@@ -1,0 +1,261 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String             @id @default(cuid())
+  name               String
+  email              String             @unique
+  passwordHash       String
+  phone              String?
+  registrationNumber String?            @unique
+  course             String?
+  school             String?
+  yearOfStudy        String?
+  gender             String?
+  county             String?
+  subcounty          String?
+  profileImage       String?
+  // Role Enum: MEMBER, ADMIN, SUPER_ADMIN
+  role               String             @default("MEMBER")
+  // UserStatus Enum: ACTIVE, INACTIVE, SUSPENDED
+  status             String             @default("ACTIVE")
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  eventsRegistered   EventRegistration[]
+  postsAuthored      Post[]
+  comments           Comment[]
+  notifications      Notification[]
+  activityLogs       ActivityLog[]
+  galleryImages      GalleryImage[]
+
+  @@map("users")
+}
+
+model Event {
+  id                   String             @id @default(cuid())
+  title                String
+  slug                 String             @unique
+  description          String
+  content              String?
+  coverImage           String?
+  date                 DateTime
+  startTime            String?
+  endTime              String?
+  venue                String?
+  organizer            String?
+  registrationDeadline DateTime?
+  capacity             Int?
+  // EventStatus Enum: DRAFT, PUBLISHED, UPCOMING, ONGOING, COMPLETED, CANCELLED
+  status               String             @default("DRAFT")
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  registrations        EventRegistration[]
+  comments             Comment[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([date])
+  @@map("events")
+}
+
+model EventRegistration {
+  id               String   @id @default(cuid())
+  eventId          String
+  userId           String?
+  studentName      String
+  studentEmail     String
+  studentPhone     String?
+  studentRegNumber String?
+  studentCourse    String?
+  // RegistrationStatus Enum: CONFIRMED, WAITLISTED, CANCELLED
+  status           String   @default("CONFIRMED")
+  registeredAt     DateTime @default(now())
+
+  event            Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([eventId, studentEmail])
+  @@index([status])
+  @@map("event_registrations")
+}
+
+model Post {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  content       String
+  excerpt       String?
+  featuredImage String?
+  category      String?
+  authorId      String
+  // PostStatus Enum: DRAFT, PUBLISHED, ARCHIVED
+  status        String    @default("DRAFT")
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  comments      Comment[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+  @@map("posts")
+}
+
+model Album {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  coverImage  String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  images      GalleryImage[]
+
+  @@map("albums")
+}
+
+model GalleryImage {
+  id           String   @id @default(cuid())
+  albumId      String
+  imageUrl     String
+  caption      String?
+  category     String?
+  uploadedById String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  album        Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([category])
+  @@map("gallery_images")
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String
+  content     String?
+  coverImage  String?
+  // ProjectStatus Enum: UPCOMING, ONGOING, COMPLETED
+  status      String    @default("UPCOMING")
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@map("projects")
+}
+
+model Leader {
+  id           String   @id @default(cuid())
+  name         String
+  position     String
+  biography    String?
+  image        String?
+  email        String?
+  phone        String?
+  socialLinks  String?  // Stored as JSON string
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("leaders")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  postId    String?
+  eventId   String?
+  parentId  String?
+  // CommentStatus Enum: PENDING, APPROVED, HIDDEN, DELETED
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  event     Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([status])
+  @@map("comments")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  // MessageStatus Enum: UNREAD, READ, REPLIED
+  status    String   @default("UNREAD")
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@map("contact_messages")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  // NotificationType Enum: SYSTEM, EVENT, ANNOUNCEMENT, NEWS, GENERAL
+  type      String   @default("GENERAL")
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isRead])
+  @@index([type])
+  @@map("notifications")
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  adminId   String
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  createdAt DateTime @default(now())
+
+  admin     User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  category  String   @default("general")
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("site_settings")
+}
