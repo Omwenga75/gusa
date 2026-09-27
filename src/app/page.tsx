@@ -132,13 +132,13 @@ export default async function HomePage() {
   return (
     <PublicLayout>
       {/* ── HERO SECTION ─────────────────────────────────── */}
-      <section className="relative min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-between pt-10 sm:pt-14 md:pt-16 lg:pt-20 pb-12 sm:pb-16 md:pb-20 text-white overflow-hidden border-b border-white/10">
+      <section className="relative min-h-[78vh] lg:min-h-[84vh] flex flex-col justify-between pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-14 text-white overflow-hidden border-b border-white/10">
         {/* Full-bleed Responsive Background Image Layer */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
           <img 
             src="/hero-gusa.jpg" 
             alt="GUSA Students Community and Cultural Heritage at Meru University" 
-            className="w-full h-full object-cover object-[72%_30%] sm:object-[75%_35%] md:object-[78%_40%] lg:object-[82%_42%] xl:object-[85%_45%] scale-[1.02]"
+            className="w-full h-full object-cover object-[72%_30%] sm:object-[75%_35%] md:object-[78%_38%] lg:object-[82%_40%] xl:object-[85%_42%] scale-[1.02]"
           />
           {/* Directional Desktop Left-to-Right Scrim: Rich dark backing for text on the left, completely natural, clear & bright on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 via-40% sm:via-50% md:via-55% lg:via-50% xl:via-46% to-slate-950/20 lg:to-transparent" />
@@ -150,26 +150,26 @@ export default async function HomePage() {
           <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Content Layer (Separated Z-Index, Left-Aligned on Desktop to Preserve People on Right) */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-center">
-          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-8 lg:py-12 mx-auto lg:mx-0">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight mb-5 sm:mb-6 leading-[1.12] text-white drop-shadow-xl">
+        {/* Content Layer (Positioned higher up to match screenshot 2) */}
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-start pt-2 sm:pt-4 md:pt-6">
+          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-4 mx-auto lg:mx-0">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl">
               Building Community. <br />
               <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
                 Celebrating Culture.
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-200 mb-8 sm:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-md">
+            <p className="text-sm sm:text-base md:text-lg text-slate-200 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-md">
               The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4">
-              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
+              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
                 <span>Join GUSA</span>
                 <ArrowRight size={18} />
               </Link>
-              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all">
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all">
                 Explore Events
               </Link>
             </div>
@@ -177,27 +177,27 @@ export default async function HomePage() {
         </div>
 
         {/* Stat Counters Grid */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-6 sm:mt-8 lg:mt-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-6 sm:mt-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto lg:mx-0">
-            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-1">
                 {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-1">
                 {stats ? stats.annualEvents.toLocaleString() : '3'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-1">
                 {stats ? stats.subCounties.toLocaleString() : '9'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Sub-Counties</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-1">
                 {stats ? stats.studentSupport.toLocaleString() : '3'}
               </h3>
