@@ -101,29 +101,42 @@ export default function HomePage() {
       .then((data) => setStats(data))
       .catch((err) => console.error('Failed to load stats:', err));
 
-    fetch('/api/events')
-      .then((res) => res.json())
+    fetch('/api/events?limit=6')
+      .then((res) => {
+        if (!res.ok) throw new Error('Events response not ok');
+        return res.json();
+      })
       .then((data) => {
         const sorted = (data.events || []).sort(
           (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         setEvents(sorted.slice(0, 3));
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error('Failed to load events:', err);
+      })
       .finally(() => setLoadingEvents(false));
 
-    fetch('/api/gallery')
-      .then((res) => res.json())
+    fetch('/api/gallery?limit=3')
+      .then((res) => {
+        if (!res.ok) throw new Error('Gallery response not ok');
+        return res.json();
+      })
       .then((data) => {
         const sorted = (data.albums || []).sort(
           (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setAlbums(sorted.slice(0, 3));
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('Failed to load gallery:', err);
+      });
 
-    fetch('/api/posts')
-      .then((res) => res.json())
+    fetch('/api/posts?limit=3')
+      .then((res) => {
+        if (!res.ok) throw new Error('Posts response not ok');
+        return res.json();
+      })
       .then((data) => {
         const sorted = (data.posts || []).sort(
           (a: any, b: any) =>
@@ -132,7 +145,9 @@ export default function HomePage() {
         );
         setPosts(sorted.slice(0, 3));
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('Failed to load posts:', err);
+      });
   }, []);
 
   return (

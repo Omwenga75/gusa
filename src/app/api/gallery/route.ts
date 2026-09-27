@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const limitParam = searchParams.get('limit')
+    const limit = limitParam ? parseInt(limitParam) : undefined
+
     const albums = await prisma.album.findMany({
       orderBy: { createdAt: 'desc' },
-      include: { images: true }
+      take: limit,
+      include: {
+        images: {
+          take: 8,
+          select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true }
+        }
+      }
     })
     return NextResponse.json({ albums })
   } catch (error) {
