@@ -6,19 +6,15 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const limitParam = searchParams.get('limit')
     const limit = limitParam ? parseInt(limitParam) : undefined
-    const includeImages = searchParams.get('includeImages') === 'true' || !limit
-
     const albums = await prisma.album.findMany({
       orderBy: { createdAt: 'desc' },
       take: limit,
-      include: includeImages
-        ? {
-            images: {
-              take: 8,
-              select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true },
-            },
-          }
-        : undefined,
+      include: {
+        images: {
+          take: 8,
+          select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true },
+        },
+      },
     })
     return NextResponse.json({ albums })
   } catch (error) {

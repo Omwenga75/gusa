@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   ArrowRight,
@@ -11,144 +9,125 @@ import {
   Calendar,
   MapPin,
   Image as ImageIcon,
-  Newspaper,
-  Clock,
   ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
+import { EventCountdown } from '@/components/events/EventCountdown';
 
-interface StatsData {
-  activeMembers: number;
-  annualEvents: number;
-  subCounties: number;
-  studentSupport: number;
-}
+export const dynamic = 'force-dynamic';
 
-const getTargetDateTime = (dateStr: string, timeStr?: string): Date | null => {
-  const dateObj = new Date(dateStr)
-  if (isNaN(dateObj.getTime())) return null
+async function getHomePageData() {
+  try {
+    const [stats, events, albums, posts] = await Promise.all([
+      // Stats
+      (async () => {
+        try {
+          const [activeMembers, annualEvents, studentSupport] = await Promise.all([
+            prisma.user.count({ where: { status: 'ACTIVE' } }),
+            prisma.event.count({ where: { status: { not: 'DRAFT' } } }),
+            prisma.eventRegistration.count(),
+          ]);
+          return {
+            activeMembers: activeMembers || 1,
+            annualEvents: annualEvents || 3,
+            subCounties: 9,
+            studentSupport: studentSupport || 3,
+          };
+        } catch (e) {
+          console.error('Error fetching stats:', e);
+          return { activeMembers: 1, annualEvents: 3, subCounties: 9, studentSupport: 3 };
+        }
+      })(),
 
-  if (timeStr) {
-    const timeMatch = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i)
-    if (timeMatch) {
-      let hours = parseInt(timeMatch[1], 10)
-      const minutes = parseInt(timeMatch[2], 10)
-      const ampm = timeMatch[3].toUpperCase()
-      if (ampm === 'PM' && hours < 12) hours += 12
-      if (ampm === 'AM' && hours === 12) hours = 0
-      dateObj.setHours(hours, minutes, 0, 0)
-    }
+      // Events
+      (async () => {
+        try {
+          return await prisma.event.findMany({
+            where: { status: { not: 'DRAFT' } },
+            orderBy: { date: 'desc' },
+            take: 3,
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              description: true,
+              coverImage: true,
+              date: true,
+              startTime: true,
+              venue: true,
+              organizer: true,
+              status: true,
+              capacity: true,
+              _count: { select: { registrations: true } },
+            },
+          });
+        } catch (e) {
+          console.error('Error fetching events:', e);
+          return [];
+        }
+      })(),
+
+      // Gallery albums
+      (async () => {
+        try {
+          return await prisma.album.findMany({
+            orderBy: { createdAt: 'desc' },
+            take: 3,
+            include: {
+              images: {
+                take: 8,
+                select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true },
+              },
+            },
+          });
+        } catch (e) {
+          console.error('Error fetching gallery:', e);
+          return [];
+        }
+      })(),
+
+      // Latest News
+      (async () => {
+        try {
+          return await prisma.post.findMany({
+            where: { status: 'PUBLISHED' },
+            orderBy: { publishedAt: 'desc' },
+            take: 3,
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              content: true,
+              excerpt: true,
+              featuredImage: true,
+              category: true,
+              publishedAt: true,
+              createdAt: true,
+              author: { select: { name: true } },
+            },
+          });
+        } catch (e) {
+          console.error('Error fetching posts:', e);
+          return [];
+        }
+      })(),
+    ]);
+
+    return { stats, events, albums, posts };
+  } catch (error) {
+    console.error('getHomePageData error:', error);
+    return {
+      stats: { activeMembers: 1, annualEvents: 3, subCounties: 9, studentSupport: 3 },
+      events: [],
+      albums: [],
+      posts: [],
+    };
   }
-  return dateObj
 }
 
-function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?: string }) {
-  const [timeLeft, setTimeLeft] = useState<string | null>(null)
-  const [isPast, setIsPast] = useState<boolean>(false)
-
-  useEffect(() => {
-    const target = getTargetDateTime(dateStr, timeStr)
-    if (!target) return
-
-    const updateTimer = () => {
-      const diff = target.getTime() - Date.now()
-      if (diff <= 0) {
-        setIsPast(true)
-        setTimeLeft(null)
-      } else {
-        setIsPast(false)
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
-        const minutes = Math.floor((diff / (1000 * 60)) % 60)
-        const seconds = Math.floor((diff / 1000) % 60)
-        setTimeLeft(`${days}D: ${hours}H: ${minutes}M: ${seconds}S`)
-      }
-    }
-
-    updateTimer()
-    const timer = setInterval(updateTimer, 1000)
-    return () => clearInterval(timer)
-  }, [dateStr, timeStr])
-
-  if (isPast) {
-    return (
-      <span className="text-[10px] font-bold uppercase bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/30 whitespace-nowrap">
-        Passed
-      </span>
-    )
-  }
-
-  if (!timeLeft) return null
-
-  return (
-    <span className="text-xs font-mono font-extrabold bg-violet-500/15 text-violet-300 px-2.5 py-1 rounded-lg border border-violet-500/35 inline-flex items-center gap-1 whitespace-nowrap shadow-sm">
-      <Clock size={12} className="text-violet-400" />
-      {timeLeft}
-    </span>
-  )
-}
-
-export default function HomePage() {
-  const [stats, setStats] = useState<StatsData | null>(null);
-  const [events, setEvents] = useState<any[]>([]);
-  const [loadingEvents, setLoadingEvents] = useState<boolean>(true);
-  const [albums, setAlbums] = useState<any[]>([]);
-  const [posts, setPosts] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetch('/api/stats')
-      .then((res) => res.json())
-      .then((data) => setStats(data))
-      .catch((err) => console.error('Failed to load stats:', err));
-
-    fetch('/api/events?limit=3&order=desc')
-      .then((res) => {
-        if (!res.ok) throw new Error('Events response not ok');
-        return res.json();
-      })
-      .then((data) => {
-        const sorted = (data.events || []).sort(
-          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-        setEvents(sorted.slice(0, 3));
-      })
-      .catch((err) => {
-        console.error('Failed to load events:', err);
-      })
-      .finally(() => setLoadingEvents(false));
-
-    fetch('/api/gallery?limit=3')
-      .then((res) => {
-        if (!res.ok) throw new Error('Gallery response not ok');
-        return res.json();
-      })
-      .then((data) => {
-        const sorted = (data.albums || []).sort(
-          (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setAlbums(sorted.slice(0, 3));
-      })
-      .catch((err) => {
-        console.error('Failed to load gallery:', err);
-      });
-
-    fetch('/api/posts?limit=3')
-      .then((res) => {
-        if (!res.ok) throw new Error('Posts response not ok');
-        return res.json();
-      })
-      .then((data) => {
-        const sorted = (data.posts || []).sort(
-          (a: any, b: any) =>
-            new Date(b.publishedAt || b.createdAt).getTime() -
-            new Date(a.publishedAt || a.createdAt).getTime()
-        );
-        setPosts(sorted.slice(0, 3));
-      })
-      .catch((err) => {
-        console.error('Failed to load posts:', err);
-      });
-  }, []);
+export default async function HomePage() {
+  const { stats, events, albums, posts } = await getHomePageData();
 
   return (
     <PublicLayout>
@@ -168,8 +147,6 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
-
-
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-white drop-shadow-lg">
             Building Community. <br />
             <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
@@ -195,13 +172,13 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
             <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
               <h3 className="text-3xl md:text-4xl font-black text-violet-400 mb-1">
-                {stats ? stats.activeMembers.toLocaleString() : '—'}
+                {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
             </div>
             <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
               <h3 className="text-3xl md:text-4xl font-black text-blue-400 mb-1">
-                {stats ? stats.annualEvents.toLocaleString() : '—'}
+                {stats ? stats.annualEvents.toLocaleString() : '3'}
               </h3>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
             </div>
@@ -213,7 +190,7 @@ export default function HomePage() {
             </div>
             <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
               <h3 className="text-3xl md:text-4xl font-black text-cyan-400 mb-1">
-                {stats ? stats.studentSupport.toLocaleString() : '—'}
+                {stats ? stats.studentSupport.toLocaleString() : '3'}
               </h3>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Student Support</p>
             </div>
@@ -278,39 +255,51 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {loadingEvents ? (
-            <div className="py-12 text-center text-slate-500">Loading upcoming events...</div>
-          ) : events.length === 0 ? (
+          {events.length === 0 ? (
             <p className="text-slate-500 text-center py-12">No upcoming events yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {events.map((ev: any) => {
-                let coverUrl: string | null = null
+                let coverUrl: string | null = null;
                 if (ev.coverImage) {
                   try {
-                    const parsed = JSON.parse(ev.coverImage)
+                    const parsed = JSON.parse(ev.coverImage);
                     if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'string') {
-                      coverUrl = parsed[0]
+                      coverUrl = parsed[0];
                     } else if (typeof parsed === 'string' && parsed.trim() !== '') {
-                      coverUrl = parsed
+                      coverUrl = parsed;
                     }
                   } catch {
                     if (typeof ev.coverImage === 'string' && ev.coverImage.trim() !== '') {
-                      coverUrl = ev.coverImage
+                      coverUrl = ev.coverImage;
                     }
                   }
                 }
+                const dateISO = ev.date instanceof Date ? ev.date.toISOString() : String(ev.date);
+                const category = ev.category || ev.organizer || 'Event';
+
                 return (
                   <Link href="/events" key={ev.id} className="group block glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all">
-                    {coverUrl && (
-                      <img src={coverUrl} alt={ev.title} className="w-full h-60 object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+                    {coverUrl ? (
+                      <div className="relative w-full h-52 overflow-hidden bg-slate-950">
+                        <img 
+                          src={coverUrl} 
+                          alt={ev.title} 
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                      </div>
+                    ) : (
+                      <div className="w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5">
+                        <Calendar size={36} className="text-violet-400/40" />
+                      </div>
                     )}
                     <div className="p-5">
                       <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="inline-block text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full">
-                          {ev.category || ev.organizer || 'Event'}
+                        <span className="inline-block text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20">
+                          {category}
                         </span>
-                        <EventCountdown dateStr={ev.date} timeStr={ev.startTime} />
+                        <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
                       </div>
                       <h3 className="text-white font-bold text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors">
                         {ev.title}
@@ -329,7 +318,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </Link>
-                )
+                );
               })}
             </div>
           )}
@@ -362,16 +351,26 @@ export default function HomePage() {
               {albums.map((alb: any) => {
                 const cover = alb.coverImage || (alb.images && alb.images[0]?.imageUrl);
                 return (
-                  <Link href="/gallery" key={alb.id} className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all">
+                  <Link href="/gallery" key={alb.id} className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900">
                     {cover ? (
                       <img src={cover} alt={alb.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
                     ) : (
-                      <div className="w-full h-full bg-pink-500/10 flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">
                         <ImageIcon size={36} className="text-pink-400 opacity-40" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                      <p className="text-white font-bold text-sm">{alb.name}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-end p-5">
+                      <div>
+                        <p className="text-white font-bold text-base leading-snug drop-shadow-md group-hover:text-pink-300 transition-colors">{alb.name}</p>
+                        {alb.description && (
+                          <p className="text-xs text-slate-300 line-clamp-1 mt-1 opacity-90">{alb.description}</p>
+                        )}
+                        {alb.images && alb.images.length > 0 && (
+                          <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-md border border-pink-500/20">
+                            {alb.images.length} photos
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 );
