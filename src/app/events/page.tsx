@@ -402,6 +402,7 @@ export default function EventsPage() {
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
+                      height: '100%',
                       borderRadius: 'var(--radius-xl)',
                       border: '1px solid var(--border)',
                       backgroundColor: 'var(--surface)',
@@ -411,8 +412,6 @@ export default function EventsPage() {
                       transition: 'transform 0.2s ease, border-color 0.2s ease'
                     }}
                   >
-
-
                     {/* Card Header Top Banner */}
                     <div
                       style={{
@@ -467,81 +466,87 @@ export default function EventsPage() {
                     </div>
 
                     {/* Card Body */}
-                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.35, margin: 0 }}>
-                          {event.title}
-                        </h3>
-                        <EventCountdown dateStr={event.date} timeStr={event.time} />
+                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+                      {/* Top content area (Title, Countdown, Description) */}
+                      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: '1.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.35, margin: 0 }}>
+                            {event.title}
+                          </h3>
+                          <EventCountdown dateStr={event.date} timeStr={event.time} />
+                        </div>
+
+                        {event.description && event.description !== event.title && (
+                          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
+                            {event.description}
+                          </p>
+                        )}
                       </div>
 
-                      {event.description && event.description !== event.title && (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                          {event.description}
-                        </p>
-                      )}
+                      {/* Bottom pinned area (Metadata + Action Button) */}
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        {/* Metadata List */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)', padding: '0.75rem', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-md)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Clock size={15} color="var(--primary)" />
+                            <span>{event.time}</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <MapPin size={15} color="var(--primary)" />
+                            <span>{event.venue}</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Users size={15} color="var(--primary)" />
+                            <span>
+                              {event.registeredCount} / {event.capacity} Registered (
+                              {Math.round((event.registeredCount / event.capacity) * 100)}% capacity)
+                            </span>
+                          </div>
+                        </div>
 
-                      {/* Metadata List */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '1.25rem', padding: '0.75rem', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-md)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <Clock size={15} color="var(--primary)" />
-                          <span>{event.time}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <MapPin size={15} color="var(--primary)" />
-                          <span>{event.venue}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <Users size={15} color="var(--primary)" />
-                          <span>
-                            {event.registeredCount} / {event.capacity} Registered (
-                            {Math.round((event.registeredCount / event.capacity) * 100)}% capacity)
-                          </span>
-                        </div>
+                        {/* Action Button */}
+                        {isAttending ? (
+                          <button
+                            disabled
+                            onClick={(e) => e.stopPropagation()}
+                            className="btn"
+                            style={{
+                              width: '100%',
+                              gap: '0.5rem',
+                              backgroundColor: 'rgba(51, 65, 85, 0.5)',
+                              color: '#94a3b8',
+                              cursor: 'not-allowed',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              padding: '0.75rem 1rem',
+                              borderRadius: 'var(--radius-lg)',
+                              fontWeight: 600
+                            }}
+                          >
+                            <CheckCircle2 size={16} color="#4ade80" /> Attending
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleAttendEvent(event)
+                            }}
+                            disabled={isBtnLoading}
+                            className="btn btn-primary"
+                            style={{ width: '100%', gap: '0.5rem' }}
+                          >
+                            {isBtnLoading ? (
+                              'Registering...'
+                            ) : (
+                              <>
+                                I Will Attend <ArrowRight size={16} />
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
-
-                      {/* Action Button */}
-                      {isAttending ? (
-                        <button
-                          disabled
-                          onClick={(e) => e.stopPropagation()}
-                          className="btn"
-                          style={{
-                            width: '100%',
-                            gap: '0.5rem',
-                            backgroundColor: 'rgba(51, 65, 85, 0.5)',
-                            color: '#94a3b8',
-                            cursor: 'not-allowed',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '0.75rem 1rem',
-                            borderRadius: 'var(--radius-lg)',
-                            fontWeight: 600
-                          }}
-                        >
-                          <CheckCircle2 size={16} color="#4ade80" /> Attending
-                        </button>
-                      ) : (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleAttendEvent(event)
-                          }}
-                          disabled={isBtnLoading}
-                          className="btn btn-primary"
-                          style={{ width: '100%', gap: '0.5rem' }}
-                        >
-                          {isBtnLoading ? (
-                            'Registering...'
-                          ) : (
-                            <>
-                              I Will Attend <ArrowRight size={16} />
-                            </>
-                          )}
-                        </button>
-                      )}
                     </div>
                   </div>
                 )

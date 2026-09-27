@@ -288,9 +288,9 @@ export default async function HomePage() {
                 const category = ev.category || ev.organizer || 'Event';
 
                 return (
-                  <Link href="/events" key={ev.id} className="group block glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all">
+                  <Link href="/events" key={ev.id} className="group flex flex-col h-full glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all">
                     {coverUrl ? (
-                      <div className="relative w-full h-52 overflow-hidden bg-slate-950">
+                      <div className="relative w-full h-52 overflow-hidden bg-slate-950 flex-shrink-0">
                         <img 
                           src={coverUrl} 
                           alt={ev.title} 
@@ -299,21 +299,23 @@ export default async function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
                       </div>
                     ) : (
-                      <div className="w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5">
+                      <div className="w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
                         <Calendar size={36} className="text-violet-400/40" />
                       </div>
                     )}
-                    <div className="p-5">
-                      <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="inline-block text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20">
-                          {category}
-                        </span>
-                        <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
+                    <div className="p-5 flex flex-col flex-1 justify-between">
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                          <span className="inline-block text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20">
+                            {category}
+                          </span>
+                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
+                        </div>
+                        <h3 className="text-white font-bold text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors">
+                          {ev.title}
+                        </h3>
                       </div>
-                      <h3 className="text-white font-bold text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors">
-                        {ev.title}
-                      </h3>
-                      <div className="flex flex-col gap-1.5 text-slate-400 text-xs">
+                      <div className="mt-auto pt-3 flex flex-col gap-1.5 text-slate-400 text-xs border-t border-white/5">
                         <span className="flex items-center gap-1.5">
                           <Calendar size={12} className="text-violet-400" />
                           {ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}
