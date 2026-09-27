@@ -136,13 +136,12 @@ export default async function HomePage() {
         {/* Full-bleed Hero Background Picture & Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/hero-banana.jpg" 
-            alt="Abagusii Heritage & Agriculture Background" 
-            className="w-full h-full object-cover scale-105 blur-[2px] opacity-95"
-            style={{ filter: 'blur(2px) contrast(95%)' }}
+            src="/hero-gusa.jpg" 
+            alt="GUSA Members Community and Heritage" 
+            className="w-full h-full object-cover object-[center_35%] scale-105 opacity-85"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/50 to-slate-950/95"></div>
-          <div className="absolute inset-0 bg-violet-950/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/65 to-slate-950/95"></div>
+          <div className="absolute inset-0 bg-violet-950/15"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-violet-500/15 rounded-full blur-3xl pointer-events-none"></div>
         </div>
 
