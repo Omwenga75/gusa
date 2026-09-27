@@ -16,7 +16,14 @@ export async function GET(request: NextRequest) {
         },
       },
     })
-    return NextResponse.json({ albums })
+    return NextResponse.json(
+      { albums },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+        },
+      }
+    )
   } catch (error) {
     console.error('Gallery GET error:', error)
     return NextResponse.json({ error: 'Failed to fetch gallery' }, { status: 500 })

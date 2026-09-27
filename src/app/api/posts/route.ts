@@ -33,7 +33,14 @@ export async function GET(request: NextRequest) {
       prisma.post.count({ where }),
     ])
 
-    return NextResponse.json({ posts, total, take, skip })
+    return NextResponse.json(
+      { posts, total, take, skip },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+        },
+      }
+    )
   } catch (error) {
     console.error('Posts API error:', error)
     return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })

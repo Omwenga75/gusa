@@ -36,7 +36,14 @@ export async function GET(request: NextRequest) {
       prisma.event.count({ where }),
     ])
 
-    return NextResponse.json({ events, total, take, skip })
+    return NextResponse.json(
+      { events, total, take, skip },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+        },
+      }
+    )
   } catch (error) {
     console.error('Events API error:', error)
     return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 })

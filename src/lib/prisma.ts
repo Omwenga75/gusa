@@ -18,6 +18,12 @@ if (dbUrl && dbUrl.includes('neon.tech') && !dbUrl.includes('-pooler')) {
   }
 }
 
+// Optimize serverless connection pooling parameters
+if (dbUrl && dbUrl.includes('neon.tech') && !dbUrl.includes('connection_limit')) {
+  const separator = dbUrl.includes('?') ? '&' : '?'
+  dbUrl += `${separator}connection_limit=10&pool_timeout=20`
+}
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient(
@@ -32,7 +38,9 @@ export const prisma =
       : undefined
   )
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Cache the Prisma client on globalThis in both dev and production to reuse connections in warm lambdas
+if (!globalForPrisma.prisma) {
+  globalForPrisma.prisma = prisma
+}
 
 export default prisma
-

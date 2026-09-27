@@ -22,12 +22,19 @@ export async function GET() {
     // Gusii region has 9 sub-counties (Kisii & Nyamira subcounties)
     const subCountiesCount = Math.max(9, uniqueSubcounties.length)
 
-    return NextResponse.json({
-      activeMembers: activeMembers || 0,
-      annualEvents: annualEvents || 0,
-      subCounties: subCountiesCount,
-      studentSupport: registrationsCount || 0
-    })
+    return NextResponse.json(
+      {
+        activeMembers: activeMembers || 0,
+        annualEvents: annualEvents || 0,
+        subCounties: subCountiesCount,
+        studentSupport: registrationsCount || 0
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    )
   } catch (error) {
     console.error('Stats API error:', error)
     return NextResponse.json({
