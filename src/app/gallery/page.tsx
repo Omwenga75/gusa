@@ -553,15 +553,18 @@ export default function GalleryPage() {
 
           {/* Empty state if category filter has no results */}
           {filteredAlbums.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-state-icon">
-                <ImageIcon size={36} />
+            <div className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg">
+              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
+                <ImageIcon size={32} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>No Albums Found</h3>
-              <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem' }}>
+              <h3 className="text-xl font-bold text-white mb-2 text-center">No Albums Found</h3>
+              <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 text-center leading-relaxed">
                 There are currently no documented albums under the &quot;{selectedCategory}&quot; category.
               </p>
-              <button onClick={() => setSelectedCategory('All')} className="btn btn-outline">
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className="btn btn-outline inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold border border-white/20 text-slate-200 hover:text-white"
+              >
                 Reset Filter
               </button>
             </div>

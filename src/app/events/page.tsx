@@ -364,17 +364,18 @@ export default function EventsPage() {
             </div>
           ) : filteredEvents.length === 0 ? (
             <div
+              className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg"
               style={{
-                textAlign: 'center',
-                padding: '4rem 1rem',
                 backgroundColor: 'var(--surface-subtle)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px dashed var(--border)'
               }}
             >
-              <Calendar size={48} color="var(--text-muted)" style={{ margin: '0 auto 1rem auto' }} />
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>No events found</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: '1.5rem' }}>
+              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
+                <Calendar size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2 text-center">No events found</h3>
+              <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 text-center leading-relaxed">
                 We couldn&apos;t find any events matching your selected criteria. Try resetting the filters.
               </p>
               <button
@@ -382,7 +383,7 @@ export default function EventsPage() {
                   setSelectedTab('all')
                   setSearchQuery('')
                 }}
-                className="btn btn-outline"
+                className="btn btn-outline inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold border border-white/20 text-slate-200 hover:text-white"
               >
                 Reset Filter
               </button>

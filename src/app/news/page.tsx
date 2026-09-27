@@ -403,14 +403,14 @@ export default function NewsPage() {
 
           {/* Empty search state */}
           {filteredArticles.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-state-icon">
-                <Search size={36} />
+            <div className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg">
+              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
+                <Search size={32} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <h3 className="text-xl font-bold text-white mb-2 text-center">
                 No Articles Found
               </h3>
-              <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem', maxWidth: '450px', margin: '0 auto 1.5rem' }}>
+              <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 text-center leading-relaxed">
                 We couldn&apos;t find any articles matching &quot;{searchQuery}&quot; under the &quot;{selectedCategory}&quot; category.
               </p>
               <button
@@ -418,7 +418,7 @@ export default function NewsPage() {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
-                className="btn btn-primary"
+                className="btn btn-primary inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-500/20"
               >
                 Clear Search & View All
               </button>

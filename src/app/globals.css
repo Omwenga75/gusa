@@ -731,3 +731,56 @@ select.form-control {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 92, 246, 0.35);
 }
+
+/* ============================================================
+   EMPTY STATE (Centered on Mobile & All Screens)
+   ============================================================ */
+.empty-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 3.5rem 1.5rem !important;
+  margin: 1.5rem auto !important;
+  max-width: 500px !important;
+  width: 100% !important;
+}
+
+.empty-state-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 1.25rem !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  border: 1px solid rgba(124, 58, 237, 0.25) !important;
+  color: #a78bfa !important;
+  margin: 0 auto 1.25rem auto !important;
+}
+
+.empty-state h3 {
+  text-align: center !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
+  margin: 0 auto 0.5rem auto !important;
+}
+
+.empty-state p {
+  text-align: center !important;
+  color: #94a3b8 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  max-width: 440px !important;
+  margin: 0 auto 1.5rem auto !important;
+}
+
+.empty-state .btn,
+.empty-state button {
+  margin: 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
