@@ -131,67 +131,83 @@ export default async function HomePage() {
 
   return (
     <PublicLayout>
-      {/* Hero Section */}
-      <section className="relative pt-10 md:pt-12 lg:pt-14 pb-16 md:pb-20 text-white overflow-hidden border-b border-white/10">
-        {/* Full-bleed Hero Background Picture & Overlay */}
-        <div className="absolute inset-0 z-0">
+      {/* ── HERO SECTION ─────────────────────────────────── */}
+      <section className="relative min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-between pt-10 sm:pt-14 md:pt-16 lg:pt-20 pb-12 sm:pb-16 md:pb-20 text-white overflow-hidden border-b border-white/10">
+        {/* Full-bleed Responsive Background Image Layer */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
           <img 
             src="/hero-gusa.jpg" 
-            alt="GUSA Members Community and Heritage" 
-            className="w-full h-full object-cover object-[center_35%] scale-105 opacity-85"
+            alt="GUSA Students Community and Cultural Heritage at Meru University" 
+            className="w-full h-full object-cover object-[72%_30%] sm:object-[75%_35%] md:object-[78%_40%] lg:object-[82%_42%] xl:object-[85%_45%] scale-[1.02]"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/65 to-slate-950/95"></div>
-          <div className="absolute inset-0 bg-violet-950/15"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-violet-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          {/* Directional Desktop Left-to-Right Scrim: Rich dark backing for text on the left, completely natural, clear & bright on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 via-40% sm:via-50% md:via-55% lg:via-50% xl:via-46% to-slate-950/20 lg:to-transparent" />
+          
+          {/* Top-to-Bottom Scrim: Clean readability on mobile/tablets & seamless nav/bottom blend */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/40 via-30% to-slate-950/95 lg:from-slate-950/70 lg:via-transparent lg:to-slate-950/95" />
+          
+          {/* Soft ambient violet glow localized to the left text quadrant */}
+          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-white drop-shadow-lg">
-            Building Community. <br />
-            <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
-              Celebrating Culture.
-            </span>
-          </h1>
+        {/* Content Layer (Separated Z-Index, Left-Aligned on Desktop to Preserve People on Right) */}
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-center">
+          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-8 lg:py-12 mx-auto lg:mx-0">
+            {/* Campus Association Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-5 sm:mb-6 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+              Meru University of Science and Technology
+            </div>
 
-          <p className="text-base sm:text-lg md:text-xl text-slate-200 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
-          </p>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight mb-5 sm:mb-6 leading-[1.12] text-white drop-shadow-xl">
+              Building Community. <br />
+              <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
+                Celebrating Culture.
+              </span>
+            </h1>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30">
-              <span>Join GUSA</span>
-              <ArrowRight size={18} />
-            </Link>
-            <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md">
-              Explore Events
-            </Link>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-200 mb-8 sm:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-md">
+              The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4">
+              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
+                <span>Join GUSA</span>
+                <ArrowRight size={18} />
+              </Link>
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all">
+                Explore Events
+              </Link>
+            </div>
           </div>
+        </div>
 
-          {/* Stat Counters Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
-            <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
-              <h3 className="text-3xl md:text-4xl font-black text-violet-400 mb-1">
+        {/* Stat Counters Grid */}
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-6 sm:mt-8 lg:mt-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto lg:mx-0">
+            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-1">
                 {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
             </div>
-            <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
-              <h3 className="text-3xl md:text-4xl font-black text-blue-400 mb-1">
+            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-1">
                 {stats ? stats.annualEvents.toLocaleString() : '3'}
               </h3>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
             </div>
-            <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
-              <h3 className="text-3xl md:text-4xl font-black text-pink-400 mb-1">
+            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-1">
                 {stats ? stats.subCounties.toLocaleString() : '9'}
               </h3>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Sub-Counties</p>
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Sub-Counties</p>
             </div>
-            <div className="glass-card p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl">
-              <h3 className="text-3xl md:text-4xl font-black text-cyan-400 mb-1">
+            <div className="glass-card p-4 sm:p-5 md:p-6 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-1">
                 {stats ? stats.studentSupport.toLocaleString() : '3'}
               </h3>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-300">Student Support</p>
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Student Support</p>
             </div>
           </div>
         </div>
