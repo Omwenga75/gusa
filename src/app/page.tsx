@@ -153,12 +153,6 @@ export default async function HomePage() {
         {/* Content Layer (Separated Z-Index, Left-Aligned on Desktop to Preserve People on Right) */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-center">
           <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-8 lg:py-12 mx-auto lg:mx-0">
-            {/* Campus Association Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-5 sm:mb-6 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-              Meru University of Science and Technology
-            </div>
-
             <h1 className="text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold tracking-tight mb-5 sm:mb-6 leading-[1.12] text-white drop-shadow-xl">
               Building Community. <br />
               <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
