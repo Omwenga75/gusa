@@ -178,26 +178,26 @@ export default async function HomePage() {
 
         {/* Stat Counters Grid */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-6 sm:mt-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto lg:mx-0">
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-1">
                 {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-1">
                 {stats ? stats.annualEvents.toLocaleString() : '3'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-1">
                 {stats ? stats.subCounties.toLocaleString() : '9'}
               </h3>
               <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Sub-Counties</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center lg:text-left backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
+            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-1">
                 {stats ? stats.studentSupport.toLocaleString() : '3'}
               </h3>
