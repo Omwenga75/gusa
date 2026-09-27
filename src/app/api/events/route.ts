@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status')
     const take = parseInt(searchParams.get('limit') || '50')
     const skip = parseInt(searchParams.get('skip') || '0')
+    const orderDirection = searchParams.get('order') === 'desc' ? 'desc' : 'asc'
 
     const where: Record<string, unknown> = {}
     if (status) where.status = status
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     const [events, total] = await Promise.all([
       prisma.event.findMany({
         where,
-        orderBy: { date: 'asc' },
+        orderBy: { date: orderDirection },
         take,
         skip,
         select: {

@@ -10,8 +10,12 @@ let dbUrl =
   process.env.STORAGE_URL
 
 // Ensure Neon connections use the high-performance pooled endpoint on serverless Vercel
-if (dbUrl && dbUrl.includes('.aws.neon.tech') && !dbUrl.includes('-pooler.')) {
-  dbUrl = dbUrl.replace('.aws.neon.tech', '-pooler.c-14.aws.neon.tech')
+if (dbUrl && dbUrl.includes('neon.tech') && !dbUrl.includes('-pooler')) {
+  const atIndex = dbUrl.indexOf('@')
+  const dotIndex = dbUrl.indexOf('.', atIndex)
+  if (atIndex !== -1 && dotIndex !== -1) {
+    dbUrl = dbUrl.slice(0, dotIndex) + '-pooler' + dbUrl.slice(dotIndex)
+  }
 }
 
 export const prisma =

@@ -101,7 +101,7 @@ export default function HomePage() {
       .then((data) => setStats(data))
       .catch((err) => console.error('Failed to load stats:', err));
 
-    fetch('/api/events?limit=6')
+    fetch('/api/events?limit=3&order=desc')
       .then((res) => {
         if (!res.ok) throw new Error('Events response not ok');
         return res.json();
