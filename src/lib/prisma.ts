@@ -9,19 +9,15 @@ let dbUrl =
   process.env.POSTGRES_URL ||
   process.env.STORAGE_URL
 
-// Ensure Neon connections use the high-performance pooled endpoint on serverless Vercel
-if (dbUrl && dbUrl.includes('neon.tech') && !dbUrl.includes('-pooler')) {
-  const atIndex = dbUrl.indexOf('@')
-  const dotIndex = dbUrl.indexOf('.', atIndex)
-  if (atIndex !== -1 && dotIndex !== -1) {
-    dbUrl = dbUrl.slice(0, dotIndex) + '-pooler' + dbUrl.slice(dotIndex)
+if (dbUrl) {
+  // Remove channel_binding parameter which causes TLS/SCRAM negotiation delays
+  dbUrl = dbUrl.replace(/([?&])channel_binding=[^&]+(&|$)/, '$1').replace(/[?&]$/, '')
+  
+  // Ensure connection timeout is bounded to prevent slow serverless hangs
+  if (!dbUrl.includes('connect_timeout')) {
+    const sep = dbUrl.includes('?') ? '&' : '?'
+    dbUrl += `${sep}connect_timeout=15`
   }
-}
-
-// Optimize serverless connection pooling parameters
-if (dbUrl && dbUrl.includes('neon.tech') && !dbUrl.includes('connection_limit')) {
-  const separator = dbUrl.includes('?') ? '&' : '?'
-  dbUrl += `${separator}connection_limit=10&pool_timeout=20`
 }
 
 export const prisma =
@@ -38,7 +34,7 @@ export const prisma =
       : undefined
   )
 
-// Cache the Prisma client on globalThis in both dev and production to reuse connections in warm lambdas
+// Cache Prisma client on globalThis across warm serverless function invocations
 if (!globalForPrisma.prisma) {
   globalForPrisma.prisma = prisma
 }

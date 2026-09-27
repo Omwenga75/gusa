@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       { events, total, take, skip },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600',
         },
       }
     )
