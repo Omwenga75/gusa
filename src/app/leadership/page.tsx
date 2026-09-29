@@ -106,54 +106,88 @@ export default function LeadershipPage() {
               {leadersData.map((leader) => (
                 <div
                   key={leader.id}
-                  className="glass-card flex flex-col rounded-2xl border border-white/10 bg-slate-900/90 overflow-hidden hover:border-violet-500/40 hover:-translate-y-1 transition-all duration-300 shadow-xl"
+                  className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-2xl hover:shadow-violet-500/15"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(20px)',
+                  }}
                 >
-                  {/* Card Header Top Graphic Banner */}
+                  {/* Glowing Top Graphic Header */}
                   <div
                     style={{
-                      height: '90px',
-                      background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(37, 99, 235, 0.2) 100%), #0d1225',
+                      height: '96px',
+                      background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                      position: 'relative'
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-end',
+                      padding: '0.85rem 1rem',
                     }}
                   >
-                    <span
+                    {/* Background Pattern Mesh */}
+                    <div
                       style={{
                         position: 'absolute',
-                        top: '0.75rem',
-                        right: '0.75rem',
-                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                        backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                        color: '#cbd5e1',
-                        fontSize: '0.75rem',
-                        padding: '0.25rem 0.75rem',
+                        inset: 0,
+                        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 60%)',
+                        pointerEvents: 'none'
+                      }}
+                    />
+
+                    {/* Term Badge */}
+                    <span
+                      style={{
+                        position: 'relative',
+                        zIndex: 10,
+                        backgroundColor: 'rgba(10, 15, 29, 0.85)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        color: '#e2e8f0',
+                        fontSize: '0.725rem',
+                        padding: '0.3rem 0.8rem',
                         borderRadius: '9999px',
-                        fontWeight: 600
+                        fontWeight: 600,
+                        letterSpacing: '0.02em',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
                       }}
                     >
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: '#10b981',
+                          boxShadow: '0 0 8px #10b981'
+                        }}
+                      />
                       Term: {leader.term}
                     </span>
                   </div>
 
-                  {/* Avatar & Core Meta */}
+                  {/* Avatar & Core Body */}
                   <div style={{ padding: '0 1.5rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
-                    <div style={{ marginTop: '-44px', marginBottom: '1rem', display: 'flex', position: 'relative', zIndex: 20 }}>
+                    {/* Avatar Container with Offset */}
+                    <div style={{ marginTop: '-48px', marginBottom: '1.15rem', display: 'flex', position: 'relative', zIndex: 20 }}>
                       <div
                         style={{
-                          width: '84px',
-                          height: '84px',
+                          width: '88px',
+                          height: '88px',
                           borderRadius: '50%',
                           overflow: 'hidden',
                           background: leader.avatarGradient || 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
-                          border: '4px solid #0d1225',
+                          border: '4px solid #0f172a',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: '#ffffff',
-                          fontSize: '1.75rem',
+                          fontSize: '1.85rem',
                           fontWeight: 800,
-                          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.6)',
                           position: 'relative',
                           zIndex: 30,
                           flexShrink: 0
@@ -163,7 +197,13 @@ export default function LeadershipPage() {
                           <img
                             src={leader.image}
                             alt={leader.name}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              transition: 'transform 0.4s ease'
+                            }}
+                            className="group-hover:scale-105"
                           />
                         ) : (
                           leader.avatarInitials
@@ -171,45 +211,88 @@ export default function LeadershipPage() {
                       </div>
                     </div>
 
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
+                    {/* Leader Name */}
+                    <h3
+                      style={{
+                        fontSize: '1.25rem',
+                        fontWeight: 800,
+                        color: '#ffffff',
+                        marginBottom: '0.35rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.025em',
+                        lineHeight: 1.25
+                      }}
+                    >
                       {leader.name}
                     </h3>
 
-                    <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9375rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                    {/* Position */}
+                    <p
+                      style={{
+                        color: '#c4b5fd',
+                        fontWeight: 700,
+                        fontSize: '0.875rem',
+                        marginBottom: '0.85rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}
+                    >
                       {leader.position}
                     </p>
 
-                    <div style={{ marginBottom: '0.75rem' }}>
+                    {/* Category Pill */}
+                    <div style={{ marginBottom: '1.25rem' }}>
                       <span
-                        className={
-                          leader.category === 'patron'
-                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                            : leader.category === 'executive'
-                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30 inline-block'
-                            : 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                        }
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          padding: '0.3rem 0.85rem',
+                          borderRadius: '0.5rem',
+                          fontSize: '0.7rem',
+                          fontWeight: 800,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          backgroundColor:
+                            leader.category === 'patron'
+                              ? 'rgba(245, 158, 11, 0.12)'
+                              : leader.category === 'executive'
+                              ? 'rgba(124, 58, 237, 0.15)'
+                              : 'rgba(59, 130, 246, 0.12)',
+                          color:
+                            leader.category === 'patron'
+                              ? '#fcd34d'
+                              : leader.category === 'executive'
+                              ? '#ddd6fe'
+                              : '#93c5fd',
+                          border:
+                            leader.category === 'patron'
+                              ? '1px solid rgba(245, 158, 11, 0.3)'
+                              : leader.category === 'executive'
+                              ? '1px solid rgba(124, 58, 237, 0.35)'
+                              : '1px solid rgba(59, 130, 246, 0.3)'
+                        }}
                       >
                         {leader.category === 'patron' ? 'Patron' : leader.category === 'executive' ? 'Executive' : 'Representative'}
                       </span>
                     </div>
 
                     {leader.bio ? (
-                      <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
+                      <p style={{ fontSize: '0.875rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
                         {leader.bio}
                       </p>
                     ) : (
-                      <div style={{ flex: 1, marginBottom: '1rem' }} />
+                      <div style={{ flex: 1, marginBottom: '0.5rem' }} />
                     )}
 
-                    {/* Contacts & Social links Footer */}
+                    {/* Professional Contact Footer Bar */}
                     <div
                       style={{
                         paddingTop: '1rem',
-                        borderTop: '1px solid var(--border)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        flexWrap: 'wrap',
                         gap: '0.75rem'
                       }}
                     >
@@ -218,30 +301,62 @@ export default function LeadershipPage() {
                           href={`tel:${leader.phone}`}
                           title={`Call ${leader.name}`}
                           style={{
-                            color: '#a78bfa',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '0.45rem',
-                            fontSize: '0.875rem',
+                            gap: '0.6rem',
+                            padding: '0.45rem 0.85rem',
+                            borderRadius: '0.625rem',
+                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            color: '#cbd5e1',
+                            fontSize: '0.8125rem',
                             fontWeight: 600,
-                            textDecoration: 'none'
+                            textDecoration: 'none',
+                            transition: 'all 0.2s ease'
                           }}
+                          className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-white"
                         >
-                          <Phone size={15} />
+                          <span
+                            style={{
+                              width: '24px',
+                              height: '24px',
+                              borderRadius: '0.375rem',
+                              backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                              color: '#a78bfa',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            <Phone size={12} />
+                          </span>
                           <span>{leader.phone}</span>
                         </a>
                       ) : (
-                        <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Official Leader</span>
+                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>
                       )}
 
-                      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                      {/* Social/Email Icons */}
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         {leader.email && (
                           <a
                             href={`mailto:${leader.email}`}
                             title={`Email ${leader.name}`}
-                            style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '0.5rem',
+                              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                              border: '1px solid rgba(255, 255, 255, 0.08)',
+                              color: '#94a3b8',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s ease'
+                            }}
+                            className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-violet-300"
                           >
-                            <Mail size={16} />
+                            <Mail size={14} />
                           </a>
                         )}
 
@@ -251,9 +366,21 @@ export default function LeadershipPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             title="Chat on WhatsApp"
-                            style={{ color: '#25D366' }}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '0.5rem',
+                              backgroundColor: 'rgba(37, 211, 102, 0.1)',
+                              border: '1px solid rgba(37, 211, 102, 0.2)',
+                              color: '#25D366',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s ease'
+                            }}
+                            className="hover:bg-emerald-500/20"
                           >
-                            <MessageCircle size={16} />
+                            <MessageCircle size={14} />
                           </a>
                         )}
                       </div>
