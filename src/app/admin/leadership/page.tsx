@@ -186,7 +186,21 @@ export default function LeadershipPage() {
           <h2 className={styles.cardTitle}>Leaders ({leaders.length})</h2>
         </div>
 
-        {leaders.length === 0 && !isLoading ? (
+        {isLoading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            {[1, 2].map((n) => (
+              <div
+                key={n}
+                style={{
+                  height: '220px',
+                  borderRadius: '1rem',
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                }}
+              />
+            ))}
+          </div>
+        ) : leaders.length === 0 ? (
           <div className={styles.emptyBox}>
             <Award size={48} style={{ opacity: 0.3 }} />
             <p className={styles.emptyText}>No leadership profiles added yet. Click &quot;Add Leader&quot; to get started.</p>

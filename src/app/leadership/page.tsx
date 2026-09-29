@@ -28,6 +28,7 @@ interface LeaderProfile {
 
 export default function LeadershipPage() {
   const [leadersData, setLeadersData] = useState<LeaderProfile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
     fetch('/api/leadership')
@@ -50,7 +51,10 @@ export default function LeadershipPage() {
           setLeadersData(mapped);
         }
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -82,8 +86,22 @@ export default function LeadershipPage() {
       {/* Main Leadership Section */}
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
         <div className="container">
-          {/* Leaders Grid or Empty State */}
-          {leadersData.length === 0 ? (
+          {/* Loading Skeleton */}
+          {isLoading ? (
+            <div className="grid-3" style={{ gap: '2rem' }}>
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="rounded-2xl overflow-hidden animate-pulse"
+                  style={{
+                    height: '260px',
+                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(9, 14, 26, 0.9) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                  }}
+                />
+              ))}
+            </div>
+          ) : leadersData.length === 0 ? (
             <div
               style={{
                 textAlign: 'center',
