@@ -329,13 +329,6 @@ export default function ProjectsPage() {
               })}
             </div>
 
-            <button
-              onClick={() => handleOpenPledge('General Student Support Fund')}
-              className="btn btn-secondary btn-sm"
-              style={{ borderRadius: '9999px', boxShadow: '0 4px 12px rgba(255,215,0,0.3)' }}
-            >
-              <Heart size={15} /> Support an Initiative
-            </button>
           </div>
 
           {/* Projects Cards Grid */}
