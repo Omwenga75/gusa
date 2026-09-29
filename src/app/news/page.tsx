@@ -48,6 +48,7 @@ type CategoryTag = (typeof CATEGORIES)[number];
 
 export default function NewsPage() {
   const [articlesData, setArticlesData] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryTag>('All');
   const [activeArticle, setActiveArticle] = useState<Article | null>(null);
@@ -56,6 +57,7 @@ export default function NewsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
+    setIsLoading(true);
     fetch('/api/posts')
       .then((res) => res.json())
       .then((data) => {
@@ -85,7 +87,8 @@ export default function NewsPage() {
           setArticlesData(mapped);
         }
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
 
   // Filtered Articles based on search and category
@@ -214,14 +217,52 @@ export default function NewsPage() {
           {/* ============================================================ */}
           {/* ARTICLES GRID */}
           {/* ============================================================ */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
-              gap: '2rem'
-            }}
-          >
-            {filteredArticles.map((article) => (
+          {isLoading ? (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
+                gap: '2rem'
+              }}
+            >
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="flex flex-col rounded-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="skeleton" style={{ height: '140px', width: '100%', borderRadius: 0 }} />
+                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                    <div className="skeleton" style={{ width: '85%', height: '22px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '100%', height: '14px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '90%', height: '14px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '60%', height: '14px', borderRadius: '4px' }} />
+                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div className="skeleton" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                          <div className="skeleton" style={{ width: '70px', height: '12px', borderRadius: '3px' }} />
+                          <div className="skeleton" style={{ width: '50px', height: '10px', borderRadius: '3px' }} />
+                        </div>
+                      </div>
+                      <div className="skeleton" style={{ width: '50px', height: '14px', borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
+                gap: '2rem'
+              }}
+            >
+              {filteredArticles.map((article) => (
               <article
                 key={article.id}
                 onClick={() => setActiveArticle(article)}
@@ -400,9 +441,10 @@ export default function NewsPage() {
               </article>
             ))}
           </div>
+          )}
 
           {/* Empty search state */}
-          {filteredArticles.length === 0 && (
+          {!isLoading && filteredArticles.length === 0 && (
             <div className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg">
               <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
                 <Search size={32} />

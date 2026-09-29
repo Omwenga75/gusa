@@ -380,7 +380,31 @@ export default function EventsPage() {
               </tr>
             </thead>
             <tbody>
-              {events.map(event => (
+              {isLoading ? (
+                [1, 2, 3, 4, 5].map((n) => (
+                  <tr key={n}>
+                    <td>
+                      <div className="skeleton" style={{ width: '80%', height: '18px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '130px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '100px', height: '26px', borderRadius: '0.375rem' }} />
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                        <div className="skeleton" style={{ width: '55px', height: '26px', borderRadius: '0.375rem' }} />
+                        <div className="skeleton" style={{ width: '55px', height: '26px', borderRadius: '0.375rem' }} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                events.map(event => (
                 <tr key={event.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{event.title}</td>
                   <td style={{ color: '#94a3b8', whiteSpace: 'nowrap' }}>
@@ -470,7 +494,8 @@ export default function EventsPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
               {events.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>

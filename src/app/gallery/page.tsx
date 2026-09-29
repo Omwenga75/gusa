@@ -53,6 +53,7 @@ const CATEGORIES: CategoryFilter[] = ['All', 'Culture', 'Events', 'Sports', 'Cam
 
 export default function GalleryPage() {
   const [albumsData, setAlbumsData] = useState<Album[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -60,6 +61,7 @@ export default function GalleryPage() {
   const [sharedAlert, setSharedAlert] = useState<string | null>(null);
 
   React.useEffect(() => {
+    setIsLoading(true);
     fetch('/api/gallery')
       .then((res) => res.json())
       .then((data) => {
@@ -93,7 +95,8 @@ export default function GalleryPage() {
           setAlbumsData(mapped);
         }
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
 
   // Filtered albums
@@ -262,14 +265,48 @@ export default function GalleryPage() {
 
 
           {/* Albums Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: '2rem'
-            }}
-          >
-            {filteredAlbums.map((album) => (
+          {isLoading ? (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gap: '2rem'
+              }}
+            >
+              {[1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  className="flex flex-col rounded-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="skeleton" style={{ height: '280px', width: '100%', borderRadius: 0 }} />
+                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div className="skeleton" style={{ width: '40%', height: '14px', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ width: '30%', height: '14px', borderRadius: '4px' }} />
+                    </div>
+                    <div className="skeleton" style={{ width: '80%', height: '22px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '100%', height: '14px', borderRadius: '4px' }} />
+                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between' }}>
+                      <div className="skeleton" style={{ width: '90px', height: '16px', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ width: '70px', height: '14px', borderRadius: '4px' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gap: '2rem'
+              }}
+            >
+              {filteredAlbums.map((album) => (
               <div
                 key={album.id}
                 onClick={() => handleOpenAlbum(album)}
@@ -550,9 +587,10 @@ export default function GalleryPage() {
               </div>
             ))}
           </div>
+          )}
 
           {/* Empty state if category filter has no results */}
-          {filteredAlbums.length === 0 && (
+          {!isLoading && filteredAlbums.length === 0 && (
             <div className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg">
               <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <ImageIcon size={32} />

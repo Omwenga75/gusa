@@ -97,7 +97,31 @@ export default function MembersPage() {
               </tr>
             </thead>
             <tbody>
-              {members.map(member => (
+              {isLoading ? (
+                [1, 2, 3, 4, 5].map((n) => (
+                  <tr key={n}>
+                    <td>
+                      <div className={styles.userCell}>
+                        <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                        <div className="skeleton" style={{ width: '120px', height: '16px', borderRadius: '4px' }} />
+                      </div>
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '160px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '70px', height: '22px', borderRadius: '9999px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '60px', height: '22px', borderRadius: '9999px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                members.map(member => (
                 <tr key={member.id}>
                   <td>
                     <div className={styles.userCell}>
@@ -144,7 +168,8 @@ export default function MembersPage() {
                     {new Date(member.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
               {members.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>

@@ -63,6 +63,7 @@ type Project = {
 
 export default function ProjectsPage() {
   const [projectsData, setProjectsData] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [statusFilter, setStatusFilter] = useState<'All' | ProjectStatus>('All');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [pledgeModalOpen, setPledgeModalOpen] = useState(false);
@@ -72,6 +73,7 @@ export default function ProjectsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
+    setIsLoading(true);
     fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
@@ -104,7 +106,8 @@ export default function ProjectsPage() {
           setProjectsData(mapped);
         }
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
 
   // Filtered projects
@@ -277,14 +280,51 @@ export default function ProjectsPage() {
         <div className="container">
 
           {/* Projects Cards Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-              gap: '2.5rem'
-            }}
-          >
-            {filteredProjects.map((project) => (
+          {isLoading ? (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+                gap: '2.5rem'
+              }}
+            >
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="flex flex-col rounded-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="skeleton" style={{ height: '170px', width: '100%', borderRadius: 0 }} />
+                  <div style={{ padding: '1.25rem 1.75rem 0.5rem' }}>
+                    <div className="skeleton" style={{ height: '8px', width: '100%', borderRadius: '9999px' }} />
+                  </div>
+                  <div style={{ padding: '1.25rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                    <div className="skeleton" style={{ width: '100%', height: '14px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '80%', height: '14px', borderRadius: '4px' }} />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
+                      <div className="skeleton" style={{ height: '45px', borderRadius: '8px' }} />
+                      <div className="skeleton" style={{ height: '45px', borderRadius: '8px' }} />
+                    </div>
+                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between' }}>
+                      <div className="skeleton" style={{ width: '120px', height: '16px', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ width: '90px', height: '24px', borderRadius: '9999px' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+                gap: '2.5rem'
+              }}
+            >
+              {filteredProjects.map((project) => (
               <div
                 key={project.id}
                 onClick={() => setActiveProject(project)}
@@ -508,6 +548,7 @@ export default function ProjectsPage() {
               </div>
             ))}
           </div>
+          )}
 
           {/* ============================================================ */}
           {/* CALL TO ACTION PARTNERSHIP BANNER */}

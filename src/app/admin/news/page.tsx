@@ -98,7 +98,28 @@ export default function NewsPage() {
               </tr>
             </thead>
             <tbody>
-              {posts.map(post => (
+              {isLoading ? (
+                [1, 2, 3, 4, 5].map((n) => (
+                  <tr key={n}>
+                    <td>
+                      <div className="skeleton" style={{ width: '85%', height: '18px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '100px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '0.375rem' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '70px', height: '22px', borderRadius: '9999px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                posts.map(post => (
                 <tr key={post.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{post.title}</td>
                   <td style={{ color: '#94a3b8' }}>{post.author?.name || 'Admin'}</td>
@@ -133,7 +154,8 @@ export default function NewsPage() {
                     {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Draft'}
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
               {posts.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>

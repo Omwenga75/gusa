@@ -119,7 +119,19 @@ export default function GalleryPage() {
           <h2 className={styles.cardTitle}>Media Albums ({albums.length})</h2>
         </div>
 
-        {albums.length === 0 && !isLoading ? (
+        {isLoading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>
+                <div className="skeleton" style={{ height: '140px', width: '100%', borderRadius: 0 }} />
+                <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div className="skeleton" style={{ width: '70%', height: '16px', borderRadius: '4px' }} />
+                  <div className="skeleton" style={{ width: '40%', height: '12px', borderRadius: '4px' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : albums.length === 0 ? (
           <div className={styles.emptyBox}>
             <ImageIcon size={48} style={{ opacity: 0.3 }} />
             <p className={styles.emptyText}>No gallery albums created yet. Upload photos to start building the album collection.</p>

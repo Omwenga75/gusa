@@ -319,19 +319,34 @@ export default function AdminMessagesPage() {
         </div>
 
         {loading ? (
-          <div style={{ padding: '3rem 1rem', textAlign: 'center', color: '#94a3b8' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                border: '3px solid rgba(99, 102, 241, 0.2)',
-                borderTopColor: '#6366f1',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 1rem',
-              }}
-            />
-            <p style={{ fontSize: '0.875rem' }}>Loading messages from database...</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                style={{
+                  background: 'rgba(6, 8, 15, 0.6)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '0.85rem',
+                  padding: '1.25rem 1.35rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div className="skeleton" style={{ width: '38px', height: '38px', borderRadius: '50%' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      <div className="skeleton" style={{ width: '130px', height: '16px', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ width: '180px', height: '12px', borderRadius: '4px' }} />
+                    </div>
+                  </div>
+                  <div className="skeleton" style={{ width: '110px', height: '14px', borderRadius: '4px' }} />
+                </div>
+                <div className="skeleton" style={{ width: '50%', height: '24px', borderRadius: '4px' }} />
+                <div className="skeleton" style={{ width: '100%', height: '40px', borderRadius: '4px' }} />
+              </div>
+            ))}
           </div>
         ) : filteredMessages.length === 0 ? (
           <div className={styles.emptyBox}>

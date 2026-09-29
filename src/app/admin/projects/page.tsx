@@ -96,7 +96,25 @@ export default function ProjectsPage() {
               </tr>
             </thead>
             <tbody>
-              {projects.map(project => (
+              {isLoading ? (
+                [1, 2, 3, 4, 5].map((n) => (
+                  <tr key={n}>
+                    <td>
+                      <div className="skeleton" style={{ width: '80%', height: '18px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td>
+                      <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                projects.map(project => (
                 <tr key={project.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{project.title}</td>
                   <td>
@@ -118,7 +136,8 @@ export default function ProjectsPage() {
                     {project.endDate ? new Date(project.endDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Ongoing'}
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
               {projects.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>

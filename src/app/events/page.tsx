@@ -250,29 +250,44 @@ export default function EventsPage() {
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem' }}>
         <div className="container">
 
-          {/* Events Grid */}
           {isLoading ? (
-            <div
-              style={{
-                textAlign: 'center',
-                padding: '5rem 1rem',
-                backgroundColor: 'var(--surface-subtle)',
-                borderRadius: 'var(--radius-xl)',
-                border: '1px solid var(--border)'
-              }}
-            >
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  border: '3px solid rgba(139, 92, 246, 0.2)',
-                  borderTopColor: 'var(--primary)',
-                  borderRadius: '50%',
-                  animation: 'spin 0.8s linear infinite',
-                  margin: '0 auto 1rem auto'
-                }}
-              />
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Loading events...</p>
+            <div className="grid-3" style={{ gap: '2rem' }}>
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="flex flex-col rounded-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: 'var(--surface-subtle)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--shadow-md)',
+                  }}
+                >
+                  {/* Event Image Banner Skeleton */}
+                  <div className="skeleton" style={{ height: '210px', width: '100%', borderRadius: 0 }} />
+
+                  {/* Card Body Skeleton */}
+                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
+                      <div className="skeleton" style={{ width: '90px', height: '16px', borderRadius: '4px' }} />
+                    </div>
+
+                    <div className="skeleton" style={{ width: '85%', height: '24px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '100%', height: '16px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '70%', height: '16px', borderRadius: '4px' }} />
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+                      <div className="skeleton" style={{ width: '60%', height: '14px', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ width: '50%', height: '14px', borderRadius: '4px' }} />
+                    </div>
+
+                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-light)', display: 'flex', gap: '0.75rem' }}>
+                      <div className="skeleton" style={{ height: '40px', flex: 1, borderRadius: 'var(--radius-md)' }} />
+                      <div className="skeleton" style={{ height: '40px', width: '40px', borderRadius: 'var(--radius-md)' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : filteredEvents.length === 0 ? (
             <div
