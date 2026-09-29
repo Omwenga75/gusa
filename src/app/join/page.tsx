@@ -98,44 +98,48 @@ export default function JoinPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Standard Member */}
-            <div className="glass-card p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl">
+            <div className="glass-card p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl flex flex-col justify-between">
               <div className="absolute top-0 right-0 bg-gradient-to-r from-violet-500 to-blue-500 text-slate-950 text-xs font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
                 Most Popular
               </div>
-              <h3 className="text-2xl font-bold mb-2 text-white">Standard Member</h3>
-              <p className="text-slate-400 text-sm mb-6">For students originating from the Gusii region (Kisii & Nyamira Counties).</p>
-              <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
-                Ksh 200 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-white">Standard Member</h3>
+                <p className="text-slate-400 text-sm mb-6">For students originating from the Gusii region (Kisii & Nyamira Counties).</p>
+                <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
+                  Ksh 200 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+                </div>
+                <ul className="space-y-3.5 mb-8">
+                  {['Full voting rights in elections', 'Access to GUSA welfare emergency fund', 'Priority registration for trips & cultural events', 'Alumni network & mentorship program', 'Eligible for Executive Committee positions'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-3.5 mb-8">
-                {['Full voting rights in elections', 'Access to GUSA welfare emergency fund', 'Priority registration for trips & cultural events', 'Alumni network & mentorship program', 'Eligible for Executive Committee positions'].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
-                    <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/contact" className="btn-primary w-full py-3 rounded-xl font-bold text-center block text-white">
+              <Link href="/contact" className="btn-primary w-full py-3 rounded-xl font-bold text-center block text-white mt-auto">
                 Register via GUSA Officials
               </Link>
             </div>
 
             {/* Associate Member */}
-            <div className="glass-card p-8 rounded-2xl bg-slate-900/60 border border-white/10">
-              <h3 className="text-2xl font-bold mb-2 text-white">Associate Member</h3>
-              <p className="text-slate-400 text-sm mb-6">For friends and allies of GUSA from other regions.</p>
-              <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
-                Ksh 150 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+            <div className="glass-card p-8 rounded-2xl bg-slate-900/60 border border-white/10 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-white">Associate Member</h3>
+                <p className="text-slate-400 text-sm mb-6">For friends and allies of GUSA from other regions.</p>
+                <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
+                  Ksh 150 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+                </div>
+                <ul className="space-y-3.5 mb-8">
+                  {['Participation in cultural nights & events', 'Join social groups & forums', 'Discounts on event tickets', 'Networking & friendship opportunities'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-3.5 mb-8">
-                {['Participation in cultural nights & events', 'Join social groups & forums', 'Discounts on event tickets', 'Networking & friendship opportunities'].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
-                    <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/contact" className="btn-glass w-full py-3 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400">
+              <Link href="/contact" className="btn-glass w-full py-3 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto">
                 Contact Officials to Join
               </Link>
             </div>
