@@ -138,7 +138,7 @@ export default function LeadershipPage() {
 
                   {/* Avatar & Core Meta */}
                   <div style={{ padding: '0 1.5rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
-                    <div style={{ marginTop: '-44px', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative', zIndex: 20 }}>
+                    <div style={{ marginTop: '-44px', marginBottom: '1rem', display: 'flex', position: 'relative', zIndex: 20 }}>
                       <div
                         style={{
                           width: '84px',
@@ -169,18 +169,6 @@ export default function LeadershipPage() {
                           leader.avatarInitials
                         )}
                       </div>
-
-                      <span
-                        className={
-                          leader.category === 'patron'
-                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                            : leader.category === 'executive'
-                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30'
-                            : 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                        }
-                      >
-                        {leader.category === 'patron' ? 'Patron' : leader.category === 'executive' ? 'Executive' : 'Representative'}
-                      </span>
                     </div>
 
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
@@ -191,14 +179,19 @@ export default function LeadershipPage() {
                       {leader.position}
                     </p>
 
-                    {leader.phone && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: '#a78bfa', marginBottom: '0.75rem', fontWeight: 500 }}>
-                        <Phone size={14} />
-                        <a href={`tel:${leader.phone}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                          {leader.phone}
-                        </a>
-                      </div>
-                    )}
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <span
+                        className={
+                          leader.category === 'patron'
+                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            : leader.category === 'executive'
+                            ? 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30 inline-block'
+                            : 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                        }
+                      >
+                        {leader.category === 'patron' ? 'Patron' : leader.category === 'executive' ? 'Executive' : 'Representative'}
+                      </span>
+                    </div>
 
                     {leader.bio ? (
                       <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
@@ -208,7 +201,7 @@ export default function LeadershipPage() {
                       <div style={{ flex: 1, marginBottom: '1rem' }} />
                     )}
 
-                    {/* Contacts & Social links */}
+                    {/* Contacts & Social links Footer */}
                     <div
                       style={{
                         paddingTop: '1rem',
@@ -217,10 +210,31 @@ export default function LeadershipPage() {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         flexWrap: 'wrap',
-                        gap: '0.5rem'
+                        gap: '0.75rem'
                       }}
                     >
-                      <div style={{ display: 'flex', gap: '0.75rem' }}>
+                      {leader.phone ? (
+                        <a
+                          href={`tel:${leader.phone}`}
+                          title={`Call ${leader.name}`}
+                          style={{
+                            color: '#a78bfa',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.45rem',
+                            fontSize: '0.875rem',
+                            fontWeight: 600,
+                            textDecoration: 'none'
+                          }}
+                        >
+                          <Phone size={15} />
+                          <span>{leader.phone}</span>
+                        </a>
+                      ) : (
+                        <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Official Leader</span>
+                      )}
+
+                      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                         {leader.email && (
                           <a
                             href={`mailto:${leader.email}`}
@@ -228,16 +242,6 @@ export default function LeadershipPage() {
                             style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
                           >
                             <Mail size={16} />
-                          </a>
-                        )}
-
-                        {leader.phone && (
-                          <a
-                            href={`tel:${leader.phone}`}
-                            title={`Call ${leader.name}`}
-                            style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
-                          >
-                            <Phone size={16} />
                           </a>
                         )}
 
@@ -253,14 +257,6 @@ export default function LeadershipPage() {
                           </a>
                         )}
                       </div>
-
-                      <a
-                        href={leader.phone ? `tel:${leader.phone}` : leader.email ? `mailto:${leader.email}` : '#'}
-                        className="btn btn-sm btn-outline"
-                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.65rem', borderRadius: '9999px' }}
-                      >
-                        Contact Official
-                      </a>
                     </div>
                   </div>
                 </div>
