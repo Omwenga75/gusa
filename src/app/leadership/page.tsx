@@ -6,7 +6,6 @@ import {
   Users,
   Mail,
   Phone,
-  Search,
   MessageCircle
 } from 'lucide-react'
 
@@ -29,8 +28,6 @@ interface LeaderProfile {
 
 export default function LeadershipPage() {
   const [leadersData, setLeadersData] = useState<LeaderProfile[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
   React.useEffect(() => {
     fetch('/api/leadership')
@@ -56,98 +53,41 @@ export default function LeadershipPage() {
       .catch(console.error);
   }, []);
 
-  const filteredLeaders = useMemo(() => {
-    return leadersData.filter((leader) => {
-      const matchesCategory =
-        selectedCategory === 'all' ||
-        (selectedCategory === 'patron' && leader.category === 'patron') ||
-        (selectedCategory === 'executive' && leader.category === 'executive') ||
-        (selectedCategory === 'representative' && leader.category === 'representative')
-
-      const query = searchQuery.toLowerCase().trim()
-      const matchesSearch =
-        query === '' ||
-        leader.name.toLowerCase().includes(query) ||
-        leader.position.toLowerCase().includes(query)
-      return matchesCategory && matchesSearch
-    })
-  }, [leadersData, selectedCategory, searchQuery])
-
   return (
     <PublicLayout>
       {/* Header Banner */}
-      <section className="page-header">
+      <section className="page-header" style={{ paddingBottom: '1.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
             <h1
               style={{
-                fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '1.25rem',
+                marginBottom: '0.75rem',
                 color: 'var(--text-main)'
               }}
             >
               Leadership Directory
             </h1>
 
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
               Meet the elected executive leaders, patron, and faculty representatives passionately serving the Gusii
               student fraternity at Meru University of Science and Technology.
             </p>
-
-            {/* Search Input */}
-            <div
-              style={{
-                position: 'relative',
-                maxWidth: '540px',
-                margin: '0 auto',
-                boxShadow: 'var(--shadow-md)',
-                borderRadius: 'var(--radius-xl)'
-              }}
-            >
-              <Search
-                size={20}
-                style={{
-                  position: 'absolute',
-                  left: '1.25rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)'
-                }}
-              />
-              <input
-                type="text"
-                placeholder="Search by leader name, executive position, or school..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '1rem 1.25rem 1rem 3.25rem',
-                  borderRadius: 'var(--radius-xl)',
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--surface)',
-                  color: 'var(--text-main)',
-                  fontSize: '1rem',
-                  outline: 'none'
-                }}
-              />
-            </div>
           </div>
         </div>
       </section>
 
       {/* Main Leadership Section */}
-      <section className="section" style={{ background: 'var(--surface)' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
         <div className="container">
-
-
           {/* Leaders Grid or Empty State */}
           {leadersData.length === 0 ? (
             <div
               style={{
                 textAlign: 'center',
-                padding: '5rem 1rem',
+                padding: '4rem 1rem',
                 backgroundColor: 'var(--surface-subtle)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px dashed var(--border)'
@@ -161,34 +101,9 @@ export default function LeadershipPage() {
                 The leadership directory is currently empty. Leaders will appear here once they are added by the admin.
               </p>
             </div>
-          ) : filteredLeaders.length === 0 ? (
-            <div
-              style={{
-                textAlign: 'center',
-                padding: '4rem 1rem',
-                backgroundColor: 'var(--surface-subtle)',
-                borderRadius: 'var(--radius-xl)',
-                border: '1px dashed var(--border)'
-              }}
-            >
-              <Users size={48} color="var(--text-muted)" style={{ margin: '0 auto 1rem auto' }} />
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>No leaders match your search</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: '1.5rem' }}>
-                Try adjusting your search query or reset the filter tabs.
-              </p>
-              <button
-                onClick={() => {
-                  setSelectedCategory('all')
-                  setSearchQuery('')
-                }}
-                className="btn btn-outline"
-              >
-                Reset Search
-              </button>
-            </div>
           ) : (
             <div className="grid-3" style={{ gap: '2rem' }}>
-              {filteredLeaders.map((leader) => (
+              {leadersData.map((leader) => (
                 <div
                   key={leader.id}
                   className="glass-card flex flex-col rounded-2xl border border-white/10 bg-slate-900/90 overflow-hidden hover:border-violet-500/40 hover:-translate-y-1 transition-all duration-300 shadow-xl"
