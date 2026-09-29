@@ -92,13 +92,71 @@ export default function LeadershipPage() {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="rounded-2xl overflow-hidden animate-pulse"
+                  className="flex flex-col rounded-2xl overflow-hidden shadow-xl"
                   style={{
-                    height: '260px',
-                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(9, 14, 26, 0.9) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                   }}
-                />
+                >
+                  {/* Top Header Banner Skeleton */}
+                  <div
+                    style={{
+                      height: '68px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      padding: '0 1rem',
+                    }}
+                  >
+                    <div className="skeleton" style={{ width: '90px', height: '22px', borderRadius: '9999px' }} />
+                  </div>
+
+                  {/* Body Skeleton */}
+                  <div style={{ padding: '0 1.25rem 1.15rem 1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    {/* Avatar Skeleton */}
+                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex' }}>
+                      <div
+                        className="skeleton"
+                        style={{
+                          width: '96px',
+                          height: '96px',
+                          borderRadius: '50%',
+                          border: '4px solid #0f172a',
+                          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
+                        }}
+                      />
+                    </div>
+
+                    {/* Name Skeleton */}
+                    <div className="skeleton" style={{ width: '65%', height: '20px', marginBottom: '0.45rem', borderRadius: '4px' }} />
+
+                    {/* Position Skeleton */}
+                    <div className="skeleton" style={{ width: '45%', height: '14px', marginBottom: '0.75rem', borderRadius: '4px' }} />
+
+                    {/* Category Pill Skeleton */}
+                    <div className="skeleton" style={{ width: '80px', height: '22px', marginBottom: '1.25rem', borderRadius: '6px' }} />
+
+                    {/* Footer Skeleton */}
+                    <div
+                      style={{
+                        marginTop: 'auto',
+                        paddingTop: '0.75rem',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div className="skeleton" style={{ width: '120px', height: '28px', borderRadius: '8px' }} />
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div className="skeleton" style={{ width: '30px', height: '30px', borderRadius: '8px' }} />
+                        <div className="skeleton" style={{ width: '30px', height: '30px', borderRadius: '8px' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : leadersData.length === 0 ? (
