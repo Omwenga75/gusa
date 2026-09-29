@@ -45,7 +45,7 @@ export default function LeadershipPage() {
             bio: ldr.biography || '',
             email: ldr.email || '',
             phone: ldr.phone || '',
-            term: '2025 - 2026'
+            term: '2026/2027'
           }));
           setLeadersData(mapped);
         }
