@@ -289,7 +289,7 @@ export default function ProjectsPage() {
             }}
           >
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {(['All', 'Ongoing', 'Completed', 'Upcoming'] as const).map((status) => {
+              {(['All'] as const).map((status) => {
                 const isActive = statusFilter === status;
                 const count =
                   status === 'All'

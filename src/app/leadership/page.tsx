@@ -143,50 +143,7 @@ export default function LeadershipPage() {
       {/* Main Leadership Section */}
       <section className="section" style={{ background: 'var(--surface)' }}>
         <div className="container">
-          {/* Filter Tabs */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              marginBottom: '2.5rem',
-              borderBottom: '1px solid var(--border)',
-              paddingBottom: '1rem'
-            }}
-          >
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`btn btn-sm ${selectedCategory === 'all' ? 'btn-primary' : 'btn-outline'}`}
-              >
-                All Directory ({leadersData.length})
-              </button>
-              <button
-                onClick={() => setSelectedCategory('patron')}
-                className={`btn btn-sm ${selectedCategory === 'patron' ? 'btn-primary' : 'btn-outline'}`}
-              >
-                Patron &amp; Advisory
-              </button>
-              <button
-                onClick={() => setSelectedCategory('executive')}
-                className={`btn btn-sm ${selectedCategory === 'executive' ? 'btn-primary' : 'btn-outline'}`}
-              >
-                Executive Council
-              </button>
-              <button
-                onClick={() => setSelectedCategory('representative')}
-                className={`btn btn-sm ${selectedCategory === 'representative' ? 'btn-primary' : 'btn-outline'}`}
-              >
-                School &amp; Class Reps
-              </button>
-            </div>
 
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-              Showing {filteredLeaders.length} of {leadersData.length} Leaders
-            </div>
-          </div>
 
           {/* Leaders Grid or Empty State */}
           {leadersData.length === 0 ? (
