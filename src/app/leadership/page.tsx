@@ -116,14 +116,14 @@ export default function LeadershipPage() {
                   {/* Glowing Top Graphic Header */}
                   <div
                     style={{
-                      height: '96px',
+                      height: '68px',
                       background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                       position: 'relative',
                       display: 'flex',
-                      alignItems: 'flex-start',
+                      alignItems: 'center',
                       justifyContent: 'flex-end',
-                      padding: '0.85rem 1rem',
+                      padding: '0 1rem',
                     }}
                   >
                     {/* Background Pattern Mesh */}
@@ -145,14 +145,14 @@ export default function LeadershipPage() {
                         backdropFilter: 'blur(12px)',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         color: '#e2e8f0',
-                        fontSize: '0.725rem',
-                        padding: '0.3rem 0.8rem',
+                        fontSize: '0.7rem',
+                        padding: '0.25rem 0.7rem',
                         borderRadius: '9999px',
                         fontWeight: 600,
                         letterSpacing: '0.02em',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '0.45rem',
+                        gap: '0.4rem',
                         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
                       }}
                     >
@@ -170,13 +170,13 @@ export default function LeadershipPage() {
                   </div>
 
                   {/* Avatar & Core Body */}
-                  <div style={{ padding: '0 1.5rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
+                  <div style={{ padding: '0 1.25rem 1.15rem 1.25rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
                     {/* Avatar Container with Offset */}
-                    <div style={{ marginTop: '-48px', marginBottom: '1.15rem', display: 'flex', position: 'relative', zIndex: 20 }}>
+                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex', position: 'relative', zIndex: 20 }}>
                       <div
                         style={{
-                          width: '88px',
-                          height: '88px',
+                          width: '96px',
+                          height: '96px',
                           borderRadius: '50%',
                           overflow: 'hidden',
                           background: leader.avatarGradient || 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
@@ -185,7 +185,7 @@ export default function LeadershipPage() {
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: '#ffffff',
-                          fontSize: '1.85rem',
+                          fontSize: '2rem',
                           fontWeight: 800,
                           boxShadow: '0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.6)',
                           position: 'relative',
@@ -201,6 +201,7 @@ export default function LeadershipPage() {
                               width: '100%',
                               height: '100%',
                               objectFit: 'cover',
+                              objectPosition: 'top center',
                               transition: 'transform 0.4s ease'
                             }}
                             className="group-hover:scale-105"
@@ -214,10 +215,10 @@ export default function LeadershipPage() {
                     {/* Leader Name */}
                     <h3
                       style={{
-                        fontSize: '1.25rem',
+                        fontSize: '1.15rem',
                         fontWeight: 800,
                         color: '#ffffff',
-                        marginBottom: '0.35rem',
+                        marginBottom: '0.25rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.025em',
                         lineHeight: 1.25
@@ -231,8 +232,8 @@ export default function LeadershipPage() {
                       style={{
                         color: '#c4b5fd',
                         fontWeight: 700,
-                        fontSize: '0.875rem',
-                        marginBottom: '0.85rem',
+                        fontSize: '0.8125rem',
+                        marginBottom: '0.5rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em'
                       }}
@@ -241,15 +242,15 @@ export default function LeadershipPage() {
                     </p>
 
                     {/* Category Pill */}
-                    <div style={{ marginBottom: '1.25rem' }}>
+                    <div style={{ marginBottom: '0.75rem' }}>
                       <span
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '0.35rem',
-                          padding: '0.3rem 0.85rem',
-                          borderRadius: '0.5rem',
-                          fontSize: '0.7rem',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.675rem',
                           fontWeight: 800,
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
@@ -277,18 +278,17 @@ export default function LeadershipPage() {
                       </span>
                     </div>
 
-                    {leader.bio ? (
-                      <p style={{ fontSize: '0.875rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
+                    {leader.bio && (
+                      <p style={{ fontSize: '0.8125rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '0.75rem' }}>
                         {leader.bio}
                       </p>
-                    ) : (
-                      <div style={{ flex: 1, marginBottom: '0.5rem' }} />
                     )}
 
                     {/* Professional Contact Footer Bar */}
                     <div
                       style={{
-                        paddingTop: '1rem',
+                        marginTop: 'auto',
+                        paddingTop: '0.75rem',
                         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                         display: 'flex',
                         alignItems: 'center',
@@ -303,13 +303,13 @@ export default function LeadershipPage() {
                           style={{
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '0.6rem',
-                            padding: '0.45rem 0.85rem',
-                            borderRadius: '0.625rem',
+                            gap: '0.5rem',
+                            padding: '0.35rem 0.75rem',
+                            borderRadius: '0.5rem',
                             backgroundColor: 'rgba(255, 255, 255, 0.04)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
                             color: '#cbd5e1',
-                            fontSize: '0.8125rem',
+                            fontSize: '0.8rem',
                             fontWeight: 600,
                             textDecoration: 'none',
                             transition: 'all 0.2s ease'
@@ -318,8 +318,8 @@ export default function LeadershipPage() {
                         >
                           <span
                             style={{
-                              width: '24px',
-                              height: '24px',
+                              width: '22px',
+                              height: '22px',
                               borderRadius: '0.375rem',
                               backgroundColor: 'rgba(124, 58, 237, 0.2)',
                               color: '#a78bfa',
@@ -328,12 +328,12 @@ export default function LeadershipPage() {
                               justifyContent: 'center'
                             }}
                           >
-                            <Phone size={12} />
+                            <Phone size={11} />
                           </span>
                           <span>{leader.phone}</span>
                         </a>
                       ) : (
-                        <span style={{ fontSize: '0.8rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>
+                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>
                       )}
 
                       {/* Social/Email Icons */}
@@ -343,8 +343,8 @@ export default function LeadershipPage() {
                             href={`mailto:${leader.email}`}
                             title={`Email ${leader.name}`}
                             style={{
-                              width: '32px',
-                              height: '32px',
+                              width: '30px',
+                              height: '30px',
                               borderRadius: '0.5rem',
                               backgroundColor: 'rgba(255, 255, 255, 0.04)',
                               border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -356,7 +356,7 @@ export default function LeadershipPage() {
                             }}
                             className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-violet-300"
                           >
-                            <Mail size={14} />
+                            <Mail size={13} />
                           </a>
                         )}
 
@@ -367,8 +367,8 @@ export default function LeadershipPage() {
                             rel="noopener noreferrer"
                             title="Chat on WhatsApp"
                             style={{
-                              width: '32px',
-                              height: '32px',
+                              width: '30px',
+                              height: '30px',
                               borderRadius: '0.5rem',
                               backgroundColor: 'rgba(37, 211, 102, 0.1)',
                               border: '1px solid rgba(37, 211, 102, 0.2)',
@@ -380,7 +380,7 @@ export default function LeadershipPage() {
                             }}
                             className="hover:bg-emerald-500/20"
                           >
-                            <MessageCircle size={14} />
+                            <MessageCircle size={13} />
                           </a>
                         )}
                       </div>

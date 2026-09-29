@@ -163,7 +163,7 @@ export default function LeadershipPage() {
                 {/* Glowing Graphic Header Banner */}
                 <div
                   style={{
-                    height: '80px',
+                    height: '64px',
                     background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
@@ -179,13 +179,13 @@ export default function LeadershipPage() {
                       backgroundColor: 'rgba(10, 15, 29, 0.85)',
                       border: '1px solid rgba(255, 255, 255, 0.12)',
                       color: '#e2e8f0',
-                      fontSize: '0.7rem',
-                      padding: '0.25rem 0.65rem',
+                      fontSize: '0.675rem',
+                      padding: '0.2rem 0.6rem',
                       borderRadius: '9999px',
                       fontWeight: 600,
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '0.4rem',
+                      gap: '0.35rem',
                     }}
                   >
                     <span
@@ -209,8 +209,8 @@ export default function LeadershipPage() {
                       background: 'rgba(239, 68, 68, 0.15)',
                       border: '1px solid rgba(239, 68, 68, 0.3)',
                       color: '#f87171',
-                      width: '32px',
-                      height: '32px',
+                      width: '30px',
+                      height: '30px',
                       borderRadius: '0.5rem',
                       display: 'flex',
                       alignItems: 'center',
@@ -220,18 +220,18 @@ export default function LeadershipPage() {
                       opacity: deletingId === leader.id ? 0.5 : 1,
                     }}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
 
                 {/* Card Body */}
-                <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                <div style={{ padding: '0 1.25rem 1rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
                   {/* Avatar Container */}
-                  <div style={{ marginTop: '-42px', marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
+                  <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 10 }}>
                     <div
                       style={{
-                        width: '84px',
-                        height: '84px',
+                        width: '96px',
+                        height: '96px',
                         borderRadius: '50%',
                         overflow: 'hidden',
                         background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
@@ -241,7 +241,7 @@ export default function LeadershipPage() {
                         justifyContent: 'center',
                         color: 'white',
                         fontWeight: 'bold',
-                        fontSize: '1.65rem',
+                        fontSize: '1.85rem',
                         boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
                         flexShrink: 0,
                       }}
@@ -250,7 +250,12 @@ export default function LeadershipPage() {
                         <img
                           src={leader.image}
                           alt={leader.name}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'top center'
+                          }}
                         />
                       ) : (
                         leader.name.charAt(0).toUpperCase()
@@ -259,24 +264,24 @@ export default function LeadershipPage() {
                   </div>
 
                   {/* Leader Info */}
-                  <div style={{ textAlign: 'center', marginBottom: '0.75rem', width: '100%' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
+                  <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
                       {leader.name}
                     </h3>
-                    <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.8125rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       {leader.position}
                     </p>
                   </div>
 
                   {/* Role Badge */}
-                  <div style={{ marginBottom: '1rem' }}>
+                  <div style={{ marginBottom: '0.75rem' }}>
                     <span
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        padding: '0.25rem 0.75rem',
+                        padding: '0.2rem 0.65rem',
                         borderRadius: '0.375rem',
-                        fontSize: '0.675rem',
+                        fontSize: '0.65rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',
@@ -294,7 +299,7 @@ export default function LeadershipPage() {
                     style={{
                       width: '100%',
                       marginTop: 'auto',
-                      paddingTop: '0.85rem',
+                      paddingTop: '0.75rem',
                       borderTop: '1px solid rgba(255, 255, 255, 0.06)',
                       display: 'flex',
                       alignItems: 'center',
@@ -307,11 +312,11 @@ export default function LeadershipPage() {
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '0.5rem',
-                          fontSize: '0.8125rem',
+                          gap: '0.45rem',
+                          fontSize: '0.775rem',
                           color: '#cbd5e1',
                           backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                          padding: '0.4rem 0.85rem',
+                          padding: '0.35rem 0.75rem',
                           borderRadius: '0.5rem',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
                           textDecoration: 'none',
@@ -320,8 +325,8 @@ export default function LeadershipPage() {
                       >
                         <span
                           style={{
-                            width: '22px',
-                            height: '22px',
+                            width: '20px',
+                            height: '20px',
                             borderRadius: '0.375rem',
                             backgroundColor: 'rgba(124, 58, 237, 0.2)',
                             color: '#a78bfa',
@@ -330,12 +335,12 @@ export default function LeadershipPage() {
                             justifyContent: 'center',
                           }}
                         >
-                          <Phone size={11} />
+                          <Phone size={10} />
                         </span>
                         <span>{leader.phone}</span>
                       </a>
                     ) : (
-                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>No phone recorded</span>
+                      <span style={{ fontSize: '0.725rem', color: '#64748b', fontStyle: 'italic' }}>No phone recorded</span>
                     )}
                   </div>
                 </div>
@@ -372,8 +377,8 @@ export default function LeadershipPage() {
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   style={{
-                    width: '90px',
-                    height: '90px',
+                    width: '96px',
+                    height: '96px',
                     borderRadius: '50%',
                     overflow: 'hidden',
                     border: '2px dashed rgba(124, 58, 237, 0.4)',
@@ -385,7 +390,7 @@ export default function LeadershipPage() {
                   }}
                 >
                   {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                   ) : (
                     <Camera size={28} color="#7c3aed" style={{ opacity: 0.6 }} />
                   )}
