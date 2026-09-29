@@ -17,12 +17,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  React.useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--color-bg-subtle)' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 40 }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(3px)', zIndex: 90 }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -31,10 +35,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         @media (max-width: 768px) {
           .dashboard-sidebar {
             position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            width: min(280px, 85vw) !important;
+            max-width: 85vw !important;
+            z-index: 100 !important;
             transform: translateX(-100%) !important;
+            box-shadow: none !important;
           }
           .dashboard-sidebar.open {
             transform: translateX(0) !important;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.7) !important;
           }
           .mobile-menu-btn {
             display: block !important;

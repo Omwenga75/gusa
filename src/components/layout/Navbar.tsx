@@ -31,6 +31,10 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
       scrolled 
@@ -92,7 +96,7 @@ export function Navbar() {
 
       {/* Mobile Dropdown Panel */}
       {mobileMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 w-full bg-slate-950/95 border-b border-violet-500/20 backdrop-blur-xl p-6 flex flex-col gap-3 shadow-2xl">
+        <div className="xl:hidden absolute top-full left-0 w-full bg-slate-950/95 border-b border-violet-500/20 backdrop-blur-xl p-6 flex flex-col gap-3 shadow-2xl max-h-[calc(100dvh-80px)] overflow-y-auto">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

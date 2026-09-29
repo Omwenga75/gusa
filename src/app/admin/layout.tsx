@@ -15,7 +15,9 @@ import {
   Mail,
   Search,
   Bell,
-  LogOut
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 
 const navItems = [
@@ -32,6 +34,12 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
+  const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(false);
+
+  // Automatically close mobile sidebar on navigation
+  React.useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   const fetchUnreadCount = React.useCallback(async () => {
     try {
@@ -58,13 +66,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className={styles.layout}>
-      <aside className={styles.sidebar}>
+      {/* Mobile Drawer Backdrop Overlay */}
+      {sidebarOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Close sidebar overlay"
+        />
+      )}
+
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarHeader}>
-          <div className={styles.logoBadge}>G</div>
-          <div>
-            <div className={styles.brandName}>GUSA Admin</div>
-            <div className={styles.brandSub}>Executive Portal</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
+            <div className={styles.logoBadge}>G</div>
+            <div>
+              <div className={styles.brandName}>GUSA Admin</div>
+              <div className={styles.brandSub}>Executive Portal</div>
+            </div>
           </div>
+
+          <button
+            className={styles.closeSidebarBtn}
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         <nav className={styles.nav}>
@@ -77,6 +104,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.path}
                 href={item.path}
+                onClick={() => setSidebarOpen(false)}
                 className={`${styles.navLink} ${isActive ? styles.active : ''}`}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
               >
@@ -113,13 +141,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <main className={styles.mainContent}>
         <header className={styles.topbar}>
-          <div className={styles.searchBar}>
-            <Search size={16} />
-            <input
-              type="text"
-              placeholder="Search members, events, news..."
-              className={styles.searchInput}
-            />
+          <div className={styles.topbarLeft}>
+            <button
+              className={styles.mobileMenuBtn}
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open navigation menu"
+            >
+              <Menu size={20} />
+            </button>
+
+            <div className={styles.searchBar}>
+              <Search size={16} />
+              <input
+                type="text"
+                placeholder="Search members, events, news..."
+                className={styles.searchInput}
+              />
+            </div>
           </div>
 
           <div className={styles.topbarActions}>
