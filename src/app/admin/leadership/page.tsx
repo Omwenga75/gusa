@@ -144,112 +144,201 @@ export default function LeadershipPage() {
             <p className={styles.emptyText}>No leadership profiles added yet. Click &quot;Add Leader&quot; to get started.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
             {leaders.map(leader => (
               <div
                 key={leader.id}
                 style={{
-                  background: 'rgba(6, 8, 15, 0.6)',
+                  background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '1rem',
-                  padding: '1.5rem',
+                  overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '1rem',
                   position: 'relative',
-                  transition: 'border-color 0.2s ease',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                  transition: 'all 0.3s ease',
                 }}
               >
-                {/* Delete Button */}
-                <button
-                  onClick={() => handleDelete(leader.id)}
-                  disabled={deletingId === leader.id}
-                  title="Remove leader"
-                  style={{
-                    position: 'absolute',
-                    top: '0.75rem',
-                    right: '0.75rem',
-                    background: 'rgba(239, 68, 68, 0.1)',
-                    border: '1px solid rgba(239, 68, 68, 0.2)',
-                    color: '#ef4444',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '0.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    opacity: deletingId === leader.id ? 0.5 : 1,
-                  }}
-                >
-                  <Trash2 size={14} />
-                </button>
-
-                {/* Leader Photo */}
+                {/* Glowing Graphic Header Banner */}
                 <div
                   style={{
-                    width: '80px',
                     height: '80px',
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    border: '3px solid rgba(124, 58, 237, 0.4)',
-                    flexShrink: 0,
+                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 1rem',
                   }}
                 >
-                  {leader.image ? (
-                    <img
-                      src={leader.image}
-                      alt={leader.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  {/* Status Badge */}
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(10, 15, 29, 0.85)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#e2e8f0',
+                      fontSize: '0.7rem',
+                      padding: '0.25rem 0.65rem',
+                      borderRadius: '9999px',
+                      fontWeight: 600,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        backgroundColor: '#10b981',
+                        boxShadow: '0 0 6px #10b981',
+                      }}
                     />
-                  ) : (
+                    Active Leader
+                  </span>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => handleDelete(leader.id)}
+                    disabled={deletingId === leader.id}
+                    title="Remove leader"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      color: '#f87171',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '0.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      opacity: deletingId === leader.id ? 0.5 : 1,
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+
+                {/* Card Body */}
+                <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                  {/* Avatar Container */}
+                  <div style={{ marginTop: '-42px', marginBottom: '1rem', position: 'relative', zIndex: 10 }}>
                     <div
                       style={{
-                        width: '100%',
-                        height: '100%',
+                        width: '84px',
+                        height: '84px',
+                        borderRadius: '50%',
+                        overflow: 'hidden',
                         background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
-                        color: 'white',
+                        border: '4px solid #0f172a',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        color: 'white',
                         fontWeight: 'bold',
-                        fontSize: '1.5rem',
+                        fontSize: '1.65rem',
+                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                        flexShrink: 0,
                       }}
                     >
-                      {leader.name.charAt(0).toUpperCase()}
+                      {leader.image ? (
+                        <img
+                          src={leader.image}
+                          alt={leader.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        leader.name.charAt(0).toUpperCase()
+                      )}
                     </div>
-                  )}
-                </div>
-
-                {/* Leader Info */}
-                <div style={{ textAlign: 'center' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.025em' }}>
-                    {leader.name}
-                  </h3>
-                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8125rem', color: '#a78bfa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                    {leader.position}
-                  </p>
-                </div>
-
-                {/* Phone */}
-                {leader.phone && (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    fontSize: '0.8125rem',
-                    color: '#94a3b8',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: '9999px',
-                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                  }}>
-                    <Phone size={13} />
-                    {leader.phone}
                   </div>
-                )}
+
+                  {/* Leader Info */}
+                  <div style={{ textAlign: 'center', marginBottom: '0.75rem', width: '100%' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
+                      {leader.name}
+                    </h3>
+                    <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.8125rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {leader.position}
+                    </p>
+                  </div>
+
+                  {/* Role Badge */}
+                  <div style={{ marginBottom: '1rem' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.675rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                        color: '#ddd6fe',
+                        border: '1px solid rgba(124, 58, 237, 0.35)',
+                      }}
+                    >
+                      Executive
+                    </span>
+                  </div>
+
+                  {/* Footer / Phone Section */}
+                  <div
+                    style={{
+                      width: '100%',
+                      marginTop: 'auto',
+                      paddingTop: '0.85rem',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {leader.phone ? (
+                      <a
+                        href={`tel:${leader.phone}`}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          fontSize: '0.8125rem',
+                          color: '#cbd5e1',
+                          backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                          padding: '0.4rem 0.85rem',
+                          borderRadius: '0.5rem',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          textDecoration: 'none',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '22px',
+                            height: '22px',
+                            borderRadius: '0.375rem',
+                            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                            color: '#a78bfa',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Phone size={11} />
+                        </span>
+                        <span>{leader.phone}</span>
+                      </a>
+                    ) : (
+                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>No phone recorded</span>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
