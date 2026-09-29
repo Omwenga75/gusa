@@ -13,9 +13,11 @@ interface Member {
   createdAt: string;
 }
 
+let cachedAdminMembers: Member[] | null = null;
+
 export default function MembersPage() {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [members, setMembers] = useState<Member[]>(() => cachedAdminMembers || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminMembers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,11 +27,14 @@ export default function MembersPage() {
   const [role, setRole] = useState('MEMBER');
 
   const fetchMembers = async () => {
-    setIsLoading(true);
+    if (!cachedAdminMembers) {
+      setIsLoading(true);
+    }
     try {
       const res = await fetch('/api/members');
       const data = await res.json();
       if (data.members) {
+        cachedAdminMembers = data.members;
         setMembers(data.members);
       }
     } catch (err) {

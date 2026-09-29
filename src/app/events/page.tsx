@@ -135,9 +135,11 @@ const parseEventImages = (coverImage?: string): string[] => {
   }
 }
 
+let cachedEvents: EventItem[] | null = null;
+
 export default function EventsPage() {
-  const [eventsData, setEventsData] = useState<EventItem[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [eventsData, setEventsData] = useState<EventItem[]>(() => cachedEvents || [])
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedEvents)
   const [selectedTab, setSelectedTab] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
@@ -168,6 +170,7 @@ export default function EventsPage() {
               coverImage: evt.coverImage || undefined
             }
           })
+          cachedEvents = mapped
           setEventsData(mapped)
         }
       })

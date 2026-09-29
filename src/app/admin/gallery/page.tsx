@@ -12,9 +12,11 @@ interface Album {
   images: Array<{ id: string; imageUrl: string }>;
 }
 
+let cachedAdminGallery: Album[] | null = null;
+
 export default function GalleryPage() {
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [albums, setAlbums] = useState<Album[]>(() => cachedAdminGallery || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminGallery);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,11 +26,14 @@ export default function GalleryPage() {
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
 
   const fetchGallery = async () => {
-    setIsLoading(true);
+    if (!cachedAdminGallery) {
+      setIsLoading(true);
+    }
     try {
       const res = await fetch('/api/gallery');
       const data = await res.json();
       if (data.albums) {
+        cachedAdminGallery = data.albums;
         setAlbums(data.albums);
       }
     } catch (err) {

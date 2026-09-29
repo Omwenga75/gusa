@@ -26,9 +26,11 @@ interface LeaderProfile {
   term: string
 }
 
+let cachedLeaders: LeaderProfile[] | null = null;
+
 export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => cachedLeaders || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedLeaders);
 
   React.useEffect(() => {
     fetch('/api/leadership')
@@ -48,6 +50,7 @@ export default function LeadershipPage() {
             phone: ldr.phone || '',
             term: '2026/2027'
           }));
+          cachedLeaders = mapped;
           setLeadersData(mapped);
         }
       })

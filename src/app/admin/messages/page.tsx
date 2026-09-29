@@ -30,21 +30,27 @@ interface ContactMessage {
   createdAt: string;
 }
 
+let cachedAdminMessages: ContactMessage[] | null = null;
+
 export default function AdminMessagesPage() {
-  const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [messages, setMessages] = useState<ContactMessage[]>(() => cachedAdminMessages || []);
+  const [loading, setLoading] = useState<boolean>(() => !cachedAdminMessages);
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const fetchMessages = async () => {
-    setLoading(true);
+  const fetchMessages = async (showLoadingState = false) => {
+    if (showLoadingState || !cachedAdminMessages) {
+      setLoading(true);
+    }
     try {
       const res = await fetch('/api/contact');
       if (res.ok) {
         const data = await res.json();
-        setMessages(data.messages || []);
+        const msgList = data.messages || [];
+        cachedAdminMessages = msgList;
+        setMessages(msgList);
       }
     } catch (err) {
       console.error('Failed to load messages:', err);

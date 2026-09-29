@@ -61,9 +61,11 @@ type Project = {
   badgeClass: string;
 };
 
+let cachedProjects: Project[] | null = null;
+
 export default function ProjectsPage() {
-  const [projectsData, setProjectsData] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [projectsData, setProjectsData] = useState<Project[]>(() => cachedProjects || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedProjects);
   const [statusFilter, setStatusFilter] = useState<'All' | ProjectStatus>('All');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [pledgeModalOpen, setPledgeModalOpen] = useState(false);
@@ -73,7 +75,6 @@ export default function ProjectsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
-    setIsLoading(true);
     fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
@@ -103,6 +104,7 @@ export default function ProjectsPage() {
             gradient: 'from-violet-600 to-indigo-600',
             badgeClass: 'badge-primary'
           }));
+          cachedProjects = mapped;
           setProjectsData(mapped);
         }
       })

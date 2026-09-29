@@ -13,9 +13,11 @@ interface Project {
   endDate?: string;
 }
 
+let cachedAdminProjects: Project[] | null = null;
+
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(() => cachedAdminProjects || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminProjects);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,11 +27,14 @@ export default function ProjectsPage() {
   const [status, setStatus] = useState('ONGOING');
 
   const fetchProjects = async () => {
-    setIsLoading(true);
+    if (!cachedAdminProjects) {
+      setIsLoading(true);
+    }
     try {
       const res = await fetch('/api/projects');
       const data = await res.json();
       if (data.projects) {
+        cachedAdminProjects = data.projects;
         setProjects(data.projects);
       }
     } catch (err) {

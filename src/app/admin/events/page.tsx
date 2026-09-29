@@ -28,9 +28,11 @@ interface Attendee {
   registeredAt: string;
 }
 
+let cachedAdminEvents: Event[] | null = null;
+
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [events, setEvents] = useState<Event[]>(() => cachedAdminEvents || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminEvents);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -79,12 +81,15 @@ export default function EventsPage() {
     });
   };
 
-  const fetchEvents = async () => {
-    setIsLoading(true);
+  const fetchEvents = async (forceLoading = false) => {
+    if (forceLoading || !cachedAdminEvents) {
+      setIsLoading(true);
+    }
     try {
       const res = await fetch('/api/events');
       const data = await res.json();
       if (data.events) {
+        cachedAdminEvents = data.events;
         setEvents(data.events);
       }
     } catch (err) {

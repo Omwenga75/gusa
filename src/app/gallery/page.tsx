@@ -51,9 +51,11 @@ type Album = {
 type CategoryFilter = 'All' | 'Culture' | 'Events' | 'Sports' | 'Campus Life';
 const CATEGORIES: CategoryFilter[] = ['All', 'Culture', 'Events', 'Sports', 'Campus Life'];
 
+let cachedAlbums: Album[] | null = null;
+
 export default function GalleryPage() {
-  const [albumsData, setAlbumsData] = useState<Album[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [albumsData, setAlbumsData] = useState<Album[]>(() => cachedAlbums || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAlbums);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -61,7 +63,6 @@ export default function GalleryPage() {
   const [sharedAlert, setSharedAlert] = useState<string | null>(null);
 
   React.useEffect(() => {
-    setIsLoading(true);
     fetch('/api/gallery')
       .then((res) => res.json())
       .then((data) => {
@@ -92,6 +93,7 @@ export default function GalleryPage() {
               }))
             };
           });
+          cachedAlbums = mapped;
           setAlbumsData(mapped);
         }
       })

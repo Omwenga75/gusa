@@ -14,9 +14,11 @@ interface Post {
   author?: { name: string };
 }
 
+let cachedAdminNews: Post[] | null = null;
+
 export default function NewsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState<Post[]>(() => cachedAdminNews || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminNews);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,11 +28,14 @@ export default function NewsPage() {
   const [category, setCategory] = useState('Announcements');
 
   const fetchPosts = async () => {
-    setIsLoading(true);
+    if (!cachedAdminNews) {
+      setIsLoading(true);
+    }
     try {
       const res = await fetch('/api/posts');
       const data = await res.json();
       if (data.posts) {
+        cachedAdminNews = data.posts;
         setPosts(data.posts);
       }
     } catch (err) {

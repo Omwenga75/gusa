@@ -46,9 +46,11 @@ type Article = {
 const CATEGORIES = ['All', 'Welfare', 'Bursaries', 'Announcements', 'Campus News', 'Cultural'] as const;
 type CategoryTag = (typeof CATEGORIES)[number];
 
+let cachedNews: Article[] | null = null;
+
 export default function NewsPage() {
-  const [articlesData, setArticlesData] = useState<Article[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [articlesData, setArticlesData] = useState<Article[]>(() => cachedNews || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedNews);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryTag>('All');
   const [activeArticle, setActiveArticle] = useState<Article | null>(null);
@@ -57,7 +59,6 @@ export default function NewsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
-    setIsLoading(true);
     fetch('/api/posts')
       .then((res) => res.json())
       .then((data) => {
@@ -84,6 +85,7 @@ export default function NewsPage() {
             commentsCount: 0,
             gradient: 'from-violet-600 via-indigo-600 to-blue-600'
           }));
+          cachedNews = mapped;
           setArticlesData(mapped);
         }
       })
