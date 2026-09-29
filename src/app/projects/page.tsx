@@ -275,61 +275,6 @@ export default function ProjectsPage() {
       {/* Main Content Area */}
       <section className="section" style={{ paddingTop: '3rem', minHeight: '800px', backgroundColor: 'var(--bg-primary)' }}>
         <div className="container">
-          {/* Status Filter Tabs */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              marginBottom: '3rem',
-              paddingBottom: '1.25rem',
-              borderBottom: '1px solid var(--border-subtle)'
-            }}
-          >
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {(['All'] as const).map((status) => {
-                const isActive = statusFilter === status;
-                const count =
-                  status === 'All'
-                    ? projectsData.length
-                    : projectsData.filter((p) => p.status === status).length;
-
-                return (
-                  <button
-                    key={status}
-                    onClick={() => setStatusFilter(status)}
-                    className={`btn ${isActive ? 'btn-primary' : 'btn-outline'}`}
-                    style={{
-                      borderRadius: '9999px',
-                      padding: '0.45rem 1.25rem',
-                      fontSize: '0.875rem',
-                      borderColor: isActive ? 'transparent' : 'var(--border-default)',
-                      backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                      color: isActive ? '#ffffff' : 'var(--color-text)',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {status}
-                    <span
-                      style={{
-                        marginLeft: '0.4rem',
-                        fontSize: '0.75rem',
-                        padding: '0.1rem 0.45rem',
-                        borderRadius: '9999px',
-                        backgroundColor: isActive ? 'rgba(255,255,255,0.25)' : 'var(--bg-tertiary)',
-                        color: isActive ? '#ffffff' : 'var(--color-text-muted)'
-                      }}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-          </div>
 
           {/* Projects Cards Grid */}
           <div
