@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
+import { readCache, writeCache } from '@/lib/cache';
 import { UserPlus, X } from 'lucide-react';
 
 interface Member {
@@ -13,11 +14,11 @@ interface Member {
   createdAt: string;
 }
 
-let cachedAdminMembers: Member[] | null = null;
+const ADMIN_MEMBERS_KEY = 'admin_members';
 
 export default function MembersPage() {
-  const [members, setMembers] = useState<Member[]>(() => cachedAdminMembers || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminMembers);
+  const [members, setMembers] = useState<Member[]>(() => readCache<Member[]>(ADMIN_MEMBERS_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_MEMBERS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,14 +28,14 @@ export default function MembersPage() {
   const [role, setRole] = useState('MEMBER');
 
   const fetchMembers = async () => {
-    if (!cachedAdminMembers) {
+    if (!readCache(ADMIN_MEMBERS_KEY)) {
       setIsLoading(true);
     }
     try {
       const res = await fetch('/api/members');
       const data = await res.json();
       if (data.members) {
-        cachedAdminMembers = data.members;
+        writeCache(ADMIN_MEMBERS_KEY, data.members);
         setMembers(data.members);
       }
     } catch (err) {

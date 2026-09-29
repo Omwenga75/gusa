@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import { readCache, writeCache } from '@/lib/cache'
 
 const getTargetDateTime = (dateStr: string, timeStr?: string): Date | null => {
   const dateObj = new Date(dateStr)
@@ -135,16 +136,21 @@ const parseEventImages = (coverImage?: string): string[] => {
   }
 }
 
-let cachedEvents: EventItem[] | null = null;
+const EVENTS_CACHE_KEY = 'events';
 
 export default function EventsPage() {
-  const [eventsData, setEventsData] = useState<EventItem[]>(() => cachedEvents || [])
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedEvents)
+  const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(EVENTS_CACHE_KEY))
   const [selectedTab, setSelectedTab] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
 
   React.useEffect(() => {
+    const cached = readCache<EventItem[]>(EVENTS_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setEventsData(cached);
+      setIsLoading(false);
+    }
     fetch('/api/events')
       .then((res) => res.json())
       .then((data) => {
@@ -170,7 +176,7 @@ export default function EventsPage() {
               coverImage: evt.coverImage || undefined
             }
           })
-          cachedEvents = mapped
+          writeCache(EVENTS_CACHE_KEY, mapped)
           setEventsData(mapped)
         }
       })

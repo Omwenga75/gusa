@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { readCache, writeCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Image as ImageIcon,
@@ -51,11 +52,11 @@ type Album = {
 type CategoryFilter = 'All' | 'Culture' | 'Events' | 'Sports' | 'Campus Life';
 const CATEGORIES: CategoryFilter[] = ['All', 'Culture', 'Events', 'Sports', 'Campus Life'];
 
-let cachedAlbums: Album[] | null = null;
+const GALLERY_CACHE_KEY = 'gallery';
 
 export default function GalleryPage() {
-  const [albumsData, setAlbumsData] = useState<Album[]>(() => cachedAlbums || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAlbums);
+  const [albumsData, setAlbumsData] = useState<Album[]>(() => readCache<Album[]>(GALLERY_CACHE_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(GALLERY_CACHE_KEY));
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -63,6 +64,11 @@ export default function GalleryPage() {
   const [sharedAlert, setSharedAlert] = useState<string | null>(null);
 
   React.useEffect(() => {
+    const cached = readCache<Album[]>(GALLERY_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setAlbumsData(cached);
+      setIsLoading(false);
+    }
     fetch('/api/gallery')
       .then((res) => res.json())
       .then((data) => {
@@ -93,7 +99,7 @@ export default function GalleryPage() {
               }))
             };
           });
-          cachedAlbums = mapped;
+          writeCache(GALLERY_CACHE_KEY, mapped);
           setAlbumsData(mapped);
         }
       })

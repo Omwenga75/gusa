@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { readCache, writeCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Search,
@@ -46,11 +47,11 @@ type Article = {
 const CATEGORIES = ['All', 'Welfare', 'Bursaries', 'Announcements', 'Campus News', 'Cultural'] as const;
 type CategoryTag = (typeof CATEGORIES)[number];
 
-let cachedNews: Article[] | null = null;
+const NEWS_CACHE_KEY = 'news';
 
 export default function NewsPage() {
-  const [articlesData, setArticlesData] = useState<Article[]>(() => cachedNews || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedNews);
+  const [articlesData, setArticlesData] = useState<Article[]>(() => readCache<Article[]>(NEWS_CACHE_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(NEWS_CACHE_KEY));
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryTag>('All');
   const [activeArticle, setActiveArticle] = useState<Article | null>(null);
@@ -59,6 +60,11 @@ export default function NewsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
+    const cached = readCache<Article[]>(NEWS_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setArticlesData(cached);
+      setIsLoading(false);
+    }
     fetch('/api/posts')
       .then((res) => res.json())
       .then((data) => {
@@ -85,7 +91,7 @@ export default function NewsPage() {
             commentsCount: 0,
             gradient: 'from-violet-600 via-indigo-600 to-blue-600'
           }));
-          cachedNews = mapped;
+          writeCache(NEWS_CACHE_KEY, mapped);
           setArticlesData(mapped);
         }
       })

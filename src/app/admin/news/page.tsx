@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Newspaper, Plus, X } from 'lucide-react';
+import { readCache, writeCache } from '@/lib/cache';
 
 interface Post {
   id: string;
@@ -14,11 +15,11 @@ interface Post {
   author?: { name: string };
 }
 
-let cachedAdminNews: Post[] | null = null;
+const ADMIN_NEWS_KEY = 'admin_news';
 
 export default function NewsPage() {
-  const [posts, setPosts] = useState<Post[]>(() => cachedAdminNews || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminNews);
+  const [posts, setPosts] = useState<Post[]>(() => readCache<Post[]>(ADMIN_NEWS_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_NEWS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,14 +29,14 @@ export default function NewsPage() {
   const [category, setCategory] = useState('Announcements');
 
   const fetchPosts = async () => {
-    if (!cachedAdminNews) {
+    if (!readCache(ADMIN_NEWS_KEY)) {
       setIsLoading(true);
     }
     try {
       const res = await fetch('/api/posts');
       const data = await res.json();
       if (data.posts) {
-        cachedAdminNews = data.posts;
+        writeCache(ADMIN_NEWS_KEY, data.posts);
         setPosts(data.posts);
       }
     } catch (err) {

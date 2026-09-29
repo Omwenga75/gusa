@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Calendar as CalendarIcon, MapPin, X, Users, Pencil, Trash2 } from 'lucide-react';
+import { readCache, writeCache } from '@/lib/cache';
 
 interface Event {
   id: string;
@@ -28,11 +29,11 @@ interface Attendee {
   registeredAt: string;
 }
 
-let cachedAdminEvents: Event[] | null = null;
+const ADMIN_EVENTS_KEY = 'admin_events';
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>(() => cachedAdminEvents || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminEvents);
+  const [events, setEvents] = useState<Event[]>(() => readCache<Event[]>(ADMIN_EVENTS_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_EVENTS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -82,14 +83,14 @@ export default function EventsPage() {
   };
 
   const fetchEvents = async (forceLoading = false) => {
-    if (forceLoading || !cachedAdminEvents) {
+    if (forceLoading || !readCache(ADMIN_EVENTS_KEY)) {
       setIsLoading(true);
     }
     try {
       const res = await fetch('/api/events');
       const data = await res.json();
       if (data.events) {
-        cachedAdminEvents = data.events;
+        writeCache(ADMIN_EVENTS_KEY, data.events);
         setEvents(data.events);
       }
     } catch (err) {

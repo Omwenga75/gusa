@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
+import { readCache, writeCache } from '@/lib/cache'
 import {
   Users,
   Mail,
@@ -26,13 +27,18 @@ interface LeaderProfile {
   term: string
 }
 
-let cachedLeaders: LeaderProfile[] | null = null;
+const LEADERS_CACHE_KEY = 'leaders';
 
 export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => cachedLeaders || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedLeaders);
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => readCache<LeaderProfile[]>(LEADERS_CACHE_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(LEADERS_CACHE_KEY));
 
   React.useEffect(() => {
+    const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setLeadersData(cached);
+      setIsLoading(false);
+    }
     fetch('/api/leadership')
       .then((res) => res.json())
       .then((data) => {
@@ -50,7 +56,7 @@ export default function LeadershipPage() {
             phone: ldr.phone || '',
             term: '2026/2027'
           }));
-          cachedLeaders = mapped;
+          writeCache(LEADERS_CACHE_KEY, mapped);
           setLeadersData(mapped);
         }
       })

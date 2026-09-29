@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Upload, Image as ImageIcon, X, Plus } from 'lucide-react';
+import { readCache, writeCache } from '@/lib/cache';
 
 interface Album {
   id: string;
@@ -12,11 +13,11 @@ interface Album {
   images: Array<{ id: string; imageUrl: string }>;
 }
 
-let cachedAdminGallery: Album[] | null = null;
+const ADMIN_GALLERY_KEY = 'admin_gallery';
 
 export default function GalleryPage() {
-  const [albums, setAlbums] = useState<Album[]>(() => cachedAdminGallery || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminGallery);
+  const [albums, setAlbums] = useState<Album[]>(() => readCache<Album[]>(ADMIN_GALLERY_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_GALLERY_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,14 +27,14 @@ export default function GalleryPage() {
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
 
   const fetchGallery = async () => {
-    if (!cachedAdminGallery) {
+    if (!readCache(ADMIN_GALLERY_KEY)) {
       setIsLoading(true);
     }
     try {
       const res = await fetch('/api/gallery');
       const data = await res.json();
       if (data.albums) {
-        cachedAdminGallery = data.albums;
+        writeCache(ADMIN_GALLERY_KEY, data.albums);
         setAlbums(data.albums);
       }
     } catch (err) {

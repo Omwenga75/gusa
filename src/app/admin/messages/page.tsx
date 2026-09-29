@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useTransition } from 'react';
 import styles from '../admin.module.css';
+import { readCache, writeCache } from '@/lib/cache';
 import {
   Mail,
   MailOpen,
@@ -30,18 +31,18 @@ interface ContactMessage {
   createdAt: string;
 }
 
-let cachedAdminMessages: ContactMessage[] | null = null;
+const ADMIN_MESSAGES_KEY = 'admin_messages';
 
 export default function AdminMessagesPage() {
-  const [messages, setMessages] = useState<ContactMessage[]>(() => cachedAdminMessages || []);
-  const [loading, setLoading] = useState<boolean>(() => !cachedAdminMessages);
+  const [messages, setMessages] = useState<ContactMessage[]>(() => readCache<ContactMessage[]>(ADMIN_MESSAGES_KEY) || []);
+  const [loading, setLoading] = useState<boolean>(() => !readCache(ADMIN_MESSAGES_KEY));
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const fetchMessages = async (showLoadingState = false) => {
-    if (showLoadingState || !cachedAdminMessages) {
+    if (showLoadingState || !readCache(ADMIN_MESSAGES_KEY)) {
       setLoading(true);
     }
     try {
@@ -49,7 +50,7 @@ export default function AdminMessagesPage() {
       if (res.ok) {
         const data = await res.json();
         const msgList = data.messages || [];
-        cachedAdminMessages = msgList;
+        writeCache(ADMIN_MESSAGES_KEY, msgList);
         setMessages(msgList);
       }
     } catch (err) {

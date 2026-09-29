@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { readCache, writeCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Target,
@@ -61,11 +62,11 @@ type Project = {
   badgeClass: string;
 };
 
-let cachedProjects: Project[] | null = null;
+const PROJECTS_CACHE_KEY = 'projects';
 
 export default function ProjectsPage() {
-  const [projectsData, setProjectsData] = useState<Project[]>(() => cachedProjects || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedProjects);
+  const [projectsData, setProjectsData] = useState<Project[]>(() => readCache<Project[]>(PROJECTS_CACHE_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(PROJECTS_CACHE_KEY));
   const [statusFilter, setStatusFilter] = useState<'All' | ProjectStatus>('All');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [pledgeModalOpen, setPledgeModalOpen] = useState(false);
@@ -75,6 +76,11 @@ export default function ProjectsPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   React.useEffect(() => {
+    const cached = readCache<Project[]>(PROJECTS_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setProjectsData(cached);
+      setIsLoading(false);
+    }
     fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
@@ -104,7 +110,7 @@ export default function ProjectsPage() {
             gradient: 'from-violet-600 to-indigo-600',
             badgeClass: 'badge-primary'
           }));
-          cachedProjects = mapped;
+          writeCache(PROJECTS_CACHE_KEY, mapped);
           setProjectsData(mapped);
         }
       })

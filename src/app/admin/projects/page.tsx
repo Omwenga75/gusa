@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { FolderKanban, Plus, X } from 'lucide-react';
+import { readCache, writeCache } from '@/lib/cache';
 
 interface Project {
   id: string;
@@ -13,11 +14,11 @@ interface Project {
   endDate?: string;
 }
 
-let cachedAdminProjects: Project[] | null = null;
+const ADMIN_PROJECTS_KEY = 'admin_projects';
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>(() => cachedAdminProjects || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !cachedAdminProjects);
+  const [projects, setProjects] = useState<Project[]>(() => readCache<Project[]>(ADMIN_PROJECTS_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_PROJECTS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,14 +28,14 @@ export default function ProjectsPage() {
   const [status, setStatus] = useState('ONGOING');
 
   const fetchProjects = async () => {
-    if (!cachedAdminProjects) {
+    if (!readCache(ADMIN_PROJECTS_KEY)) {
       setIsLoading(true);
     }
     try {
       const res = await fetch('/api/projects');
       const data = await res.json();
       if (data.projects) {
-        cachedAdminProjects = data.projects;
+        writeCache(ADMIN_PROJECTS_KEY, data.projects);
         setProjects(data.projects);
       }
     } catch (err) {

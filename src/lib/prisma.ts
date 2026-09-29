@@ -18,6 +18,10 @@ if (dbUrl) {
     const sep = dbUrl.includes('?') ? '&' : '?'
     dbUrl += `${sep}connect_timeout=15`
   }
+  if (!dbUrl.includes('pool_timeout')) {
+    const sep = dbUrl.includes('?') ? '&' : '?'
+    dbUrl += `${sep}pool_timeout=20`
+  }
 }
 
 export const prisma =
