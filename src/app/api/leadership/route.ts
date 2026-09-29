@@ -41,6 +41,42 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, name, position, biography, email, phone, image } = body
+
+    if (!id) {
+      return NextResponse.json({ error: 'Leader ID is required' }, { status: 400 })
+    }
+    if (!name || !position) {
+      return NextResponse.json({ error: 'Leader name and position are required' }, { status: 400 })
+    }
+
+    const updateData: any = {
+      name,
+      position,
+      biography: biography !== undefined ? biography : undefined,
+      email: email !== undefined ? (email || null) : undefined,
+      phone: phone !== undefined ? (phone || null) : undefined,
+    }
+
+    if (image !== undefined) {
+      updateData.image = image
+    }
+
+    const leader = await prisma.leader.update({
+      where: { id },
+      data: updateData
+    })
+
+    return NextResponse.json({ success: true, leader })
+  } catch (error) {
+    console.error('Update leader error:', error)
+    return NextResponse.json({ error: 'Failed to update leader' }, { status: 500 })
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

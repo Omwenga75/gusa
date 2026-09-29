@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { Award, Plus, X, Trash2, Phone, Camera } from 'lucide-react';
+import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
 
 interface Leader {
   id: string;
@@ -10,6 +10,8 @@ interface Leader {
   position: string;
   phone?: string;
   image?: string;
+  biography?: string;
+  email?: string;
 }
 
 export default function LeadershipPage() {
@@ -18,6 +20,7 @@ export default function LeadershipPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
 
   // Form State
   const [name, setName] = useState('');
@@ -58,13 +61,33 @@ export default function LeadershipPage() {
     }
   };
 
-  const handleAddLeader = async (e: React.FormEvent) => {
+  const handleOpenAdd = () => {
+    setEditingLeader(null);
+    setName('');
+    setPosition('');
+    setPhone('');
+    setImagePreview(null);
+    setImageFile(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (leader: Leader) => {
+    setEditingLeader(leader);
+    setName(leader.name);
+    setPosition(leader.position);
+    setPhone(leader.phone || '');
+    setImagePreview(leader.image || null);
+    setImageFile(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveLeader = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !position) return;
 
     setIsSubmitting(true);
     try {
-      let imageBase64: string | null = null;
+      let imageBase64: string | null | undefined = undefined;
 
       if (imageFile) {
         const reader = new FileReader();
@@ -72,22 +95,46 @@ export default function LeadershipPage() {
           reader.onloadend = () => resolve(reader.result as string);
           reader.readAsDataURL(imageFile);
         });
+      } else if (imagePreview !== undefined) {
+        // If image preview is still the same or cleared
+        imageBase64 = imagePreview;
       }
 
-      const res = await fetch('/api/leadership', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, position, phone, image: imageBase64 })
-      });
+      if (editingLeader) {
+        // Edit / Update
+        const res = await fetch('/api/leadership', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editingLeader.id,
+            name,
+            position,
+            phone,
+            image: imageBase64
+          })
+        });
 
-      if (res.ok) {
-        setName('');
-        setPosition('');
-        setPhone('');
-        setImagePreview(null);
-        setImageFile(null);
-        setIsModalOpen(false);
-        fetchLeaders();
+        if (res.ok) {
+          resetForm();
+          fetchLeaders();
+        }
+      } else {
+        // Create new
+        const res = await fetch('/api/leadership', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            position,
+            phone,
+            image: imageBase64
+          })
+        });
+
+        if (res.ok) {
+          resetForm();
+          fetchLeaders();
+        }
       }
     } catch (err) {
       console.error(err);
@@ -113,6 +160,7 @@ export default function LeadershipPage() {
   };
 
   const resetForm = () => {
+    setEditingLeader(null);
     setName('');
     setPosition('');
     setPhone('');
@@ -128,7 +176,7 @@ export default function LeadershipPage() {
           <h1 className={styles.pageTitle}>Leadership Management</h1>
           <p className={styles.pageSubtitle}>Manage executive committee members, patrons, and council leaders</p>
         </div>
-        <button className={styles.btnPrimary} onClick={() => setIsModalOpen(true)}>
+        <button className={styles.btnPrimary} onClick={handleOpenAdd}>
           <Plus size={16} /> Add Leader
         </button>
       </div>
@@ -200,28 +248,50 @@ export default function LeadershipPage() {
                     Active Leader
                   </span>
 
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => handleDelete(leader.id)}
-                    disabled={deletingId === leader.id}
-                    title="Remove leader"
-                    style={{
-                      background: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      color: '#f87171',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '0.5rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      opacity: deletingId === leader.id ? 0.5 : 1,
-                    }}
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  {/* Actions (Edit & Delete) */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <button
+                      onClick={() => handleOpenEdit(leader)}
+                      title="Edit leader profile"
+                      style={{
+                        background: 'rgba(124, 58, 237, 0.2)',
+                        border: '1px solid rgba(124, 58, 237, 0.4)',
+                        color: '#c4b5fd',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <Pencil size={13} />
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(leader.id)}
+                      disabled={deletingId === leader.id}
+                      title="Remove leader"
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#f87171',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        opacity: deletingId === leader.id ? 0.5 : 1,
+                      }}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Card Body */}
@@ -350,7 +420,7 @@ export default function LeadershipPage() {
         )}
       </div>
 
-      {/* Add Leader Modal */}
+      {/* Add / Edit Leader Modal */}
       {isModalOpen && (
         <div style={{
           position: 'fixed',
@@ -365,14 +435,14 @@ export default function LeadershipPage() {
         }}>
           <div className={styles.card} style={{ width: '100%', maxWidth: '480px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 className={styles.cardTitle}>Add Leader Profile</h2>
+              <h2 className={styles.cardTitle}>{editingLeader ? 'Edit Leader Profile' : 'Add Leader Profile'}</h2>
               <button onClick={resetForm} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleAddLeader} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Photo Upload */}
+            <form onSubmit={handleSaveLeader} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Photo Upload & Change */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                 <div
                   onClick={() => fileInputRef.current?.click()}
@@ -387,6 +457,7 @@ export default function LeadershipPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     transition: 'border-color 0.2s ease',
+                    position: 'relative'
                   }}
                 >
                   {imagePreview ? (
@@ -402,7 +473,20 @@ export default function LeadershipPage() {
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
                 />
-                <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Click to upload photo</span>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#a78bfa',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    fontWeight: 600
+                  }}
+                >
+                  {imagePreview ? 'Click to change photo' : 'Click to upload photo'}
+                </button>
               </div>
 
               {/* Name */}
@@ -461,7 +545,7 @@ export default function LeadershipPage() {
                   disabled={isSubmitting}
                   className={styles.btnPrimary}
                 >
-                  {isSubmitting ? 'Saving...' : 'Add Leader'}
+                  {isSubmitting ? 'Saving...' : editingLeader ? 'Save Changes' : 'Add Leader'}
                 </button>
               </div>
             </form>
