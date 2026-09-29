@@ -225,10 +225,10 @@ export default function LeadershipPage() {
 
                 {/* Leader Info */}
                 <div style={{ textAlign: 'center' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 700 }}>
+                  <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.025em' }}>
                     {leader.name}
                   </h3>
-                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8125rem', color: '#a78bfa', fontWeight: 600 }}>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8125rem', color: '#a78bfa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
                     {leader.position}
                   </p>
                 </div>

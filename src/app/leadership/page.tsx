@@ -268,11 +268,11 @@ export default function LeadershipPage() {
                       </span>
                     </div>
 
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
                       {leader.name}
                     </h3>
 
-                    <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9375rem', marginBottom: '0.75rem' }}>
+                    <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9375rem', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
                       {leader.position}
                     </p>
 
