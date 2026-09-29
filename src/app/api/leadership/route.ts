@@ -16,7 +16,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, position, biography, email, phone } = body
+    const { name, position, biography, email, phone, image } = body
 
     if (!name || !position) {
       return NextResponse.json({ error: 'Leader name and position are required' }, { status: 400 })
@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
         biography: biography || '',
         email: email || null,
         phone: phone || null,
+        image: image || null,
         isActive: true
       }
     })
@@ -37,5 +38,25 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Create leader error:', error)
     return NextResponse.json({ error: 'Failed to add leader' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'Leader ID is required' }, { status: 400 })
+    }
+
+    await prisma.leader.delete({
+      where: { id }
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Delete leader error:', error)
+    return NextResponse.json({ error: 'Failed to delete leader' }, { status: 500 })
   }
 }
