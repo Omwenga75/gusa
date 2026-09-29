@@ -27,19 +27,40 @@ export default function ContactPage() {
     message: ''
   })
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setErrorMessage('')
 
-    // Simulate async submission
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject || 'General Inquiry',
+          message: formData.message,
+        })
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setSubmitSuccess(true)
+      } else {
+        setErrorMessage(data.error || 'Failed to submit message. Please try again.')
+      }
+    } catch (err) {
+      setErrorMessage('A network error occurred. Please try again.')
+    } finally {
       setIsSubmitting(false)
-      setSubmitSuccess(true)
-    }, 900)
+    }
   }
 
   const toggleFaq = (index: number) => {
