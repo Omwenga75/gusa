@@ -7,8 +7,7 @@ import {
   Mail,
   Phone,
   Search,
-  MessageCircle,
-  GraduationCap
+  MessageCircle
 } from 'lucide-react'
 
 interface LeaderProfile {
@@ -16,13 +15,12 @@ interface LeaderProfile {
   name: string
   position: string
   category: 'patron' | 'executive' | 'representative'
-  course: string
-  yearOrDept: string
+  image?: string | null
   avatarInitials: string
   avatarGradient: string
   bio: string
-  email: string
-  phone: string
+  email?: string
+  phone?: string
   whatsapp?: string
   linkedin?: string
   twitter?: string
@@ -44,12 +42,11 @@ export default function LeadershipPage() {
             name: ldr.name,
             position: ldr.position,
             category: 'executive',
-            school: 'Meru University',
-            yearOrDept: 'Executive Council',
-            avatarInitials: ldr.name.charAt(0).toUpperCase(),
+            image: ldr.image || null,
+            avatarInitials: ldr.name ? ldr.name.charAt(0).toUpperCase() : 'L',
             avatarGradient: 'from-violet-600 to-blue-600',
-            bio: ldr.biography || 'Dedicated Leader',
-            email: ldr.email || 'leader@gusa.or.ke',
+            bio: ldr.biography || '',
+            email: ldr.email || '',
             phone: ldr.phone || '',
             term: '2025 - 2026'
           }));
@@ -232,6 +229,7 @@ export default function LeadershipPage() {
                           width: '84px',
                           height: '84px',
                           borderRadius: '50%',
+                          overflow: 'hidden',
                           background: leader.avatarGradient || 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
                           border: '4px solid #0d1225',
                           display: 'flex',
@@ -246,7 +244,15 @@ export default function LeadershipPage() {
                           flexShrink: 0
                         }}
                       >
-                        {leader.avatarInitials}
+                        {leader.image ? (
+                          <img
+                            src={leader.image}
+                            alt={leader.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          leader.avatarInitials
+                        )}
                       </div>
 
                       <span
@@ -266,22 +272,26 @@ export default function LeadershipPage() {
                       {leader.name}
                     </h3>
 
-                    <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9375rem', marginBottom: '0.5rem' }}>
+                    <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9375rem', marginBottom: '0.75rem' }}>
                       {leader.position}
                     </p>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
-                      <GraduationCap size={15} color="var(--primary)" />
-                      <span>{leader.course}</span>
-                    </div>
+                    {leader.phone && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: '#a78bfa', marginBottom: '0.75rem', fontWeight: 500 }}>
+                        <Phone size={14} />
+                        <a href={`tel:${leader.phone}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                          {leader.phone}
+                        </a>
+                      </div>
+                    )}
 
-                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                      <em>{leader.yearOrDept}</em>
-                    </div>
-
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
-                      {leader.bio}
-                    </p>
+                    {leader.bio ? (
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1 }}>
+                        {leader.bio}
+                      </p>
+                    ) : (
+                      <div style={{ flex: 1, marginBottom: '1rem' }} />
+                    )}
 
                     {/* Contacts & Social links */}
                     <div
@@ -296,21 +306,25 @@ export default function LeadershipPage() {
                       }}
                     >
                       <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        <a
-                          href={`mailto:${leader.email}`}
-                          title={`Email ${leader.name}`}
-                          style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
-                        >
-                          <Mail size={16} />
-                        </a>
+                        {leader.email && (
+                          <a
+                            href={`mailto:${leader.email}`}
+                            title={`Email ${leader.name}`}
+                            style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
+                          >
+                            <Mail size={16} />
+                          </a>
+                        )}
 
-                        <a
-                          href={`tel:${leader.phone}`}
-                          title={`Call ${leader.name}`}
-                          style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
-                        >
-                          <Phone size={16} />
-                        </a>
+                        {leader.phone && (
+                          <a
+                            href={`tel:${leader.phone}`}
+                            title={`Call ${leader.name}`}
+                            style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8125rem' }}
+                          >
+                            <Phone size={16} />
+                          </a>
+                        )}
 
                         {leader.whatsapp && (
                           <a
@@ -326,9 +340,9 @@ export default function LeadershipPage() {
                       </div>
 
                       <a
-                        href={`mailto:${leader.email}`}
+                        href={leader.phone ? `tel:${leader.phone}` : leader.email ? `mailto:${leader.email}` : '#'}
                         className="btn btn-sm btn-outline"
-                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.65rem', borderRadius: '9999px' }}
                       >
                         Contact Official
                       </a>
