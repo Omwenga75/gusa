@@ -321,7 +321,7 @@ export default function AboutPage() {
                     <span className="badge badge-neutral" style={{ fontSize: '0.75rem', marginBottom: '0.25rem' }}>Foundation</span>
                     <h4 style={{ fontSize: '1.0625rem', fontWeight: 600 }}>The First Fellowship</h4>
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                      Inception of the informal welfare fellowship by 28 pioneer Abagusii scholars at MUST Main Campus.
+                      Inception of the informal welfare fellowship by 28 pioneer Abagusii scholars at MUST.
                     </p>
                   </div>
                 </div>

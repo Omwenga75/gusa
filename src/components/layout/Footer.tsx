@@ -85,7 +85,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3 min-w-0">
                 <MapPin size={16} className="text-violet-400 mt-1 shrink-0" />
-                <span className="text-slate-400 text-sm break-words">Meru University of Science and Technology, Main Campus</span>
+                <span className="text-slate-400 text-sm break-words">Meru University of Science and Technology</span>
               </li>
             </ul>
           </div>

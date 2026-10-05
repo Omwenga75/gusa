@@ -81,7 +81,7 @@ export default function GalleryPage() {
               slug: alb.id,
               category: (alb.category as any) || 'Campus Life',
               date: new Date(alb.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-              location: 'Meru University Main Campus',
+              location: 'Meru University of Science and Technology',
               description: alb.description || 'Official GUSA Album',
               coverGradient: 'from-violet-600 to-blue-600',
               coverImage: alb.coverImage || firstImage,

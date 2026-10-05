@@ -134,7 +134,7 @@ export default function EventsPage() {
         body: JSON.stringify({
           title,
           description: description || title,
-          venue: venue || 'Meru University Main Campus',
+          venue: venue || 'Meru University of Science and Technology',
           category,
           date,
           startTime,

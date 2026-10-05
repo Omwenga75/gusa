@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         slug,
         description: description || title,
         coverImage: coverImage || null,
-        venue: venue || 'Meru University Main Campus',
+        venue: venue || 'Meru University of Science and Technology',
         organizer: category || 'academic',
         date: new Date(date),
         startTime: startTime || '10:00 AM',
