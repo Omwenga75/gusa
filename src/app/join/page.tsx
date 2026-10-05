@@ -69,20 +69,20 @@ export default function JoinPage() {
 
 
       {/* Benefits Section */}
-      <section id="benefits" className="py-20 bg-slate-900/50 text-white">
+      <section id="benefits" className="py-12 sm:py-20 bg-slate-900/50 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-4 text-white">Why Join GUSA?</h2>
-            <p className="text-slate-400">Discover the exclusive perks and opportunities available to our members.</p>
+          <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Why Join GUSA?</h2>
+            <p className="text-slate-400 text-sm sm:text-base">Discover the exclusive perks and opportunities available to our members.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {benefits.map((benefit, idx) => (
-              <div key={idx} className="glass-card p-6 rounded-2xl bg-slate-900/80 border border-white/10 hover:border-violet-500/30 transition-all">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500/20 text-violet-400 flex items-center justify-center mb-5 border border-violet-500/30">
+              <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-white/10 hover:border-violet-500/30 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500/20 text-violet-400 flex items-center justify-center mb-4 sm:mb-5 border border-violet-500/30">
                   <benefit.icon size={24} />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-white">{benefit.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{benefit.description}</p>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-white">{benefit.title}</h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">{benefit.description}</p>
               </div>
             ))}
           </div>
@@ -90,28 +90,28 @@ export default function JoinPage() {
       </section>
 
       {/* Membership Tiers */}
-      <section className="py-20 bg-slate-950 text-white">
+      <section className="py-12 sm:py-20 bg-slate-950 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-4 text-white">Membership Categories</h2>
-            <p className="text-slate-400">Choose the membership tier that applies to you.</p>
+          <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Membership Categories</h2>
+            <p className="text-slate-400 text-sm sm:text-base">Choose the membership tier that applies to you.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
             {/* Standard Member */}
-            <div className="glass-card p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl flex flex-col justify-between">
+            <div className="glass-card p-5 sm:p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl flex flex-col justify-between">
               <div className="absolute top-0 right-0 bg-gradient-to-r from-violet-500 to-blue-500 text-slate-950 text-xs font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
                 Most Popular
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2 text-white">Standard Member</h3>
-                <p className="text-slate-400 text-sm mb-6">For students originating from the Gusii region (Kisii & Nyamira Counties).</p>
-                <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
-                  Ksh 200 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">Standard Member</h3>
+                <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">For students originating from the Gusii region (Kisii & Nyamira Counties).</p>
+                <div className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-white flex items-baseline gap-2 flex-wrap">
+                  Ksh 200 <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
                 </div>
-                <ul className="space-y-3.5 mb-8">
+                <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Full voting rights in elections', 'Access to GUSA welfare emergency fund', 'Priority registration for trips & cultural events', 'Alumni network & mentorship program', 'Eligible for Executive Committee positions'].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
-                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
+                    <li key={i} className="flex items-start gap-2.5 sm:gap-3 text-slate-300 text-xs sm:text-sm">
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={16} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -123,17 +123,17 @@ export default function JoinPage() {
             </div>
 
             {/* Associate Member */}
-            <div className="glass-card p-8 rounded-2xl bg-slate-900/60 border border-white/10 flex flex-col justify-between">
+            <div className="glass-card p-5 sm:p-8 rounded-2xl bg-slate-900/60 border border-white/10 flex flex-col justify-between">
               <div>
-                <h3 className="text-2xl font-bold mb-2 text-white">Associate Member</h3>
-                <p className="text-slate-400 text-sm mb-6">For friends and allies of GUSA from other regions.</p>
-                <div className="text-4xl font-extrabold mb-8 text-white flex items-baseline gap-2">
-                  Ksh 150 <span className="text-sm font-normal text-slate-400">/ annual registration</span>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">Associate Member</h3>
+                <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">For friends and allies of GUSA from other regions.</p>
+                <div className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-white flex items-baseline gap-2 flex-wrap">
+                  Ksh 150 <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
                 </div>
-                <ul className="space-y-3.5 mb-8">
+                <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Participation in cultural nights & events', 'Join social groups & forums', 'Discounts on event tickets', 'Networking & friendship opportunities'].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-300 text-sm">
-                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={18} />
+                    <li key={i} className="flex items-start gap-2.5 sm:gap-3 text-slate-300 text-xs sm:text-sm">
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={16} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -148,19 +148,19 @@ export default function JoinPage() {
       </section>
 
       {/* How to Join */}
-      <section className="py-20 bg-slate-900/60 text-white">
+      <section className="py-12 sm:py-20 bg-slate-900/60 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-4 text-white">Simple 4-Step Registration</h2>
-            <p className="text-slate-400">Joining GUSA is fast and straightforward.</p>
+          <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Simple 4-Step Registration</h2>
+            <p className="text-slate-400 text-sm sm:text-base">Joining GUSA is fast and straightforward.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
             {steps.map((step, idx) => (
-              <div key={idx} className="glass-card p-6 rounded-2xl bg-slate-900/90 border border-white/10 text-center flex flex-col items-center">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-500 to-blue-500 text-slate-950 font-black text-xl flex items-center justify-center mb-5 shadow-lg shadow-violet-500/20">
+              <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-900/90 border border-white/10 text-center flex flex-col items-center">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-violet-500 to-blue-500 text-slate-950 font-black text-lg sm:text-xl flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-violet-500/20">
                   {step.num}
                 </div>
-                <h3 className="text-base font-bold mb-2 text-white">{step.title}</h3>
+                <h3 className="text-sm sm:text-base font-bold mb-1.5 sm:mb-2 text-white">{step.title}</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">{step.desc}</p>
               </div>
             ))}
@@ -169,16 +169,16 @@ export default function JoinPage() {
       </section>
 
       {/* FAQs */}
-      <section className="py-20 bg-slate-950 text-white">
+      <section className="py-12 sm:py-20 bg-slate-950 text-white">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold mb-3 text-white">Frequently Asked Questions</h2>
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Frequently Asked Questions</h2>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {faqs.map((faq, idx) => (
-              <div key={idx} className="glass-card p-6 rounded-xl bg-slate-900/60 border border-white/10">
-                <h4 className="text-base font-bold mb-2 text-white">{faq.q}</h4>
-                <p className="text-slate-400 text-sm leading-relaxed">{faq.a}</p>
+              <div key={idx} className="glass-card p-4 sm:p-6 rounded-xl bg-slate-900/60 border border-white/10">
+                <h4 className="text-sm sm:text-base font-bold mb-2 text-white">{faq.q}</h4>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>

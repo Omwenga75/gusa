@@ -32,14 +32,20 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      // Placeholder for actual registration API logic
-      // const res = await fetch('/api/auth/register', { method: 'POST', body: JSON.stringify(formData) });
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Assume success for now
-      router.push("/auth/login?registered=true");
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Registration failed. Please try again.');
+        return;
+      }
+
+      router.push('/auth/login?registered=true');
     } catch (err) {
       setError("Failed to register. Please try again.");
     } finally {
@@ -48,9 +54,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--color-bg-alt)", padding: "var(--space-8) 0" }}>
-      <div className="card" style={{ width: "100%", maxWidth: "600px", margin: "var(--space-4)" }}>
-        <div className="card-body">
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--color-bg-alt)", padding: "clamp(1.5rem, 4vw, 3rem) 1rem" }}>
+      <div className="card" style={{ width: "100%", maxWidth: "600px", margin: "0 auto" }}>
+        <div className="card-body" style={{ padding: "clamp(1.25rem, 4vw, 2.5rem)" }}>
           <div className="text-center" style={{ marginBottom: "var(--space-6)" }}>
             <h1 style={{ marginBottom: "var(--space-2)" }}>Join GUSA</h1>
             <p>Create your student membership account</p>

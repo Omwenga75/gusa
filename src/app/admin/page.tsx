@@ -17,7 +17,7 @@ import {
 export const revalidate = 0; // Ensure fresh DB counts on every page load
 
 export default async function AdminDashboard() {
-  // Query real metrics directly from the SQLite database
+  // Query real metrics directly from the PostgreSQL database
   const [
     totalMembers,
     activeEvents,

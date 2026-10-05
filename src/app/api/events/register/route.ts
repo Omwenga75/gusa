@@ -6,9 +6,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { eventId, fullName, email, phone, regNumber, course } = body
 
-    if (!eventId) {
+    if (!eventId || !fullName || !email) {
       return NextResponse.json(
-        { error: 'Event ID is required.' },
+        { error: 'Event ID, full name, and email are required.' },
         { status: 400 }
       )
     }
@@ -22,18 +22,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Event not found.' }, { status: 404 })
     }
 
-    const studentName = fullName || 'GUSA Registered Student'
-    const studentEmail = email || `attendee_${Date.now()}_${Math.floor(Math.random() * 1000)}@must.ac.ke`
+    // Check for duplicate registration
+    const existing = await prisma.eventRegistration.findFirst({
+      where: { eventId, studentEmail: email }
+    })
+    if (existing) {
+      return NextResponse.json(
+        { error: 'You have already registered for this event.' },
+        { status: 409 }
+      )
+    }
 
-    // Create new event registration
+    // Create new event registration with real data
     const registration = await prisma.eventRegistration.create({
       data: {
         eventId,
-        studentName,
-        studentEmail,
-        studentPhone: phone || '0700000000',
-        studentRegNumber: regNumber || `CT201/${Math.floor(100000 + Math.random() * 900000)}/24`,
-        studentCourse: course || 'General Student Member',
+        studentName: fullName,
+        studentEmail: email,
+        studentPhone: phone || null,
+        studentRegNumber: regNumber || null,
+        studentCourse: course || null,
         status: 'CONFIRMED'
       }
     })

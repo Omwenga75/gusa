@@ -54,7 +54,7 @@ export default function AboutPage() {
 
 
 
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="responsive-btn-group" style={{ marginTop: '1.5rem' }}>
               <Link href="/leadership" className="btn btn-primary btn-lg">
                 Meet Our Leadership <ChevronRight size={18} />
               </Link>
@@ -69,23 +69,23 @@ export default function AboutPage() {
       {/* Mission, Vision & Core Values */}
       <section className="section" style={{ background: 'var(--surface)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3.5rem auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
             <span className="badge badge-primary" style={{ marginBottom: '0.75rem' }}>Our Creed</span>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
               Mission, Vision & Core Values
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6 }}>
               Our foundation is anchored upon timeless values of community, integrity, academic perseverance, and
               mutual uplift.
             </p>
           </div>
 
-          <div className="grid-2" style={{ gap: '2rem', marginBottom: '2.5rem' }}>
+          <div className="grid-2" style={{ gap: '1.5rem', marginBottom: '2.5rem' }}>
             {/* Mission */}
             <div
               className="card"
               style={{
-                padding: '2.25rem',
+                padding: 'clamp(1.25rem, 3.5vw, 2.25rem)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px solid var(--border)',
                 background: 'linear-gradient(180deg, var(--surface) 0%, var(--surface-subtle) 100%)',
@@ -131,7 +131,7 @@ export default function AboutPage() {
             <div
               className="card"
               style={{
-                padding: '2.25rem',
+                padding: 'clamp(1.25rem, 3.5vw, 2.25rem)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px solid var(--border)',
                 background: 'linear-gradient(180deg, var(--surface) 0%, var(--surface-subtle) 100%)',
@@ -175,8 +175,8 @@ export default function AboutPage() {
           </div>
 
           {/* Core Values Grid */}
-          <div className="grid-3" style={{ gap: '1.5rem' }}>
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+          <div className="grid-3" style={{ gap: '1.25rem' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <Heart size={20} color="var(--primary)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Obomanyani (Unity)</h4>
@@ -187,7 +187,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <GraduationCap size={20} color="var(--accent-blue)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Academic Tenacity</h4>
@@ -198,7 +198,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <ShieldCheck size={20} color="var(--primary)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Integrity & Transparency</h4>
@@ -209,7 +209,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <Sparkles size={20} color="#b78103" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Cultural Preservation</h4>
@@ -220,7 +220,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <Users size={20} color="var(--primary)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Servant Leadership</h4>
@@ -231,7 +231,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <Award size={20} color="var(--accent-blue)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Oborwaneri (Welfare)</h4>
@@ -248,10 +248,10 @@ export default function AboutPage() {
       {/* History & Story */}
       <section className="section" style={{ background: 'var(--surface-subtle)' }}>
         <div className="container">
-          <div className="grid-2" style={{ gap: '3.5rem', alignItems: 'center' }}>
+          <div className="grid-2" style={{ gap: 'clamp(1.75rem, 4vw, 3.5rem)', alignItems: 'center' }}>
             <div>
               <span className="badge badge-warning" style={{ marginBottom: '0.75rem' }}>Our Heritage & Roots</span>
-              <h2 style={{ fontSize: '2.25rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-main)' }}>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-main)' }}>
                 The Story of GUSA Meru
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.7 }}>
@@ -275,19 +275,19 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div style={{ marginTop: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+              <div style={{ marginTop: '2rem', display: 'flex', gap: 'clamp(1rem, 3vw, 2rem)', flexWrap: 'wrap', alignItems: 'center' }}>
                 <div>
-                  <h4 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary)' }}>2014</h4>
+                  <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.75rem)', fontWeight: 700, color: 'var(--primary)' }}>2014</h4>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Year Established</p>
                 </div>
-                <div style={{ width: '1px', backgroundColor: 'var(--border)' }} />
+                <div className="hidden sm:block" style={{ width: '1px', height: '36px', backgroundColor: 'var(--border)' }} />
                 <div>
-                  <h4 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary)' }}>1,200+</h4>
+                  <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.75rem)', fontWeight: 700, color: 'var(--primary)' }}>1,200+</h4>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Comrades Served</p>
                 </div>
-                <div style={{ width: '1px', backgroundColor: 'var(--border)' }} />
+                <div className="hidden sm:block" style={{ width: '1px', height: '36px', backgroundColor: 'var(--border)' }} />
                 <div>
-                  <h4 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary)' }}>100%</h4>
+                  <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.75rem)', fontWeight: 700, color: 'var(--primary)' }}>100%</h4>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Emergency Support</p>
                 </div>
               </div>
@@ -297,7 +297,7 @@ export default function AboutPage() {
             <div
               className="card"
               style={{
-                padding: '2.5rem',
+                padding: 'clamp(1.25rem, 3.5vw, 2.25rem)',
                 backgroundColor: 'var(--surface)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px solid var(--border)'
@@ -388,9 +388,9 @@ export default function AboutPage() {
       {/* Organizational Chart Structure */}
       <section className="section" style={{ background: 'var(--surface)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3.5rem auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto clamp(2rem, 4vw, 3.5rem) auto' }}>
             <span className="badge badge-success" style={{ marginBottom: '0.75rem' }}>Leadership Hierarchy</span>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
               Organizational Chart
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
@@ -406,7 +406,8 @@ export default function AboutPage() {
               alignItems: 'center',
               gap: '1.5rem',
               maxWidth: '900px',
-              margin: '0 auto'
+              margin: '0 auto',
+              width: '100%'
             }}
           >
             {/* Level 1: Advisory & Patron */}
@@ -416,7 +417,7 @@ export default function AboutPage() {
                 width: '100%',
                 maxWidth: '450px',
                 textAlign: 'center',
-                padding: '1.5rem',
+                padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                 border: '2px solid var(--primary)',
                 background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, var(--surface) 100%)',
                 boxShadow: 'var(--shadow-md)'
@@ -439,7 +440,7 @@ export default function AboutPage() {
                 width: '100%',
                 maxWidth: '650px',
                 textAlign: 'center',
-                padding: '1.75rem',
+                padding: 'clamp(1.25rem, 3.5vw, 2rem)',
                 border: '2px solid var(--accent-gold)',
                 background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, var(--surface) 100%)',
                 boxShadow: 'var(--shadow-md)'
@@ -450,7 +451,7 @@ export default function AboutPage() {
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem', marginBottom: '1rem' }}>
                 Chairperson &bull; Vice-Chairperson &bull; Secretary General &bull; Deputy SG &bull; Treasurer
               </p>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span className="badge badge-neutral">Organizing Secretary</span>
                 <span className="badge badge-neutral">Welfare Rep</span>
                 <span className="badge badge-neutral">Public Relations Officer</span>
@@ -462,11 +463,11 @@ export default function AboutPage() {
             <div style={{ width: '2px', height: '30px', backgroundColor: 'var(--primary)' }} />
 
             {/* Level 3: Two branches - Committees & Congress */}
-            <div className="grid-2" style={{ width: '100%', gap: '1.5rem' }}>
+            <div className="grid-2" style={{ width: '100%', gap: '1.25rem' }}>
               <div
                 className="card"
                 style={{
-                  padding: '1.5rem',
+                  padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                   border: '1px solid var(--border)',
                   background: 'var(--surface-subtle)'
                 }}
@@ -486,7 +487,7 @@ export default function AboutPage() {
               <div
                 className="card"
                 style={{
-                  padding: '1.5rem',
+                  padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                   border: '1px solid var(--border)',
                   background: 'var(--surface-subtle)'
                 }}
@@ -513,12 +514,12 @@ export default function AboutPage() {
               style={{
                 width: '100%',
                 textAlign: 'center',
-                padding: '1.5rem',
+                padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                 border: '1px dashed var(--primary)',
                 background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)'
               }}
             >
-              <h5 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)' }}>
+              <h5 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', fontWeight: 700, color: 'var(--primary)' }}>
                 The General Assembly (All Registered Members)
               </h5>
               <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -534,23 +535,23 @@ export default function AboutPage() {
         style={{
           background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)',
           color: '#ffffff',
-          padding: '4.5rem 0',
+          padding: 'clamp(3rem, 6vw, 4.5rem) 0',
           textAlign: 'center'
         }}
       >
         <div className="container" style={{ maxWidth: '720px' }}>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem', color: '#ffffff' }}>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 800, marginBottom: '1rem', color: '#ffffff' }}>
             Discover Your Place in the GUSA Meru Family
           </h2>
           <p style={{ fontSize: '1.125rem', opacity: 0.9, marginBottom: '2rem', lineHeight: 1.6 }}>
             Whether you are a first-year student newly admitted to MUST or a continuing comrade seeking to give back,
             our arms and doors are open.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/auth/register" className="btn btn-secondary btn-lg" style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}>
+          <div className="responsive-btn-group" style={{ justifyContent: 'center' }}>
+            <Link href="/auth/register" className="btn btn-secondary btn-lg w-full sm:w-auto" style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}>
               Register as Member Now <ArrowRight size={18} />
             </Link>
-            <Link href="/leadership" className="btn btn-outline btn-lg" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
+            <Link href="/leadership" className="btn btn-outline btn-lg w-full sm:w-auto" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
               Meet The Leaders
             </Link>
           </div>

@@ -39,7 +39,9 @@ export default function LeadershipPage() {
       setLeadersData(cached);
       setIsLoading(false);
     }
-    fetch('/api/leadership')
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    fetch('/api/leadership', { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.leaders) {
@@ -56,14 +58,18 @@ export default function LeadershipPage() {
             phone: ldr.phone || '',
             term: '2026/2027'
           }));
-          writeCache(LEADERS_CACHE_KEY, mapped);
+          try { writeCache(LEADERS_CACHE_KEY, mapped); } catch (_) { /* sessionStorage quota */ }
           setLeadersData(mapped);
         }
       })
-      .catch(console.error)
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error(err);
+      })
       .finally(() => {
+        clearTimeout(timeout);
         setIsLoading(false);
       });
+    return () => { clearTimeout(timeout); controller.abort(); };
   }, []);
 
   return (
@@ -97,7 +103,7 @@ export default function LeadershipPage() {
         <div className="container">
           {/* Loading Skeleton */}
           {isLoading ? (
-            <div className="grid-3" style={{ gap: '2rem' }}>
+            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
@@ -123,7 +129,7 @@ export default function LeadershipPage() {
                   </div>
 
                   {/* Body Skeleton */}
-                  <div style={{ padding: '0 1.25rem 1.15rem 1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div style={{ padding: '0 clamp(1rem, 3vw, 1.25rem) 1.15rem clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     {/* Avatar Skeleton */}
                     <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex' }}>
                       <div
@@ -156,6 +162,8 @@ export default function LeadershipPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '0.5rem'
                       }}
                     >
                       <div className="skeleton" style={{ width: '120px', height: '28px', borderRadius: '8px' }} />
@@ -187,7 +195,7 @@ export default function LeadershipPage() {
               </p>
             </div>
           ) : (
-            <div className="grid-3" style={{ gap: '2rem' }}>
+            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {leadersData.map((leader) => (
                 <div
                   key={leader.id}
@@ -255,7 +263,7 @@ export default function LeadershipPage() {
                   </div>
 
                   {/* Avatar & Core Body */}
-                  <div style={{ padding: '0 1.25rem 1.15rem 1.25rem', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
+                  <div style={{ padding: '0 clamp(1rem, 3vw, 1.25rem) 1.15rem clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
                     {/* Avatar Container with Offset */}
                     <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex', position: 'relative', zIndex: 20 }}>
                       <div
@@ -378,7 +386,8 @@ export default function LeadershipPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        gap: '0.75rem'
+                        flexWrap: 'wrap',
+                        gap: '0.5rem'
                       }}
                     >
                       {leader.phone ? (
@@ -397,7 +406,9 @@ export default function LeadershipPage() {
                             fontSize: '0.8rem',
                             fontWeight: 600,
                             textDecoration: 'none',
-                            transition: 'all 0.2s ease'
+                            transition: 'all 0.2s ease',
+                            maxWidth: '100%',
+                            minWidth: 0
                           }}
                           className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-white"
                         >
@@ -410,12 +421,13 @@ export default function LeadershipPage() {
                               color: '#a78bfa',
                               display: 'flex',
                               alignItems: 'center',
-                              justifyContent: 'center'
+                              justifyContent: 'center',
+                              flexShrink: 0
                             }}
                           >
                             <Phone size={11} />
                           </span>
-                          <span>{leader.phone}</span>
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{leader.phone}</span>
                         </a>
                       ) : (
                         <span style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>

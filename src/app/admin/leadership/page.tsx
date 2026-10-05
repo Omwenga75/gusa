@@ -53,11 +53,26 @@ export default function LeadershipPage() {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+      // Compress image client-side to avoid 2MB+ base64 strings
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const MAX = 400;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL('image/jpeg', 0.75);
+        setImagePreview(compressed);
+        URL.revokeObjectURL(url);
       };
-      reader.readAsDataURL(file);
+      img.src = url;
     }
   };
 
@@ -89,14 +104,10 @@ export default function LeadershipPage() {
     try {
       let imageBase64: string | null | undefined = undefined;
 
-      if (imageFile) {
-        const reader = new FileReader();
-        imageBase64 = await new Promise<string>((resolve) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(imageFile);
-        });
-      } else if (imagePreview !== undefined) {
-        // If image preview is still the same or cleared
+      if (imageFile && imagePreview) {
+        // imagePreview already contains the compressed base64 from handleImageChange
+        imageBase64 = imagePreview;
+      } else if (!imageFile) {
         imageBase64 = imagePreview;
       }
 
@@ -187,7 +198,7 @@ export default function LeadershipPage() {
         </div>
 
         {isLoading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
             {[1, 2].map((n) => (
               <div
                 key={n}
@@ -259,7 +270,7 @@ export default function LeadershipPage() {
             <p className={styles.emptyText}>No leadership profiles added yet. Click &quot;Add Leader&quot; to get started.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
             {leaders.map(leader => (
               <div
                 key={leader.id}

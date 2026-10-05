@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { verifyAdminSession } from '@/lib/adminAuth'
+
 
 export async function GET() {
   try {
     const leaders = await prisma.leader.findMany({
       orderBy: { displayOrder: 'asc' }
     })
-    return NextResponse.json({ leaders })
+    return NextResponse.json({ leaders }, { headers: { 'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600' } })
   } catch (error) {
     console.error('Leadership GET error:', error)
     return NextResponse.json({ error: 'Failed to fetch leaders' }, { status: 500 })
@@ -14,6 +16,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const body = await request.json()
     const { name, position, biography, email, phone, image } = body
@@ -42,6 +47,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const body = await request.json()
     const { id, name, position, biography, email, phone, image } = body
@@ -78,6 +86,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')

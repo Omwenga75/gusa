@@ -260,7 +260,7 @@ export default function EventsPage() {
         <div className="container">
 
           {isLoading ? (
-            <div className="grid-3" style={{ gap: '2rem' }}>
+            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
@@ -275,7 +275,7 @@ export default function EventsPage() {
                   <div className="skeleton" style={{ height: '210px', width: '100%', borderRadius: 0 }} />
 
                   {/* Card Body Skeleton */}
-                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                  <div style={{ padding: 'clamp(1rem, 3.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
                       <div className="skeleton" style={{ width: '90px', height: '16px', borderRadius: '4px' }} />
@@ -325,7 +325,7 @@ export default function EventsPage() {
               </button>
             </div>
           ) : (
-            <div className="grid-3" style={{ gap: '2rem' }}>
+            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {filteredEvents.map((event) => {
                 const isAttending = registeredEventIds.includes(event.id)
                 const isBtnLoading = attendingLoadingId === event.id
@@ -360,10 +360,12 @@ export default function EventsPage() {
                             ? 'linear-gradient(135deg, #475569 0%, #1e293b 100%)'
                             : 'linear-gradient(135deg, #b78103 0%, #8a6f00 100%)',
                         color: '#ffffff',
-                        padding: '1.25rem 1.5rem',
+                        padding: '1rem clamp(1rem, 3vw, 1.5rem)',
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        flexWrap: 'wrap'
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -372,7 +374,8 @@ export default function EventsPage() {
                             backgroundColor: 'rgba(255, 255, 255, 0.2)',
                             borderRadius: '8px',
                             padding: '0.25rem 0.6rem',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            flexShrink: 0
                           }}
                         >
                           <span style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>
@@ -394,7 +397,8 @@ export default function EventsPage() {
                           backgroundColor: 'rgba(255, 255, 255, 0.25)',
                           padding: '0.25rem 0.6rem',
                           borderRadius: '9999px',
-                          letterSpacing: '0.04em'
+                          letterSpacing: '0.04em',
+                          flexShrink: 0
                         }}
                       >
                         {event.category}
@@ -402,13 +406,15 @@ export default function EventsPage() {
                     </div>
 
                     {/* Card Body */}
-                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+                    <div style={{ padding: 'clamp(1rem, 3.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                       {/* Top content area (Title, Countdown, Description) */}
                       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: '1.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.35, margin: 0 }}>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.35, margin: 0, minWidth: 0, flex: '1 1 200px' }}>
                             {event.title}
                           </h3>
+                          <EventCountdown dateStr={event.date} timeStr={event.time} />
+                        </div>
                           <EventCountdown dateStr={event.date} timeStr={event.time} />
                         </div>
 
@@ -504,7 +510,7 @@ export default function EventsPage() {
             backdropFilter: 'blur(16px)',
             display: 'flex',
             flexDirection: 'column',
-            padding: '1.5rem',
+            padding: 'clamp(0.75rem, 3vw, 1.5rem)',
             overflowY: 'auto'
           }}
         >
@@ -515,16 +521,18 @@ export default function EventsPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '1.5rem',
+              marginBottom: '1rem',
               borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
               paddingBottom: '1rem',
               maxWidth: '1200px',
               width: '100%',
-              margin: '0 auto 1.5rem auto'
+              margin: '0 auto 1.5rem auto',
+              gap: '0.75rem',
+              flexWrap: 'wrap'
             }}
           >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
                 <span style={{
                   fontSize: '0.75rem',
                   fontWeight: 700,
@@ -541,7 +549,7 @@ export default function EventsPage() {
                   {galleryModalEvent.date}
                 </span>
               </div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h2 style={{ fontSize: 'clamp(1.15rem, 3.5vw, 1.5rem)', fontWeight: 800, color: '#ffffff', margin: 0, overflowWrap: 'anywhere' }}>
                 {galleryModalEvent.title} — Gallery
               </h2>
             </div>
@@ -558,7 +566,8 @@ export default function EventsPage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                flexShrink: 0
               }}
               title="Close gallery"
             >
@@ -585,7 +594,7 @@ export default function EventsPage() {
                 return (
                   <div style={{
                     textAlign: 'center',
-                    padding: '4rem 2rem',
+                    padding: 'clamp(2rem, 5vw, 4rem) 1.5rem',
                     color: '#94a3b8',
                     backgroundColor: 'rgba(15, 23, 42, 0.6)',
                     borderRadius: '1.5rem',
@@ -603,12 +612,12 @@ export default function EventsPage() {
               return (
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: images.length === 1 ? '1fr' : images.length === 2 ? 'repeat(auto-fit, minmax(300px, 1fr))' : 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gap: '1.25rem',
+                  gridTemplateColumns: images.length === 1 ? '1fr' : 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+                  gap: '1rem',
                   width: '100%',
                   maxHeight: '80vh',
                   overflowY: 'auto',
-                  padding: '0.5rem'
+                  padding: '0.25rem'
                 }}>
                   {images.map((imgSrc, i) => (
                     <div
@@ -622,7 +631,7 @@ export default function EventsPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: images.length === 1 ? '70vh' : '340px'
+                        height: images.length === 1 ? '70vh' : '260px'
                       }}
                     >
                       <img

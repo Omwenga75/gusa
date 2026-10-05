@@ -1,20 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { verifyAdminSession } from '@/lib/adminAuth'
 
 export async function GET() {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const members = await prisma.user.findMany({
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        phone: true,
+        registrationNumber: true,
+        course: true,
+        yearOfStudy: true,
+        createdAt: true,
+      }
     })
     return NextResponse.json({ members })
-  } catch (error) {
-    console.error('Fetch members error:', error)
+  } catch (err) {
+    console.error('Fetch members error:', err)
     return NextResponse.json({ error: 'Failed to fetch members' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const body = await request.json()
     const { name, email, role, status, password } = body
@@ -37,12 +56,20 @@ export async function POST(request: NextRequest) {
         passwordHash,
         role: role || 'MEMBER',
         status: status || 'ACTIVE'
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        createdAt: true
       }
     })
 
     return NextResponse.json({ success: true, user }, { status: 201 })
-  } catch (error) {
-    console.error('Create member error:', error)
+  } catch (err) {
+    console.error('Create member error:', err)
     return NextResponse.json({ error: 'Failed to create member' }, { status: 500 })
   }
 }

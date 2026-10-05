@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { verifyAdminSession } from '@/lib/adminAuth'
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,6 +33,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const body = await request.json()
     const { name, description, imageUrl, images: imagesFromReq, category } = body

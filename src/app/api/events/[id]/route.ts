@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { verifyAdminSession } from '@/lib/adminAuth'
+
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { id } = await params
     const body = await request.json()
@@ -36,6 +41,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { id } = await params
 

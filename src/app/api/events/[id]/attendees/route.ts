@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { verifyAdminSession } from '@/lib/adminAuth'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { id: eventId } = await params
 
@@ -28,8 +32,8 @@ export async function GET(
     })
 
     return NextResponse.json({ attendees })
-  } catch (error) {
-    console.error('Fetch attendees API error:', error)
+  } catch (err) {
+    console.error('Fetch attendees API error:', err)
     return NextResponse.json({ error: 'Failed to fetch event attendees' }, { status: 500 })
   }
 }

@@ -91,7 +91,7 @@ export default function ProjectsPage() {
             title: proj.title,
             tagline: proj.description,
             category: 'Welfare',
-            status: proj.status === 'COMPLETED' ? 'Completed' : 'Active',
+            status: proj.status === 'COMPLETED' ? 'Completed' : 'Ongoing',
             targetBudget: 500000,
             raisedAmount: 250000,
             donorCount: 45,
@@ -292,8 +292,8 @@ export default function ProjectsPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-                gap: '2.5rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2.5rem)'
               }}
             >
               {[1, 2, 3].map((n) => (
@@ -328,8 +328,8 @@ export default function ProjectsPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-                gap: '2.5rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2.5rem)'
               }}
             >
               {filteredProjects.map((project) => (
@@ -677,7 +677,7 @@ export default function ProjectsPage() {
             <div
               style={{
                 background: activeProject.gradient,
-                padding: '2rem',
+                padding: 'clamp(1.25rem, 4vw, 2rem)',
                 color: '#ffffff',
                 position: 'relative'
               }}
@@ -686,8 +686,8 @@ export default function ProjectsPage() {
                 onClick={() => setActiveProject(null)}
                 style={{
                   position: 'absolute',
-                  top: '1.25rem',
-                  right: '1.25rem',
+                  top: '1rem',
+                  right: '1rem',
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
@@ -704,7 +704,7 @@ export default function ProjectsPage() {
                 <X size={20} />
               </button>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                 <span
                   style={{
                     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -724,11 +724,13 @@ export default function ProjectsPage() {
 
               <h2
                 style={{
-                  fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)',
+                  fontSize: 'clamp(1.25rem, 3.5vw, 1.85rem)',
                   fontWeight: 800,
                   lineHeight: 1.3,
                   color: '#ffffff',
-                  marginBottom: '0.5rem'
+                  marginBottom: '0.5rem',
+                  paddingRight: '2rem',
+                  overflowWrap: 'anywhere'
                 }}
               >
                 {activeProject.title}
@@ -741,7 +743,7 @@ export default function ProjectsPage() {
             {/* Modal Scrollable Body */}
             <div
               style={{
-                padding: '2rem',
+                padding: 'clamp(1rem, 3.5vw, 2rem)',
                 overflowY: 'auto',
                 flex: 1
               }}
@@ -771,7 +773,8 @@ export default function ProjectsPage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: 700,
-                      fontSize: '0.9rem'
+                      fontSize: '0.9rem',
+                      flexShrink: 0
                     }}
                   >
                     {activeProject.leadCoordinator.avatarInitials}
@@ -786,7 +789,7 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.8rem', color: 'var(--color-text-muted)', flexWrap: 'wrap' }}>
                   <span>Timeline: <strong>{activeProject.startDate} &ndash; {activeProject.endDate}</strong></span>
                 </div>
               </div>
@@ -795,7 +798,7 @@ export default function ProjectsPage() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))',
                   gap: '1rem',
                   marginBottom: '2rem'
                 }}
@@ -897,12 +900,14 @@ export default function ProjectsPage() {
             {/* Modal Footer */}
             <div
               style={{
-                padding: '1rem 2rem',
+                padding: '1rem clamp(1rem, 3.5vw, 2rem)',
                 borderTop: '1px solid var(--border-subtle)',
                 background: 'var(--bg-secondary)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.75rem'
               }}
             >
               <button
@@ -912,7 +917,7 @@ export default function ProjectsPage() {
                 <Share2 size={15} /> Share Initiative
               </button>
 
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => {
                     const title = activeProject.title;
@@ -956,7 +961,7 @@ export default function ProjectsPage() {
               borderRadius: '1.5rem',
               maxWidth: '520px',
               width: '100%',
-              padding: '2.5rem',
+              padding: 'clamp(1.25rem, 4vw, 2.5rem)',
               boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
               position: 'relative',
               animation: 'slideUp 0.25s ease'
@@ -967,8 +972,8 @@ export default function ProjectsPage() {
               onClick={() => setPledgeModalOpen(false)}
               style={{
                 position: 'absolute',
-                top: '1.25rem',
-                right: '1.25rem',
+                top: '1rem',
+                right: '1rem',
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
@@ -984,7 +989,7 @@ export default function ProjectsPage() {
               <X size={18} />
             </button>
 
-            <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <div
                 style={{
                   width: '56px',
@@ -1000,7 +1005,7 @@ export default function ProjectsPage() {
               >
                 <Heart size={28} />
               </div>
-              <h3 style={{ fontSize: '1.45rem', fontWeight: 800, marginBottom: '0.35rem' }}>
+              <h3 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.45rem)', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Pledge Your Support
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
@@ -1035,7 +1040,7 @@ export default function ProjectsPage() {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label style={{ fontSize: '0.825rem', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
                       Email Address *
@@ -1066,7 +1071,7 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label style={{ fontSize: '0.825rem', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
                       Affiliation

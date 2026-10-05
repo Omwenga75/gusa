@@ -277,8 +277,8 @@ export default function GalleryPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
               {[1, 2, 3, 4].map((n) => (
@@ -291,7 +291,7 @@ export default function GalleryPage() {
                   }}
                 >
                   <div className="skeleton" style={{ height: '280px', width: '100%', borderRadius: 0 }} />
-                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+                  <div style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <div className="skeleton" style={{ width: '40%', height: '14px', borderRadius: '4px' }} />
                       <div className="skeleton" style={{ width: '30%', height: '14px', borderRadius: '4px' }} />
@@ -310,8 +310,8 @@ export default function GalleryPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
               {filteredAlbums.map((album) => (
@@ -654,22 +654,24 @@ export default function GalleryPage() {
             {/* Modal Header */}
             <div
               style={{
-                padding: '1.5rem 2rem',
+                padding: 'clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 2rem)',
                 borderBottom: '1px solid var(--border-subtle)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                background: 'var(--bg-secondary)'
+                background: 'var(--bg-secondary)',
+                gap: '0.75rem',
+                flexWrap: 'wrap'
               }}
             >
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
                   <span className="badge badge-primary">{activeAlbum.category}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
                     {activeAlbum.date} &bull; {activeAlbum.location}
                   </span>
                 </div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{activeAlbum.title}</h2>
+                <h2 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', fontWeight: 800, overflowWrap: 'anywhere' }}>{activeAlbum.title}</h2>
               </div>
 
               <button
@@ -684,7 +686,8 @@ export default function GalleryPage() {
                   backgroundColor: 'var(--border-default)',
                   color: 'var(--color-text)',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  flexShrink: 0
                 }}
                 aria-label="Close Album Modal"
               >
@@ -695,16 +698,16 @@ export default function GalleryPage() {
             {/* Modal Controls: Media Filter Tabs */}
             <div
               style={{
-                padding: '0.875rem 2rem',
+                padding: '0.75rem clamp(1rem, 3vw, 2rem)',
                 borderBottom: '1px solid var(--border-subtle)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                gap: '1rem'
+                gap: '0.75rem'
               }}
             >
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => setMediaFilter('all')}
                   className={`btn btn-xs ${mediaFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
@@ -736,7 +739,7 @@ export default function GalleryPage() {
             {/* Modal Media Grid */}
             <div
               style={{
-                padding: '1.5rem 2rem',
+                padding: '1.25rem clamp(1rem, 3vw, 2rem)',
                 overflowY: 'auto',
                 flex: 1
               }}
@@ -748,8 +751,8 @@ export default function GalleryPage() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                  gap: '1.25rem'
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 180px), 1fr))',
+                  gap: '1rem'
                 }}
               >
                 {currentAlbumMedia.map((item, index) => (
@@ -857,12 +860,14 @@ export default function GalleryPage() {
             {/* Modal Footer */}
             <div
               style={{
-                padding: '1rem 2rem',
+                padding: '1rem clamp(1rem, 3vw, 2rem)',
                 borderTop: '1px solid var(--border-subtle)',
                 background: 'var(--bg-secondary)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.5rem'
               }}
             >
               <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
@@ -889,7 +894,7 @@ export default function GalleryPage() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            padding: '1.5rem'
+            padding: 'clamp(0.75rem, 2.5vw, 1.5rem)'
           }}
           onClick={() => setLightboxIndex(null)}
         >
@@ -900,28 +905,30 @@ export default function GalleryPage() {
               justifyContent: 'space-between',
               alignItems: 'center',
               color: '#ffffff',
-              zIndex: 10
+              zIndex: 10,
+              gap: '0.5rem',
+              flexWrap: 'wrap'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div>
+            <div style={{ minWidth: 0, flex: 1 }}>
               <span style={{ fontSize: '0.8rem', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {activeAlbum?.title}
               </span>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff' }}>
+              <h3 style={{ fontSize: 'clamp(0.95rem, 3vw, 1.125rem)', fontWeight: 700, color: '#ffffff', overflowWrap: 'anywhere' }}>
                 {currentAlbumMedia[lightboxIndex].title}
               </h3>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+              <span style={{ fontSize: '0.8125rem', color: 'rgba(255, 255, 255, 0.7)' }}>
                 {lightboxIndex + 1} of {currentAlbumMedia.length}
               </span>
               <button
                 onClick={() => setLightboxIndex(null)}
                 style={{
-                  width: '44px',
-                  height: '44px',
+                  width: '40px',
+                  height: '40px',
                   borderRadius: '50%',
                   backgroundColor: 'rgba(255,255,255,0.15)',
                   color: '#ffffff',
@@ -932,7 +939,7 @@ export default function GalleryPage() {
                   justifyContent: 'center'
                 }}
               >
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
           </div>
@@ -945,7 +952,7 @@ export default function GalleryPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '1rem'
+              padding: '0.5rem'
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -955,12 +962,12 @@ export default function GalleryPage() {
               aria-label="Previous Media"
               style={{
                 position: 'absolute',
-                left: '1rem',
+                left: '0.5rem',
                 backgroundColor: 'rgba(255,255,255,0.15)',
                 color: '#ffffff',
                 border: 'none',
-                width: '52px',
-                height: '52px',
+                width: 'clamp(36px, 8vw, 48px)',
+                height: 'clamp(36px, 8vw, 48px)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -969,7 +976,7 @@ export default function GalleryPage() {
                 zIndex: 20
               }}
             >
-              <ChevronLeft size={32} />
+              <ChevronLeft size={24} />
             </button>
 
             {/* Media Canvas Box */}
@@ -990,28 +997,28 @@ export default function GalleryPage() {
               }}
             >
               {currentAlbumMedia[lightboxIndex].type === 'video' ? (
-                <div style={{ textAlign: 'center', color: '#ffffff', padding: '2rem' }}>
+                <div style={{ textAlign: 'center', color: '#ffffff', padding: '1.5rem' }}>
                   <div
                     style={{
-                      width: '84px',
-                      height: '84px',
+                      width: '72px',
+                      height: '72px',
                       borderRadius: '50%',
                       backgroundColor: 'rgba(0, 135, 81, 0.85)',
                       border: '3px solid #FFD700',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      margin: '0 auto 1.5rem',
+                      margin: '0 auto 1.25rem',
                       boxShadow: '0 0 30px rgba(255,215,0,0.4)',
                       cursor: 'pointer'
                     }}
                   >
-                    <Play size={40} fill="#ffffff" color="#ffffff" style={{ marginLeft: '4px' }} />
+                    <Play size={32} fill="#ffffff" color="#ffffff" style={{ marginLeft: '4px' }} />
                   </div>
-                  <h4 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                  <h4 style={{ fontSize: 'clamp(1.15rem, 3.5vw, 1.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>
                     {currentAlbumMedia[lightboxIndex].title}
                   </h4>
-                  <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '500px', margin: '0 auto' }}>
+                  <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '500px', margin: '0 auto', fontSize: '0.85rem' }}>
                     Video Highlight ({currentAlbumMedia[lightboxIndex].videoDuration}) &bull; Recorded live during the event
                   </p>
                 </div>
@@ -1027,12 +1034,12 @@ export default function GalleryPage() {
                   }}
                 />
               ) : (
-                <div style={{ textAlign: 'center', color: '#ffffff', padding: '2rem' }}>
-                  <ImageIcon size={64} style={{ color: '#FFD700', marginBottom: '1rem', opacity: 0.8 }} />
-                  <h4 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                <div style={{ textAlign: 'center', color: '#ffffff', padding: '1.5rem' }}>
+                  <ImageIcon size={52} style={{ color: '#FFD700', marginBottom: '0.75rem', opacity: 0.8 }} />
+                  <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
                     {currentAlbumMedia[lightboxIndex].title}
                   </h4>
-                  <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '550px', margin: '0 auto', fontSize: '0.95rem' }}>
+                  <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '550px', margin: '0 auto', fontSize: '0.875rem' }}>
                     {currentAlbumMedia[lightboxIndex].caption}
                   </p>
                 </div>
@@ -1045,12 +1052,12 @@ export default function GalleryPage() {
               aria-label="Next Media"
               style={{
                 position: 'absolute',
-                right: '1rem',
+                right: '0.5rem',
                 backgroundColor: 'rgba(255,255,255,0.15)',
                 color: '#ffffff',
                 border: 'none',
-                width: '52px',
-                height: '52px',
+                width: 'clamp(36px, 8vw, 48px)',
+                height: 'clamp(36px, 8vw, 48px)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -1059,7 +1066,7 @@ export default function GalleryPage() {
                 zIndex: 20
               }}
             >
-              <ChevronRight size={32} />
+              <ChevronRight size={24} />
             </button>
           </div>
 

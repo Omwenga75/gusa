@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { verifyAdminSession } from '@/lib/adminAuth'
+
 
 export async function GET(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { searchParams } = new URL(request.url)
     const countOnly = searchParams.get('countOnly')
@@ -59,6 +64,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const body = await request.json()
     const { id, status } = body
@@ -84,6 +92,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')

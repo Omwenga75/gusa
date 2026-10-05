@@ -51,7 +51,7 @@ export function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?
 
   if (isPast) {
     return (
-      <span className="text-[10px] font-bold uppercase bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/30 whitespace-nowrap">
+      <span className="text-[9px] sm:text-[10px] font-bold uppercase bg-emerald-500/15 text-emerald-400 px-1.5 sm:px-2 py-0.5 rounded-md border border-emerald-500/30 whitespace-nowrap shrink-0">
         Passed
       </span>
     )
@@ -60,8 +60,8 @@ export function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?
   if (!timeLeft) return null
 
   return (
-    <span className="text-xs font-mono font-extrabold bg-violet-500/15 text-violet-300 px-2.5 py-1 rounded-lg border border-violet-500/35 inline-flex items-center gap-1 whitespace-nowrap shadow-sm">
-      <Clock size={12} className="text-violet-400" />
+    <span className="text-[11px] sm:text-xs font-mono font-extrabold bg-violet-500/15 text-violet-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-violet-500/35 inline-flex items-center gap-1 whitespace-nowrap shadow-sm shrink-0">
+      <Clock size={11} className="text-violet-400 shrink-0" />
       {timeLeft}
     </span>
   )

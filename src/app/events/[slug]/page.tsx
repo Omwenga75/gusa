@@ -1,37 +1,38 @@
-import React from 'react';
 import Link from 'next/link';
-import PublicLayout from '@/components/layout/PublicLayout';
-import { Calendar, MapPin, Users, ArrowLeft, Clock, Share2, Tag } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { Calendar, MapPin, Users, ArrowLeft, Clock } from 'lucide-react';
+import prisma from '@/lib/prisma';
+import { PublicLayout } from '@/components/layout/PublicLayout';
 
-export default function EventDetailPage({ params }: { params: { slug: string } }) {
-  // Static placeholder data
-  const event = {
-    title: 'GUSA Annual Cultural Night 2026',
-    date: 'October 15, 2026',
-    time: '6:00 PM - 11:00 PM',
-    venue: 'Main Hall, MUST Campus',
-    capacity: '500 attendees',
-    category: 'Cultural Event',
-    organizer: 'GUSA Executive Committee',
-    description: `Join us for the most anticipated event of the year! The GUSA Annual Cultural Night is a celebration of our rich heritage, featuring traditional dances, authentic Gusii cuisine, poetry, and a showcase of our vibrant culture. 
-    
-    This year's theme is "Embracing Our Roots in the Modern World". Come dressed in your best cultural attire. 
-    
-    The evening will also feature guest speakers from our alumni network, networking opportunities, and the crowning of Mr. and Miss GUSA. Don't miss out on this spectacular night of community and celebration!`,
-  };
+export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
-  const relatedEvents = [
-    { id: 1, title: 'Fresher\'s Welcome Party', date: 'Sept 30, 2026', category: 'Social' },
-    { id: 2, title: 'Academic Mentorship Forum', date: 'Nov 5, 2026', category: 'Academic' },
-    { id: 3, title: 'End of Year Sports Gala', date: 'Dec 10, 2026', category: 'Sports' }
-  ];
+  const event = await prisma.event.findUnique({
+    where: { slug },
+  });
+
+  if (!event) {
+    notFound();
+  }
+
+  const eventDate = new Date(event.date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
     <PublicLayout>
-      {/* Hero Section Placeholder */}
-      <div 
-        className="w-full h-64 md:h-96 relative flex items-end pb-8"
-        style={{ background: 'linear-gradient(135deg, var(--primary) 0%, #005a36 100%)' }}
+      {/* Hero Banner */}
+      <div
+        className="w-full relative flex items-end pb-8"
+        style={{
+          minHeight: event.coverImage ? '320px' : '200px',
+          background: event.coverImage
+            ? `linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3)), url(${event.coverImage}) center/cover no-repeat`
+            : 'linear-gradient(135deg, var(--primary) 0%, #005a36 100%)',
+        }}
       >
         <div className="container mx-auto px-4 relative z-10">
           <Link href="/events" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors">
@@ -39,8 +40,18 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
             Back to Events
           </Link>
           <div className="flex flex-wrap gap-2 mb-3">
-            <span className="badge" style={{ backgroundColor: 'var(--accent-gold)', color: '#000' }}>
-              {event.category}
+            <span
+              className="badge"
+              style={{
+                backgroundColor: event.status === 'PUBLISHED' ? 'var(--accent-gold, #d4af37)' : '#6b7280',
+                color: '#000',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '9999px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+              }}
+            >
+              {event.status}
             </span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">{event.title}</h1>
@@ -60,42 +71,46 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
               </div>
             </div>
 
-            <div className="glass-card p-6">
-              <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Organizer</h3>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl font-bold text-gray-500">
-                  G
-                </div>
-                <div>
-                  <h4 className="font-semibold text-lg">{event.organizer}</h4>
-                  <p className="text-sm text-gray-500">Gusii University Students Association</p>
+            {event.organizer && (
+              <div className="glass-card p-6">
+                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Organizer</h3>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl font-bold text-gray-500">
+                    {event.organizer.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg">{event.organizer}</h4>
+                    <p className="text-sm text-gray-500">Gusii University Students Association</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:w-1/3">
             <div className="glass-card p-6 sticky top-24">
               <h3 className="text-xl font-bold mb-6 border-b pb-4 dark:border-gray-700" style={{ color: 'var(--text-main)' }}>Event Details</h3>
-              
+
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
                   <Calendar className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
                   <div>
                     <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Date</p>
-                    <p className="text-gray-600 dark:text-gray-400">{event.date}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{eventDate}</p>
                   </div>
                 </div>
-                
-                <div className="flex items-start gap-3">
-                  <Clock className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Time</p>
-                    <p className="text-gray-600 dark:text-gray-400">{event.time}</p>
+
+                {event.startTime && (
+                  <div className="flex items-start gap-3">
+                    <Clock className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Time</p>
+                      <p className="text-gray-600 dark:text-gray-400">{event.startTime}</p>
+                    </div>
                   </div>
-                </div>
-                
+                )}
+
                 <div className="flex items-start gap-3">
                   <MapPin className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
                   <div>
@@ -104,51 +119,17 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
-                    <p className="text-gray-600 dark:text-gray-400">{event.capacity}</p>
+                {event.capacity && (
+                  <div className="flex items-start gap-3">
+                    <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
+                      <p className="text-gray-600 dark:text-gray-400">{event.capacity} attendees</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-
-              <button 
-                className="w-full btn py-3 text-white font-bold rounded-lg mb-4 hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: 'var(--primary)' }}
-              >
-                I Will Attend
-              </button>
-
-              <button className="w-full btn btn-outline py-3 flex items-center justify-center gap-2">
-                <Share2 size={18} />
-                Share Event
-              </button>
             </div>
-          </div>
-        </div>
-
-        {/* Related Events */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-main)' }}>Related Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedEvents.map(evt => (
-              <div key={evt.id} className="glass-card card-hover overflow-hidden">
-                <div className="h-32" style={{ backgroundColor: 'var(--surface-subtle)' }}></div>
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-xs font-semibold text-gray-500 flex items-center gap-1">
-                      <Tag size={12} /> {evt.category}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--text-main)' }}>{evt.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar size={14} />
-                    <span>{evt.date}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

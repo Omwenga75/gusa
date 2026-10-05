@@ -119,17 +119,17 @@ export default function ContactPage() {
             <div
               className="card"
               style={{
-                padding: '3rem',
+                padding: 'clamp(1.25rem, 4vw, 3rem)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px solid var(--border)',
                 backgroundColor: 'var(--surface)',
                 boxShadow: 'var(--shadow-md)'
               }}
             >
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
+              <h2 style={{ fontSize: 'clamp(1.35rem, 3.5vw, 1.75rem)', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
                 Send Us a Message
               </h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '2.25rem' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '1.75rem' }}>
                 Fill in the details below. Our Secretariat typically responds within 24 business hours.
               </p>
 
@@ -277,7 +277,7 @@ export default function ContactPage() {
         <div className="container" style={{ maxWidth: '850px' }}>
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <span className="badge badge-info" style={{ marginBottom: '0.5rem' }}>Help Center</span>
-            <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-main)' }}>
+            <h2 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2rem)', fontWeight: 700, color: 'var(--text-main)' }}>
               Frequently Asked Questions
             </h2>
           </div>
@@ -298,7 +298,7 @@ export default function ContactPage() {
                   onClick={() => toggleFaq(idx)}
                   style={{
                     width: '100%',
-                    padding: '1.25rem 1.5rem',
+                    padding: '1rem clamp(1rem, 3vw, 1.5rem)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
@@ -308,7 +308,8 @@ export default function ContactPage() {
                     cursor: 'pointer',
                     color: 'var(--text-main)',
                     fontWeight: 600,
-                    fontSize: '1rem'
+                    fontSize: '1rem',
+                    gap: '0.75rem'
                   }}
                 >
                   <span>{faq.q}</span>
@@ -324,7 +325,7 @@ export default function ContactPage() {
                 {openFaq === idx && (
                   <div
                     style={{
-                      padding: '0 1.5rem 1.25rem 1.5rem',
+                      padding: '0 clamp(1rem, 3vw, 1.5rem) 1.25rem clamp(1rem, 3vw, 1.5rem)',
                       color: 'var(--text-muted)',
                       fontSize: '0.9375rem',
                       lineHeight: 1.6,
