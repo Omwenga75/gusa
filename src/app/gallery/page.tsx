@@ -113,16 +113,6 @@ export default function GalleryPage() {
     return albumsData.filter((album) => album.category === selectedCategory);
   }, [albumsData, selectedCategory]);
 
-  // Overall statistics
-  const totalPhotos = useMemo(
-    () => albumsData.reduce((acc, curr) => acc + curr.photoCount, 0),
-    [albumsData]
-  );
-  const totalVideos = useMemo(
-    () => albumsData.reduce((acc, curr) => acc + curr.videoCount, 0),
-    [albumsData]
-  );
-
   // Open album modal
   const handleOpenAlbum = (album: Album) => {
     setActiveAlbum(album);
@@ -198,43 +188,7 @@ export default function GalleryPage() {
             >
               <Layers size={16} style={{ color: '#FFD700' }} />
               <strong style={{ color: '#ffffff' }}>{albumsData.length}</strong>
-              <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Curated Albums</span>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '9999px',
-                padding: '0.5rem 1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              <ImageIcon size={16} style={{ color: '#FFD700' }} />
-              <strong style={{ color: '#ffffff' }}>{totalPhotos}+</strong>
-              <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>HD Photos</span>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '9999px',
-                padding: '0.5rem 1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              <Video size={16} style={{ color: '#FFD700' }} />
-              <strong style={{ color: '#ffffff' }}>{totalVideos}</strong>
-              <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Video Highlights</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Albums</span>
             </div>
           </div>
         </div>
