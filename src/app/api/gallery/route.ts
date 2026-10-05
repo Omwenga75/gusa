@@ -74,3 +74,36 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create gallery album' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
+  try {
+    const { searchParams } = new URL(request.url)
+    let id = searchParams.get('id')
+
+    if (!id) {
+      try {
+        const body = await request.json()
+        id = body.id
+      } catch {
+        // no JSON body
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: 'Album ID is required' }, { status: 400 })
+    }
+
+    await prisma.album.delete({
+      where: { id }
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Delete album error:', error)
+    return NextResponse.json({ error: 'Failed to delete album' }, { status: 500 })
+  }
+}
+

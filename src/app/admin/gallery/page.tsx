@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { Upload, Image as ImageIcon, X, Plus } from 'lucide-react';
+import { Upload, Image as ImageIcon, X, Plus, Trash2 } from 'lucide-react';
 import { readCache, writeCache } from '@/lib/cache';
 
 interface Album {
@@ -20,11 +20,42 @@ export default function GalleryPage() {
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_GALLERY_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form State
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
+
+  const handleDeleteAlbum = async (album: Album) => {
+    if (!window.confirm(`Are you sure you want to permanently delete "${album.name}" and all its photos?`)) {
+      return;
+    }
+
+    setDeletingId(album.id);
+    const prevAlbums = [...albums];
+    setAlbums(prev => prev.filter(a => a.id !== album.id));
+
+    try {
+      const res = await fetch(`/api/gallery/${album.id}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) {
+        setAlbums(prevAlbums);
+        alert('Failed to delete album.');
+      } else {
+        const nextList = prevAlbums.filter(a => a.id !== album.id);
+        writeCache(ADMIN_GALLERY_KEY, nextList);
+      }
+    } catch (err) {
+      console.error(err);
+      setAlbums(prevAlbums);
+      alert('Network error while deleting album.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const fetchGallery = async () => {
     if (!readCache(ADMIN_GALLERY_KEY)) {
@@ -153,9 +184,36 @@ export default function GalleryPage() {
                     <ImageIcon size={32} />
                   )}
                 </div>
-                <div style={{ padding: '1rem' }}>
-                  <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#ffffff' }}>{album.name}</h3>
-                  <p style={{ margin: 0, fontSize: '0.8125rem', color: '#94a3b8' }}>{album.images?.length || 0} photos</p>
+                <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div>
+                    <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>{album.name}</h3>
+                    <p style={{ margin: 0, fontSize: '0.8125rem', color: '#94a3b8' }}>{album.images?.length || 0} photos</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
+                    <button
+                      onClick={() => handleDeleteAlbum(album)}
+                      disabled={deletingId === album.id}
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#f87171',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        cursor: deletingId === album.id ? 'not-allowed' : 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.35rem',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Delete album"
+                    >
+                      <Trash2 size={13} />
+                      <span>{deletingId === album.id ? 'Deleting...' : 'Delete'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
