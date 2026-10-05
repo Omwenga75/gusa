@@ -9,7 +9,6 @@ import {
   Video,
   Eye,
   Calendar,
-  MapPin,
   X,
   ChevronLeft,
   ChevronRight,
@@ -39,7 +38,6 @@ type Album = {
   slug: string;
   category: 'Culture' | 'Events' | 'Sports' | 'Campus Life';
   date: string;
-  location: string;
   description: string;
   coverGradient: string;
   coverImage?: string;
@@ -81,7 +79,6 @@ export default function GalleryPage() {
               slug: alb.id,
               category: (alb.category as any) || 'Campus Life',
               date: new Date(alb.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-              location: 'Meru University of Science and Technology',
               description: alb.description || 'Official GUSA Album',
               coverGradient: 'from-violet-600 to-blue-600',
               coverImage: alb.coverImage || firstImage,
@@ -489,10 +486,6 @@ export default function GalleryPage() {
                       <Calendar size={13} style={{ color: 'var(--color-primary)' }} />
                       {album.date}
                     </span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                      <MapPin size={13} style={{ color: 'var(--color-primary)' }} />
-                      {album.location}
-                    </span>
                   </div>
 
                   <h3
@@ -622,7 +615,7 @@ export default function GalleryPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
                   <span className="badge badge-primary">{activeAlbum.category}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                    {activeAlbum.date} &bull; {activeAlbum.location}
+                    {activeAlbum.date}
                   </span>
                 </div>
                 <h2 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', fontWeight: 800, overflowWrap: 'anywhere' }}>{activeAlbum.title}</h2>
