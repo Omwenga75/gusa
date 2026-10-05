@@ -284,12 +284,12 @@ export default function GalleryPage() {
                 <div
                   style={{
                     position: 'relative',
-                    height: '280px',
+                    height: '210px',
                     background: album.coverGradient,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    padding: '1.25rem',
+                    padding: '0.85rem 1rem',
                     overflow: 'hidden'
                   }}
                 >
@@ -471,15 +471,15 @@ export default function GalleryPage() {
                 </div>
 
                 {/* Card Body */}
-                <div className="card-body" style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div className="card-body" style={{ padding: '0.85rem 1rem 1rem 1rem', display: 'flex', flexDirection: 'column' }}>
                   <div
                     style={{
                       display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.85rem',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                       fontSize: '0.75rem',
                       color: 'var(--color-text-muted)',
-                      marginBottom: '0.75rem'
+                      marginBottom: '0.35rem'
                     }}
                   >
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
@@ -490,50 +490,31 @@ export default function GalleryPage() {
 
                   <h3
                     style={{
-                      fontSize: '1.25rem',
+                      fontSize: '1.1rem',
                       fontWeight: 700,
-                      marginBottom: '0.75rem',
+                      marginBottom: album.description && album.description !== album.title && album.description !== 'Official GUSA Album' ? '0.25rem' : '0',
                       lineHeight: 1.3
                     }}
                   >
                     {album.title}
                   </h3>
 
-                  <p
-                    style={{
-                      fontSize: '0.875rem',
-                      color: 'var(--color-text-secondary)',
-                      lineHeight: 1.6,
-                      marginBottom: '1.5rem',
-                      flex: 1
-                    }}
-                  >
-                    {album.description}
-                  </p>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginTop: 'auto',
-                      paddingTop: '1rem',
-                      borderTop: '1px solid var(--border-subtle)'
-                    }}
-                  >
-                    <span
+                  {album.description && album.description !== album.title && album.description !== 'Official GUSA Album' && (
+                    <p
                       style={{
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                        color: 'var(--color-primary)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.35rem'
+                        fontSize: '0.8125rem',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: 1.5,
+                        margin: 0,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
                       }}
                     >
-                      View Album <ChevronRight size={16} />
-                    </span>
-                  </div>
+                      {album.description}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
