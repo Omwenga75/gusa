@@ -533,10 +533,6 @@ export default function GalleryPage() {
                     >
                       View Album <ChevronRight size={16} />
                     </span>
-
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                      {album.media.length} media samples
-                    </span>
                   </div>
                 </div>
               </div>
