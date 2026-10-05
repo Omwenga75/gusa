@@ -244,16 +244,18 @@ export default function GalleryPage() {
                   key={album.id}
                   onClick={() => handleOpenAlbum(album)}
                   className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900 cursor-pointer shadow-lg hover:shadow-pink-500/10"
+                  style={{ aspectRatio: '1 / 1' }}
                 >
                   {/* Full Cover Image */}
                   {album.coverImage ? (
                     <img
                       src={album.coverImage}
                       alt={album.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                      className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">
                       <ImageIcon size={42} className="text-pink-400 opacity-40" />
                     </div>
                   )}
@@ -273,23 +275,26 @@ export default function GalleryPage() {
                     </button>
                   </div>
 
-                  {/* Bottom Text Over Photo (No dark shape, subtle gradient & drop shadows) */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4 sm:p-5">
+                  {/* Bottom Text Over Photo (No black footer, translucent gradient & drop shadows) */}
+                  <div
+                    className="absolute inset-0 flex items-end p-4 sm:p-5 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 35%, transparent 70%)' }}
+                  >
                     <div className="w-full">
-                      <h3 className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-pink-300 transition-colors line-clamp-1">
+                      <h3 className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,1)] group-hover:text-pink-300 transition-colors line-clamp-1">
                         {album.title}
                       </h3>
                       {album.description && album.description !== album.title && album.description !== 'Official GUSA Album' && (
-                        <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                        <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,1)]">
                           {album.description}
                         </p>
                       )}
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-pink-300 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-pink-500/30 drop-shadow-sm">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-pink-300 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-pink-500/30 drop-shadow-sm">
                           {album.photoCount} photos
                         </span>
                         {album.videoCount > 0 && (
-                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-cyan-500/30 drop-shadow-sm">
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-cyan-500/30 drop-shadow-sm">
                             <Video size={11} /> {album.videoCount} videos
                           </span>
                         )}
