@@ -1,118 +1,232 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Home, Users, Calendar, Image, Newspaper, Landmark, FolderKanban, Info, Mail, UserPlus } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Leadership', href: '/leadership' },
-  { label: 'Events', href: '/events' },
-  { label: 'Gallery', href: '/gallery' },
-  { label: 'News', href: '/news' },
-  { label: 'Politics', href: '/politics' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-  { label: 'Join Us', href: '/join' },
+  { label: 'Home',       href: '/',           icon: Home },
+  { label: 'Leadership', href: '/leadership', icon: Users },
+  { label: 'Events',     href: '/events',     icon: Calendar },
+  { label: 'Gallery',    href: '/gallery',    icon: Image },
+  { label: 'News',       href: '/news',       icon: Newspaper },
+  { label: 'Politics',   href: '/politics',   icon: Landmark },
+  { label: 'Projects',   href: '/projects',   icon: FolderKanban },
+  { label: 'About',      href: '/about',      icon: Info },
+  { label: 'Contact',    href: '/contact',    icon: Mail },
+  { label: 'Join Us',    href: '/join',       icon: UserPlus },
 ]
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
 
+  const closeDrawer = useCallback(() => setDrawerOpen(false), [])
+
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Close on route change
+  useEffect(() => { closeDrawer() }, [pathname, closeDrawer])
+
+  // Close on Escape key
   useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [pathname])
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeDrawer() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [closeDrawer])
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [drawerOpen])
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? 'bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md shadow-lg border-b border-violet-500/20 py-3' 
-        : 'bg-slate-900/70 dark:bg-slate-950/70 backdrop-blur-sm border-b border-white/10 py-4'
-    }`}>
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-xl text-violet-400">
-              G
+    <>
+      {/* ── Top bar ─────────────────────────────────────────────────── */}
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md shadow-lg border-b border-violet-500/20 py-3'
+            : 'bg-slate-900/70 dark:bg-slate-950/70 backdrop-blur-sm border-b border-white/10 py-4'
+        }`}
+      >
+        <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between">
+          {/* Brand */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-lg sm:text-xl text-violet-400">
+                G
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
-              GUSA <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">MUST</span>
-            </span>
-            <span className="text-[10px] text-slate-400 font-medium tracking-wide hidden sm:block">
-              Gusii University Students Association
-            </span>
-          </div>
-        </Link>
+            <div className="flex flex-col min-w-0">
+              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+                GUSA{' '}
+                <span className="text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                  MUST
+                </span>
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium tracking-wide hidden sm:block truncate">
+                Gusii University Students Association
+              </span>
+            </div>
+          </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-1 bg-slate-800/50 dark:bg-slate-900/50 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href
+          {/* Desktop nav pill */}
+          <nav className="hidden xl:flex items-center gap-1 bg-slate-800/50 dark:bg-slate-900/50 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
+            {NAV_LINKS.map(({ href, label }) => {
+              const active = pathname === href
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                    active
+                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30'
+                      : '!text-slate-200 hover:!text-white hover:bg-white/10'
+                  }`}
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          {/* Desktop right spacer */}
+          <div className="hidden lg:flex items-center gap-3" />
+
+          {/* Hamburger — mobile/tablet only */}
+          <div className="xl:hidden flex items-center">
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="p-2 sm:p-2.5 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 min-h-[40px] min-w-[40px] flex items-center justify-center"
+              aria-label="Open navigation menu"
+              aria-expanded={drawerOpen}
+            >
+              <Menu size={22} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Left Drawer ─────────────────────────────────────────────── */}
+
+      {/* Backdrop */}
+      <div
+        aria-hidden="true"
+        onClick={closeDrawer}
+        className={`xl:hidden fixed inset-0 z-[60] transition-all duration-300 ${
+          drawerOpen ? 'bg-black/60 backdrop-blur-sm pointer-events-auto' : 'bg-transparent pointer-events-none'
+        }`}
+      />
+
+      {/* Drawer panel */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className={`xl:hidden fixed top-0 left-0 z-[70] h-full w-[82vw] max-w-[320px]
+          flex flex-col
+          bg-[#0d0d1a] border-r border-violet-500/20
+          shadow-[8px_0_40px_rgba(109,40,217,0.18)]
+          transition-transform duration-300 ease-in-out
+          ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-5 pt-6 pb-5">
+          <Link href="/" onClick={closeDrawer} className="flex items-center gap-3 group">
+            {/* Logo icon */}
+            <div className="w-11 h-11 shrink-0 rounded-2xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/25 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#0d0d1a] rounded-[14px] flex items-center justify-center font-black text-xl text-violet-400">
+                G
+              </div>
+            </div>
+            {/* Brand text */}
+            <div className="flex flex-col leading-tight">
+              <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+                GUSA
+                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                  MUST
+                </span>
+              </span>
+            </div>
+          </Link>
+
+          {/* Close button */}
+          <button
+            onClick={closeDrawer}
+            aria-label="Close navigation menu"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 hover:bg-violet-500/30 transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Thin accent line */}
+        <div className="mx-5 h-px bg-gradient-to-r from-violet-500/40 via-blue-500/20 to-transparent mb-2" />
+
+        {/* Nav links */}
+        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-violet-500/20">
+          {NAV_LINKS.map(({ href, label, icon: Icon }, idx) => {
+            const active = pathname === href
             return (
               <Link
-                key={link.href}
-                href={link.href}
-                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30' 
-                    : '!text-slate-200 hover:!text-white hover:bg-white/10'
-                }`}
+                key={href}
+                href={href}
+                onClick={closeDrawer}
+                style={{ animationDelay: `${idx * 35}ms` }}
+                className={`
+                  group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl
+                  text-[15px] font-semibold tracking-wide
+                  transition-all duration-200
+                  ${drawerOpen ? 'animate-drawer-item' : ''}
+                  ${
+                    active
+                      ? 'bg-violet-600/25 text-white border border-violet-500/40 shadow-sm shadow-violet-500/10'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                  }
+                `}
               >
-                {link.label}
+                {/* Active left-edge accent */}
+                {active && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-violet-400 to-blue-500" />
+                )}
+
+                {/* Icon */}
+                <span
+                  className={`shrink-0 transition-colors ${
+                    active ? 'text-violet-400' : 'text-slate-500 group-hover:text-violet-400'
+                  }`}
+                >
+                  <Icon size={19} strokeWidth={active ? 2.2 : 1.8} />
+                </span>
+
+                {/* Label */}
+                <span className="flex-1">{label}</span>
+
+                {/* Active dot indicator */}
+                {active && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow shadow-violet-400/60" />
+                )}
               </Link>
             )
           })}
         </nav>
 
-        {/* Action Controls — desktop placeholder to keep spacing */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* Footer strip */}
+        <div className="px-5 py-5 border-t border-violet-500/10">
+          <p className="text-[11px] text-slate-600 font-medium tracking-wide text-center">
+            © {new Date().getFullYear()} GUSA – Meru University
+          </p>
         </div>
-
-        {/* Mobile Menu Button */}
-        <div className="xl:hidden flex items-center gap-3">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30"
-          >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Dropdown Panel */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 w-full bg-slate-950/95 border-b border-violet-500/20 backdrop-blur-xl p-6 flex flex-col gap-3 shadow-2xl max-h-[calc(100dvh-80px)] overflow-y-auto">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                pathname === link.href 
-                  ? 'bg-violet-500/20 !text-violet-300 border border-violet-500/30 font-bold' 
-                  : '!text-slate-200 hover:bg-white/5'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </header>
+      </aside>
+    </>
   )
 }
