@@ -40,7 +40,6 @@ export default function AboutPage() {
                 color: 'var(--text-main)'
               }}
             >
-              Rooted in Heritage,{' '}
               <span
                 style={{
                   background: 'linear-gradient(135deg, var(--primary) 0%, #38bdf8 60%, var(--accent-gold) 100%)',
