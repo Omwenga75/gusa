@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { Upload, Image as ImageIcon, X, Plus, Trash2 } from 'lucide-react';
+import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
 import { readCache, writeCache } from '@/lib/cache';
 
 interface Album {
@@ -19,6 +19,7 @@ export default function GalleryPage() {
   const [albums, setAlbums] = useState<Album[]>(() => readCache<Album[]>(ADMIN_GALLERY_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_GALLERY_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,6 +45,7 @@ export default function GalleryPage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
+  const [imageFiles, setImageFiles] = useState<(File | null)[]>(Array(10).fill(null));
 
   const handleDeleteAlbum = async (album: Album) => {
     if (!window.confirm(`Are you sure you want to permanently delete "${album.name}" and all its photos?`)) {
@@ -99,6 +101,13 @@ export default function GalleryPage() {
 
   const handleImageUpload = (index: number, file: File | undefined) => {
     if (!file) return;
+    // Store the File object for later upload
+    setImageFiles(prev => {
+      const next = [...prev];
+      next[index] = file;
+      return next;
+    });
+    // Generate preview
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
@@ -119,39 +128,136 @@ export default function GalleryPage() {
       next[index] = '';
       return next;
     });
+    setImageFiles(prev => {
+      const next = [...prev];
+      next[index] = null;
+      return next;
+    });
   };
 
   const resetForm = () => {
     setName('');
     setDescription('');
     setImages(Array(10).fill(''));
+    setImageFiles(Array(10).fill(null));
+    setEditingAlbum(null);
   };
 
-  const handleCreateAlbum = async (e: React.FormEvent) => {
+  const handleOpenEdit = (album: Album) => {
+    setEditingAlbum(album);
+    setName(album.name);
+    setDescription(album.description || '');
+    const existingUrls = (album.images && album.images.length > 0)
+      ? album.images.map(img => img.imageUrl)
+      : (album.coverImage ? [album.coverImage] : []);
+    const initialImages = Array(10).fill('');
+    existingUrls.slice(0, 10).forEach((url, i) => {
+      initialImages[i] = url;
+    });
+    setImages(initialImages);
+    setImageFiles(Array(10).fill(null));
+    setIsModalOpen(true);
+  };
+
+  const handleSaveAlbum = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name) return;
+    if (!name.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const activeImages = images.filter(Boolean);
-      const res = await fetch('/api/gallery', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          description,
-          images: activeImages,
-          category: 'Campus Life'
-        })
+      // 1. Identify which slots have newly selected File objects
+      const uploadIndices: number[] = [];
+      imageFiles.forEach((file, idx) => {
+        if (file !== null) {
+          uploadIndices.push(idx);
+        }
       });
 
-      if (res.ok) {
-        resetForm();
-        setIsModalOpen(false);
-        fetchGallery();
+      const uploadedUrlsMap = new Map<number, string>();
+
+      if (uploadIndices.length > 0) {
+        const formData = new FormData();
+        uploadIndices.forEach((idx) => {
+          formData.append('files', imageFiles[idx]!);
+        });
+
+        const uploadRes = await fetch('/api/gallery/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          const errData = await uploadRes.json().catch(() => ({}));
+          alert(errData.error || 'Failed to upload images.');
+          setIsSubmitting(false);
+          return;
+        }
+
+        const uploadData = await uploadRes.json();
+        const returnedUrls: string[] = uploadData.urls || [];
+        uploadIndices.forEach((origIdx, i) => {
+          if (returnedUrls[i]) {
+            uploadedUrlsMap.set(origIdx, returnedUrls[i]);
+          }
+        });
+      }
+
+      // 2. Build final list of image URLs preserving order
+      const finalUrls: string[] = [];
+      for (let i = 0; i < 10; i++) {
+        if (uploadedUrlsMap.has(i)) {
+          finalUrls.push(uploadedUrlsMap.get(i)!);
+        } else if (images[i] && !images[i].startsWith('data:')) {
+          finalUrls.push(images[i]);
+        }
+      }
+
+      if (editingAlbum) {
+        // Update existing album
+        const res = await fetch(`/api/gallery/${editingAlbum.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name.trim(),
+            description: description.trim(),
+            images: finalUrls,
+            category: 'Campus Life'
+          })
+        });
+
+        if (res.ok) {
+          resetForm();
+          setIsModalOpen(false);
+          fetchGallery();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          alert(errData.error || 'Failed to update album.');
+        }
+      } else {
+        // Create new album
+        const res = await fetch('/api/gallery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name.trim(),
+            description: description.trim(),
+            images: finalUrls,
+            category: 'Campus Life'
+          })
+        });
+
+        if (res.ok) {
+          resetForm();
+          setIsModalOpen(false);
+          fetchGallery();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          alert(errData.error || 'Failed to create album.');
+        }
       }
     } catch (err) {
       console.error(err);
+      alert('Network error while saving album.');
     } finally {
       setIsSubmitting(false);
     }
@@ -207,7 +313,29 @@ export default function GalleryPage() {
                     <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>{album.name}</h3>
                     <p style={{ margin: 0, fontSize: '0.8125rem', color: '#94a3b8' }}>{album.images?.length || 0} photos</p>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
+                    <button
+                      onClick={() => handleOpenEdit(album)}
+                      style={{
+                        background: 'rgba(59, 130, 246, 0.15)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        color: '#60a5fa',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.35rem',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Edit album"
+                    >
+                      <Pencil size={13} />
+                      <span>Edit</span>
+                    </button>
                     <button
                       onClick={() => handleDeleteAlbum(album)}
                       disabled={deletingId === album.id}
@@ -254,13 +382,13 @@ export default function GalleryPage() {
         }}>
           <div className={styles.card} style={{ width: '100%', maxWidth: '520px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 className={styles.cardTitle}>Upload Gallery Album</h2>
-              <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <h2 className={styles.cardTitle}>{editingAlbum ? 'Edit Gallery Album' : 'Upload Gallery Album'}</h2>
+              <button onClick={() => { resetForm(); setIsModalOpen(false); }} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateAlbum} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSaveAlbum} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Album Name</label>
                 <input
@@ -393,7 +521,7 @@ export default function GalleryPage() {
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => { resetForm(); setIsModalOpen(false); }}
                   className={styles.btnOutline}
                   style={{ width: 'auto' }}
                 >
@@ -404,7 +532,7 @@ export default function GalleryPage() {
                   disabled={isSubmitting}
                   className={styles.btnPrimary}
                 >
-                  {isSubmitting ? 'Uploading...' : 'Save Album'}
+                  {isSubmitting ? (editingAlbum ? 'Saving...' : 'Uploading...') : (editingAlbum ? 'Update Album' : 'Save Album')}
                 </button>
               </div>
             </form>

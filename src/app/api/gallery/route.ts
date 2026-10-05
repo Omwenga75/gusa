@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       take: limit,
       include: {
         images: {
-          take: 8,
+          orderBy: { displayOrder: 'asc' },
           select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true },
         },
       },
@@ -62,7 +62,8 @@ export async function POST(request: NextRequest) {
           create: photoList.map((url, idx) => ({
             imageUrl: url,
             caption: `${name} - Photo ${idx + 1}`,
-            category: category || 'Campus Life'
+            category: category || 'Campus Life',
+            displayOrder: idx
           }))
         } : undefined
       }
