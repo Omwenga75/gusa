@@ -382,20 +382,20 @@ export default async function HomePage() {
                 return (
                   <Link href="/gallery" key={alb.id} className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900">
                     {cover ? (
-                      <img src={cover} alt={alb.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+                      <img src={cover} alt={alb.name} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300" />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">
                         <ImageIcon size={36} className="text-pink-400 opacity-40" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-end p-4 sm:p-5">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-4 sm:p-5">
                       <div>
-                        <p className="text-white font-bold text-sm sm:text-base leading-snug drop-shadow-md group-hover:text-pink-300 transition-colors">{alb.name}</p>
+                        <p className="text-white font-bold text-sm sm:text-base leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-pink-300 transition-colors">{alb.name}</p>
                         {alb.description && (
-                          <p className="text-xs text-slate-300 line-clamp-1 mt-1 opacity-90">{alb.description}</p>
+                          <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">{alb.description}</p>
                         )}
                         {alb.images && alb.images.length > 0 && (
-                          <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded-md border border-pink-500/20">
+                          <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-pink-300 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-pink-500/30 drop-shadow-sm">
                             {alb.images.length} photos
                           </span>
                         )}
