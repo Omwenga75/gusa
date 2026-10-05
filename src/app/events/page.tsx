@@ -415,8 +415,6 @@ export default function EventsPage() {
                           </h3>
                           <EventCountdown dateStr={event.date} timeStr={event.time} />
                         </div>
-                          <EventCountdown dateStr={event.date} timeStr={event.time} />
-                        </div>
 
                         {event.description && event.description !== event.title && (
                           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
