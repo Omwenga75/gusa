@@ -225,300 +225,80 @@ export default function GalleryPage() {
 
           {/* Albums Grid */}
           {isLoading ? (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
-                gap: 'clamp(1.25rem, 3vw, 2rem)'
-              }}
-            >
-              {[1, 2, 3, 4].map((n) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
-                  className="flex flex-col rounded-2xl overflow-hidden"
+                  className="aspect-square rounded-2xl overflow-hidden skeleton"
                   style={{
                     backgroundColor: 'var(--surface-subtle)',
                     border: '1px solid var(--border)',
                   }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAlbums.map((album) => (
+                <div
+                  key={album.id}
+                  onClick={() => handleOpenAlbum(album)}
+                  className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900 cursor-pointer shadow-lg hover:shadow-pink-500/10"
                 >
-                  <div className="skeleton" style={{ height: '280px', width: '100%', borderRadius: 0 }} />
-                  <div style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div className="skeleton" style={{ width: '40%', height: '14px', borderRadius: '4px' }} />
-                      <div className="skeleton" style={{ width: '30%', height: '14px', borderRadius: '4px' }} />
+                  {/* Full Cover Image */}
+                  {album.coverImage ? (
+                    <img
+                      src={album.coverImage}
+                      alt={album.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">
+                      <ImageIcon size={42} className="text-pink-400 opacity-40" />
                     </div>
-                    <div className="skeleton" style={{ width: '80%', height: '22px', borderRadius: '4px' }} />
-                    <div className="skeleton" style={{ width: '100%', height: '14px', borderRadius: '4px' }} />
-                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between' }}>
-                      <div className="skeleton" style={{ width: '90px', height: '16px', borderRadius: '4px' }} />
-                      <div className="skeleton" style={{ width: '70px', height: '14px', borderRadius: '4px' }} />
+                  )}
+
+                  {/* Top Bar Badges */}
+                  <div className="absolute top-0 inset-x-0 p-4 sm:p-5 flex justify-between items-center z-10 pointer-events-none">
+                    <span className="text-[11px] font-semibold text-white/90 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 drop-shadow-sm pointer-events-auto">
+                      {album.category}
+                    </span>
+
+                    <button
+                      onClick={(e) => handleShareAlbum(album.title, e)}
+                      title="Share album link"
+                      className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-pink-600 transition-colors pointer-events-auto shadow-md"
+                    >
+                      <Share2 size={14} />
+                    </button>
+                  </div>
+
+                  {/* Bottom Text Over Photo (No dark shape, subtle gradient & drop shadows) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4 sm:p-5">
+                    <div className="w-full">
+                      <h3 className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-pink-300 transition-colors line-clamp-1">
+                        {album.title}
+                      </h3>
+                      {album.description && album.description !== album.title && album.description !== 'Official GUSA Album' && (
+                        <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                          {album.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-pink-300 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-pink-500/30 drop-shadow-sm">
+                          {album.photoCount} photos
+                        </span>
+                        {album.videoCount > 0 && (
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-cyan-500/30 drop-shadow-sm">
+                            <Video size={11} /> {album.videoCount} videos
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
-                gap: 'clamp(1.25rem, 3vw, 2rem)'
-              }}
-            >
-              {filteredAlbums.map((album) => (
-              <div
-                key={album.id}
-                onClick={() => handleOpenAlbum(album)}
-                className="card card-hover"
-                style={{
-                  cursor: 'pointer',
-                  borderRadius: '1.25rem',
-                  overflow: 'hidden',
-                  border: '1px solid var(--border-default)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-              >
-                {/* Visual Cover Banner */}
-                <div
-                  style={{
-                    position: 'relative',
-                    height: '210px',
-                    background: album.coverGradient,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    padding: '0.85rem 1rem',
-                    overflow: 'hidden'
-                  }}
-                >
-                  {album.coverImage && (
-                    <img
-                      src={album.coverImage}
-                      alt={album.title}
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center top'
-                      }}
-                    />
-                  )}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.6) 100%)',
-                      pointerEvents: 'none'
-                    }}
-                  />
-
-
-                  {/* Top Bar Badges */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      position: 'relative',
-                      zIndex: 2
-                    }}
-                  >
-                    <span
-                      style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.55)',
-                        backdropFilter: 'blur(8px)',
-                        color: '#ffffff',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '9999px',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.04em',
-                        border: '1px solid rgba(255,255,255,0.2)'
-                      }}
-                    >
-                      {album.category}
-                    </span>
-
-                    {album.featured && (
-                      <span
-                        style={{
-                          backgroundColor: '#FFD700',
-                          color: '#111827',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: '9999px',
-                          fontSize: '0.75rem',
-                          fontWeight: 800,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.25rem'
-                        }}
-                      >
-                        <Sparkles size={12} /> Spotlight
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Center Action Overlay Hint */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      backgroundColor: 'rgba(0, 0, 0, 0.35)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      opacity: 0,
-                      transition: 'opacity 0.25s ease',
-                      zIndex: 3
-                    }}
-                    className="album-hover-overlay"
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
-                  >
-                    <span
-                      className="btn btn-secondary btn-sm"
-                      style={{
-                        borderRadius: '9999px',
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
-                        pointerEvents: 'none'
-                      }}
-                    >
-                      <Eye size={16} /> Open Album
-                    </span>
-                  </div>
-
-                  {/* Bottom Counter Bar */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-end',
-                      position: 'relative',
-                      zIndex: 2
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                          backdropFilter: 'blur(6px)',
-                          color: '#ffffff',
-                          padding: '0.3rem 0.65rem',
-                          borderRadius: '0.5rem',
-                          fontSize: '0.75rem',
-                          fontWeight: 600
-                        }}
-                      >
-                        <ImageIcon size={14} style={{ color: '#FFD700' }} />
-                        {album.photoCount} Photos
-                      </span>
-
-                      {album.videoCount > 0 && (
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.35rem',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            backdropFilter: 'blur(6px)',
-                            color: '#ffffff',
-                            padding: '0.3rem 0.65rem',
-                            borderRadius: '0.5rem',
-                            fontSize: '0.75rem',
-                            fontWeight: 600
-                          }}
-                        >
-                          <Video size={14} style={{ color: '#38b0b0' }} />
-                          {album.videoCount} Videos
-                        </span>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={(e) => handleShareAlbum(album.title, e)}
-                      title="Share album link"
-                      style={{
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        color: '#ffffff',
-                        border: 'none',
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '9999px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)')}
-                    >
-                      <Share2 size={15} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="card-body" style={{ padding: '0.85rem 1rem 1rem 1rem', display: 'flex', flexDirection: 'column' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      fontSize: '0.75rem',
-                      color: 'var(--color-text-muted)',
-                      marginBottom: '0.35rem'
-                    }}
-                  >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                      <Calendar size={13} style={{ color: 'var(--color-primary)' }} />
-                      {album.date}
-                    </span>
-                  </div>
-
-                  <h3
-                    style={{
-                      fontSize: '1.1rem',
-                      fontWeight: 700,
-                      marginBottom: album.description && album.description !== album.title && album.description !== 'Official GUSA Album' ? '0.25rem' : '0',
-                      lineHeight: 1.3
-                    }}
-                  >
-                    {album.title}
-                  </h3>
-
-                  {album.description && album.description !== album.title && album.description !== 'Official GUSA Album' && (
-                    <p
-                      style={{
-                        fontSize: '0.8125rem',
-                        color: 'var(--color-text-secondary)',
-                        lineHeight: 1.5,
-                        margin: 0,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      {album.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
           )}
 
           {/* Empty state if category filter has no results */}
