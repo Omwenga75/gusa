@@ -170,7 +170,7 @@ export default function GalleryPage() {
             name: name.trim(),
             description: description.trim(),
             images: finalUrls,
-            category: 'Campus Life'
+            category: 'General'
           })
         });
 
@@ -192,7 +192,7 @@ export default function GalleryPage() {
             name: name.trim(),
             description: description.trim(),
             images: finalUrls,
-            category: 'Campus Life'
+            category: 'General'
           })
         });
 

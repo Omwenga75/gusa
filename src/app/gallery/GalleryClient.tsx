@@ -36,7 +36,7 @@ type Album = {
   id: string;
   title: string;
   slug: string;
-  category: 'Culture' | 'Events' | 'Sports' | 'Campus Life';
+  category?: 'Culture' | 'Events' | 'Sports';
   date: string;
   description: string;
   coverGradient: string;
@@ -47,8 +47,8 @@ type Album = {
   media: MediaItem[];
 };
 
-type CategoryFilter = 'All' | 'Culture' | 'Events' | 'Sports' | 'Campus Life';
-const CATEGORIES: CategoryFilter[] = ['All', 'Culture', 'Events', 'Sports', 'Campus Life'];
+type CategoryFilter = 'All' | 'Culture' | 'Events' | 'Sports';
+const CATEGORIES: CategoryFilter[] = ['All', 'Culture', 'Events', 'Sports'];
 
 const GALLERY_CACHE_KEY = 'gallery';
 
@@ -77,7 +77,7 @@ export default function GalleryClient() {
               id: alb.id,
               title: alb.name,
               slug: alb.id,
-              category: (alb.category as any) || 'Campus Life',
+              category: (alb.category && alb.category !== 'Campus Life') ? alb.category : undefined,
               date: new Date(alb.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
               description: alb.description || 'Official GUSA Album',
               coverGradient: 'from-violet-600 to-blue-600',
@@ -260,12 +260,8 @@ export default function GalleryClient() {
                     </div>
                   )}
 
-                  {/* Top Bar Badges */}
-                  <div className="absolute top-0 inset-x-0 p-4 sm:p-5 flex justify-between items-center z-10 pointer-events-none">
-                    <span className="text-[11px] font-semibold text-white/90 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 drop-shadow-sm pointer-events-auto">
-                      {album.category}
-                    </span>
-
+                  {/* Top Bar Actions */}
+                  <div className="absolute top-0 inset-x-0 p-4 sm:p-5 flex justify-end items-center z-10 pointer-events-none">
                     <button
                       onClick={(e) => handleShareAlbum(album.title, e)}
                       title="Share album link"
@@ -375,7 +371,9 @@ export default function GalleryClient() {
             >
               <div style={{ minWidth: 0, flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-                  <span className="badge badge-primary">{activeAlbum.category}</span>
+                  {activeAlbum.category && (
+                    <span className="badge badge-primary">{activeAlbum.category}</span>
+                  )}
                   <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
                     {activeAlbum.date}
                   </span>

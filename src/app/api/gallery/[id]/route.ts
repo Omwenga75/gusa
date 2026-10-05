@@ -73,7 +73,7 @@ export async function PUT(
               albumId: id,
               imageUrl: url,
               caption: `${name} - Photo ${idx + 1}`,
-              category: category || 'Campus Life',
+              category: category || 'General',
               displayOrder: idx
             }))
           })

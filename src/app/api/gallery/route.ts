@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
           create: photoList.map((url, idx) => ({
             imageUrl: url,
             caption: `${name} - Photo ${idx + 1}`,
-            category: category || 'Campus Life',
+            category: category || 'General',
             displayOrder: idx
           }))
         } : undefined
