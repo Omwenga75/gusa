@@ -96,11 +96,10 @@ export default function NewsPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '40%' }}>Title</th>
-                <th style={{ width: '20%' }}>Author</th>
-                <th style={{ width: '15%' }}>Category</th>
-                <th style={{ width: '12%' }}>Status</th>
-                <th style={{ width: '13%' }}>Published Date</th>
+                <th style={{ width: '45%' }}>Title</th>
+                <th style={{ width: '22%' }}>Author</th>
+                <th style={{ width: '18%' }}>Category</th>
+                <th style={{ width: '15%' }}>Published Date</th>
               </tr>
             </thead>
             <tbody>
@@ -115,9 +114,6 @@ export default function NewsPage() {
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '0.375rem' }} />
-                    </td>
-                    <td>
-                      <div className="skeleton" style={{ width: '70px', height: '22px', borderRadius: '9999px' }} />
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
@@ -142,20 +138,6 @@ export default function NewsPage() {
                       {post.category || 'General'}
                     </span>
                   </td>
-                  <td style={{ whiteSpace: 'nowrap' }}>
-                    <span style={{
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: '9999px',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                      backgroundColor: post.status === 'PUBLISHED' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                      color: post.status === 'PUBLISHED' ? '#4ade80' : '#fbbf24',
-                      display: 'inline-block',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      {post.status}
-                    </span>
-                  </td>
                   <td style={{ color: '#94a3b8', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
                     {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Draft'}
                   </td>
@@ -164,7 +146,7 @@ export default function NewsPage() {
               )}
               {posts.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                     No news articles or announcements published yet. Click "New Article" to publish.
                   </td>
                 </tr>
