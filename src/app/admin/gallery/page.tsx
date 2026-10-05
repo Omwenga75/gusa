@@ -46,7 +46,7 @@ export default function GalleryPage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
-  const [imageFiles, setImageFiles] = useState<(File | null)[]>(Array(10).fill(null));
+  const [compressingIndex, setCompressingIndex] = useState<number | null>(null);
 
   const handleDeleteAlbum = async (album: Album) => {
     if (!window.confirm(`Are you sure you want to permanently delete "${album.name}" and all its photos?`)) {
@@ -103,15 +103,9 @@ export default function GalleryPage() {
 
   const handleImageUpload = async (index: number, file: File | undefined) => {
     if (!file) return;
-    // Store the File object for potential upload
-    setImageFiles(prev => {
-      const next = [...prev];
-      next[index] = file;
-      return next;
-    });
-    // Compress image client-side to ensure small payload
+    setCompressingIndex(index);
     try {
-      const compressed = await compressImage(file, 1200, 0.75);
+      const compressed = await compressImage(file, 1000, 0.72);
       setImages(prev => {
         const next = [...prev];
         next[index] = compressed;
@@ -119,6 +113,9 @@ export default function GalleryPage() {
       });
     } catch (err) {
       console.error('Image compression error:', err);
+      alert('Failed to process image.');
+    } finally {
+      setCompressingIndex(null);
     }
   };
 
@@ -128,18 +125,12 @@ export default function GalleryPage() {
       next[index] = '';
       return next;
     });
-    setImageFiles(prev => {
-      const next = [...prev];
-      next[index] = null;
-      return next;
-    });
   };
 
   const resetForm = () => {
     setName('');
     setDescription('');
     setImages(Array(10).fill(''));
-    setImageFiles(Array(10).fill(null));
     setEditingAlbum(null);
   };
 
@@ -155,7 +146,6 @@ export default function GalleryPage() {
       initialImages[i] = url;
     });
     setImages(initialImages);
-    setImageFiles(Array(10).fill(null));
     setIsModalOpen(true);
   };
 
@@ -163,54 +153,14 @@ export default function GalleryPage() {
     e.preventDefault();
     if (!name.trim()) return;
 
+    const finalUrls = images.filter(Boolean);
+    if (finalUrls.length === 0) {
+      alert('Please select at least one photo for the album.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // 1. Identify which slots have newly selected File objects
-      const uploadIndices: number[] = [];
-      imageFiles.forEach((file, idx) => {
-        if (file !== null) {
-          uploadIndices.push(idx);
-        }
-      });
-
-      const uploadedUrlsMap = new Map<number, string>();
-
-      if (uploadIndices.length > 0) {
-        try {
-          const formData = new FormData();
-          uploadIndices.forEach((idx) => {
-            formData.append('files', imageFiles[idx]!);
-          });
-
-          const uploadRes = await fetch('/api/gallery/upload', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (uploadRes.ok) {
-            const uploadData = await uploadRes.json();
-            const returnedUrls: string[] = uploadData.urls || [];
-            uploadIndices.forEach((origIdx, i) => {
-              if (returnedUrls[i]) {
-                uploadedUrlsMap.set(origIdx, returnedUrls[i]);
-              }
-            });
-          }
-        } catch {
-          // If upload fails, fallback to client-compressed images
-        }
-      }
-
-      // 2. Build final list of image URLs preserving order
-      const finalUrls: string[] = [];
-      for (let i = 0; i < 10; i++) {
-        if (uploadedUrlsMap.has(i)) {
-          finalUrls.push(uploadedUrlsMap.get(i)!);
-        } else if (images[i]) {
-          finalUrls.push(images[i]);
-        }
-      }
-
       if (editingAlbum) {
         // Update existing album
         const res = await fetch(`/api/gallery/${editingAlbum.id}`, {
@@ -441,7 +391,12 @@ export default function GalleryPage() {
                         overflow: 'hidden'
                       }}
                     >
-                      {images[idx] ? (
+                      {compressingIndex === idx ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#c084fc', fontSize: '0.625rem', gap: '0.3rem' }}>
+                          <span style={{ width: '16px', height: '16px', border: '2px solid rgba(192, 132, 252, 0.3)', borderTopColor: '#c084fc', borderRadius: '50%', display: 'inline-block' }} />
+                          <span>Optimizing...</span>
+                        </div>
+                      ) : images[idx] ? (
                         <>
                           <img
                             src={images[idx]}
