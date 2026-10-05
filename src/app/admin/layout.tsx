@@ -11,6 +11,7 @@ import {
   Newspaper,
   Image as ImageIcon,
   FolderKanban,
+  HeartHandshake,
   Award,
   Mail,
   Search,
@@ -26,7 +27,7 @@ const navItems = [
   { label: 'Events', path: '/admin/events', icon: Calendar },
   { label: 'Posts / News', path: '/admin/news', icon: Newspaper },
   { label: 'Gallery', path: '/admin/gallery', icon: ImageIcon },
-  { label: 'Projects', path: '/admin/projects', icon: FolderKanban },
+  { label: 'Welfare', path: '/admin/welfare', icon: HeartHandshake },
   { label: 'Leadership', path: '/admin/leadership', icon: Award },
   { label: 'Messages', path: '/admin/messages', icon: Mail },
 ];
@@ -34,6 +35,7 @@ const navItems = [
 const SEARCHABLE_PAGES: Record<string, { placeholder: string }> = {
   '/admin/events': { placeholder: 'Search events by title, venue...' },
   '/admin/gallery': { placeholder: 'Search albums by name...' },
+  '/admin/welfare': { placeholder: 'Search welfare initiatives by title...' },
   '/admin/messages': { placeholder: 'Search inquiries, senders, subjects...' },
   '/admin/leadership': { placeholder: 'Search leaders by name, role...' },
   '/admin/news': { placeholder: 'Search articles, announcements...' },

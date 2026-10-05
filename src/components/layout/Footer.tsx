@@ -52,7 +52,7 @@ export function Footer() {
               <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leadership</Link></li>
               <li><Link href="/events" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Events & Programs</Link></li>
               <li><Link href="/politics" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Politics & Elections</Link></li>
-              <li><Link href="/projects" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Initiatives & Projects</Link></li>
+              <li><Link href="/welfare" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Welfare & Initiatives</Link></li>
             </ul>
           </div>
 

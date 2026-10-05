@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Activity,
   FolderKanban,
+  HeartHandshake,
   Mail
 } from 'lucide-react';
 
@@ -99,10 +100,10 @@ export default async function AdminDashboard() {
 
         <div className={styles.statCard}>
           <div className={styles.statIcon} style={{ background: 'rgba(6, 182, 212, 0.12)', color: '#22d3ee' }}>
-            <FolderKanban size={24} />
+            <HeartHandshake size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Active Projects</h3>
+            <h3>Active Welfare</h3>
             <p>{activeProjects.toLocaleString()}</p>
           </div>
         </div>
@@ -132,9 +133,9 @@ export default async function AdminDashboard() {
               <span>Publish News Article</span>
               <Plus size={16} />
             </Link>
-            <Link href="/admin/projects" className={styles.btnOutline}>
-              <span>Add Project Initiative</span>
-              <FolderKanban size={16} />
+            <Link href="/admin/welfare" className={styles.btnOutline}>
+              <span>Add Welfare Initiative</span>
+              <HeartHandshake size={16} />
             </Link>
             <Link href="/admin/members" className={styles.btnOutline}>
               <span>Manage System Members</span>

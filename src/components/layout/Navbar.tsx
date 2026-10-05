@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Home, Users, Calendar, Image, Newspaper, Landmark, FolderKanban, Info, Mail, UserPlus } from 'lucide-react'
+import { Menu, X, Home, Users, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus } from 'lucide-react'
 
 const NAV_LINKS = [
   { label: 'Home',       href: '/',           icon: Home },
@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { label: 'Gallery',    href: '/gallery',    icon: Image },
   { label: 'News',       href: '/news',       icon: Newspaper },
   { label: 'Politics',   href: '/politics',   icon: Landmark },
-  { label: 'Projects',   href: '/projects',   icon: FolderKanban },
+  { label: 'Welfare',    href: '/welfare',    icon: HeartHandshake },
   { label: 'About',      href: '/about',      icon: Info },
   { label: 'Contact',    href: '/contact',    icon: Mail },
   { label: 'Join Us',    href: '/join',       icon: UserPlus },
