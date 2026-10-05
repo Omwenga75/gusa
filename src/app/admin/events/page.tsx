@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Calendar as CalendarIcon, MapPin, X, Users, Pencil, Trash2 } from 'lucide-react';
 import { readCache, writeCache, clearCache } from '@/lib/cache';
+import { compressImage } from '@/lib/imageCompress';
 
 interface Event {
   id: string;
@@ -77,20 +78,18 @@ export default function EventsPage() {
   const [coverImage, setCoverImage] = useState('');
   const [images, setImages] = useState<string[]>(['', '', '', '']);
 
-  const handleImageUpload = (index: number, file: File | undefined) => {
+  const handleImageUpload = async (index: number, file: File | undefined) => {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      if (result) {
-        setImages(prev => {
-          const next = [...prev];
-          next[index] = result;
-          return next;
-        });
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImage(file, 1200, 0.75);
+      setImages(prev => {
+        const next = [...prev];
+        next[index] = compressed;
+        return next;
+      });
+    } catch (err) {
+      console.error('Image compression failed:', err);
+    }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -168,9 +167,13 @@ export default function EventsPage() {
         resetForm();
         setIsModalOpen(false);
         fetchEvents();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || `Failed to create event (Status: ${res.status})`);
       }
     } catch (err) {
       console.error(err);
+      alert('Network error while creating event.');
     } finally {
       setIsSubmitting(false);
     }
@@ -240,11 +243,12 @@ export default function EventsPage() {
         setEditingEvent(null);
         fetchEvents();
       } else {
-        alert('Failed to update event.');
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || `Failed to update event (Status: ${res.status})`);
       }
     } catch (err) {
       console.error(err);
-      alert('Error updating event.');
+      alert('Network error while updating event.');
     } finally {
       setIsSubmitting(false);
     }

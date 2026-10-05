@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
 
+export const dynamic = 'force-dynamic'
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -12,28 +14,46 @@ export async function PUT(
 
   try {
     const { id } = await params
+    if (!id) {
+      return NextResponse.json({ error: 'Event ID is required' }, { status: 400 })
+    }
+
     const body = await request.json()
     const { title, description, venue, category, date, startTime, capacity, status, coverImage } = body
 
+    const updateData: any = {}
+    if (title) updateData.title = title
+    if (description !== undefined) updateData.description = description || title
+    if (venue !== undefined) updateData.venue = venue
+    if (category !== undefined) updateData.organizer = category
+    if (startTime !== undefined) updateData.startTime = startTime
+    if (status) updateData.status = status
+    if (coverImage !== undefined) updateData.coverImage = coverImage || null
+
+    if (date) {
+      const parsedDate = new Date(date)
+      if (!isNaN(parsedDate.getTime())) {
+        updateData.date = parsedDate
+      }
+    }
+
+    if (capacity !== undefined) {
+      const parsedCapacity = parseInt(String(capacity), 10)
+      if (!isNaN(parsedCapacity)) {
+        updateData.capacity = parsedCapacity
+      }
+    }
+
     const event = await prisma.event.update({
       where: { id },
-      data: {
-        ...(title && { title }),
-        ...(description && { description }),
-        ...(venue !== undefined && { venue }),
-        ...(category !== undefined && { organizer: category }),
-        ...(date && { date: new Date(date) }),
-        ...(startTime !== undefined && { startTime }),
-        ...(capacity !== undefined && { capacity: parseInt(capacity) }),
-        ...(status && { status }),
-        ...(coverImage !== undefined && { coverImage: coverImage || null })
-      }
+      data: updateData
     })
 
     return NextResponse.json({ success: true, event })
   } catch (error) {
     console.error('Update event API error:', error)
-    return NextResponse.json({ error: 'Failed to update event' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Failed to update event'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 

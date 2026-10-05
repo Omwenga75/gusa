@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
 import { readCache, writeCache, clearCache } from '@/lib/cache';
+import { compressImage } from '@/lib/imageCompress';
 
 interface Album {
   id: string;
@@ -100,27 +101,25 @@ export default function GalleryPage() {
     fetchGallery();
   }, []);
 
-  const handleImageUpload = (index: number, file: File | undefined) => {
+  const handleImageUpload = async (index: number, file: File | undefined) => {
     if (!file) return;
-    // Store the File object for later upload
+    // Store the File object for potential upload
     setImageFiles(prev => {
       const next = [...prev];
       next[index] = file;
       return next;
     });
-    // Generate preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      if (result) {
-        setImages(prev => {
-          const next = [...prev];
-          next[index] = result;
-          return next;
-        });
-      }
-    };
-    reader.readAsDataURL(file);
+    // Compress image client-side to ensure small payload
+    try {
+      const compressed = await compressImage(file, 1200, 0.75);
+      setImages(prev => {
+        const next = [...prev];
+        next[index] = compressed;
+        return next;
+      });
+    } catch (err) {
+      console.error('Image compression error:', err);
+    }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -177,30 +176,29 @@ export default function GalleryPage() {
       const uploadedUrlsMap = new Map<number, string>();
 
       if (uploadIndices.length > 0) {
-        const formData = new FormData();
-        uploadIndices.forEach((idx) => {
-          formData.append('files', imageFiles[idx]!);
-        });
+        try {
+          const formData = new FormData();
+          uploadIndices.forEach((idx) => {
+            formData.append('files', imageFiles[idx]!);
+          });
 
-        const uploadRes = await fetch('/api/gallery/upload', {
-          method: 'POST',
-          body: formData,
-        });
+          const uploadRes = await fetch('/api/gallery/upload', {
+            method: 'POST',
+            body: formData,
+          });
 
-        if (!uploadRes.ok) {
-          const errData = await uploadRes.json().catch(() => ({}));
-          alert(errData.error || 'Failed to upload images.');
-          setIsSubmitting(false);
-          return;
-        }
-
-        const uploadData = await uploadRes.json();
-        const returnedUrls: string[] = uploadData.urls || [];
-        uploadIndices.forEach((origIdx, i) => {
-          if (returnedUrls[i]) {
-            uploadedUrlsMap.set(origIdx, returnedUrls[i]);
+          if (uploadRes.ok) {
+            const uploadData = await uploadRes.json();
+            const returnedUrls: string[] = uploadData.urls || [];
+            uploadIndices.forEach((origIdx, i) => {
+              if (returnedUrls[i]) {
+                uploadedUrlsMap.set(origIdx, returnedUrls[i]);
+              }
+            });
           }
-        });
+        } catch {
+          // If upload fails, fallback to client-compressed images
+        }
       }
 
       // 2. Build final list of image URLs preserving order
@@ -208,7 +206,7 @@ export default function GalleryPage() {
       for (let i = 0; i < 10; i++) {
         if (uploadedUrlsMap.has(i)) {
           finalUrls.push(uploadedUrlsMap.get(i)!);
-        } else if (images[i] && !images[i].startsWith('data:')) {
+        } else if (images[i]) {
           finalUrls.push(images[i]);
         }
       }
@@ -233,7 +231,7 @@ export default function GalleryPage() {
           fetchGallery();
         } else {
           const errData = await res.json().catch(() => ({}));
-          alert(errData.error || 'Failed to update album.');
+          alert(errData.error || `Failed to update album (Status: ${res.status})`);
         }
       } else {
         // Create new album
@@ -255,7 +253,7 @@ export default function GalleryPage() {
           fetchGallery();
         } else {
           const errData = await res.json().catch(() => ({}));
-          alert(errData.error || 'Failed to create album.');
+          alert(errData.error || `Failed to create album (Status: ${res.status})`);
         }
       }
     } catch (err) {

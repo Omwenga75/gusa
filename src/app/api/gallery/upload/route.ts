@@ -16,7 +16,12 @@ export async function POST(request: NextRequest) {
     }
 
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'gallery')
-    await mkdir(uploadDir, { recursive: true })
+    let isReadOnly = false
+    try {
+      await mkdir(uploadDir, { recursive: true })
+    } catch {
+      isReadOnly = true
+    }
 
     const urls: string[] = []
 
@@ -25,17 +30,29 @@ export async function POST(request: NextRequest) {
         continue
       }
 
-      // Generate unique filename
-      const ext = file.name.split('.').pop() || 'jpg'
-      const uniqueName = `gallery_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`
-      const filePath = path.join(uploadDir, uniqueName)
-
-      // Write file to disk
       const buffer = Buffer.from(await file.arrayBuffer())
-      await writeFile(filePath, buffer)
 
-      // Return the public URL path
-      urls.push(`/uploads/gallery/${uniqueName}`)
+      if (!isReadOnly) {
+        try {
+          // Generate unique filename
+          const ext = file.name.split('.').pop() || 'jpg'
+          const uniqueName = `gallery_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`
+          const filePath = path.join(uploadDir, uniqueName)
+
+          // Write file to disk
+          await writeFile(filePath, buffer)
+
+          // Return the public URL path
+          urls.push(`/uploads/gallery/${uniqueName}`)
+          continue
+        } catch {
+          // Fall through to data URL if writing fails
+        }
+      }
+
+      // Fallback for Vercel/serverless environments where disk is read-only
+      const base64 = buffer.toString('base64')
+      urls.push(`data:${file.type || 'image/jpeg'};base64,${base64}`)
     }
 
     if (urls.length === 0) {
