@@ -168,7 +168,7 @@ export default function NewsPage() {
             News, Bursaries & Announcements
           </h1>
           <p style={{ maxWidth: '650px', margin: '0 auto', fontSize: '1.125rem' }}>
-            Official updates, student welfare alerts, county bursary notices, and cultural milestones from the Gusii University Students Association – Meru Chapter.
+            Official updates from house leaders.
           </p>
         </div>
       </section>
@@ -211,7 +211,9 @@ export default function NewsPage() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: '2rem'
+              marginBottom: '2rem',
+              flexWrap: 'wrap',
+              gap: '0.5rem'
             }}
           >
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>
@@ -229,8 +231,8 @@ export default function NewsPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
               {[1, 2, 3].map((n) => (
@@ -243,7 +245,7 @@ export default function NewsPage() {
                   }}
                 >
                   <div className="skeleton" style={{ height: '140px', width: '100%', borderRadius: 0 }} />
-                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                  <div style={{ padding: 'clamp(1rem, 3.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
                     <div className="skeleton" style={{ width: '85%', height: '22px', borderRadius: '4px' }} />
                     <div className="skeleton" style={{ width: '100%', height: '14px', borderRadius: '4px' }} />
                     <div className="skeleton" style={{ width: '90%', height: '14px', borderRadius: '4px' }} />
@@ -266,8 +268,8 @@ export default function NewsPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+                gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
               {filteredArticles.map((article) => (
@@ -514,7 +516,7 @@ export default function NewsPage() {
             <div
               style={{
                 background: activeArticle.gradient,
-                padding: '2rem',
+                padding: 'clamp(1.25rem, 4vw, 2rem)',
                 color: '#ffffff',
                 position: 'relative'
               }}
@@ -523,8 +525,8 @@ export default function NewsPage() {
                 onClick={() => setActiveArticle(null)}
                 style={{
                   position: 'absolute',
-                  top: '1.25rem',
-                  right: '1.25rem',
+                  top: '1rem',
+                  right: '1rem',
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
@@ -541,7 +543,7 @@ export default function NewsPage() {
                 <X size={20} />
               </button>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                 <span className={`badge ${getCategoryBadgeClass(activeArticle.category)}`}>
                   {activeArticle.category}
                 </span>
@@ -552,10 +554,12 @@ export default function NewsPage() {
 
               <h2
                 style={{
-                  fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)',
+                  fontSize: 'clamp(1.25rem, 3.5vw, 1.85rem)',
                   fontWeight: 800,
                   lineHeight: 1.3,
-                  color: '#ffffff'
+                  color: '#ffffff',
+                  paddingRight: '2rem',
+                  overflowWrap: 'anywhere'
                 }}
               >
                 {activeArticle.title}
@@ -565,7 +569,7 @@ export default function NewsPage() {
             {/* Modal Scrollable Article Body */}
             <div
               style={{
-                padding: '2rem',
+                padding: 'clamp(1rem, 3.5vw, 2rem)',
                 overflowY: 'auto',
                 flex: 1
               }}
@@ -578,7 +582,9 @@ export default function NewsPage() {
                   justifyContent: 'space-between',
                   paddingBottom: '1.25rem',
                   marginBottom: '1.75rem',
-                  borderBottom: '1px solid var(--border-subtle)'
+                  borderBottom: '1px solid var(--border-subtle)',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -593,7 +599,8 @@ export default function NewsPage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: 700,
-                      fontSize: '0.85rem'
+                      fontSize: '0.85rem',
+                      flexShrink: 0
                     }}
                   >
                     {activeArticle.author.avatarInitials}
@@ -622,7 +629,7 @@ export default function NewsPage() {
                   backgroundColor: 'var(--bg-secondary)',
                   border: '1px solid var(--border-default)',
                   borderRadius: '1rem',
-                  padding: '1.25rem 1.5rem',
+                  padding: 'clamp(1rem, 3vw, 1.5rem)',
                   marginBottom: '2rem'
                 }}
               >
@@ -683,12 +690,14 @@ export default function NewsPage() {
             {/* Modal Footer */}
             <div
               style={{
-                padding: '1rem 2rem',
+                padding: '1rem clamp(1rem, 3.5vw, 2rem)',
                 borderTop: '1px solid var(--border-subtle)',
                 background: 'var(--bg-secondary)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.5rem'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
