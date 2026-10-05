@@ -21,6 +21,26 @@ export default function LeadershipPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
+  const filteredLeaders = leaders.filter((ldr) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      ldr.name.toLowerCase().includes(q) ||
+      (ldr.position && ldr.position.toLowerCase().includes(q)) ||
+      (ldr.phone && ldr.phone.toLowerCase().includes(q)) ||
+      (ldr.email && ldr.email.toLowerCase().includes(q))
+    );
+  });
 
   // Form State
   const [name, setName] = useState('');
@@ -264,14 +284,14 @@ export default function LeadershipPage() {
               </div>
             ))}
           </div>
-        ) : leaders.length === 0 ? (
+        ) : filteredLeaders.length === 0 ? (
           <div className={styles.emptyBox}>
             <Award size={48} style={{ opacity: 0.3 }} />
-            <p className={styles.emptyText}>No leadership profiles added yet. Click &quot;Add Leader&quot; to get started.</p>
+            <p className={styles.emptyText}>{searchQuery ? `No leaders match "${searchQuery}".` : 'No leadership profiles added yet. Click "Add Leader" to get started.'}</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
-            {leaders.map(leader => (
+            {filteredLeaders.map(leader => (
               <div
                 key={leader.id}
                 style={{

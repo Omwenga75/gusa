@@ -22,6 +22,25 @@ export default function NewsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_NEWS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
+  const filteredPosts = posts.filter((p) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      p.title.toLowerCase().includes(q) ||
+      (p.author?.name && p.author.name.toLowerCase().includes(q)) ||
+      (p.category && p.category.toLowerCase().includes(q))
+    );
+  });
 
   // Form State
   const [title, setTitle] = useState('');
@@ -121,7 +140,7 @@ export default function NewsPage() {
                   </tr>
                 ))
               ) : (
-                posts.map(post => (
+                filteredPosts.map(post => (
                 <tr key={post.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{post.title}</td>
                   <td style={{ color: '#94a3b8' }}>{post.author?.name || 'Admin'}</td>
@@ -144,10 +163,10 @@ export default function NewsPage() {
                 </tr>
               ))
               )}
-              {posts.length === 0 && !isLoading && (
+              {filteredPosts.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-                    No news articles or announcements published yet. Click "New Article" to publish.
+                    {searchQuery ? `No articles match "${searchQuery}".` : 'No news articles or announcements published yet. Click "New Article" to publish.'}
                   </td>
                 </tr>
               )}

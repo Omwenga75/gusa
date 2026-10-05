@@ -21,6 +21,24 @@ export default function GalleryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
+  const filteredAlbums = albums.filter((alb) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      alb.name.toLowerCase().includes(q) ||
+      (alb.description && alb.description.toLowerCase().includes(q))
+    );
+  });
 
   // Form State
   const [name, setName] = useState('');
@@ -168,14 +186,14 @@ export default function GalleryPage() {
               </div>
             ))}
           </div>
-        ) : albums.length === 0 ? (
+        ) : filteredAlbums.length === 0 ? (
           <div className={styles.emptyBox}>
             <ImageIcon size={48} style={{ opacity: 0.3 }} />
-            <p className={styles.emptyText}>No gallery albums created yet. Upload photos to start building the album collection.</p>
+            <p className={styles.emptyText}>{searchQuery ? `No albums match "${searchQuery}".` : 'No gallery albums created yet. Upload photos to start building the album collection.'}</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
-            {albums.map(album => (
+            {filteredAlbums.map(album => (
               <div key={album.id} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>
                 <div style={{ height: '140px', background: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
                   {album.coverImage ? (

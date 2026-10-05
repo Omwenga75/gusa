@@ -72,6 +72,14 @@ export default function AdminMessagesPage() {
 
   useEffect(() => { fetchMessages(); }, []);
 
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
   const triggerBadgeUpdate = () => {
     if (typeof window !== 'undefined') window.dispatchEvent(new Event('messages-updated'));
   };

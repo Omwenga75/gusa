@@ -36,6 +36,25 @@ export default function EventsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_EVENTS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
+  const filteredEvents = events.filter((event) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      event.title.toLowerCase().includes(q) ||
+      (event.venue && event.venue.toLowerCase().includes(q)) ||
+      (event.description && event.description.toLowerCase().includes(q))
+    );
+  });
 
   // Edit Event State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -410,7 +429,7 @@ export default function EventsPage() {
                   </tr>
                 ))
               ) : (
-                events.map(event => (
+                filteredEvents.map(event => (
                 <tr key={event.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{event.title}</td>
                   <td style={{ color: '#94a3b8', whiteSpace: 'nowrap' }}>
@@ -502,10 +521,10 @@ export default function EventsPage() {
                 </tr>
               ))
               )}
-              {events.length === 0 && !isLoading && (
+              {filteredEvents.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
-                    No events created yet. Click "Create Event" to publish an event.
+                    {searchQuery ? `No events match "${searchQuery}".` : 'No events created yet. Click "Create Event" to publish an event.'}
                   </td>
                 </tr>
               )}
