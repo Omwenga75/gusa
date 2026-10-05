@@ -18,9 +18,14 @@ import { EventCountdown } from '@/components/events/EventCountdown';
 export const revalidate = 30; // ISR: edge-cached for instant loading; revalidates in background every 30s
 
 async function getHomePageData() {
+  // Items older than this threshold are hidden from the home page.
+  // They remain permanently on their own pages (/events, /news, /gallery).
+  const CUTOFF_DAYS = 5;
+  const cutoffDate = new Date(Date.now() - CUTOFF_DAYS * 24 * 60 * 60 * 1000);
+
   try {
     const [stats, events, albums, posts] = await Promise.all([
-      // Stats
+      // Stats — never filtered by cutoff
       (async () => {
         try {
           const [activeMembers, annualEvents, studentSupport] = await Promise.all([
@@ -29,22 +34,25 @@ async function getHomePageData() {
             prisma.eventRegistration.count(),
           ]);
           return {
-            activeMembers: activeMembers || 1,
-            annualEvents: annualEvents || 3,
+            activeMembers,
+            annualEvents,
             subCounties: 9,
-            studentSupport: studentSupport || 3,
+            studentSupport,
           };
         } catch (e) {
           console.error('Error fetching stats:', e);
-          return { activeMembers: 1, annualEvents: 3, subCounties: 9, studentSupport: 3 };
+          return { activeMembers: 0, annualEvents: 0, subCounties: 9, studentSupport: 0 };
         }
       })(),
 
-      // Events
+      // Events — only show events whose date is within the last 5 days or in the future
       (async () => {
         try {
           return await prisma.event.findMany({
-            where: { status: { not: 'DRAFT' } },
+            where: {
+              status: { not: 'DRAFT' },
+              date: { gte: cutoffDate }, // hide events that ended more than 5 days ago
+            },
             orderBy: { date: 'desc' },
             take: 3,
             select: {
@@ -68,10 +76,11 @@ async function getHomePageData() {
         }
       })(),
 
-      // Gallery albums
+      // Gallery albums — only show albums created within the last 5 days
       (async () => {
         try {
           return await prisma.album.findMany({
+            where: { createdAt: { gte: cutoffDate } },
             orderBy: { createdAt: 'desc' },
             take: 3,
             include: {
@@ -87,11 +96,18 @@ async function getHomePageData() {
         }
       })(),
 
-      // Latest News
+      // Latest News — only show posts published within the last 5 days
       (async () => {
         try {
           return await prisma.post.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+              status: 'PUBLISHED',
+              // use publishedAt when available, fall back to createdAt
+              OR: [
+                { publishedAt: { gte: cutoffDate } },
+                { publishedAt: null, createdAt: { gte: cutoffDate } },
+              ],
+            },
             orderBy: { publishedAt: 'desc' },
             take: 3,
             select: {
@@ -153,7 +169,7 @@ export default async function HomePage() {
         {/* Content Layer (Positioned higher up to match screenshot 2) */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-start pt-2 sm:pt-4 md:pt-6">
           <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-4 mx-auto lg:mx-0">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl break-words">
               Building Community. <br />
               <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
                 Celebrating Culture.
@@ -164,12 +180,12 @@ export default async function HomePage() {
               The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4">
-              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
+              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
                 <span>Join GUSA</span>
                 <ArrowRight size={18} />
               </Link>
-              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all">
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center">
                 Explore Events
               </Link>
             </div>
@@ -177,38 +193,38 @@ export default async function HomePage() {
         </div>
 
         {/* Stat Counters Grid */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-6 sm:mt-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-1">
+        <div className="container mx-auto px-3 sm:px-6 relative z-10 mt-6 sm:mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
+            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
                 {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Active Members</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Active Members</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-1">
+            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-0.5 sm:mb-1">
                 {stats ? stats.annualEvents.toLocaleString() : '3'}
               </h3>
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Annual Events</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Annual Events</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-1">
+            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-0.5 sm:mb-1">
                 {stats ? stats.subCounties.toLocaleString() : '9'}
               </h3>
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Sub-Counties</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Sub-Counties</p>
             </div>
-            <div className="glass-card p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-1">
+            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-0.5 sm:mb-1">
                 {stats ? stats.studentSupport.toLocaleString() : '3'}
               </h3>
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-300">Student Support</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Student Support</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Core Pillars Section */}
-      <section className="py-24 bg-slate-950 text-white border-b border-white/10">
+      <section className="py-14 sm:py-20 md:py-24 bg-slate-950 text-white border-b border-white/10">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-white">Our Four Core Pillars</h2>
@@ -252,12 +268,13 @@ export default async function HomePage() {
       </section>
 
       {/* ── UPCOMING EVENTS ─────────────────────────────────── */}
-      <section className="py-20 bg-slate-900 text-white border-b border-white/10">
+      {/* ── UPCOMING EVENTS ─────────────────────────────────── */}
+      <section className="py-14 sm:py-20 bg-slate-900 text-white border-b border-white/10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-10">
             <div>
-              <p className="text-violet-400 text-sm font-bold uppercase tracking-widest mb-1">What&apos;s Happening</p>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white">Upcoming Events</h2>
+              <p className="text-violet-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-1">What&apos;s Happening</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">Upcoming Events</h2>
             </div>
             <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-violet-400 hover:text-violet-300 transition-colors">
               View all <ChevronRight size={16} />
@@ -290,7 +307,7 @@ export default async function HomePage() {
                 return (
                   <Link href="/events" key={ev.id} className="group flex flex-col h-full glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all">
                     {coverUrl ? (
-                      <div className="relative w-full h-52 overflow-hidden bg-slate-950 flex-shrink-0">
+                      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-950 flex-shrink-0">
                         <img 
                           src={coverUrl} 
                           alt={ev.title} 
@@ -303,27 +320,27 @@ export default async function HomePage() {
                         <Calendar size={36} className="text-violet-400/40" />
                       </div>
                     )}
-                    <div className="p-5 flex flex-col flex-1 justify-between">
+                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
                       <div>
-                        <div className="flex items-center justify-between gap-2 mb-3">
-                          <span className="inline-block text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20">
+                        <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                          <span className="inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20 truncate max-w-full">
                             {category}
                           </span>
                           <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
                         </div>
-                        <h3 className="text-white font-bold text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors">
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors break-words">
                           {ev.title}
                         </h3>
                       </div>
                       <div className="mt-auto pt-3 flex flex-col gap-1.5 text-slate-400 text-xs border-t border-white/5">
                         <span className="flex items-center gap-1.5">
-                          <Calendar size={12} className="text-violet-400" />
-                          {ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}
+                          <Calendar size={12} className="text-violet-400 shrink-0" />
+                          <span>{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
                         </span>
                         {ev.venue && (
                           <span className="flex items-center gap-1.5">
-                            <MapPin size={12} className="text-violet-400" />
-                            {ev.venue}
+                            <MapPin size={12} className="text-violet-400 shrink-0" />
+                            <span className="truncate">{ev.venue}</span>
                           </span>
                         )}
                       </div>
@@ -335,7 +352,7 @@ export default async function HomePage() {
           )}
 
           <div className="mt-8 text-center sm:hidden">
-            <Link href="/events" className="btn-glass px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm">
+            <Link href="/events" className="btn-glass w-full px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm flex items-center justify-center">
               View all events <ArrowRight size={14} className="inline ml-1" />
             </Link>
           </div>
@@ -343,12 +360,12 @@ export default async function HomePage() {
       </section>
 
       {/* ── GALLERY PREVIEW ─────────────────────────────────── */}
-      <section className="py-20 bg-slate-950 text-white border-b border-white/10">
+      <section className="py-14 sm:py-20 bg-slate-950 text-white border-b border-white/10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-10">
             <div>
-              <p className="text-pink-400 text-sm font-bold uppercase tracking-widest mb-1">Captured Moments</p>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white">Gallery</h2>
+              <p className="text-pink-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-1">Captured Moments</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">Gallery</h2>
             </div>
             <Link href="/gallery" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-pink-400 hover:text-pink-300 transition-colors">
               View all <ChevronRight size={16} />
@@ -370,9 +387,9 @@ export default async function HomePage() {
                         <ImageIcon size={36} className="text-pink-400 opacity-40" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-end p-5">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-end p-4 sm:p-5">
                       <div>
-                        <p className="text-white font-bold text-base leading-snug drop-shadow-md group-hover:text-pink-300 transition-colors">{alb.name}</p>
+                        <p className="text-white font-bold text-sm sm:text-base leading-snug drop-shadow-md group-hover:text-pink-300 transition-colors">{alb.name}</p>
                         {alb.description && (
                           <p className="text-xs text-slate-300 line-clamp-1 mt-1 opacity-90">{alb.description}</p>
                         )}
@@ -390,7 +407,7 @@ export default async function HomePage() {
           )}
 
           <div className="mt-8 text-center sm:hidden">
-            <Link href="/gallery" className="btn-glass px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm">
+            <Link href="/gallery" className="btn-glass w-full px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm flex items-center justify-center">
               View full gallery <ArrowRight size={14} className="inline ml-1" />
             </Link>
           </div>
@@ -398,12 +415,12 @@ export default async function HomePage() {
       </section>
 
       {/* ── LATEST NEWS ─────────────────────────────────────── */}
-      <section className="py-20 bg-slate-900 text-white">
+      <section className="py-14 sm:py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-10">
             <div>
-              <p className="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-1">Stay Informed</p>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white">Latest News</h2>
+              <p className="text-cyan-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-1">Stay Informed</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">Latest News</h2>
             </div>
             <Link href="/news" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 rounded-full hover:bg-cyan-500/20">
               All news <ChevronRight size={16} />
@@ -459,14 +476,14 @@ export default async function HomePage() {
                     )}
 
                     {/* Card body */}
-                    <div className="flex flex-col flex-1 p-5 gap-3">
+                    <div className="flex flex-col flex-1 p-4 sm:p-5 gap-2.5 sm:gap-3">
                       {/* Category pill */}
                       <span className={`self-start text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${catStyle}`}>
                         {category}
                       </span>
 
                       {/* Title */}
-                      <h3 className={`font-extrabold text-base leading-snug transition-colors ${idx === 0 ? 'text-white group-hover:text-cyan-300 text-lg' : 'text-slate-100 group-hover:text-cyan-300'}`}>
+                      <h3 className={`font-extrabold text-base leading-snug transition-colors ${idx === 0 ? 'text-white group-hover:text-cyan-300 text-base sm:text-lg' : 'text-slate-100 group-hover:text-cyan-300'} break-words`}>
                         {post.title}
                       </h3>
 
@@ -480,20 +497,20 @@ export default async function HomePage() {
 
                       {/* Footer: author + date + read arrow */}
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
                           {/* Author avatar */}
                           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-violet-500 flex items-center justify-center text-[10px] font-black text-white shrink-0">
                             {authorInitial}
                           </div>
-                          <div className="flex flex-col leading-tight">
-                            <span className="text-[11px] font-semibold text-slate-300 truncate max-w-[100px]">{authorName}</span>
+                          <div className="flex flex-col leading-tight min-w-0">
+                            <span className="text-[11px] font-semibold text-slate-300 truncate max-w-[85px] sm:max-w-[120px]">{authorName}</span>
                             {formattedDate && (
-                              <span className="text-[10px] text-slate-500">{formattedDate}</span>
+                              <span className="text-[10px] text-slate-500 truncate">{formattedDate}</span>
                             )}
                           </div>
                         </div>
                         {/* Read more arrow */}
-                        <span className="flex items-center gap-1 text-[11px] font-bold text-cyan-400 group-hover:text-cyan-300 group-hover:gap-2 transition-all whitespace-nowrap">
+                        <span className="flex items-center gap-1 text-[11px] font-bold text-cyan-400 group-hover:text-cyan-300 group-hover:gap-2 transition-all whitespace-nowrap shrink-0">
                           Read <ChevronRight size={13} />
                         </span>
                       </div>
@@ -505,7 +522,7 @@ export default async function HomePage() {
           )}
 
           <div className="mt-8 text-center sm:hidden">
-            <Link href="/news" className="btn-glass px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm">
+            <Link href="/news" className="btn-glass w-full px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm flex items-center justify-center">
               Read all news <ArrowRight size={14} className="inline ml-1" />
             </Link>
           </div>
