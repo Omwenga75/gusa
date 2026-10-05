@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
+import { clearCache } from '@/lib/cache';
 
 interface Leader {
   id: string;
@@ -53,7 +54,7 @@ export default function LeadershipPage() {
   const fetchLeaders = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/leadership');
+      const res = await fetch('/api/leadership', { cache: 'no-store' });
       const data = await res.json();
       if (data.leaders) {
         setLeaders(data.leaders);
@@ -146,6 +147,7 @@ export default function LeadershipPage() {
         });
 
         if (res.ok) {
+          clearCache('leadership');
           resetForm();
           fetchLeaders();
         }
@@ -163,6 +165,7 @@ export default function LeadershipPage() {
         });
 
         if (res.ok) {
+          clearCache('leadership');
           resetForm();
           fetchLeaders();
         }
@@ -181,6 +184,7 @@ export default function LeadershipPage() {
     try {
       const res = await fetch(`/api/leadership?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
+        clearCache('leadership');
         fetchLeaders();
       }
     } catch (err) {

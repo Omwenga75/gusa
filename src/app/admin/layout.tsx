@@ -87,7 +87,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const fetchUnreadCount = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/contact?countOnly=true');
+      const res = await fetch('/api/contact?countOnly=true', { cache: 'no-store' });
       const data = await res.json();
       if (typeof data.unreadCount === 'number') {
         setUnreadCount(data.unreadCount);

@@ -67,7 +67,7 @@ export default function GalleryPage() {
       setAlbumsData(cached);
       setIsLoading(false);
     }
-    fetch('/api/gallery')
+    fetch('/api/gallery', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.albums) {

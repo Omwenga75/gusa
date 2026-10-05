@@ -41,7 +41,7 @@ export default function LeadershipPage() {
     }
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
-    fetch('/api/leadership', { signal: controller.signal })
+    fetch('/api/leadership', { cache: 'no-store', signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.leaders) {

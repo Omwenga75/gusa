@@ -56,7 +56,7 @@ export default function AdminMessagesPage() {
   const fetchMessages = async (showLoading = false) => {
     if (showLoading || !readCache(ADMIN_MESSAGES_KEY)) setLoading(true);
     try {
-      const res = await fetch('/api/contact');
+      const res = await fetch('/api/contact', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         const list = data.messages || [];

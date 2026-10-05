@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Calendar as CalendarIcon, MapPin, X, Users, Pencil, Trash2 } from 'lucide-react';
-import { readCache, writeCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface Event {
   id: string;
@@ -106,7 +106,7 @@ export default function EventsPage() {
       setIsLoading(true);
     }
     try {
-      const res = await fetch('/api/events');
+      const res = await fetch('/api/events', { cache: 'no-store' });
       const data = await res.json();
       if (data.events) {
         writeCache(ADMIN_EVENTS_KEY, data.events);
@@ -164,6 +164,7 @@ export default function EventsPage() {
       });
 
       if (res.ok) {
+        clearCache('events');
         resetForm();
         setIsModalOpen(false);
         fetchEvents();
@@ -233,6 +234,7 @@ export default function EventsPage() {
       });
 
       if (res.ok) {
+        clearCache('events');
         resetForm();
         setIsEditModalOpen(false);
         setEditingEvent(null);
@@ -257,6 +259,7 @@ export default function EventsPage() {
       });
 
       if (res.ok) {
+        clearCache('events');
         fetchEvents();
       } else {
         alert('Failed to delete event.');

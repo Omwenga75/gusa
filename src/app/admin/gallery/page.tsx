@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
-import { readCache, writeCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface Album {
   id: string;
@@ -67,6 +67,7 @@ export default function GalleryPage() {
       } else {
         const nextList = prevAlbums.filter(a => a.id !== album.id);
         writeCache(ADMIN_GALLERY_KEY, nextList);
+        clearCache('gallery');
       }
     } catch (err) {
       console.error(err);
@@ -82,7 +83,7 @@ export default function GalleryPage() {
       setIsLoading(true);
     }
     try {
-      const res = await fetch('/api/gallery');
+      const res = await fetch('/api/gallery', { cache: 'no-store' });
       const data = await res.json();
       if (data.albums) {
         writeCache(ADMIN_GALLERY_KEY, data.albums);
@@ -226,6 +227,7 @@ export default function GalleryPage() {
         });
 
         if (res.ok) {
+          clearCache('gallery');
           resetForm();
           setIsModalOpen(false);
           fetchGallery();
@@ -247,6 +249,7 @@ export default function GalleryPage() {
         });
 
         if (res.ok) {
+          clearCache('gallery');
           resetForm();
           setIsModalOpen(false);
           fetchGallery();

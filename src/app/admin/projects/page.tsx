@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { FolderKanban, Plus, X } from 'lucide-react';
-import { readCache, writeCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface Project {
   id: string;
@@ -32,7 +32,7 @@ export default function ProjectsPage() {
       setIsLoading(true);
     }
     try {
-      const res = await fetch('/api/projects');
+      const res = await fetch('/api/projects', { cache: 'no-store' });
       const data = await res.json();
       if (data.projects) {
         writeCache(ADMIN_PROJECTS_KEY, data.projects);
@@ -62,6 +62,7 @@ export default function ProjectsPage() {
       });
 
       if (res.ok) {
+        clearCache('projects');
         setTitle('');
         setDescription('');
         setIsModalOpen(false);

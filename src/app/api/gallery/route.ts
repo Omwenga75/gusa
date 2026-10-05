@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -22,7 +24,9 @@ export async function GET(request: NextRequest) {
       { albums },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
         },
       }
     )

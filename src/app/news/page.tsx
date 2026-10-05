@@ -65,7 +65,7 @@ export default function NewsPage() {
       setArticlesData(cached);
       setIsLoading(false);
     }
-    fetch('/api/posts')
+    fetch('/api/posts', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.posts) {

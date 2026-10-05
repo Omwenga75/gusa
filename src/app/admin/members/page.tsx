@@ -32,7 +32,7 @@ export default function MembersPage() {
       setIsLoading(true);
     }
     try {
-      const res = await fetch('/api/members');
+      const res = await fetch('/api/members', { cache: 'no-store' });
       const data = await res.json();
       if (data.members) {
         writeCache(ADMIN_MEMBERS_KEY, data.members);

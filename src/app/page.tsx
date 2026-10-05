@@ -15,7 +15,8 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { EventCountdown } from '@/components/events/EventCountdown';
 
-export const revalidate = 30; // ISR: edge-cached for instant loading; revalidates in background every 30s
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getHomePageData() {
   // Items older than this threshold are hidden from the home page.

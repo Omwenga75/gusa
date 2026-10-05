@@ -3,12 +3,23 @@ import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const leaders = await prisma.leader.findMany({
       orderBy: { displayOrder: 'asc' }
     })
-    return NextResponse.json({ leaders }, { headers: { 'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600' } })
+    return NextResponse.json(
+      { leaders },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    )
   } catch (error) {
     console.error('Leadership GET error:', error)
     return NextResponse.json({ error: 'Failed to fetch leaders' }, { status: 500 })

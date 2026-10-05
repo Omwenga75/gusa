@@ -81,7 +81,7 @@ export default function ProjectsPage() {
       setProjectsData(cached);
       setIsLoading(false);
     }
-    fetch('/api/projects')
+    fetch('/api/projects', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.projects) {

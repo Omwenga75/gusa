@@ -151,7 +151,7 @@ export default function EventsPage() {
       setEventsData(cached);
       setIsLoading(false);
     }
-    fetch('/api/events')
+    fetch('/api/events', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.events) {

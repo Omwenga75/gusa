@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Newspaper, Plus, X } from 'lucide-react';
-import { readCache, writeCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface Post {
   id: string;
@@ -52,7 +52,7 @@ export default function NewsPage() {
       setIsLoading(true);
     }
     try {
-      const res = await fetch('/api/posts');
+      const res = await fetch('/api/posts', { cache: 'no-store' });
       const data = await res.json();
       if (data.posts) {
         writeCache(ADMIN_NEWS_KEY, data.posts);
@@ -82,6 +82,8 @@ export default function NewsPage() {
       });
 
       if (res.ok) {
+        clearCache('posts');
+        clearCache('news');
         setTitle('');
         setContent('');
         setIsModalOpen(false);
