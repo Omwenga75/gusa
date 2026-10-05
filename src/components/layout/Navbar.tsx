@@ -66,13 +66,13 @@ export function Navbar() {
               </div>
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+              <span className="font-extrabold text-base sm:text-xl tracking-tight text-white flex items-center gap-1.5 leading-tight">
                 GUSA{' '}
                 <span className="text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
                   MUST
                 </span>
               </span>
-              <span className="text-[10px] text-slate-400 font-medium tracking-wide hidden sm:block truncate">
+              <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium tracking-tight sm:tracking-wide block truncate">
                 Gusii University Students Association
               </span>
             </div>
@@ -149,12 +149,15 @@ export function Navbar() {
               </div>
             </div>
             {/* Brand text */}
-            <div className="flex flex-col leading-tight">
+            <div className="flex flex-col leading-tight min-w-0">
               <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
                 GUSA
                 <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
                   MUST
                 </span>
+              </span>
+              <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium tracking-tight sm:tracking-wide truncate block">
+                Gusii University Students Association
               </span>
             </div>
           </Link>
