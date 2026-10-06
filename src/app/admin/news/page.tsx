@@ -46,6 +46,10 @@ export default function NewsPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('Announcements');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const isAnnouncement = category === 'Announcements';
+  const MAX_ANNOUNCEMENT_CHARS = 80;
 
   const fetchPosts = async () => {
     if (!readCache(ADMIN_NEWS_KEY)) {
@@ -71,14 +75,25 @@ export default function NewsPage() {
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !content) return;
+    if (!title.trim() || !content.trim()) return;
 
+    if (isAnnouncement && content.trim().length > MAX_ANNOUNCEMENT_CHARS) {
+      setErrorMsg(`Announcement text cannot exceed ${MAX_ANNOUNCEMENT_CHARS} characters.`);
+      return;
+    }
+
+    setErrorMsg('');
     setIsSubmitting(true);
     try {
       const res = await fetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content, category, status: 'PUBLISHED' })
+        body: JSON.stringify({
+          title: title.trim(),
+          content: isAnnouncement ? content.trim().slice(0, MAX_ANNOUNCEMENT_CHARS) : content.trim(),
+          category,
+          status: 'PUBLISHED'
+        })
       });
 
       if (res.ok) {
@@ -86,11 +101,16 @@ export default function NewsPage() {
         clearCache('news');
         setTitle('');
         setContent('');
+        setErrorMsg('');
         setIsModalOpen(false);
         fetchPosts();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setErrorMsg(data.error || 'Failed to publish post');
       }
     } catch (err) {
       console.error(err);
+      setErrorMsg('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -193,10 +213,24 @@ export default function NewsPage() {
           <div className={styles.card} style={{ width: '100%', maxWidth: '540px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>Publish New Article</h2>
-              <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <button onClick={() => { setIsModalOpen(false); setErrorMsg(''); }} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
+
+            {errorMsg && (
+              <div style={{
+                padding: '0.65rem 0.9rem',
+                borderRadius: '0.5rem',
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#fca5a5',
+                fontSize: '0.8125rem',
+                marginBottom: '0.5rem'
+              }}>
+                {errorMsg}
+              </div>
+            )}
 
             <form onSubmit={handleCreatePost} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -204,7 +238,7 @@ export default function NewsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Welcome to the New GUSA Digital Portal"
+                  placeholder="e.g. Football Match: GUSA vs MUST"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   className={styles.searchInput}
@@ -216,7 +250,13 @@ export default function NewsPage() {
                 <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Category</label>
                 <select
                   value={category}
-                  onChange={e => setCategory(e.target.value)}
+                  onChange={e => {
+                    const nextCat = e.target.value;
+                    setCategory(nextCat);
+                    if (nextCat === 'Announcements' && content.length > MAX_ANNOUNCEMENT_CHARS) {
+                      setContent(content.slice(0, MAX_ANNOUNCEMENT_CHARS));
+                    }
+                  }}
                   className={styles.searchInput}
                   style={{ background: '#06080f', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem', color: '#ffffff' }}
                 >
@@ -228,22 +268,62 @@ export default function NewsPage() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Content Body</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    {isAnnouncement ? 'Announcement Text' : 'Content Body'}
+                  </label>
+                  {isAnnouncement && (
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: content.length >= MAX_ANNOUNCEMENT_CHARS ? '#f43f5e' : '#94a3b8'
+                      }}
+                    >
+                      {content.length}/{MAX_ANNOUNCEMENT_CHARS} characters
+                    </span>
+                  )}
+                </div>
                 <textarea
                   required
-                  rows={5}
-                  placeholder="Write article details and official announcements..."
+                  rows={isAnnouncement ? 3 : 5}
+                  maxLength={isAnnouncement ? MAX_ANNOUNCEMENT_CHARS : undefined}
+                  placeholder={
+                    isAnnouncement
+                      ? "Write a short announcement (maximum 80 characters)..."
+                      : "Write article details and official announcements..."
+                  }
                   value={content}
-                  onChange={e => setContent(e.target.value)}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (isAnnouncement && val.length > MAX_ANNOUNCEMENT_CHARS) {
+                      setContent(val.slice(0, MAX_ANNOUNCEMENT_CHARS));
+                    } else {
+                      setContent(val);
+                    }
+                  }}
                   className={styles.searchInput}
-                  style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem' }}
+                  style={{
+                    background: 'rgba(6, 8, 15, 0.8)',
+                    border: content.length >= MAX_ANNOUNCEMENT_CHARS && isAnnouncement
+                      ? '1px solid rgba(244, 63, 94, 0.5)'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
+                    padding: '0.6rem 1rem',
+                    borderRadius: '0.5rem',
+                    resize: 'vertical'
+                  }}
                 />
+                {isAnnouncement && (
+                  <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '0.1rem 0 0 0' }}>
+                    Announcements are displayed in full directly on the card without opening a modal (limited to 80 characters).
+                  </p>
+                )}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => { setIsModalOpen(false); setErrorMsg(''); }}
                   className={styles.btnOutline}
                   style={{ width: 'auto' }}
                 >

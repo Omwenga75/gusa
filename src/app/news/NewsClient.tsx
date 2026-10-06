@@ -282,222 +282,235 @@ export default function NewsClient() {
                 gap: 'clamp(1.25rem, 3vw, 2rem)'
               }}
             >
-              {filteredArticles.map((article) => (
-              <article
-                key={article.id}
-                onClick={() => setActiveArticle(article)}
-                className="card card-hover"
-                style={{
-                  cursor: 'pointer',
-                  borderRadius: '1.25rem',
-                  overflow: 'hidden',
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--surface)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
-                  boxShadow: 'var(--shadow-sm)'
-                }}
-              >
-                {/* Header Banner Graphic with Solid Purple to Pink gradient and styled dots */}
-                <div
-                  style={{
-                    height: '145px',
-                    background: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)',
-                    padding: '1.15rem 1.25rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}
-                >
-                  {/* Styled Translucent Dot Grid Overlay */}
-                  <div
+              {filteredArticles.map((article) => {
+                const isAnnouncement = article.category?.toLowerCase().includes('announc');
+                return (
+                  <article
+                    key={article.id}
+                    onClick={isAnnouncement ? undefined : () => setActiveArticle(article)}
+                    className={`card ${isAnnouncement ? '' : 'card-hover'}`}
                     style={{
-                      position: 'absolute',
-                      inset: 0,
-                      opacity: 0.25,
-                      backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.7) 1.5px, transparent 1.5px)',
-                      backgroundSize: '15px 15px',
-                      pointerEvents: 'none'
-                    }}
-                  />
-                  {/* Subtle lighting overlay for depth */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%)',
-                      pointerEvents: 'none'
-                    }}
-                  />
-
-                  {/* Top row: Frosted Glass Category Badge + Share button */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 2 }}>
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        fontSize: '0.7rem',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: '#ffffff',
-                        backgroundColor: 'rgba(255, 255, 255, 0.22)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(255, 255, 255, 0.35)',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '9999px',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
-                      }}
-                    >
-                      {article.category}
-                    </span>
-
-                    <button
-                      onClick={(e) => handleShare(article.title, e)}
-                      title="Share link"
-                      style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                        backdropFilter: 'blur(8px)',
-                        color: '#ffffff',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
-                      }}
-                    >
-                      <Share2 size={14} />
-                    </button>
-                  </div>
-
-                  {/* Bottom row: Date & Read Time with crisp contrast */}
-                  <div
-                    style={{
+                      cursor: isAnnouncement ? 'default' : 'pointer',
+                      borderRadius: '1.25rem',
+                      overflow: 'hidden',
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--surface)',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.65rem',
-                      color: '#ffffff',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      position: 'relative',
-                      zIndex: 2,
-                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                      flexDirection: 'column',
+                      transition: isAnnouncement ? 'none' : 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                      boxShadow: 'var(--shadow-sm)'
                     }}
                   >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <Calendar size={13} /> {article.publishedAt}
-                    </span>
-                    <span style={{ opacity: 0.7 }}>&bull;</span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <Clock size={13} /> {article.readTime}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div
-                  className="card-body"
-                  style={{
-                    padding: '1.25rem 1.4rem',
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '1rem'
-                  }}
-                >
-                  <div>
-                    <h3
+                    {/* Header Banner Graphic with Solid Purple to Pink gradient and styled dots */}
+                    <div
                       style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 800,
-                        lineHeight: 1.35,
-                        marginBottom: '0.5rem',
-                        color: 'var(--text-main)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {article.title}
-                    </h3>
-
-                    <p
-                      style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--text-muted)',
-                        lineHeight: 1.6,
-                        margin: 0,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
+                        height: '145px',
+                        background: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)',
+                        padding: '1.15rem 1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        position: 'relative',
                         overflow: 'hidden'
                       }}
                     >
-                      {article.excerpt}
-                    </p>
-                  </div>
-
-                  {/* Author and Footer Bar */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      paddingTop: '0.9rem',
-                      borderTop: '1px solid var(--border)',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
+                      {/* Styled Translucent Dot Grid Overlay */}
                       <div
                         style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
-                          color: '#ffffff',
+                          position: 'absolute',
+                          inset: 0,
+                          opacity: 0.25,
+                          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.7) 1.5px, transparent 1.5px)',
+                          backgroundSize: '15px 15px',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      {/* Subtle lighting overlay for depth */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%)',
+                          pointerEvents: 'none'
+                        }}
+                      />
+
+                      {/* Top row: Frosted Glass Category Badge + Share button */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            fontSize: '0.7rem',
+                            fontWeight: 700,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em',
+                            color: '#ffffff',
+                            backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.35)',
+                            padding: '0.25rem 0.75rem',
+                            borderRadius: '9999px',
+                            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          {article.category}
+                        </span>
+
+                        <button
+                          onClick={(e) => handleShare(article.title, e)}
+                          title="Share link"
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            backdropFilter: 'blur(8px)',
+                            color: '#ffffff',
+                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          <Share2 size={14} />
+                        </button>
+                      </div>
+
+                      {/* Bottom row: Date & Read Time */}
+                      <div
+                        style={{
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
+                          gap: '0.65rem',
+                          color: '#ffffff',
                           fontSize: '0.75rem',
-                          fontWeight: 800,
-                          flexShrink: 0,
-                          boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
+                          fontWeight: 600,
+                          position: 'relative',
+                          zIndex: 2,
+                          textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
                         }}
                       >
-                        E
-                      </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          Executive Team
-                        </div>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <Calendar size={13} /> {article.publishedAt}
+                        </span>
+                        {!isAnnouncement && (
+                          <>
+                            <span style={{ opacity: 0.7 }}>&bull;</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                              <Clock size={13} /> {article.readTime}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
 
-                    <span
+                    {/* Card Body */}
+                    <div
+                      className="card-body"
                       style={{
-                        fontSize: '0.85rem',
-                        fontWeight: 700,
-                        color: '#c084fc',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        flexShrink: 0
+                        padding: '1.25rem 1.4rem',
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '1rem'
                       }}
                     >
-                      Read <ChevronRight size={16} />
-                    </span>
-                  </div>
-                </div>
-              </article>
-            ))}
+                      <div>
+                        <h3
+                          style={{
+                            fontSize: '1.2rem',
+                            fontWeight: 800,
+                            lineHeight: 1.35,
+                            marginBottom: '0.5rem',
+                            color: 'var(--text-main)',
+                            letterSpacing: '-0.01em'
+                          }}
+                        >
+                          {article.title}
+                        </h3>
+
+                        <p
+                          style={{
+                            fontSize: '0.875rem',
+                            color: 'var(--text-muted)',
+                            lineHeight: 1.6,
+                            margin: 0,
+                            ...(isAnnouncement
+                              ? { wordBreak: 'break-word', whiteSpace: 'pre-line' }
+                              : {
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 3,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden'
+                                })
+                          }}
+                        >
+                          {article.content?.[0] || article.excerpt}
+                        </p>
+                      </div>
+
+                      {/* Author and Footer Bar */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          paddingTop: '0.9rem',
+                          borderTop: '1px solid var(--border)',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
+                          <div
+                            style={{
+                              width: '34px',
+                              height: '34px',
+                              borderRadius: '50%',
+                              background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.75rem',
+                              fontWeight: 800,
+                              flexShrink: 0,
+                              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
+                            }}
+                          >
+                            E
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              Executive Team
+                            </div>
+                          </div>
+                        </div>
+
+                        {!isAnnouncement && (
+                          <span
+                            style={{
+                              fontSize: '0.85rem',
+                              fontWeight: 700,
+                              color: '#c084fc',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.25rem',
+                              flexShrink: 0
+                            }}
+                          >
+                            Read <ChevronRight size={16} />
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
           </div>
           )}
 

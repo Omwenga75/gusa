@@ -65,6 +65,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title and content are required' }, { status: 400 })
     }
 
+    const cat = category || 'Announcements'
+    if (cat.toLowerCase().includes('announc') && content.trim().length > 80) {
+      return NextResponse.json({ error: 'Announcement content cannot exceed 80 characters' }, { status: 400 })
+    }
+
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now().toString().slice(-4)
 
     // Find super admin or default user author
