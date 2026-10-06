@@ -292,7 +292,7 @@ export default function LeadershipPage() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '2rem' }}>
-              Meet the elected executive leaders, SAMU delegates, and faculty patrons dedicated to serving the Gusii student fraternity at Meru University.
+              Meet the elected GUSA executive leaders.
             </p>
 
             {/* Navigation Tabs */}
