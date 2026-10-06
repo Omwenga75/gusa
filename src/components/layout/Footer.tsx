@@ -12,12 +12,10 @@ export function Footer() {
           {/* Column 1: Brand & Social */}
           <div className="flex flex-col gap-4 sm:gap-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-violet-600 to-amber-500 p-0.5 shadow-lg shadow-violet-500/20">
-                <img
-                  src="/gusa-logo.jpg"
-                  alt="GUSA Official Crest"
-                  className="w-full h-full object-cover rounded-[10px]"
-                />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20">
+                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-xl text-violet-400">
+                  G
+                </div>
               </div>
               <span className="font-extrabold text-2xl tracking-tight text-white">GUSA</span>
             </div>
