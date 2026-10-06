@@ -33,18 +33,6 @@ export default function PoliticsClient() {
       description: 'Custodian of association records, official correspondence, minutes, and institutional communication.',
       requirements: ['Strong organizational skills', 'Active member for at least 1 academic year'],
       status: 'Nominations Open'
-    },
-    {
-      title: 'Treasurer / Organizing Secretary',
-      description: 'Management of GUSA funds, budgeting for events, financial reporting, and logistics coordination.',
-      requirements: ['Accounting / budget management proficiency', 'High integrity & accountability'],
-      status: 'Nominations Open'
-    },
-    {
-      title: 'Sub-County Representatives (9 Sub-Counties)',
-      description: 'Grassroots coordinators representing members from Kisii and Nyamira sub-counties at MUST.',
-      requirements: ['Registered native / resident of the respective sub-county', 'Active member'],
-      status: 'Open for Aspirants'
     }
   ];
 
