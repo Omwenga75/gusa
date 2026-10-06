@@ -23,7 +23,7 @@ export default function PoliticsClient() {
 
   const positions = [
     {
-      title: 'President & Vice President',
+      title: 'Executive Positions',
       description: 'The executive leadership steering GUSA policy, campus administration representation, and overall member advocacy.',
       requirements: ['Must be in 2nd year or above', 'Good academic standing', 'Proven leadership track record'],
       status: 'Nominations Open'
