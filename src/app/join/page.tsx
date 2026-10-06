@@ -125,7 +125,7 @@ export default function JoinPage() {
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">Standard Member</h3>
                 <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">For students originating from the Gusii region (Kisii & Nyamira Counties).</p>
                 <div className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-white flex items-baseline gap-2 flex-wrap">
-                  Ksh 200 <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
+                  Ksh 100 <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
                 </div>
                 <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Full voting rights in elections', 'Access to GUSA welfare emergency fund', 'Priority registration for trips & cultural events', 'Alumni network & mentorship program', 'Eligible for Executive Committee positions'].map((item, i) => (
@@ -147,7 +147,7 @@ export default function JoinPage() {
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">Associate Member</h3>
                 <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">For friends and allies of GUSA from other regions.</p>
                 <div className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-white flex items-baseline gap-2 flex-wrap">
-                  Ksh 150 <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
+                  FREE <span className="text-xs sm:text-sm font-normal text-slate-400">/ annual registration</span>
                 </div>
                 <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Participation in cultural nights & events', 'Join social groups & forums', 'Discounts on event tickets', 'Networking & friendship opportunities'].map((item, i) => (
