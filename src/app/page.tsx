@@ -305,9 +305,14 @@ export default async function HomePage() {
                 const category = ev.category || ev.organizer || 'Event';
 
                 return (
-                  <Link href="/events" key={ev.id} className="group flex flex-col h-full glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all">
+                  <Link
+                    href="/events"
+                    key={ev.id}
+                    className="group flex flex-col aspect-square glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all shadow-lg hover:shadow-violet-500/10"
+                    style={{ aspectRatio: '1 / 1' }}
+                  >
                     {coverUrl ? (
-                      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-950 flex-shrink-0">
+                      <div className="relative w-full h-[52%] overflow-hidden bg-slate-950 flex-shrink-0">
                         <img 
                           src={coverUrl} 
                           alt={ev.title} 
@@ -319,21 +324,21 @@ export default async function HomePage() {
                         </span>
                       </div>
                     ) : (
-                      <div className="relative w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                      <div className="relative w-full h-[52%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
                         <Calendar size={36} className="text-violet-400/40" />
                         <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {category}
                         </span>
                       </div>
                     )}
-                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
-                      <div className="mb-3">
-                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors break-words">
+                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between overflow-hidden">
+                      <div className="mb-2">
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-2">
                           {ev.title}
                         </h3>
                       </div>
                       <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-white/5">
-                        <div className="flex flex-col gap-1.5 text-slate-400 text-xs min-w-0">
+                        <div className="flex flex-col gap-1 text-slate-400 text-xs min-w-0">
                           <span className="flex items-center gap-1.5">
                             <Calendar size={12} className="text-violet-400 shrink-0" />
                             <span className="truncate">{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>

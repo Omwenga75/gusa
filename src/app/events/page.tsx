@@ -286,35 +286,27 @@ export default function EventsPage() {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="flex flex-col rounded-2xl overflow-hidden"
+                  className="flex flex-col aspect-square rounded-2xl overflow-hidden"
                   style={{
                     backgroundColor: 'var(--surface-subtle)',
                     border: '1px solid var(--border)',
                     boxShadow: 'var(--shadow-md)',
+                    aspectRatio: '1 / 1'
                   }}
                 >
                   {/* Event Image Banner Skeleton */}
-                  <div className="skeleton" style={{ height: '210px', width: '100%', borderRadius: 0 }} />
+                  <div className="skeleton" style={{ height: '52%', width: '100%', borderRadius: 0 }} />
 
                   {/* Card Body Skeleton */}
-                  <div style={{ padding: 'clamp(1rem, 3.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
-                      <div className="skeleton" style={{ width: '90px', height: '16px', borderRadius: '4px' }} />
-                    </div>
-
-                    <div className="skeleton" style={{ width: '85%', height: '24px', borderRadius: '4px' }} />
-                    <div className="skeleton" style={{ width: '100%', height: '16px', borderRadius: '4px' }} />
-                    <div className="skeleton" style={{ width: '70%', height: '16px', borderRadius: '4px' }} />
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  <div style={{ padding: 'clamp(0.75rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div className="skeleton" style={{ width: '85%', height: '20px', borderRadius: '4px' }} />
                       <div className="skeleton" style={{ width: '60%', height: '14px', borderRadius: '4px' }} />
-                      <div className="skeleton" style={{ width: '50%', height: '14px', borderRadius: '4px' }} />
                     </div>
 
-                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-light)', display: 'flex', gap: '0.75rem' }}>
-                      <div className="skeleton" style={{ height: '40px', flex: 1, borderRadius: 'var(--radius-md)' }} />
-                      <div className="skeleton" style={{ height: '40px', width: '40px', borderRadius: 'var(--radius-md)' }} />
+                    <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="skeleton" style={{ height: '16px', width: '40%', borderRadius: '4px' }} />
+                      <div className="skeleton" style={{ height: '24px', width: '35%', borderRadius: '8px' }} />
                     </div>
                   </div>
                 </div>
@@ -351,163 +343,92 @@ export default function EventsPage() {
               {filteredEvents.map((event) => {
                 const isAttending = registeredEventIds.includes(event.id)
                 const isBtnLoading = attendingLoadingId === event.id
+                const images = parseEventImages(event.coverImage)
+                const coverUrl = images.length > 0 ? images[0] : undefined
 
                 return (
                   <div
                     key={event.id}
-                    className="card"
                     onClick={() => setGalleryModalEvent(event)}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%',
-                      borderRadius: 'var(--radius-xl)',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--surface)',
-                      boxShadow: 'var(--shadow-sm)',
-                      overflow: 'hidden',
-                      cursor: 'pointer',
-                      transition: 'transform 0.2s ease, border-color 0.2s ease'
-                    }}
+                    className="group flex flex-col aspect-square glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all cursor-pointer shadow-lg hover:shadow-violet-500/10"
+                    style={{ aspectRatio: '1 / 1' }}
                   >
-                    {/* Card Header Top Banner */}
-                    <div
-                      style={{
-                        background:
-                          event.category === 'cultural'
-                            ? 'linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%)'
-                            : event.category === 'academic'
-                            ? 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)'
-                            : event.category === 'sports'
-                            ? 'linear-gradient(135deg, #475569 0%, #1e293b 100%)'
-                            : 'linear-gradient(135deg, #b78103 0%, #8a6f00 100%)',
-                        color: '#ffffff',
-                        padding: '1rem clamp(1rem, 3vw, 1.5rem)',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        flexWrap: 'wrap'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div
-                          style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                            borderRadius: '8px',
-                            padding: '0.25rem 0.6rem',
-                            textAlign: 'center',
-                            flexShrink: 0
+                    {coverUrl ? (
+                      <div className="relative w-full h-[52%] overflow-hidden bg-slate-950 flex-shrink-0">
+                        <img 
+                          src={coverUrl} 
+                          alt={event.title} 
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {event.category}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (!isAttending) handleAttendEvent(event)
                           }}
+                          disabled={isAttending || isBtnLoading}
+                          className={`absolute top-3 right-3 z-10 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full border shadow-md transition-all ${
+                            isAttending
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 cursor-default'
+                              : 'bg-violet-600/90 hover:bg-violet-600 text-white border-violet-400/40'
+                          }`}
                         >
-                          <span style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>
-                            {event.month}
-                          </span>
-                          <span style={{ fontSize: '1.25rem', fontWeight: 800, lineHeight: 1 }}>{event.day}</span>
-                        </div>
-                        <div>
-                          <span style={{ fontSize: '0.8125rem', opacity: 0.9 }}>{event.year}</span>
-                          <span style={{ fontSize: '0.8125rem', display: 'block', fontWeight: 500 }}>MUST Campus</span>
-                        </div>
+                          {isAttending ? '✓ Attending' : isBtnLoading ? 'Registering...' : 'Attend'}
+                        </button>
                       </div>
+                    ) : (
+                      <div className="relative w-full h-[52%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                        <Calendar size={36} className="text-violet-400/40" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {event.category}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (!isAttending) handleAttendEvent(event)
+                          }}
+                          disabled={isAttending || isBtnLoading}
+                          className={`absolute top-3 right-3 z-10 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full border shadow-md transition-all ${
+                            isAttending
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 cursor-default'
+                              : 'bg-violet-600/90 hover:bg-violet-600 text-white border-violet-400/40'
+                          }`}
+                        >
+                          {isAttending ? '✓ Attending' : isBtnLoading ? 'Registering...' : 'Attend'}
+                        </button>
+                      </div>
+                    )}
 
-                      <span
-                        style={{
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          textTransform: 'uppercase',
-                          backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                          padding: '0.25rem 0.6rem',
-                          borderRadius: '9999px',
-                          letterSpacing: '0.04em',
-                          flexShrink: 0
-                        }}
-                      >
-                        {event.category}
-                      </span>
-                    </div>
-
-                    {/* Card Body */}
-                    <div style={{ padding: 'clamp(1rem, 3.5vw, 1.5rem)', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                      {/* Top content area (Title, Countdown, Description) */}
-                      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: '1.25rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.35, margin: 0, minWidth: 0, flex: '1 1 200px' }}>
-                            {event.title}
-                          </h3>
-                          <EventCountdown dateStr={event.date} timeStr={event.time} />
-                        </div>
-
+                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between overflow-hidden">
+                      <div className="mb-2">
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-2">
+                          {event.title}
+                        </h3>
                         {event.description && event.description !== event.title && (
-                          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
+                          <p className="text-xs text-slate-400 line-clamp-1 mt-1">
                             {event.description}
                           </p>
                         )}
                       </div>
-
-                      {/* Bottom pinned area (Metadata + Action Button) */}
-                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                        {/* Metadata List */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)', padding: '0.75rem', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-md)' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Clock size={15} color="var(--primary)" />
-                            <span>{event.time}</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <MapPin size={15} color="var(--primary)" />
-                            <span>{event.venue}</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Users size={15} color="var(--primary)" />
-                            <span>
-                              {event.registeredCount} / {event.capacity} Registered (
-                              {Math.round((event.registeredCount / event.capacity) * 100)}% capacity)
+                      <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-white/5">
+                        <div className="flex flex-col gap-1 text-slate-400 text-xs min-w-0">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar size={12} className="text-violet-400 shrink-0" />
+                            <span className="truncate">{event.date}</span>
+                          </span>
+                          {event.venue && (
+                            <span className="flex items-center gap-1.5">
+                              <MapPin size={12} className="text-violet-400 shrink-0" />
+                              <span className="truncate">{event.venue}</span>
                             </span>
-                          </div>
+                          )}
                         </div>
-
-                        {/* Action Button */}
-                        {isAttending ? (
-                          <button
-                            disabled
-                            onClick={(e) => e.stopPropagation()}
-                            className="btn"
-                            style={{
-                              width: '100%',
-                              gap: '0.5rem',
-                              backgroundColor: 'rgba(51, 65, 85, 0.5)',
-                              color: '#94a3b8',
-                              cursor: 'not-allowed',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              padding: '0.75rem 1rem',
-                              borderRadius: 'var(--radius-lg)',
-                              fontWeight: 600
-                            }}
-                          >
-                            <CheckCircle2 size={16} color="#4ade80" /> Attending
-                          </button>
-                        ) : (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleAttendEvent(event)
-                            }}
-                            disabled={isBtnLoading}
-                            className="btn btn-primary"
-                            style={{ width: '100%', gap: '0.5rem' }}
-                          >
-                            {isBtnLoading ? (
-                              'Registering...'
-                            ) : (
-                              <>
-                                I Will Attend <ArrowRight size={16} />
-                              </>
-                            )}
-                          </button>
-                        )}
+                        <div className="shrink-0">
+                          <EventCountdown dateStr={event.date} timeStr={event.time} />
+                        </div>
                       </div>
                     </div>
                   </div>
