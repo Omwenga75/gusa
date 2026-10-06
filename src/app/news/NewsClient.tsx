@@ -89,7 +89,7 @@ export default function NewsClient() {
             }),
             readTime: '3 min read',
             commentsCount: 0,
-            gradient: 'from-violet-600 via-indigo-600 to-blue-600'
+            gradient: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)'
           }));
           writeCache(NEWS_CACHE_KEY, mapped);
           setArticlesData(mapped);
@@ -291,18 +291,20 @@ export default function NewsClient() {
                   cursor: 'pointer',
                   borderRadius: '1.25rem',
                   overflow: 'hidden',
-                  border: '1px solid var(--border-default)',
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--surface)',
                   display: 'flex',
                   flexDirection: 'column',
-                  transition: 'all 0.3s ease'
+                  transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                  boxShadow: 'var(--shadow-sm)'
                 }}
               >
-                {/* Header Banner Graphic */}
+                {/* Header Banner Graphic with Solid Purple to Pink gradient and styled dots */}
                 <div
                   style={{
-                    height: '140px',
-                    background: article.gradient,
-                    padding: '1.25rem',
+                    height: '145px',
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)',
+                    padding: '1.15rem 1.25rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -310,18 +312,46 @@ export default function NewsClient() {
                     overflow: 'hidden'
                   }}
                 >
+                  {/* Styled Translucent Dot Grid Overlay */}
                   <div
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      opacity: 0.12,
-                      backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)',
-                      backgroundSize: '16px 16px'
+                      opacity: 0.25,
+                      backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.7) 1.5px, transparent 1.5px)',
+                      backgroundSize: '15px 15px',
+                      pointerEvents: 'none'
+                    }}
+                  />
+                  {/* Subtle lighting overlay for depth */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%)',
+                      pointerEvents: 'none'
                     }}
                   />
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-                    <span className={`badge ${getCategoryBadgeClass(article.category)}`}>
+                  {/* Top row: Frosted Glass Category Badge + Share button */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: '#ffffff',
+                        backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.35)',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '9999px',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
+                      }}
+                    >
                       {article.category}
                     </span>
 
@@ -329,39 +359,45 @@ export default function NewsClient() {
                       onClick={(e) => handleShare(article.title, e)}
                       title="Share link"
                       style={{
-                        backgroundColor: 'rgba(0,0,0,0.4)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(8px)',
                         color: '#ffffff',
-                        border: 'none',
-                        width: '30px',
-                        height: '30px',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        width: '32px',
+                        height: '32px',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)'
                       }}
                     >
                       <Share2 size={14} />
                     </button>
                   </div>
 
+                  {/* Bottom row: Date & Read Time with crisp contrast */}
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.75rem',
-                      color: 'rgba(255,255,255,0.9)',
+                      gap: '0.65rem',
+                      color: '#ffffff',
                       fontSize: '0.75rem',
+                      fontWeight: 600,
                       position: 'relative',
-                      zIndex: 2
+                      zIndex: 2,
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
                     }}
                   >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Calendar size={12} /> {article.publishedAt}
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <Calendar size={13} /> {article.publishedAt}
                     </span>
-                    <span>&bull;</span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Clock size={12} /> {article.readTime}
+                    <span style={{ opacity: 0.7 }}>&bull;</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <Clock size={13} /> {article.readTime}
                     </span>
                   </div>
                 </div>
@@ -370,20 +406,23 @@ export default function NewsClient() {
                 <div
                   className="card-body"
                   style={{
-                    padding: '1.5rem',
+                    padding: '1.25rem 1.4rem',
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    gap: '1rem'
                   }}
                 >
                   <div>
                     <h3
                       style={{
-                        fontSize: '1.15rem',
-                        fontWeight: 700,
+                        fontSize: '1.2rem',
+                        fontWeight: 800,
                         lineHeight: 1.35,
-                        marginBottom: '0.75rem'
+                        marginBottom: '0.5rem',
+                        color: 'var(--text-main)',
+                        letterSpacing: '-0.01em'
                       }}
                     >
                       {article.title}
@@ -392,9 +431,9 @@ export default function NewsClient() {
                     <p
                       style={{
                         fontSize: '0.875rem',
-                        color: 'var(--color-text-secondary)',
+                        color: 'var(--text-muted)',
                         lineHeight: 1.6,
-                        marginBottom: '1.25rem',
+                        margin: 0,
                         display: '-webkit-box',
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: 'vertical',
@@ -406,56 +445,58 @@ export default function NewsClient() {
                   </div>
 
                   {/* Author and Footer Bar */}
-                  <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        paddingTop: '1rem',
-                        borderTop: '1px solid var(--border-subtle)'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div
-                          style={{
-                            width: '32px',
-                            height: '32px',
-                            borderRadius: '50%',
-                            backgroundColor: 'var(--color-primary-light)',
-                            color: 'var(--color-primary)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            fontWeight: 700
-                          }}
-                        >
-                          {article.author.avatarInitials}
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>
-                            {article.author.name}
-                          </div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)' }}>
-                            {article.author.role}
-                          </div>
-                        </div>
-                      </div>
-
-                      <span
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingTop: '0.9rem',
+                      borderTop: '1px solid var(--border)',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
+                      <div
                         style={{
-                          fontSize: '0.825rem',
-                          fontWeight: 600,
-                          color: 'var(--color-primary)',
-                          display: 'inline-flex',
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '50%',
+                          background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+                          color: '#ffffff',
+                          display: 'flex',
                           alignItems: 'center',
-                          gap: '0.2rem'
+                          justifyContent: 'center',
+                          fontSize: '0.75rem',
+                          fontWeight: 800,
+                          flexShrink: 0,
+                          boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
                         }}
                       >
-                        Read <ChevronRight size={15} />
-                      </span>
+                        {article.author.avatarInitials}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {article.author.name}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                          {article.author.role}
+                        </div>
+                      </div>
                     </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.85rem',
+                        fontWeight: 700,
+                        color: '#c084fc',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        flexShrink: 0
+                      }}
+                    >
+                      Read <ChevronRight size={16} />
+                    </span>
                   </div>
                 </div>
               </article>
