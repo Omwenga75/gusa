@@ -60,10 +60,12 @@ export function Navbar() {
         <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-lg sm:text-xl text-violet-400">
-                G
-              </div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl overflow-hidden bg-gradient-to-tr from-violet-600 to-amber-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
+              <img
+                src="/gusa-logo.jpg"
+                alt="GUSA Official Crest"
+                className="w-full h-full object-cover rounded-[10px]"
+              />
             </div>
             <div className="flex flex-col min-w-0">
               <span className="font-extrabold text-base sm:text-xl tracking-tight text-white flex items-center gap-1.5 leading-tight">
@@ -143,10 +145,12 @@ export function Navbar() {
         <div className="flex items-center justify-between px-5 pt-6 pb-5">
           <Link href="/" onClick={closeDrawer} className="flex items-center gap-3 group">
             {/* Logo icon */}
-            <div className="w-11 h-11 shrink-0 rounded-2xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/25 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#0d0d1a] rounded-[14px] flex items-center justify-center font-black text-xl text-violet-400">
-                G
-              </div>
+            <div className="w-11 h-11 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-tr from-violet-600 to-amber-500 p-0.5 shadow-lg shadow-violet-500/25 group-hover:scale-105 transition-transform">
+              <img
+                src="/gusa-logo.jpg"
+                alt="GUSA Official Crest"
+                className="w-full h-full object-cover rounded-[14px]"
+              />
             </div>
             {/* Brand text */}
             <div className="flex flex-col leading-tight min-w-0">

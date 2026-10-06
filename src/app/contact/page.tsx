@@ -78,7 +78,7 @@ export default function ContactPage() {
     },
     {
       q: 'Can alumni or well-wishers sponsor GUSA events and programs?',
-      a: 'Yes! We actively partner with Gusii professionals, alumni corporate entities, and cultural patrons. Contact the Secretariat at info@gusa-meru.org or call the Chairperson at +254 720 112 233 to explore partnership packages.'
+      a: 'Yes! We actively partner with Gusii professionals, alumni corporate entities, and cultural patrons. Contact the Secretariat at gusa@gmail.com or call +254 76 804 142 to explore partnership packages.'
     },
     {
       q: 'When does the Annual Cultural Night take place?',

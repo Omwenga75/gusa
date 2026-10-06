@@ -12,10 +12,12 @@ export function Footer() {
           {/* Column 1: Brand & Social */}
           <div className="flex flex-col gap-4 sm:gap-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20">
-                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-xl text-violet-400">
-                  G
-                </div>
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-violet-600 to-amber-500 p-0.5 shadow-lg shadow-violet-500/20">
+                <img
+                  src="/gusa-logo.jpg"
+                  alt="GUSA Official Crest"
+                  className="w-full h-full object-cover rounded-[10px]"
+                />
               </div>
               <span className="font-extrabold text-2xl tracking-tight text-white">GUSA</span>
             </div>
@@ -77,11 +79,15 @@ export function Footer() {
             <ul className="flex flex-col gap-3.5">
               <li className="flex items-start gap-3 min-w-0">
                 <Mail size={16} className="text-violet-400 mt-1 shrink-0" />
-                <span className="text-slate-400 text-sm break-all">info@gusa.or.ke</span>
+                <a href="mailto:gusa@gmail.com" className="text-slate-400 hover:text-violet-400 transition-colors text-sm break-all">
+                  gusa@gmail.com
+                </a>
               </li>
               <li className="flex items-start gap-3 min-w-0">
                 <Phone size={16} className="text-violet-400 mt-1 shrink-0" />
-                <span className="text-slate-400 text-sm">+254 700 000 000</span>
+                <a href="tel:+25476804142" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">
+                  +254 76 804 142
+                </a>
               </li>
               <li className="flex items-start gap-3 min-w-0">
                 <MapPin size={16} className="text-violet-400 mt-1 shrink-0" />
