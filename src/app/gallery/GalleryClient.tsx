@@ -435,48 +435,7 @@ export default function GalleryClient() {
               </button>
             </div>
 
-            {/* Modal Controls: Media Filter Tabs */}
-            <div
-              style={{
-                padding: '0.75rem clamp(1rem, 3vw, 2rem)',
-                borderBottom: '1px solid var(--border-subtle)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '0.75rem'
-              }}
-            >
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => setMediaFilter('all')}
-                  className={`btn btn-xs ${mediaFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
-                  style={{ borderRadius: '9999px' }}
-                >
-                  All Media ({activeAlbum.media.length})
-                </button>
-                <button
-                  onClick={() => setMediaFilter('photo')}
-                  className={`btn btn-xs ${mediaFilter === 'photo' ? 'btn-primary' : 'btn-ghost'}`}
-                  style={{ borderRadius: '9999px' }}
-                >
-                  <ImageIcon size={12} /> Photos ({activeAlbum.media.filter((m) => m.type === 'photo').length})
-                </button>
-                <button
-                  onClick={() => setMediaFilter('video')}
-                  className={`btn btn-xs ${mediaFilter === 'video' ? 'btn-primary' : 'btn-ghost'}`}
-                  style={{ borderRadius: '9999px' }}
-                >
-                  <Video size={12} /> Videos ({activeAlbum.media.filter((m) => m.type === 'video').length})
-                </button>
-              </div>
-
-              <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                Click any item to view in full resolution
-              </span>
-            </div>
-
-            {/* Modal Media Grid */}
+            {/* Modal Media Grid — clean minimal layout */}
             <div
               style={{
                 padding: '1.25rem clamp(1rem, 3vw, 2rem)',
@@ -484,14 +443,12 @@ export default function GalleryClient() {
                 flex: 1
               }}
             >
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>
-                {activeAlbum.description}
-              </p>
-
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 180px), 1fr))',
+                  gridTemplateColumns: currentAlbumMedia.length === 1
+                    ? '1fr'
+                    : 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))',
                   gap: '1rem'
                 }}
               >
@@ -500,122 +457,73 @@ export default function GalleryClient() {
                     key={item.id}
                     onClick={() => setLightboxIndex(index)}
                     style={{
-                      position: 'relative',
                       borderRadius: '1rem',
                       overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
                       cursor: 'pointer',
-                      aspectRatio: '4 / 3',
-                      background: item.thumbnailGradient,
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      position: 'relative',
+                      height: currentAlbumMedia.length === 1 ? 'auto' : '260px',
+                      maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
+                      maxWidth: currentAlbumMedia.length === 1 ? '700px' : undefined,
+                      margin: currentAlbumMedia.length === 1 ? '0 auto' : undefined,
                       transition: 'transform 0.2s ease, box-shadow 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.4)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
                     }}
                   >
-                    {item.imageUrl && (
+                    {item.imageUrl ? (
                       <img
                         src={item.imageUrl}
                         alt={item.title}
                         style={{
-                          position: 'absolute',
-                          inset: 0,
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
-                          objectPosition: 'center top'
+                          objectPosition: 'center top',
+                          maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
+                          display: 'block'
                         }}
                       />
-                    )}
-                    {/* Media Type Icon Badge */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '0.75rem',
-                        right: '0.75rem',
-                        backgroundColor: 'rgba(0, 0, 0, 0.65)',
-                        backdropFilter: 'blur(4px)',
-                        color: '#ffffff',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.7rem',
-                        fontWeight: 600,
+                    ) : (
+                      <div style={{
+                        width: '100%',
+                        height: '100%',
+                        minHeight: '200px',
+                        background: item.thumbnailGradient || 'linear-gradient(135deg, #7c3aed, #db2777)',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.25rem',
-                        zIndex: 2
-                      }}
-                    >
-                      {item.type === 'video' ? (
-                        <>
-                          <Play size={10} fill="#FFD700" color="#FFD700" />
-                          <span>{item.videoDuration || 'Video'}</span>
-                        </>
-                      ) : (
-                        <>
-                          <ImageIcon size={11} /> Photo
-                        </>
-                      )}
-                    </div>
-
-                    {/* Gradient content container */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                        padding: '1rem',
-                        color: '#ffffff'
-                      }}
-                    >
-                      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, lineHeight: 1.2, marginBottom: '0.2rem' }}>
-                        {item.title}
-                      </h4>
-                      <p
-                        style={{
-                          fontSize: '0.75rem',
-                          color: 'rgba(255,255,255,0.8)',
-                          lineHeight: 1.3,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {item.caption}
-                      </p>
-                    </div>
+                        justifyContent: 'center'
+                      }}>
+                        {item.type === 'video' ? (
+                          <Play size={40} color="#ffffff" style={{ opacity: 0.7 }} />
+                        ) : (
+                          <ImageIcon size={40} color="#ffffff" style={{ opacity: 0.4 }} />
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-            </div>
 
-            {/* Modal Footer */}
-            <div
-              style={{
-                padding: '1rem clamp(1rem, 3vw, 2rem)',
-                borderTop: '1px solid var(--border-subtle)',
-                background: 'var(--bg-secondary)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '0.5rem'
-              }}
-            >
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
-                {activeAlbum.photoCount} Total Photos &bull; {activeAlbum.videoCount} Total Videos
-              </span>
-              <button onClick={handleCloseAlbum} className="btn btn-outline btn-sm">
-                Close Viewer
-              </button>
+              {currentAlbumMedia.length === 0 && (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '3rem 1.5rem',
+                  color: '#94a3b8'
+                }}>
+                  <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#a78bfa' }} />
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>No Photos Yet</h3>
+                  <p style={{ fontSize: '0.875rem', margin: 0 }}>No pictures have been added to this album yet.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -651,37 +559,28 @@ export default function GalleryClient() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <span style={{ fontSize: '0.8rem', color: '#FFD700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {activeAlbum?.title}
-              </span>
-              <h3 style={{ fontSize: 'clamp(0.95rem, 3vw, 1.125rem)', fontWeight: 700, color: '#ffffff', overflowWrap: 'anywhere' }}>
-                {currentAlbumMedia[lightboxIndex].title}
-              </h3>
-            </div>
+            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ffffff' }}>
+              {lightboxIndex + 1} / {currentAlbumMedia.length}
+            </span>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-              <span style={{ fontSize: '0.8125rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-                {lightboxIndex + 1} of {currentAlbumMedia.length}
-              </span>
-              <button
-                onClick={() => setLightboxIndex(null)}
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255,255,255,0.15)',
-                  color: '#ffffff',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <X size={20} />
-              </button>
-            </div>
+            <button
+              onClick={() => setLightboxIndex(null)}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.2s'
+              }}
+            >
+              <X size={20} />
+            </button>
           </div>
 
           {/* Central Media Display */}
@@ -808,29 +707,6 @@ export default function GalleryClient() {
             >
               <ChevronRight size={24} />
             </button>
-          </div>
-
-          {/* Bottom Caption Bar */}
-          <div
-            style={{
-              textAlign: 'center',
-              color: '#ffffff',
-              padding: '0.75rem',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              borderRadius: '0.75rem',
-              maxWidth: '850px',
-              margin: '0 auto',
-              width: '100%',
-              zIndex: 10
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)' }}>
-              {currentAlbumMedia[lightboxIndex].caption}
-            </p>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.25rem', display: 'block' }}>
-              Recorded on {currentAlbumMedia[lightboxIndex].date} &bull; Gusii University Students Association – Meru Chapter Archive
-            </span>
           </div>
         </div>
       )}
