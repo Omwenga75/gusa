@@ -14,6 +14,22 @@
   flex-direction: column;
   padding: 1.5rem 1rem;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
 }
 
 .sidebarHeader {
@@ -106,12 +122,16 @@
 
 .topbar {
   height: 72px;
-  background: #0d1225;
+  background: rgba(13, 18, 37, 0.95);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 40;
 }
 
 .searchBar {
