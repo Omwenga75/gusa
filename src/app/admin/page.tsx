@@ -122,8 +122,8 @@ export default async function AdminDashboard() {
   recentLeaders.forEach((ldr) => {
     activities.push({
       id: `ldr-${ldr.id}`,
-      title: `Executive Roster: ${ldr.name}`,
-      subtitle: `Active as ${ldr.position}`,
+      title: `Leader Added: ${ldr.name}`,
+      subtitle: `Added as ${ldr.position}`,
       timestamp: ldr.updatedAt || ldr.createdAt,
       type: 'leader'
     });
