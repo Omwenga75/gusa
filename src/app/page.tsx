@@ -314,35 +314,40 @@ export default async function HomePage() {
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {category}
+                        </span>
                       </div>
                     ) : (
-                      <div className="w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                      <div className="relative w-full h-32 bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
                         <Calendar size={36} className="text-violet-400/40" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {category}
+                        </span>
                       </div>
                     )}
                     <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
-                      <div>
-                        <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-                          <span className="inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-2.5 py-1 rounded-full border border-violet-500/20 truncate max-w-full">
-                            {category}
-                          </span>
-                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
-                        </div>
-                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug mb-3 group-hover:text-violet-300 transition-colors break-words">
+                      <div className="mb-3">
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors break-words">
                           {ev.title}
                         </h3>
                       </div>
-                      <div className="mt-auto pt-3 flex flex-col gap-1.5 text-slate-400 text-xs border-t border-white/5">
-                        <span className="flex items-center gap-1.5">
-                          <Calendar size={12} className="text-violet-400 shrink-0" />
-                          <span>{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
-                        </span>
-                        {ev.venue && (
+                      <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-white/5">
+                        <div className="flex flex-col gap-1.5 text-slate-400 text-xs min-w-0">
                           <span className="flex items-center gap-1.5">
-                            <MapPin size={12} className="text-violet-400 shrink-0" />
-                            <span className="truncate">{ev.venue}</span>
+                            <Calendar size={12} className="text-violet-400 shrink-0" />
+                            <span className="truncate">{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
                           </span>
-                        )}
+                          {ev.venue && (
+                            <span className="flex items-center gap-1.5">
+                              <MapPin size={12} className="text-violet-400 shrink-0" />
+                              <span className="truncate">{ev.venue}</span>
+                            </span>
+                          )}
+                        </div>
+                        <div className="shrink-0">
+                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
+                        </div>
                       </div>
                     </div>
                   </Link>
