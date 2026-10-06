@@ -43,10 +43,6 @@ export default function AboutPage() {
               About GUSA
             </h1>
 
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', margin: '0 0 1.5rem 0' }}>
-              Driven by excellence — the Gusii University Students Association at Meru University of Science &amp; Technology.
-            </p>
-
             <div className="responsive-btn-group">
               <Link href="/leadership" className="btn btn-primary btn-lg">
                 Meet Our Leadership <ChevronRight size={18} />
