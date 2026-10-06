@@ -223,7 +223,6 @@ export default function NewsPage() {
                   <option value="Announcements">Announcements</option>
                   <option value="Campus News">Campus News</option>
                   <option value="Welfare">Welfare</option>
-                  <option value="Bursaries">Bursaries</option>
                   <option value="Cultural">Cultural</option>
                 </select>
               </div>
