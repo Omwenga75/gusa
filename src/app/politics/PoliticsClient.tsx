@@ -29,8 +29,8 @@ export default function PoliticsClient() {
       status: 'Nominations Open'
     },
     {
-      title: 'Secretary General',
-      description: 'Custodian of association records, official correspondence, minutes, and institutional communication.',
+      title: 'SAMU & Delegate Positions',
+      description: 'Leaders representing GUSA as delegates and Students Association of Meru University(SAMU)',
       requirements: ['Strong organizational skills', 'Active member for at least 1 academic year'],
       status: 'Nominations Open'
     }
