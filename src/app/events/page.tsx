@@ -228,54 +228,7 @@ export default function EventsPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([])
-  const [attendingLoadingId, setAttendingLoadingId] = useState<string | null>(null)
 
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem('gusa_registered_events')
-      if (saved) {
-        setRegisteredEventIds(JSON.parse(saved))
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }, [])
-
-  const handleAttendEvent = async (event: EventItem) => {
-    if (registeredEventIds.includes(event.id) || attendingLoadingId === event.id) return
-
-    setAttendingLoadingId(event.id)
-
-    try {
-      const res = await fetch('/api/events/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId: event.id })
-      })
-
-      if (res.ok) {
-        const next = [...registeredEventIds, event.id]
-        setRegisteredEventIds(next)
-        localStorage.setItem('gusa_registered_events', JSON.stringify(next))
-
-        setEventsData((prev) =>
-          prev.map((evt) =>
-            evt.id === event.id
-              ? { ...evt, registeredCount: evt.registeredCount + 1 }
-              : evt
-          )
-        )
-      } else {
-        alert('Failed to register attendance. Please try again.')
-      }
-    } catch (err) {
-      console.error(err)
-      alert('An error occurred while registering attendance.')
-    } finally {
-      setAttendingLoadingId(null)
-    }
-  }
 
   // Filtered Events
   const filteredEvents = useMemo(() => {
@@ -385,8 +338,6 @@ export default function EventsPage() {
           ) : (
             <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {filteredEvents.map((event) => {
-                const isAttending = registeredEventIds.includes(event.id)
-                const isBtnLoading = attendingLoadingId === event.id
                 const images = parseEventImages(event.coverImage)
                 const coverUrl = images.length > 0 ? images[0] : undefined
 
@@ -408,20 +359,6 @@ export default function EventsPage() {
                         <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category}
                         </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (!isAttending) handleAttendEvent(event)
-                          }}
-                          disabled={isAttending || isBtnLoading}
-                          className={`absolute top-3 right-3 z-10 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full border shadow-md transition-all ${
-                            isAttending
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 cursor-default'
-                              : 'bg-violet-600/90 hover:bg-violet-600 text-white border-violet-400/40'
-                          }`}
-                        >
-                          {isAttending ? '✓ Attending' : isBtnLoading ? 'Registering...' : 'Attend'}
-                        </button>
                       </div>
                     ) : (
                       <div className="relative w-full h-[72%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
@@ -429,20 +366,6 @@ export default function EventsPage() {
                         <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category}
                         </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (!isAttending) handleAttendEvent(event)
-                          }}
-                          disabled={isAttending || isBtnLoading}
-                          className={`absolute top-3 right-3 z-10 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full border shadow-md transition-all ${
-                            isAttending
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 cursor-default'
-                              : 'bg-violet-600/90 hover:bg-violet-600 text-white border-violet-400/40'
-                          }`}
-                        >
-                          {isAttending ? '✓ Attending' : isBtnLoading ? 'Registering...' : 'Attend'}
-                        </button>
                       </div>
                     )}
 

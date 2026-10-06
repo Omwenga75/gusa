@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { Plus, Calendar as CalendarIcon, MapPin, X, Users, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Calendar as CalendarIcon, MapPin, X, Pencil, Trash2 } from 'lucide-react';
 import { readCache, writeCache, clearCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
@@ -17,17 +17,6 @@ interface Event {
   capacity?: number;
   coverImage?: string;
   _count?: { registrations: number };
-}
-
-interface Attendee {
-  id: string;
-  studentName: string;
-  studentEmail: string;
-  studentPhone?: string;
-  studentRegNumber?: string;
-  studentCourse?: string;
-  status: string;
-  registeredAt: string;
 }
 
 const ADMIN_EVENTS_KEY = 'admin_events';
@@ -61,11 +50,7 @@ export default function EventsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
-  // Attendees Modal State
-  const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
-  const [selectedEventForAttendees, setSelectedEventForAttendees] = useState<Event | null>(null);
-  const [attendees, setAttendees] = useState<Attendee[]>([]);
-  const [isLoadingAttendees, setIsLoadingAttendees] = useState(false);
+
 
   // Form State (used for both Create & Edit)
   const [title, setTitle] = useState('');
@@ -274,25 +259,7 @@ export default function EventsPage() {
     }
   };
 
-  const handleViewAttendees = async (event: Event) => {
-    setSelectedEventForAttendees(event);
-    setIsAttendeesModalOpen(true);
-    setIsLoadingAttendees(true);
-    try {
-      const res = await fetch(`/api/events/${event.id}/attendees`);
-      const data = await res.json();
-      if (data.attendees) {
-        setAttendees(data.attendees);
-      } else {
-        setAttendees([]);
-      }
-    } catch (err) {
-      console.error(err);
-      setAttendees([]);
-    } finally {
-      setIsLoadingAttendees(false);
-    }
-  };
+
 
   const renderImagePicker = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -404,11 +371,10 @@ export default function EventsPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '32%' }}>Event Title</th>
-                <th style={{ width: '24%', whiteSpace: 'nowrap' }}>Date & Time</th>
-                <th style={{ width: '14%', whiteSpace: 'nowrap' }}>Status</th>
-                <th style={{ width: '16%', whiteSpace: 'nowrap' }}>Registrations</th>
-                <th style={{ width: '14%', textAlign: 'center', whiteSpace: 'nowrap' }}>Action</th>
+                <th style={{ width: '40%' }}>Event Title</th>
+                <th style={{ width: '30%', whiteSpace: 'nowrap' }}>Date & Time</th>
+                <th style={{ width: '15%', whiteSpace: 'nowrap' }}>Status</th>
+                <th style={{ width: '15%', textAlign: 'center', whiteSpace: 'nowrap' }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -423,9 +389,6 @@ export default function EventsPage() {
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
-                    </td>
-                    <td>
-                      <div className="skeleton" style={{ width: '100px', height: '26px', borderRadius: '0.375rem' }} />
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
@@ -455,29 +418,6 @@ export default function EventsPage() {
                     }}>
                       {event.status}
                     </span>
-                  </td>
-                  <td style={{ whiteSpace: 'nowrap' }}>
-                    <button
-                      onClick={() => handleViewAttendees(event)}
-                      style={{
-                        background: 'rgba(139, 92, 246, 0.15)',
-                        border: '1px solid rgba(139, 92, 246, 0.3)',
-                        color: '#a78bfa',
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.4rem',
-                        whiteSpace: 'nowrap'
-                      }}
-                      title="Click to view attendee list"
-                    >
-                      <Users size={13} />
-                      {event._count?.registrations || 0} attendee(s)
-                    </button>
                   </td>
                   <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
@@ -768,86 +708,7 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* Attendees List Modal */}
-      {isAttendeesModalOpen && selectedEventForAttendees && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.85)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 110,
-          padding: '1rem'
-        }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '750px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)', maxHeight: '85vh', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <div>
-                <h2 className={styles.cardTitle} style={{ fontSize: '1.25rem' }}>
-                  Registered Attendees ({attendees.length})
-                </h2>
-                <p style={{ fontSize: '0.8125rem', color: '#94a3b8', margin: 0 }}>
-                  {selectedEventForAttendees.title}
-                </p>
-              </div>
-              <button onClick={() => setIsAttendeesModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <div style={{ overflowY: 'auto', flex: 1 }}>
-              {isLoadingAttendees ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
-                  Loading attendees...
-                </div>
-              ) : attendees.length === 0 ? (
-                <div style={{ padding: '2.5rem', textAlign: 'center', color: '#64748b' }}>
-                  <Users size={36} style={{ margin: '0 auto 0.5rem auto', display: 'block', opacity: 0.5 }} />
-                  No registered attendees for this event yet.
-                </div>
-              ) : (
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Student Name</th>
-                      <th>Email</th>
-                      <th>Phone</th>
-                      <th>Reg Number</th>
-                      <th>Course</th>
-                      <th>Registered At</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {attendees.map((attendee) => (
-                      <tr key={attendee.id}>
-                        <td style={{ fontWeight: 600, color: '#ffffff' }}>{attendee.studentName}</td>
-                        <td style={{ color: '#94a3b8' }}>{attendee.studentEmail}</td>
-                        <td style={{ color: '#94a3b8' }}>{attendee.studentPhone || '—'}</td>
-                        <td style={{ color: '#94a3b8' }}>{attendee.studentRegNumber || '—'}</td>
-                        <td style={{ color: '#94a3b8' }}>{attendee.studentCourse || '—'}</td>
-                        <td style={{ color: '#64748b', fontSize: '0.75rem' }}>
-                          {new Date(attendee.registeredAt).toLocaleDateString(undefined, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-
-            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-              <button onClick={() => setIsAttendeesModalOpen(false)} className={styles.btnOutline} style={{ width: 'auto' }}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Attendees List Modal Removed */}
     </>
   );
 }
