@@ -78,9 +78,9 @@ export default function NewsClient() {
             keyTakeaways: ['Official GUSA Announcement'],
             category: (post.category as any) || 'Announcements',
             author: {
-              name: post.author?.name || 'GUSA Executive',
-              role: 'Executive Admin',
-              avatarInitials: (post.author?.name || 'GUSA').charAt(0)
+              name: 'Executive Team',
+              role: '',
+              avatarInitials: 'E'
             },
             publishedAt: new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
               month: 'short',
@@ -472,14 +472,11 @@ export default function NewsClient() {
                           boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
                         }}
                       >
-                        {article.author.avatarInitials}
+                        E
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {article.author.name}
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                          {article.author.role}
+                        <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          Executive Team
                         </div>
                       </div>
                     </div>
@@ -644,24 +641,22 @@ export default function NewsClient() {
                       width: '40px',
                       height: '40px',
                       borderRadius: '50%',
-                      backgroundColor: 'var(--color-primary-light)',
-                      color: 'var(--color-primary)',
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+                      color: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: 700,
                       fontSize: '0.85rem',
-                      flexShrink: 0
+                      flexShrink: 0,
+                      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
                     }}
                   >
-                    {activeArticle.author.avatarInitials}
+                    E
                   </div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>
-                      {activeArticle.author.name}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                      {activeArticle.author.role}
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)' }}>
+                      Executive Team
                     </div>
                   </div>
                 </div>

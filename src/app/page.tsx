@@ -459,8 +459,8 @@ export default async function HomePage() {
                 const formattedDate = date
                   ? new Date(date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                   : null;
-                const authorInitial = post.author?.name?.charAt(0)?.toUpperCase() || 'G';
-                const authorName = post.author?.name || 'GUSA';
+                const authorInitial = 'E';
+                const authorName = 'Executive Team';
                 const snippet = post.excerpt || post.content?.slice(0, 130) || '';
                 const category = post.category || 'Announcement';
 

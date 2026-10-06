@@ -49,12 +49,10 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
             {post.title}
           </h1>
           <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
-            {post.author && (
-              <div className="flex items-center gap-2">
-                <User size={16} />
-                <span>By {post.author.name}</span>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <User size={16} />
+              <span>By Executive Team</span>
+            </div>
             <div className="flex items-center gap-2">
               <Calendar size={16} />
               <span>{formattedDate}</span>
@@ -82,19 +80,20 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
         </div>
 
         {/* Author Card */}
-        {post.author && (
-          <div className="border-t border-gray-100 dark:border-gray-800 py-8 mb-12">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl font-bold text-gray-500">
-                {post.author.name?.charAt(0) || 'A'}
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Written by</p>
-                <h4 className="font-bold text-lg" style={{ color: 'var(--text-main)' }}>{post.author.name}</h4>
-              </div>
+        <div className="border-t border-gray-100 dark:border-gray-800 py-8 mb-12">
+          <div className="flex items-center gap-4">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold text-white shadow-md"
+              style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }}
+            >
+              E
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Published by</p>
+              <h4 className="font-bold text-lg" style={{ color: 'var(--text-main)' }}>Executive Team</h4>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </PublicLayout>
   );
