@@ -93,7 +93,6 @@ export default function JoinPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Why Join GUSA?</h2>
-            <p className="text-slate-400 text-sm sm:text-base">Discover the exclusive perks and opportunities available to our members.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {benefits.map((benefit, idx) => (
