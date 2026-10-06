@@ -148,7 +148,7 @@ export default async function HomePage() {
   return (
     <PublicLayout>
       {/* ── HERO SECTION ─────────────────────────────────── */}
-      <section className="relative min-h-[78vh] lg:min-h-[84vh] flex flex-col justify-between pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-8 sm:pb-10 md:pb-14 text-white overflow-hidden border-b border-white/10">
+      <section className="relative min-h-0 lg:min-h-[84vh] flex flex-col justify-between pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-6 sm:pb-10 md:pb-14 text-white overflow-hidden border-b border-white/10">
         {/* Full-bleed Responsive Background Image Layer */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
           <img 
@@ -193,7 +193,7 @@ export default async function HomePage() {
         </div>
 
         {/* Stat Counters Grid */}
-        <div className="container mx-auto px-3 sm:px-6 relative z-10 mt-6 sm:mt-8">
+        <div className="container mx-auto px-3 sm:px-6 relative z-10 mt-4 sm:mt-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
             <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
