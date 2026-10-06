@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { HeartHandshake, Plus, X } from 'lucide-react';
+import { HeartHandshake, Plus, X, Trash2 } from 'lucide-react';
 import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface WelfareProject {
@@ -77,6 +77,24 @@ export default function WelfarePage() {
     }
   };
 
+  const handleDeleteProject = async (id: string, projectTitle: string) => {
+    if (!confirm(`Are you sure you want to delete "${projectTitle}"?`)) return;
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        clearCache('projects');
+        clearCache('welfare');
+        clearCache('admin_welfare');
+        setProjects(prev => prev.filter(p => p.id !== id));
+      } else {
+        alert('Failed to delete initiative');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting initiative');
+    }
+  };
+
   return (
     <>
       <div className={styles.pageHeader}>
@@ -98,10 +116,11 @@ export default function WelfarePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '40%' }}>Initiative Title</th>
+                <th style={{ width: '35%' }}>Initiative Title</th>
                 <th style={{ width: '20%' }}>Status</th>
-                <th style={{ width: '20%' }}>Start Date</th>
-                <th style={{ width: '20%' }}>End Date</th>
+                <th style={{ width: '15%' }}>Start Date</th>
+                <th style={{ width: '15%' }}>End Date</th>
+                <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -119,6 +138,9 @@ export default function WelfarePage() {
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div className="skeleton" style={{ width: '32px', height: '32px', borderRadius: '6px', marginLeft: 'auto' }} />
                     </td>
                   </tr>
                 ))
@@ -144,12 +166,31 @@ export default function WelfarePage() {
                   <td style={{ color: '#94a3b8' }}>
                     {project.endDate ? new Date(project.endDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Ongoing'}
                   </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button
+                      onClick={() => handleDeleteProject(project.id, project.title)}
+                      title="Delete initiative"
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#f87171',
+                        borderRadius: '0.375rem',
+                        padding: '0.4rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </td>
                 </tr>
               ))
               )}
               {projects.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                     No welfare initiatives registered yet. Click &quot;Add Welfare Initiative&quot; to launch one.
                   </td>
                 </tr>
