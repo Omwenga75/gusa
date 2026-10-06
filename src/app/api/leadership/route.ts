@@ -79,9 +79,11 @@ export async function GET() {
         }
       ]
 
-      await prisma.leader.createMany({
-        data: initialLeaders
-      })
+      for (const ldr of initialLeaders) {
+        await prisma.leader.create({
+          data: ldr
+        })
+      }
 
       leaders = await prisma.leader.findMany({
         orderBy: { displayOrder: 'asc' }

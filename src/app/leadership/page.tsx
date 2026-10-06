@@ -26,9 +26,14 @@ const LEADERS_CACHE_KEY = 'leaders';
 
 export default function LeadershipPage() {
   const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => {
-    return readCache<LeaderProfile[]>(LEADERS_CACHE_KEY) || [];
+    const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
+    if (cached && cached.length > 0) return cached;
+    return [];
   });
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(LEADERS_CACHE_KEY));
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
+    return !cached || cached.length === 0;
+  });
 
   useEffect(() => {
     const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
