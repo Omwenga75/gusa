@@ -159,37 +159,8 @@ export default function WelfareClient() {
         style={{ paddingTop: '2.5rem', paddingBottom: '5rem', minHeight: '600px', backgroundColor: 'var(--bg-primary)' }}
       >
         <div className="container">
-          {/* Status Filter Tabs */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-              marginBottom: '2.5rem'
-            }}
-          >
-            {(['All', 'Ongoing', 'Completed', 'Upcoming'] as const).map((status) => (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(status)}
-                style={{
-                  padding: '0.45rem 1.25rem',
-                  borderRadius: '9999px',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  border: statusFilter === status ? '1px solid #7c3aed' : '1px solid rgba(255, 255, 255, 0.12)',
-                  backgroundColor: statusFilter === status ? '#7c3aed' : 'rgba(255, 255, 255, 0.04)',
-                  color: statusFilter === status ? '#ffffff' : 'var(--text-muted)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
+
+
 
           {/* Initiatives Grid */}
           {isLoading ? (
