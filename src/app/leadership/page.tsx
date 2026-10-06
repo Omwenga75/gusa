@@ -201,7 +201,7 @@ export default function LeadershipPage() {
                           boxShadow: '0 0 6px #10b981'
                         }}
                       />
-                      Active Leader
+                      2026/2027
                     </span>
                   </div>
 
