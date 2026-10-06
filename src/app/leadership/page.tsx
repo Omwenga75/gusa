@@ -87,7 +87,7 @@ export default function LeadershipPage() {
                 color: 'var(--text-main)'
               }}
             >
-              Leadership Directory
+              Executive Leaders
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
