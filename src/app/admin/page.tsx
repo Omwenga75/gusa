@@ -182,9 +182,9 @@ export default async function AdminDashboard() {
     );
   }
 
-  // Sort activities newest first and take top 6
+  // Sort activities newest first and take top 4 most recent
   activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  const displayActivities = activities.slice(0, 6);
+  const displayActivities = activities.slice(0, 4);
 
   const getTypeStyle = (type: ActivityItem['type']) => {
     switch (type) {
