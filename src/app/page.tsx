@@ -228,7 +228,6 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-white">Our Four Core Pillars</h2>
-            <p className="text-slate-400">Guiding every event, project, and decision we make at GUSA.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
