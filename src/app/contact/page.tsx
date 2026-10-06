@@ -105,8 +105,8 @@ export default function ContactPage() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Have questions regarding membership, academic mentorship, welfare aid, or event sponsorships? Connect
-              with our executive leadership and campus secretariat team.
+              Have questions regarding membership, academic mentorship,<br />
+              welfare aid, or event sponsorships?
             </p>
           </div>
         </div>
