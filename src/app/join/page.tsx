@@ -40,7 +40,7 @@ export default function JoinPage() {
   const steps = [
     { num: '01', title: 'Contact Executive Officials', desc: 'Reach out to any GUSA committee leader or visit our campus desk at MUST.' },
     { num: '02', title: 'Verify Student Status', desc: 'Provide your student registration number and course details for verification.' },
-    { num: '03', title: 'Pay Registration Fee', desc: 'Contribute the annual Ksh 200 membership fee via the official GUSA M-Pesa Till/Paybill.' },
+    { num: '03', title: 'Pay Registration Fee', desc: 'Contribute the annual Ksh 100 membership fee via the official GUSA M-Pesa Till/Paybill.' },
     { num: '04', title: 'Welcome to GUSA!', desc: 'Get added to official WhatsApp groups, receive member updates, and participate in events.' }
   ];
 
@@ -51,7 +51,7 @@ export default function JoinPage() {
     },
     {
       q: 'How much is the registration fee?',
-      a: 'The annual registration fee is Ksh 200, which is renewable every academic year. There is also a monthly contribution of Ksh 50 for the welfare fund.'
+      a: 'The annual registration fee is Ksh 100, which is renewable every academic year.'
     },
     {
       q: 'Do I have to speak Ekegusii to join?',
