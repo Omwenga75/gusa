@@ -82,7 +82,7 @@ export default function JoinPage() {
               Join GUSA
             </h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Become a member of the Gusii University Students Association at Meru University of Science &amp; Technology.
+              Become a member of the Gusii University Students Association at MUST.
             </p>
           </div>
         </div>
