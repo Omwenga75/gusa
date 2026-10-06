@@ -1,17 +1,13 @@
 'use client'
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { readCache, writeCache } from '@/lib/cache'
 import {
   Users,
   Mail,
   Phone,
-  MessageCircle,
-  Search,
-  ShieldCheck,
-  Award,
-  Sparkles
+  MessageCircle
 } from 'lucide-react'
 
 interface LeaderProfile {
@@ -202,8 +198,6 @@ export default function LeadershipPage() {
     return DEFAULT_LEADERS;
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeCategory, setActiveCategory] = useState<'all' | 'executive' | 'representative' | 'patron'>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
@@ -243,7 +237,6 @@ export default function LeadershipPage() {
       })
       .catch((err) => {
         if (err.name !== 'AbortError') console.error('Error fetching leadership:', err);
-        // Fallback to default leaders on error
         setLeadersData((prev) => (prev && prev.length > 0 ? prev : DEFAULT_LEADERS));
       })
       .finally(() => {
@@ -257,26 +250,10 @@ export default function LeadershipPage() {
     };
   }, []);
 
-  const filteredLeaders = useMemo(() => {
-    return leadersData.filter((leader) => {
-      const matchesCategory =
-        activeCategory === 'all' || leader.category === activeCategory;
-
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        q === '' ||
-        leader.name.toLowerCase().includes(q) ||
-        leader.position.toLowerCase().includes(q) ||
-        (leader.bio && leader.bio.toLowerCase().includes(q));
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [leadersData, activeCategory, searchQuery]);
-
   return (
     <PublicLayout>
       {/* Header Banner */}
-      <section className="page-header" style={{ paddingBottom: '2rem' }}>
+      <section className="page-header" style={{ paddingBottom: '1.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
             <h1
@@ -288,108 +265,21 @@ export default function LeadershipPage() {
                 color: 'var(--text-main)'
               }}
             >
-              Executive &amp; Student Leadership
+              Executive Leaders
             </h1>
 
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '2rem' }}>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
               Meet the elected GUSA executive leaders.
             </p>
-
-            {/* Navigation Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full max-w-2xl mx-auto">
-              {[
-                { id: 'all', label: 'All Leaders' },
-                { id: 'executive', label: 'Executive Positions' },
-                { id: 'representative', label: 'SAMU & Delegate Positions' },
-                { id: 'patron', label: 'Patron & Advisory' },
-              ].map((tab) => {
-                const count = tab.id === 'all'
-                  ? leadersData.length
-                  : leadersData.filter((l) => l.category === tab.id).length;
-                const isActive = activeCategory === tab.id;
-
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveCategory(tab.id as any)}
-                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer flex items-center gap-2 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                        : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                        isActive
-                          ? 'bg-white/20 text-white'
-                          : 'bg-white/5 text-[var(--text-muted)]'
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
         </div>
       </section>
 
       {/* Main Leadership Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
         <div className="container">
-          {/* Search bar & Category filter header */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              marginBottom: '2rem',
-              borderBottom: '1px solid var(--border)',
-              paddingBottom: '1rem'
-            }}
-          >
-            <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
-              <Search
-                size={16}
-                style={{
-                  position: 'absolute',
-                  left: '1rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)',
-                  pointerEvents: 'none'
-                }}
-              />
-              <input
-                type="text"
-                placeholder="Search leaders by name or title..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.6rem 1rem 0.6rem 2.6rem',
-                  borderRadius: '0.75rem',
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--surface-subtle)',
-                  color: 'var(--text-main)',
-                  fontSize: '0.875rem',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-              Showing {filteredLeaders.length} of {leadersData.length} Leaders
-            </div>
-          </div>
-
           {/* Leaders Grid */}
-          {filteredLeaders.length === 0 ? (
+          {leadersData.length === 0 ? (
             <div
               style={{
                 textAlign: 'center',
@@ -403,23 +293,13 @@ export default function LeadershipPage() {
               <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
                 No Leaders Found
               </h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto 1.5rem auto' }}>
-                {searchQuery
-                  ? `No leaders match "${searchQuery}" in this category.`
-                  : 'There are currently no leaders listed under this tab.'}
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto' }}>
+                The leadership directory is currently empty.
               </p>
-              <button
-                type="button"
-                onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
-                className="btn btn-primary btn-sm"
-                style={{ margin: '0 auto' }}
-              >
-                Reset Filter
-              </button>
             </div>
           ) : (
             <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
-              {filteredLeaders.map((leader) => (
+              {leadersData.map((leader) => (
                 <div
                   key={leader.id}
                   className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-2xl hover:shadow-violet-500/15"
