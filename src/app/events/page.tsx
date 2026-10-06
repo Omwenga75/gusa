@@ -295,7 +295,7 @@ export default function EventsPage() {
                   }}
                 >
                   {/* Event Image Banner Skeleton */}
-                  <div className="skeleton" style={{ height: '52%', width: '100%', borderRadius: 0 }} />
+                  <div className="skeleton" style={{ height: '72%', width: '100%', borderRadius: 0 }} />
 
                   {/* Card Body Skeleton */}
                   <div style={{ padding: 'clamp(0.75rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'space-between' }}>
@@ -354,7 +354,7 @@ export default function EventsPage() {
                     style={{ aspectRatio: '1 / 1' }}
                   >
                     {coverUrl ? (
-                      <div className="relative w-full h-[52%] overflow-hidden bg-slate-950 flex-shrink-0">
+                      <div className="relative w-full h-[72%] overflow-hidden bg-slate-950 flex-shrink-0">
                         <img 
                           src={coverUrl} 
                           alt={event.title} 
@@ -380,7 +380,7 @@ export default function EventsPage() {
                         </button>
                       </div>
                     ) : (
-                      <div className="relative w-full h-[52%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                      <div className="relative w-full h-[72%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
                         <Calendar size={36} className="text-violet-400/40" />
                         <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category}
@@ -402,26 +402,21 @@ export default function EventsPage() {
                       </div>
                     )}
 
-                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between overflow-hidden">
-                      <div className="mb-2">
-                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-2">
+                    <div className="p-3 sm:p-3.5 flex flex-col flex-1 justify-between overflow-hidden">
+                      <div>
+                        <h3 className="text-white font-bold text-sm sm:text-base leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-1">
                           {event.title}
                         </h3>
-                        {event.description && event.description !== event.title && (
-                          <p className="text-xs text-slate-400 line-clamp-1 mt-1">
-                            {event.description}
-                          </p>
-                        )}
                       </div>
-                      <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-white/5">
-                        <div className="flex flex-col gap-1 text-slate-400 text-xs min-w-0">
+                      <div className="mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
+                        <div className="flex flex-col gap-0.5 text-slate-400 text-[11px] sm:text-xs min-w-0">
                           <span className="flex items-center gap-1.5">
-                            <Calendar size={12} className="text-violet-400 shrink-0" />
+                            <Calendar size={11} className="text-violet-400 shrink-0" />
                             <span className="truncate">{event.date}</span>
                           </span>
                           {event.venue && (
                             <span className="flex items-center gap-1.5">
-                              <MapPin size={12} className="text-violet-400 shrink-0" />
+                              <MapPin size={11} className="text-violet-400 shrink-0" />
                               <span className="truncate">{event.venue}</span>
                             </span>
                           )}
