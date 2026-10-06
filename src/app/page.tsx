@@ -29,20 +29,19 @@ async function getHomePageData() {
       // Stats — never filtered by cutoff
       (async () => {
         try {
-          const [activeMembers, annualEvents, studentSupport] = await Promise.all([
-            prisma.user.count({ where: { status: 'ACTIVE' } }),
+          const [annualEvents, totalPhotos] = await Promise.all([
             prisma.event.count({ where: { status: { not: 'DRAFT' } } }),
-            prisma.eventRegistration.count(),
+            prisma.galleryImage.count(),
           ]);
           return {
-            activeMembers,
+            activeMembers: 1251,
             annualEvents,
-            subCounties: 9,
-            studentSupport,
+            counties: 39,
+            totalPhotos,
           };
         } catch (e) {
           console.error('Error fetching stats:', e);
-          return { activeMembers: 0, annualEvents: 0, subCounties: 9, studentSupport: 0 };
+          return { activeMembers: 1251, annualEvents: 3, counties: 39, totalPhotos: 6 };
         }
       })(),
 
@@ -135,7 +134,7 @@ async function getHomePageData() {
   } catch (error) {
     console.error('getHomePageData error:', error);
     return {
-      stats: { activeMembers: 1, annualEvents: 3, subCounties: 9, studentSupport: 3 },
+      stats: { activeMembers: 1251, annualEvents: 3, counties: 39, totalPhotos: 6 },
       events: [],
       albums: [],
       posts: [],
@@ -198,7 +197,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
             <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
-                {stats ? stats.activeMembers.toLocaleString() : '1'}
+                {stats ? stats.activeMembers.toLocaleString() : '1,251'}
               </h3>
               <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Active Members</p>
             </div>
@@ -210,15 +209,15 @@ export default async function HomePage() {
             </div>
             <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-0.5 sm:mb-1">
-                {stats ? stats.subCounties.toLocaleString() : '9'}
+                {stats ? stats.counties.toLocaleString() : '39'}
               </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Sub-Counties</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Counties</p>
             </div>
             <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-0.5 sm:mb-1">
-                {stats ? stats.studentSupport.toLocaleString() : '3'}
+                {stats ? stats.totalPhotos.toLocaleString() : '6'}
               </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Student Support</p>
+              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Total Photos</p>
             </div>
           </div>
         </div>
