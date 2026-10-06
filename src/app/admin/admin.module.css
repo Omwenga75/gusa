@@ -172,7 +172,7 @@
   padding: 0.35rem 0.85rem;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
+  border-radius: 13px;
 }
 
 .avatar {

@@ -319,7 +319,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className={styles.profile}>
               <div className={styles.avatar}>A</div>
               <div className={styles.profileInfo}>
-                <span className={styles.profileName}>Executive Admin</span>
+                <span className={styles.profileName}>Executive Team</span>
                 <span className={styles.profileRole}>Super Admin</span>
               </div>
             </div>
