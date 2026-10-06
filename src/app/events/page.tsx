@@ -271,7 +271,7 @@ export default function EventsPage() {
               Events
             </h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Stay up to date with all GUSA academic, cultural, sports, and welfare events at Meru University.
+              All GUSA academic, cultural, sports, and welfare events.
             </p>
           </div>
         </div>
