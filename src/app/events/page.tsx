@@ -612,9 +612,12 @@ export default function EventsPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: images.length === 1 ? '70vh' : '260px',
+                        height: images.length === 1 ? 'auto' : '260px',
+                        maxHeight: images.length === 1 ? '75vh' : undefined,
                         cursor: 'pointer',
-                        position: 'relative'
+                        position: 'relative',
+                        maxWidth: images.length === 1 ? '700px' : undefined,
+                        margin: images.length === 1 ? '0 auto' : undefined
                       }}
                     >
                       <img
@@ -623,7 +626,8 @@ export default function EventsPage() {
                         style={{
                           width: '100%',
                           height: '100%',
-                          objectFit: images.length === 1 ? 'contain' : 'cover'
+                          objectFit: 'cover',
+                          maxHeight: images.length === 1 ? '75vh' : undefined
                         }}
                       />
                       {/* Fullscreen hint overlay */}
