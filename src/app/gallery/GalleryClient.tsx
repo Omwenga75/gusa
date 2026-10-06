@@ -378,7 +378,7 @@ export default function GalleryClient() {
             style={{
               backgroundColor: 'var(--card-bg)',
               borderRadius: '1.5rem',
-              maxWidth: '960px',
+              maxWidth: '1300px',
               width: '100%',
               maxHeight: '90vh',
               display: 'flex',
@@ -448,7 +448,7 @@ export default function GalleryClient() {
                   display: 'grid',
                   gridTemplateColumns: currentAlbumMedia.length === 1
                     ? '1fr'
-                    : 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))',
+                    : 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
                   gap: '1rem'
                 }}
               >
