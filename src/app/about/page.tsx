@@ -28,32 +28,26 @@ export default function AboutPage() {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="page-header">
+      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
         <div className="container">
-          <div style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
             <h1
               style={{
-                fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '1.25rem',
+                marginBottom: '0.75rem',
                 color: 'var(--text-main)'
               }}
             >
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, var(--primary) 0%, #38bdf8 60%, var(--accent-gold) 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                Driven by Excellence
-              </span>
+              About GUSA
             </h1>
 
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem', margin: '0 0 1.5rem 0' }}>
+              Driven by excellence — the Gusii University Students Association at Meru University of Science &amp; Technology.
+            </p>
 
-
-            <div className="responsive-btn-group" style={{ marginTop: '1.5rem' }}>
+            <div className="responsive-btn-group">
               <Link href="/leadership" className="btn btn-primary btn-lg">
                 Meet Our Leadership <ChevronRight size={18} />
               </Link>

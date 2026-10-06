@@ -78,49 +78,47 @@ export default function PoliticsClient() {
   return (
     <PublicLayout>
       {/* ── HERO BANNER ───────────────────────────────────── */}
-      <section className="relative py-20 md:py-28 bg-slate-950 text-white overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(124,58,237,0.25),rgba(255,255,255,0))]" />
-        
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
-          <h1
-            style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              marginBottom: '0.75rem',
-              color: 'var(--text-main)'
-            }}
-          >
-            <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
-              Politics & Governance
-            </span>
-          </h1>
-
-          <p className="text-sm sm:text-base md:text-lg text-slate-300 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
-            Empowering visionary student leadership through transparent elections, constitutional democracy, and grassroots representation at Meru University.
-          </p>
-
-          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
-            <button
-              onClick={() => setActiveTab('aspirants')}
-              className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center ${
-                activeTab === 'aspirants'
-                  ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                  : 'bg-slate-900 border border-white/10 text-slate-300 hover:text-white'
-              }`}
+      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
+        <div className="container">
+          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+            <h1
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 800,
+                lineHeight: 1.15,
+                marginBottom: '0.75rem',
+                color: 'var(--text-main)'
+              }}
             >
-              Elective Seats & Aspirants
-            </button>
-            <button
-              onClick={() => setActiveTab('elections')}
-              className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center ${
-                activeTab === 'elections'
-                  ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                  : 'bg-slate-900 border border-white/10 text-slate-300 hover:text-white'
-              }`}
-            >
-              Electoral Calendar
-            </button>
+              Politics &amp; Governance
+            </h1>
+
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              Empowering visionary student leadership through transparent elections, constitutional democracy, and grassroots representation at Meru University.
+            </p>
+
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
+              <button
+                onClick={() => setActiveTab('aspirants')}
+                className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center ${
+                  activeTab === 'aspirants'
+                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
+                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                }`}
+              >
+                Elective Seats &amp; Aspirants
+              </button>
+              <button
+                onClick={() => setActiveTab('elections')}
+                className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center ${
+                  activeTab === 'elections'
+                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
+                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                }`}
+              >
+                Electoral Calendar
+              </button>
+            </div>
           </div>
         </div>
       </section>

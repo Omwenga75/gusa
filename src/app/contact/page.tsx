@@ -89,22 +89,22 @@ export default function ContactPage() {
   return (
     <PublicLayout>
       {/* Header Hero */}
-      <section className="page-header">
+      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
             <h1
               style={{
-                fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '1.25rem',
+                marginBottom: '0.75rem',
                 color: 'var(--text-main)'
               }}
             >
               Contact Us
             </h1>
 
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
               Have questions regarding membership, academic mentorship, welfare aid, or event sponsorships? Connect
               with our executive leadership and campus secretariat team.
             </p>

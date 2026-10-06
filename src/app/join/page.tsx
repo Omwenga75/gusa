@@ -66,7 +66,27 @@ export default function JoinPage() {
   return (
     <PublicLayout>
 
-
+      {/* Page Header */}
+      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
+        <div className="container">
+          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+            <h1
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 800,
+                lineHeight: 1.15,
+                marginBottom: '0.75rem',
+                color: 'var(--text-main)'
+              }}
+            >
+              Join GUSA
+            </h1>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+              Become a member of the Gusii University Students Association at Meru University of Science &amp; Technology.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Benefits Section */}
       <section id="benefits" className="py-12 sm:py-20 bg-slate-900/50 text-white">

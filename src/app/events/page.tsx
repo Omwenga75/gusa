@@ -255,6 +255,28 @@ export default function EventsPage() {
 
   return (
     <PublicLayout>
+      {/* Page Header */}
+      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
+        <div className="container">
+          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+            <h1
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 800,
+                lineHeight: 1.15,
+                marginBottom: '0.75rem',
+                color: 'var(--text-main)'
+              }}
+            >
+              Events
+            </h1>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+              Stay up to date with all GUSA academic, cultural, sports, and welfare events at Meru University.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Main Events Section */}
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem' }}>
         <div className="container">
