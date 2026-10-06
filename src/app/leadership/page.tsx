@@ -91,8 +91,7 @@ export default function LeadershipPage() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Meet the elected executive leaders, patron, and faculty representatives passionately serving the Gusii
-              student fraternity at Meru University of Science and Technology.
+              Meet our elected executive leaders.
             </p>
           </div>
         </div>
