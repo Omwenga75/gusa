@@ -14,230 +14,55 @@ interface LeaderProfile {
   id: string
   name: string
   position: string
-  category: 'patron' | 'executive' | 'representative'
   image?: string | null
   avatarInitials: string
-  avatarGradient: string
-  bio: string
+  bio?: string
   email?: string
   phone?: string
   whatsapp?: string
-  linkedin?: string
-  twitter?: string
-  term: string
 }
 
 const LEADERS_CACHE_KEY = 'leaders';
 
-const getCategory = (position: string): 'patron' | 'executive' | 'representative' => {
-  const p = (position || '').toLowerCase();
-  if (p.includes('patron') || p.includes('advisor')) return 'patron';
-  if (p.includes('samu') || p.includes('delegate') || p.includes('rep') || p.includes('congress')) return 'representative';
-  return 'executive';
-};
-
-const DEFAULT_LEADERS: LeaderProfile[] = [
-  // Executive Positions
-  {
-    id: 'exec-1',
-    name: 'Brian Osoro',
-    position: 'President / Chairperson',
-    category: 'executive',
-    avatarInitials: 'BO',
-    avatarGradient: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
-    bio: 'Steering the executive council, campus administration representation, student rights advocacy, and general GUSA stewardship.',
-    email: 'president@gusa.or.ke',
-    phone: '+254 712 345 678',
-    whatsapp: '+254712345678',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-2',
-    name: 'Faith Nyaboke',
-    position: 'Deputy President',
-    category: 'executive',
-    avatarInitials: 'FN',
-    avatarGradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
-    bio: 'Overseeing internal executive coordination, academic mentorship portfolios, gender inclusivity, and welfare initiatives.',
-    email: 'deputy.president@gusa.or.ke',
-    phone: '+254 723 456 789',
-    whatsapp: '+254723456789',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-3',
-    name: 'Dennis Ombati',
-    position: 'Secretary General',
-    category: 'executive',
-    avatarInitials: 'DO',
-    avatarGradient: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
-    bio: 'Custodian of association records, institutional correspondence, council minutes, and official administrative liaison.',
-    email: 'secgen@gusa.or.ke',
-    phone: '+254 734 567 890',
-    whatsapp: '+254734567890',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-4',
-    name: 'Lilian Kemunto',
-    position: 'Treasurer & Finance Secretary',
-    category: 'executive',
-    avatarInitials: 'LK',
-    avatarGradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    bio: 'Directing association finances, transparent budgeting, benevolent kitty accountability, and financial reporting.',
-    email: 'treasurer@gusa.or.ke',
-    phone: '+254 745 678 901',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-5',
-    name: 'Collins Machuki',
-    position: 'Organizing Secretary',
-    category: 'executive',
-    avatarInitials: 'CM',
-    avatarGradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-    bio: 'Lead coordinator for Gusii Cultural Festival, inter-campus sports, community outreach, and logistics mobilization.',
-    email: 'organizing@gusa.or.ke',
-    phone: '+254 756 789 012',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-6',
-    name: 'Dorcas Kwamboka',
-    position: 'Welfare Director',
-    category: 'executive',
-    avatarInitials: 'DK',
-    avatarGradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
-    bio: 'Managing comrade distress interventions, emergency assistance, hospitalization visits, and member bereavement support.',
-    email: 'welfare@gusa.or.ke',
-    phone: '+254 767 890 123',
-    term: '2026/2027'
-  },
-  {
-    id: 'exec-7',
-    name: 'Elvis Nyandiko',
-    position: 'Public Relations Officer',
-    category: 'executive',
-    avatarInitials: 'EN',
-    avatarGradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-    bio: 'Heading digital publicity, institutional media publications, public relations, and corporate stakeholder engagement.',
-    email: 'pr@gusa.or.ke',
-    phone: '+254 778 901 234',
-    term: '2026/2027'
-  },
-
-  // SAMU & Delegate Positions
-  {
-    id: 'rep-1',
-    name: 'Samson Moguche',
-    position: 'SAMU GUSA Representative',
-    category: 'representative',
-    avatarInitials: 'SM',
-    avatarGradient: 'linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)',
-    bio: 'Official leader representing GUSA as delegate to the Students Association of Meru University (SAMU) Parliament.',
-    email: 'samu.rep@gusa.or.ke',
-    phone: '+254 789 012 345',
-    term: '2026/2027'
-  },
-  {
-    id: 'rep-2',
-    name: 'Brenda Bosibori',
-    position: 'Campus Delegate',
-    category: 'representative',
-    avatarInitials: 'BB',
-    avatarGradient: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
-    bio: 'Representing Gusii students in university delegate forums, congress sessions, and academic policy dialogues.',
-    email: 'delegate@gusa.or.ke',
-    phone: '+254 790 123 456',
-    term: '2026/2027'
-  },
-  {
-    id: 'rep-3',
-    name: 'Kelvin Omwoyo',
-    position: 'Electoral & Delegate Liaison',
-    category: 'representative',
-    avatarInitials: 'KO',
-    avatarGradient: 'linear-gradient(135deg, #0284c7 0%, #6366f1 100%)',
-    bio: 'Coordinating student delegates across departments and fostering cohesive comradeship representation.',
-    email: 'liaison@gusa.or.ke',
-    phone: '+254 701 345 678',
-    term: '2026/2027'
-  },
-
-  // Patron & Advisory
-  {
-    id: 'patron-1',
-    name: 'Dr. Kennedy Momanyi',
-    position: 'Faculty Patron & Advisory Head',
-    category: 'patron',
-    avatarInitials: 'KM',
-    avatarGradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
-    bio: 'Senior faculty advisor offering academic mentorship, university administration liaison, and elder council guidance.',
-    email: 'patron@gusa.or.ke',
-    phone: '+254 700 123 456',
-    term: 'Permanent Advisory'
-  },
-  {
-    id: 'patron-2',
-    name: 'Prof. Evans Nyambane',
-    position: 'Associate Patron & Career Advisor',
-    category: 'patron',
-    avatarInitials: 'EN',
-    avatarGradient: 'linear-gradient(135deg, #d97706 0%, #92400e 100%)',
-    bio: 'Guiding graduate mentorship, research opportunities, corporate alumni liaisons, and postgraduate scholarship links.',
-    email: 'advisor@gusa.or.ke',
-    phone: '+254 711 234 567',
-    term: 'Faculty Advisory'
-  }
-];
-
 export default function LeadershipPage() {
   const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => {
-    const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
-    if (cached && cached.length > 0) return cached;
-    return DEFAULT_LEADERS;
+    return readCache<LeaderProfile[]>(LEADERS_CACHE_KEY) || [];
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(LEADERS_CACHE_KEY));
 
   useEffect(() => {
     const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
     if (cached && cached.length > 0) {
       setLeadersData(cached);
+      setIsLoading(false);
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
     fetch('/api/leadership', { cache: 'no-store', signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        if (data && Array.isArray(data.leaders) && data.leaders.length > 0) {
+        if (data && Array.isArray(data.leaders)) {
           const mapped: LeaderProfile[] = data.leaders.map((ldr: any) => ({
             id: ldr.id,
             name: ldr.name,
             position: ldr.position,
-            category: getCategory(ldr.position),
             image: ldr.image || null,
             avatarInitials: ldr.name
               ? ldr.name.split(' ').map((n: string) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
               : 'L',
-            avatarGradient: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
             bio: ldr.biography || '',
             email: ldr.email || '',
             phone: ldr.phone || '',
-            term: '2026/2027'
+            whatsapp: ldr.phone || ''
           }));
           try { writeCache(LEADERS_CACHE_KEY, mapped); } catch (_) { /* quota */ }
           setLeadersData(mapped);
-        } else {
-          // Keep default leaders if DB returns 0 items
-          try { writeCache(LEADERS_CACHE_KEY, DEFAULT_LEADERS); } catch (_) { /* quota */ }
-          setLeadersData(DEFAULT_LEADERS);
         }
       })
       .catch((err) => {
         if (err.name !== 'AbortError') console.error('Error fetching leadership:', err);
-        setLeadersData((prev) => (prev && prev.length > 0 ? prev : DEFAULT_LEADERS));
       })
       .finally(() => {
         clearTimeout(timeout);
@@ -278,8 +103,31 @@ export default function LeadershipPage() {
       {/* Main Leadership Section */}
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
         <div className="container">
-          {/* Leaders Grid */}
-          {leadersData.length === 0 ? (
+          {/* Loading Skeletons */}
+          {isLoading && leadersData.length === 0 ? (
+            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="flex flex-col rounded-2xl overflow-hidden shadow-xl"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  <div style={{ height: '64px', background: 'rgba(255, 255, 255, 0.02)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }} />
+                  <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem' }}>
+                      <div className="skeleton" style={{ width: '96px', height: '96px', borderRadius: '50%', border: '4px solid #0f172a' }} />
+                    </div>
+                    <div className="skeleton" style={{ width: '60%', height: '18px', marginBottom: '0.5rem', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '40%', height: '14px', marginBottom: '0.75rem', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '6px' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : leadersData.length === 0 ? (
             <div
               style={{
                 textAlign: 'center',
@@ -291,10 +139,10 @@ export default function LeadershipPage() {
             >
               <Users size={56} color="var(--text-muted)" style={{ margin: '0 auto 1.25rem auto' }} />
               <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
-                No Leaders Found
+                No Leaders Listed Yet
               </h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto' }}>
-                The leadership directory is currently empty.
+                Leaders added in the executive admin portal will appear here immediately.
               </p>
             </div>
           ) : (
@@ -309,46 +157,33 @@ export default function LeadershipPage() {
                     backdropFilter: 'blur(20px)',
                   }}
                 >
-                  {/* Glowing Top Graphic Header */}
+                  {/* Glowing Top Graphic Header Banner */}
                   <div
                     style={{
-                      height: '68px',
+                      height: '64px',
                       background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                       position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'flex-end',
+                      justifyContent: 'space-between',
                       padding: '0 1rem',
                     }}
                   >
-                    {/* Background Pattern Mesh */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 60%)',
-                        pointerEvents: 'none'
-                      }}
-                    />
-
-                    {/* Term Badge */}
+                    {/* Status Badge matching Admin side */}
                     <span
                       style={{
-                        position: 'relative',
-                        zIndex: 10,
                         backgroundColor: 'rgba(10, 15, 29, 0.85)',
                         backdropFilter: 'blur(12px)',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         color: '#e2e8f0',
-                        fontSize: '0.7rem',
-                        padding: '0.25rem 0.7rem',
+                        fontSize: '0.675rem',
+                        padding: '0.2rem 0.6rem',
                         borderRadius: '9999px',
                         fontWeight: 600,
-                        letterSpacing: '0.02em',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '0.4rem',
+                        gap: '0.35rem',
                         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
                       }}
                     >
@@ -358,34 +193,32 @@ export default function LeadershipPage() {
                           height: '6px',
                           borderRadius: '50%',
                           backgroundColor: '#10b981',
-                          boxShadow: '0 0 8px #10b981'
+                          boxShadow: '0 0 6px #10b981'
                         }}
                       />
-                      Term: {leader.term}
+                      Active Leader
                     </span>
                   </div>
 
                   {/* Avatar & Core Body */}
-                  <div style={{ padding: '0 clamp(1rem, 3vw, 1.25rem) 1.15rem clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', zIndex: 10 }}>
+                  <div style={{ padding: '0 clamp(1rem, 3vw, 1.25rem) 1.15rem clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, position: 'relative', zIndex: 10 }}>
                     {/* Avatar Container with Offset */}
-                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex', position: 'relative', zIndex: 20 }}>
+                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 20 }}>
                       <div
                         style={{
                           width: '96px',
                           height: '96px',
                           borderRadius: '50%',
                           overflow: 'hidden',
-                          background: leader.avatarGradient || 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+                          background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
                           border: '4px solid #0f172a',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: '#ffffff',
-                          fontSize: '1.75rem',
+                          fontSize: '1.85rem',
                           fontWeight: 800,
-                          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.6)',
-                          position: 'relative',
-                          zIndex: 30,
+                          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
                           flexShrink: 0
                         }}
                       >
@@ -408,92 +241,72 @@ export default function LeadershipPage() {
                       </div>
                     </div>
 
-                    {/* Leader Name */}
-                    <h3
-                      style={{
-                        fontSize: '1.15rem',
-                        fontWeight: 800,
-                        color: '#ffffff',
-                        marginBottom: '0.25rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.025em',
-                        lineHeight: 1.25
-                      }}
-                    >
-                      {leader.name}
-                    </h3>
+                    {/* Leader Name & Position */}
+                    <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
+                      <h3
+                        style={{
+                          margin: 0,
+                          fontSize: '1.1rem',
+                          fontWeight: 800,
+                          color: '#ffffff',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.025em',
+                          lineHeight: 1.3
+                        }}
+                      >
+                        {leader.name}
+                      </h3>
+                      <p
+                        style={{
+                          margin: '0.25rem 0 0 0',
+                          color: '#c4b5fd',
+                          fontWeight: 700,
+                          fontSize: '0.8rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}
+                      >
+                        {leader.position}
+                      </p>
+                    </div>
 
-                    {/* Position */}
-                    <p
-                      style={{
-                        color: '#c4b5fd',
-                        fontWeight: 700,
-                        fontSize: '0.8125rem',
-                        marginBottom: '0.5rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em'
-                      }}
-                    >
-                      {leader.position}
-                    </p>
-
-                    {/* Category Pill */}
+                    {/* Role Badge matching Admin Side */}
                     <div style={{ marginBottom: '0.75rem' }}>
                       <span
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '0.35rem',
-                          padding: '0.25rem 0.75rem',
+                          padding: '0.2rem 0.65rem',
                           borderRadius: '0.375rem',
-                          fontSize: '0.675rem',
+                          fontSize: '0.65rem',
                           fontWeight: 800,
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
-                          backgroundColor:
-                            leader.category === 'patron'
-                              ? 'rgba(245, 158, 11, 0.12)'
-                              : leader.category === 'executive'
-                              ? 'rgba(124, 58, 237, 0.15)'
-                              : 'rgba(59, 130, 246, 0.12)',
-                          color:
-                            leader.category === 'patron'
-                              ? '#fcd34d'
-                              : leader.category === 'executive'
-                              ? '#ddd6fe'
-                              : '#93c5fd',
-                          border:
-                            leader.category === 'patron'
-                              ? '1px solid rgba(245, 158, 11, 0.3)'
-                              : leader.category === 'executive'
-                              ? '1px solid rgba(124, 58, 237, 0.35)'
-                              : '1px solid rgba(59, 130, 246, 0.3)'
+                          backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                          color: '#ddd6fe',
+                          border: '1px solid rgba(124, 58, 237, 0.35)',
                         }}
                       >
-                        {leader.category === 'patron'
-                          ? 'Patron & Advisory'
-                          : leader.category === 'executive'
-                          ? 'Executive Positions'
-                          : 'SAMU & Delegate Positions'}
+                        Executive
                       </span>
                     </div>
 
                     {leader.bio && (
-                      <p style={{ fontSize: '0.8125rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '0.75rem' }}>
+                      <p style={{ fontSize: '0.8125rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '0.75rem', textAlign: 'center' }}>
                         {leader.bio}
                       </p>
                     )}
 
-                    {/* Professional Contact Footer Bar */}
+                    {/* Footer / Phone Section matching Admin Side */}
                     <div
                       style={{
+                        width: '100%',
                         marginTop: 'auto',
                         paddingTop: '0.75rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
+                        justifyContent: 'center',
                         gap: '0.5rem'
                       }}
                     >
@@ -504,90 +317,61 @@ export default function LeadershipPage() {
                           style={{
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '0.5rem',
+                            gap: '0.45rem',
+                            fontSize: '0.775rem',
+                            color: '#cbd5e1',
+                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
                             padding: '0.35rem 0.75rem',
                             borderRadius: '0.5rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
-                            color: '#cbd5e1',
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
                             textDecoration: 'none',
-                            transition: 'all 0.2s ease',
-                            maxWidth: '100%',
-                            minWidth: 0
+                            fontWeight: 600,
+                            transition: 'all 0.2s ease'
                           }}
                           className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-white"
                         >
                           <span
                             style={{
-                              width: '22px',
-                              height: '22px',
+                              width: '20px',
+                              height: '20px',
                               borderRadius: '0.375rem',
                               backgroundColor: 'rgba(124, 58, 237, 0.2)',
                               color: '#a78bfa',
                               display: 'flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              flexShrink: 0
+                              justifyContent: 'center'
                             }}
                           >
-                            <Phone size={11} />
+                            <Phone size={10} />
                           </span>
-                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{leader.phone}</span>
+                          <span>{leader.phone}</span>
                         </a>
                       ) : (
-                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>
+                        <span style={{ fontSize: '0.725rem', color: '#64748b', fontStyle: 'italic' }}>Verified Official</span>
                       )}
 
-                      {/* Social/Email Icons */}
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        {leader.email && (
-                          <a
-                            href={`mailto:${leader.email}`}
-                            title={`Email ${leader.name}`}
-                            style={{
-                              width: '30px',
-                              height: '30px',
-                              borderRadius: '0.5rem',
-                              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                              border: '1px solid rgba(255, 255, 255, 0.08)',
-                              color: '#94a3b8',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              transition: 'all 0.2s ease'
-                            }}
-                            className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-violet-300"
-                          >
-                            <Mail size={13} />
-                          </a>
-                        )}
-
-                        {leader.whatsapp && (
-                          <a
-                            href={`https://wa.me/${leader.whatsapp.replace(/[^0-9]/g, '')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="Chat on WhatsApp"
-                            style={{
-                              width: '30px',
-                              height: '30px',
-                              borderRadius: '0.5rem',
-                              backgroundColor: 'rgba(37, 211, 102, 0.1)',
-                              border: '1px solid rgba(37, 211, 102, 0.2)',
-                              color: '#25D366',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              transition: 'all 0.2s ease'
-                            }}
-                            className="hover:bg-emerald-500/20"
-                          >
-                            <MessageCircle size={13} />
-                          </a>
-                        )}
-                      </div>
+                      {/* Email if present */}
+                      {leader.email && (
+                        <a
+                          href={`mailto:${leader.email}`}
+                          title={`Email ${leader.name}`}
+                          style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            color: '#94a3b8',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s ease'
+                          }}
+                          className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-violet-300"
+                        >
+                          <Mail size={12} />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
