@@ -63,10 +63,6 @@ export default function AboutPage() {
             <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
               Mission, Vision & Core Values
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6 }}>
-              Our foundation is anchored upon timeless values of community, integrity, academic perseverance, and
-              mutual uplift.
-            </p>
           </div>
 
           <div className="grid-2" style={{ gap: '1.5rem', marginBottom: '2.5rem' }}>
