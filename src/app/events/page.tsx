@@ -101,7 +101,11 @@ import {
   CheckCircle2,
   ArrowRight,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  Minimize2
 } from 'lucide-react'
 
 interface EventItem {
@@ -144,6 +148,46 @@ export default function EventsPage() {
   const [selectedTab, setSelectedTab] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
+  const [fullscreenImageIndex, setFullscreenImageIndex] = useState<number | null>(null)
+  const [isFullscreenMode, setIsFullscreenMode] = useState<boolean>(false)
+
+  const toggleBrowserFullscreen = () => {
+    if (typeof document === 'undefined') return
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {})
+      setIsFullscreenMode(true)
+    } else {
+      document.exitFullscreen?.().catch(() => {})
+      setIsFullscreenMode(false)
+    }
+  }
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreenMode(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFsChange)
+    return () => document.removeEventListener('fullscreenchange', handleFsChange)
+  }, [])
+
+  useEffect(() => {
+    if (fullscreenImageIndex === null || !galleryModalEvent) return
+    const images = parseEventImages(galleryModalEvent.coverImage)
+    if (!images.length) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setFullscreenImageIndex(null)
+      } else if (e.key === 'ArrowLeft') {
+        setFullscreenImageIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1))
+      } else if (e.key === 'ArrowRight') {
+        setFullscreenImageIndex((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0))
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [fullscreenImageIndex, galleryModalEvent])
 
   React.useEffect(() => {
     const cached = readCache<EventItem[]>(EVENTS_CACHE_KEY);
@@ -437,7 +481,7 @@ export default function EventsPage() {
       {/* Fullscreen Gallery Lightbox Modal */}
       {galleryModalEvent && (
         <div 
-          onClick={() => setGalleryModalEvent(null)}
+          onClick={() => { setGalleryModalEvent(null); setFullscreenImageIndex(null) }}
           style={{
             position: 'fixed',
             inset: 0,
@@ -490,7 +534,7 @@ export default function EventsPage() {
               </h2>
             </div>
             <button
-              onClick={() => setGalleryModalEvent(null)}
+              onClick={() => { setGalleryModalEvent(null); setFullscreenImageIndex(null) }}
               style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -558,6 +602,7 @@ export default function EventsPage() {
                   {images.map((imgSrc, i) => (
                     <div
                       key={i}
+                      onClick={() => setFullscreenImageIndex(i)}
                       style={{
                         borderRadius: '1rem',
                         overflow: 'hidden',
@@ -567,7 +612,9 @@ export default function EventsPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: images.length === 1 ? '70vh' : '260px'
+                        height: images.length === 1 ? '70vh' : '260px',
+                        cursor: 'pointer',
+                        position: 'relative'
                       }}
                     >
                       <img
@@ -579,12 +626,194 @@ export default function EventsPage() {
                           objectFit: images.length === 1 ? 'contain' : 'cover'
                         }}
                       />
+                      {/* Fullscreen hint overlay */}
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'rgba(0, 0, 0, 0)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'background 0.2s ease',
+                        pointerEvents: 'none'
+                      }}
+                        className="group-hover-overlay"
+                      >
+                        <Maximize2
+                          size={28}
+                          style={{
+                            color: '#ffffff',
+                            opacity: 0,
+                            transition: 'opacity 0.2s ease',
+                            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
+                          }}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
               )
             })()}
           </div>
+
+          {/* ── Fullscreen Image Lightbox ── */}
+          {fullscreenImageIndex !== null && (() => {
+            const images = parseEventImages(galleryModalEvent.coverImage)
+            if (!images.length || fullscreenImageIndex >= images.length) return null
+            return (
+              <div
+                onClick={() => setFullscreenImageIndex(null)}
+                style={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 200,
+                  backgroundColor: 'rgba(0, 0, 0, 0.97)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column'
+                }}
+              >
+                {/* Top bar: counter + fullscreen toggle + close */}
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '1rem 1.25rem',
+                    zIndex: 210,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)'
+                  }}
+                >
+                  <span style={{ color: '#ffffff', fontSize: '0.875rem', fontWeight: 600 }}>
+                    {fullscreenImageIndex + 1} / {images.length}
+                  </span>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={toggleBrowserFullscreen}
+                      title={isFullscreenMode ? 'Exit fullscreen' : 'Enter fullscreen'}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        color: '#ffffff',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s'
+                      }}
+                    >
+                      {isFullscreenMode ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                    </button>
+                    <button
+                      onClick={() => setFullscreenImageIndex(null)}
+                      title="Close"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        color: '#ffffff',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s'
+                      }}
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Previous arrow */}
+                {images.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setFullscreenImageIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1))
+                    }}
+                    aria-label="Previous image"
+                    style={{
+                      position: 'absolute',
+                      left: 'clamp(0.5rem, 2vw, 1.5rem)',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: '#ffffff',
+                      width: 'clamp(40px, 8vw, 52px)',
+                      height: 'clamp(40px, 8vw, 52px)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 210,
+                      transition: 'background 0.2s'
+                    }}
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                )}
+
+                {/* Image */}
+                <img
+                  onClick={(e) => e.stopPropagation()}
+                  src={images[fullscreenImageIndex]}
+                  alt={`${galleryModalEvent.title} picture ${fullscreenImageIndex + 1}`}
+                  style={{
+                    maxWidth: '95vw',
+                    maxHeight: '90vh',
+                    objectFit: 'contain',
+                    borderRadius: '0.5rem',
+                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6)',
+                    userSelect: 'none'
+                  }}
+                />
+
+                {/* Next arrow */}
+                {images.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setFullscreenImageIndex((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0))
+                    }}
+                    aria-label="Next image"
+                    style={{
+                      position: 'absolute',
+                      right: 'clamp(0.5rem, 2vw, 1.5rem)',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: '#ffffff',
+                      width: 'clamp(40px, 8vw, 52px)',
+                      height: 'clamp(40px, 8vw, 52px)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      zIndex: 210,
+                      transition: 'background 0.2s'
+                    }}
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                )}
+              </div>
+            )
+          })()}
         </div>
       )}
     </PublicLayout>
