@@ -94,7 +94,7 @@ export default function PoliticsClient() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Empowering visionary student leadership through transparent elections, constitutional democracy, and grassroots representation at Meru University.
+              Elected leaders representing GUSA Community.
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
