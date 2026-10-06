@@ -36,8 +36,16 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
     setErrorMessage('')
-
     try {
+      const categoryLabels: Record<string, string> = {
+        general: 'General Inquiry',
+        leadership: 'Leadership & Governance',
+        welfare: 'Student Welfare & Emergency',
+        events: 'Cultural Night & Event Tickets',
+        mentorship: 'Academic Mentorship & Attachments',
+        partnership: 'Sponsorship & Alumni Network'
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,7 +53,7 @@ export default function ContactPage() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          subject: formData.subject || 'General Inquiry',
+          subject: formData.subject || categoryLabels[formData.category] || 'General Inquiry',
           message: formData.message,
         })
       })
@@ -230,6 +238,7 @@ export default function ContactPage() {
                         className="form-input"
                       >
                         <option value="general">General Inquiries</option>
+                        <option value="leadership">Leadership & Governance</option>
                         <option value="welfare">Student Welfare & Emergency</option>
                         <option value="events">Cultural Night & Event Tickets</option>
                         <option value="mentorship">Academic Mentorship & Attachments</option>

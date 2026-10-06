@@ -117,7 +117,7 @@ export default function PoliticsClient() {
           {activeTab === 'aspirants' && (
             <div>
               <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Executive & Sub-County Elective Seats</h2>
+                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Executive, SAMU & Delegate Positions</h2>
                 <p className="text-slate-400 text-sm">Positions open for contestation in the upcoming GUSA General Elections.</p>
               </div>
 
