@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import styles from './admin.module.css';
 import {
   LayoutDashboard,
@@ -298,9 +299,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
             </div>
 
-            <Link href="/" className={styles.iconBtn} title="Exit to Public Site">
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              className={styles.iconBtn}
+              title="Log Out"
+              style={{ cursor: 'pointer' }}
+            >
               <LogOut size={16} />
-            </Link>
+            </button>
           </div>
         </header>
 
