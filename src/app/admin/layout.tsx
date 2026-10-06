@@ -183,6 +183,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
             );
           })}
+
+          <div style={{ height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)', margin: '0.5rem 0' }} />
+
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: '/auth/login' })}
+            className={styles.navLink}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.85rem',
+              width: '100%',
+              background: 'transparent',
+              border: '1px solid transparent',
+              textAlign: 'left',
+              cursor: 'pointer',
+              color: '#f87171'
+            }}
+            title="Log Out"
+          >
+            <span className={styles.navIcon} style={{ color: '#f87171' }}>
+              <LogOut size={18} />
+            </span>
+            <span>Logout</span>
+          </button>
         </nav>
       </aside>
 
@@ -298,16 +323,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <span className={styles.profileRole}>Super Admin</span>
               </div>
             </div>
-
-            <button
-              type="button"
-              onClick={() => signOut({ callbackUrl: '/auth/login' })}
-              className={styles.iconBtn}
-              title="Log Out"
-              style={{ cursor: 'pointer' }}
-            >
-              <LogOut size={16} />
-            </button>
           </div>
         </header>
 
