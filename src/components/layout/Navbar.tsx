@@ -25,6 +25,18 @@ export function Navbar() {
 
   const closeDrawer = useCallback(() => setDrawerOpen(false), [])
 
+  const isLinkActive = useCallback((href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname === href || pathname.startsWith(href + '/')
+  }, [pathname])
+
+  const handleNavClick = useCallback((href: string) => {
+    closeDrawer()
+    if (typeof window !== 'undefined' && pathname === href) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [closeDrawer, pathname])
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
@@ -32,7 +44,9 @@ export function Navbar() {
   }, [])
 
   // Close on route change
-  useEffect(() => { closeDrawer() }, [pathname, closeDrawer])
+  useEffect(() => {
+    closeDrawer()
+  }, [pathname, closeDrawer])
 
   // Close on Escape key
   useEffect(() => {
@@ -53,20 +67,20 @@ export function Navbar() {
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-md shadow-lg border-b border-violet-500/20 py-3'
-            : 'bg-slate-900/70 dark:bg-slate-950/70 backdrop-blur-sm border-b border-white/10 py-4'
+            ? 'bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md shadow-lg border-b border-violet-500/20 py-2.5 sm:py-3'
+            : 'bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-sm border-b border-white/10 py-3 sm:py-4'
         }`}
       >
         <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+          <Link href="/" onClick={() => handleNavClick('/')} className="flex items-center gap-2 sm:gap-3 group min-w-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-lg sm:text-xl text-violet-400">
                 G
               </div>
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="font-extrabold text-base sm:text-xl tracking-tight text-white flex items-center gap-1.5 leading-tight">
+              <span className="font-extrabold text-base sm:text-lg xl:text-xl tracking-tight text-white flex items-center gap-1.5 leading-tight">
                 GUSA{' '}
                 <span className="text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
                   MUST
@@ -78,15 +92,16 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop nav pill */}
-          <nav className="hidden xl:flex items-center gap-1 bg-slate-800/50 dark:bg-slate-900/50 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
+          {/* Desktop nav pill (visible on lg: 1024px and up) */}
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-slate-800/60 dark:bg-slate-900/60 p-1 xl:p-1.5 rounded-full border border-white/10 backdrop-blur-md">
             {NAV_LINKS.map(({ href, label }) => {
-              const active = pathname === href
+              const active = isLinkActive(href)
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                  onClick={() => handleNavClick(href)}
+                  className={`px-2.5 xl:px-4 py-1.5 xl:py-2 rounded-full text-[11px] xl:text-xs font-semibold transition-all whitespace-nowrap ${
                     active
                       ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30'
                       : '!text-slate-200 hover:!text-white hover:bg-white/10'
@@ -98,14 +113,11 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Desktop right spacer */}
-          <div className="hidden lg:flex items-center gap-3" />
-
-          {/* Hamburger — mobile/tablet only */}
-          <div className="xl:hidden flex items-center">
+          {/* Hamburger — tablet and mobile (< 1024px) */}
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setDrawerOpen(true)}
-              className="p-2 sm:p-2.5 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 min-h-[40px] min-w-[40px] flex items-center justify-center"
+              className="p-2 sm:p-2.5 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer hover:bg-violet-500/30 transition-colors"
               aria-label="Open navigation menu"
               aria-expanded={drawerOpen}
             >
@@ -121,8 +133,10 @@ export function Navbar() {
       <div
         aria-hidden="true"
         onClick={closeDrawer}
-        className={`xl:hidden fixed inset-0 z-[60] transition-all duration-300 ${
-          drawerOpen ? 'bg-black/60 backdrop-blur-sm pointer-events-auto' : 'bg-transparent pointer-events-none'
+        className={`lg:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${
+          drawerOpen
+            ? 'bg-black/60 backdrop-blur-sm opacity-100 pointer-events-auto visible'
+            : 'bg-transparent opacity-0 pointer-events-none invisible'
         }`}
       />
 
@@ -131,17 +145,17 @@ export function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        className={`xl:hidden fixed top-0 left-0 z-[70] h-full w-[82vw] max-w-[320px]
+        className={`lg:hidden fixed top-0 left-0 z-[70] h-full w-[82vw] max-w-[320px]
           flex flex-col
           bg-[#0d0d1a] border-r border-violet-500/20
           shadow-[8px_0_40px_rgba(109,40,217,0.18)]
-          transition-transform duration-300 ease-in-out
-          ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}
+          transition-all duration-300 ease-in-out
+          ${drawerOpen ? 'translate-x-0 opacity-100 pointer-events-auto visible' : '-translate-x-full opacity-0 pointer-events-none invisible'}
         `}
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between px-5 pt-6 pb-5">
-          <Link href="/" onClick={closeDrawer} className="flex items-center gap-3 group">
+          <Link href="/" onClick={() => handleNavClick('/')} className="flex items-center gap-3 group">
             {/* Logo icon */}
             <div className="w-11 h-11 shrink-0 rounded-2xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/25 group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-[#0d0d1a] rounded-[14px] flex items-center justify-center font-black text-xl text-violet-400">
@@ -166,7 +180,7 @@ export function Navbar() {
           <button
             onClick={closeDrawer}
             aria-label="Close navigation menu"
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 hover:bg-violet-500/30 transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 hover:bg-violet-500/30 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -178,13 +192,13 @@ export function Navbar() {
         {/* Nav links */}
         <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-violet-500/20">
           {NAV_LINKS.map(({ href, label, icon: Icon }, idx) => {
-            const active = pathname === href
+            const active = isLinkActive(href)
             return (
               <Link
                 key={href}
                 href={href}
-                onClick={closeDrawer}
-                style={{ animationDelay: `${idx * 35}ms` }}
+                onClick={() => handleNavClick(href)}
+                style={{ animationDelay: `${idx * 30}ms` }}
                 className={`
                   group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl
                   text-[15px] font-semibold tracking-wide
@@ -226,7 +240,7 @@ export function Navbar() {
         {/* Footer strip */}
         <div className="px-5 py-5 border-t border-violet-500/10">
           <p className="text-[11px] text-slate-600 font-medium tracking-wide text-center">
-            © {new Date().getFullYear()} GUSA – Meru University
+            &copy; {new Date().getFullYear()} GUSA &ndash; Meru University
           </p>
         </div>
       </aside>

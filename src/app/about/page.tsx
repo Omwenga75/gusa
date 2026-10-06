@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import {
@@ -23,8 +23,6 @@ import {
 } from 'lucide-react'
 
 export default function AboutPage() {
-  const [activeConstitutionTab, setActiveConstitutionTab] = useState('principles')
-
   return (
     <PublicLayout>
       {/* Hero Section */}

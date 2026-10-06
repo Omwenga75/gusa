@@ -147,6 +147,7 @@ export default function LeadershipPage() {
         });
 
         if (res.ok) {
+          clearCache('leaders');
           clearCache('leadership');
           resetForm();
           fetchLeaders();
@@ -165,6 +166,7 @@ export default function LeadershipPage() {
         });
 
         if (res.ok) {
+          clearCache('leaders');
           clearCache('leadership');
           resetForm();
           fetchLeaders();
@@ -184,6 +186,7 @@ export default function LeadershipPage() {
     try {
       const res = await fetch(`/api/leadership?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
+        clearCache('leaders');
         clearCache('leadership');
         fetchLeaders();
       }

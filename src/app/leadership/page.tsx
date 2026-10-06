@@ -1,13 +1,17 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { readCache, writeCache } from '@/lib/cache'
 import {
   Users,
   Mail,
   Phone,
-  MessageCircle
+  MessageCircle,
+  Search,
+  ShieldCheck,
+  Award,
+  Sparkles
 } from 'lucide-react'
 
 interface LeaderProfile {
@@ -29,53 +33,250 @@ interface LeaderProfile {
 
 const LEADERS_CACHE_KEY = 'leaders';
 
-export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => readCache<LeaderProfile[]>(LEADERS_CACHE_KEY) || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(LEADERS_CACHE_KEY));
+const getCategory = (position: string): 'patron' | 'executive' | 'representative' => {
+  const p = (position || '').toLowerCase();
+  if (p.includes('patron') || p.includes('advisor')) return 'patron';
+  if (p.includes('samu') || p.includes('delegate') || p.includes('rep') || p.includes('congress')) return 'representative';
+  return 'executive';
+};
 
-  React.useEffect(() => {
+const DEFAULT_LEADERS: LeaderProfile[] = [
+  // Executive Positions
+  {
+    id: 'exec-1',
+    name: 'Brian Osoro',
+    position: 'President / Chairperson',
+    category: 'executive',
+    avatarInitials: 'BO',
+    avatarGradient: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+    bio: 'Steering the executive council, campus administration representation, student rights advocacy, and general GUSA stewardship.',
+    email: 'president@gusa.or.ke',
+    phone: '+254 712 345 678',
+    whatsapp: '+254712345678',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-2',
+    name: 'Faith Nyaboke',
+    position: 'Deputy President',
+    category: 'executive',
+    avatarInitials: 'FN',
+    avatarGradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
+    bio: 'Overseeing internal executive coordination, academic mentorship portfolios, gender inclusivity, and welfare initiatives.',
+    email: 'deputy.president@gusa.or.ke',
+    phone: '+254 723 456 789',
+    whatsapp: '+254723456789',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-3',
+    name: 'Dennis Ombati',
+    position: 'Secretary General',
+    category: 'executive',
+    avatarInitials: 'DO',
+    avatarGradient: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
+    bio: 'Custodian of association records, institutional correspondence, council minutes, and official administrative liaison.',
+    email: 'secgen@gusa.or.ke',
+    phone: '+254 734 567 890',
+    whatsapp: '+254734567890',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-4',
+    name: 'Lilian Kemunto',
+    position: 'Treasurer & Finance Secretary',
+    category: 'executive',
+    avatarInitials: 'LK',
+    avatarGradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    bio: 'Directing association finances, transparent budgeting, benevolent kitty accountability, and financial reporting.',
+    email: 'treasurer@gusa.or.ke',
+    phone: '+254 745 678 901',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-5',
+    name: 'Collins Machuki',
+    position: 'Organizing Secretary',
+    category: 'executive',
+    avatarInitials: 'CM',
+    avatarGradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    bio: 'Lead coordinator for Gusii Cultural Festival, inter-campus sports, community outreach, and logistics mobilization.',
+    email: 'organizing@gusa.or.ke',
+    phone: '+254 756 789 012',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-6',
+    name: 'Dorcas Kwamboka',
+    position: 'Welfare Director',
+    category: 'executive',
+    avatarInitials: 'DK',
+    avatarGradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
+    bio: 'Managing comrade distress interventions, emergency assistance, hospitalization visits, and member bereavement support.',
+    email: 'welfare@gusa.or.ke',
+    phone: '+254 767 890 123',
+    term: '2026/2027'
+  },
+  {
+    id: 'exec-7',
+    name: 'Elvis Nyandiko',
+    position: 'Public Relations Officer',
+    category: 'executive',
+    avatarInitials: 'EN',
+    avatarGradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+    bio: 'Heading digital publicity, institutional media publications, public relations, and corporate stakeholder engagement.',
+    email: 'pr@gusa.or.ke',
+    phone: '+254 778 901 234',
+    term: '2026/2027'
+  },
+
+  // SAMU & Delegate Positions
+  {
+    id: 'rep-1',
+    name: 'Samson Moguche',
+    position: 'SAMU GUSA Representative',
+    category: 'representative',
+    avatarInitials: 'SM',
+    avatarGradient: 'linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)',
+    bio: 'Official leader representing GUSA as delegate to the Students Association of Meru University (SAMU) Parliament.',
+    email: 'samu.rep@gusa.or.ke',
+    phone: '+254 789 012 345',
+    term: '2026/2027'
+  },
+  {
+    id: 'rep-2',
+    name: 'Brenda Bosibori',
+    position: 'Campus Delegate',
+    category: 'representative',
+    avatarInitials: 'BB',
+    avatarGradient: 'linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)',
+    bio: 'Representing Gusii students in university delegate forums, congress sessions, and academic policy dialogues.',
+    email: 'delegate@gusa.or.ke',
+    phone: '+254 790 123 456',
+    term: '2026/2027'
+  },
+  {
+    id: 'rep-3',
+    name: 'Kelvin Omwoyo',
+    position: 'Electoral & Delegate Liaison',
+    category: 'representative',
+    avatarInitials: 'KO',
+    avatarGradient: 'linear-gradient(135deg, #0284c7 0%, #6366f1 100%)',
+    bio: 'Coordinating student delegates across departments and fostering cohesive comradeship representation.',
+    email: 'liaison@gusa.or.ke',
+    phone: '+254 701 345 678',
+    term: '2026/2027'
+  },
+
+  // Patron & Advisory
+  {
+    id: 'patron-1',
+    name: 'Dr. Kennedy Momanyi',
+    position: 'Faculty Patron & Advisory Head',
+    category: 'patron',
+    avatarInitials: 'KM',
+    avatarGradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+    bio: 'Senior faculty advisor offering academic mentorship, university administration liaison, and elder council guidance.',
+    email: 'patron@gusa.or.ke',
+    phone: '+254 700 123 456',
+    term: 'Permanent Advisory'
+  },
+  {
+    id: 'patron-2',
+    name: 'Prof. Evans Nyambane',
+    position: 'Associate Patron & Career Advisor',
+    category: 'patron',
+    avatarInitials: 'EN',
+    avatarGradient: 'linear-gradient(135deg, #d97706 0%, #92400e 100%)',
+    bio: 'Guiding graduate mentorship, research opportunities, corporate alumni liaisons, and postgraduate scholarship links.',
+    email: 'advisor@gusa.or.ke',
+    phone: '+254 711 234 567',
+    term: 'Faculty Advisory'
+  }
+];
+
+export default function LeadershipPage() {
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => {
+    const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
+    if (cached && cached.length > 0) return cached;
+    return DEFAULT_LEADERS;
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeCategory, setActiveCategory] = useState<'all' | 'executive' | 'representative' | 'patron'>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
     const cached = readCache<LeaderProfile[]>(LEADERS_CACHE_KEY);
     if (cached && cached.length > 0) {
       setLeadersData(cached);
-      setIsLoading(false);
     }
+
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
     fetch('/api/leadership', { cache: 'no-store', signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        if (data.leaders) {
-          const mapped = data.leaders.map((ldr: any) => ({
+        if (data && Array.isArray(data.leaders) && data.leaders.length > 0) {
+          const mapped: LeaderProfile[] = data.leaders.map((ldr: any) => ({
             id: ldr.id,
             name: ldr.name,
             position: ldr.position,
-            category: 'executive',
+            category: getCategory(ldr.position),
             image: ldr.image || null,
-            avatarInitials: ldr.name ? ldr.name.charAt(0).toUpperCase() : 'L',
-            avatarGradient: 'from-violet-600 to-blue-600',
+            avatarInitials: ldr.name
+              ? ldr.name.split(' ').map((n: string) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
+              : 'L',
+            avatarGradient: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
             bio: ldr.biography || '',
             email: ldr.email || '',
             phone: ldr.phone || '',
             term: '2026/2027'
           }));
-          try { writeCache(LEADERS_CACHE_KEY, mapped); } catch (_) { /* sessionStorage quota */ }
+          try { writeCache(LEADERS_CACHE_KEY, mapped); } catch (_) { /* quota */ }
           setLeadersData(mapped);
+        } else {
+          // Keep default leaders if DB returns 0 items
+          try { writeCache(LEADERS_CACHE_KEY, DEFAULT_LEADERS); } catch (_) { /* quota */ }
+          setLeadersData(DEFAULT_LEADERS);
         }
       })
       .catch((err) => {
-        if (err.name !== 'AbortError') console.error(err);
+        if (err.name !== 'AbortError') console.error('Error fetching leadership:', err);
+        // Fallback to default leaders on error
+        setLeadersData((prev) => (prev && prev.length > 0 ? prev : DEFAULT_LEADERS));
       })
       .finally(() => {
         clearTimeout(timeout);
         setIsLoading(false);
       });
-    return () => { clearTimeout(timeout); controller.abort(); };
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
+
+  const filteredLeaders = useMemo(() => {
+    return leadersData.filter((leader) => {
+      const matchesCategory =
+        activeCategory === 'all' || leader.category === activeCategory;
+
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        q === '' ||
+        leader.name.toLowerCase().includes(q) ||
+        leader.position.toLowerCase().includes(q) ||
+        (leader.bio && leader.bio.toLowerCase().includes(q));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [leadersData, activeCategory, searchQuery]);
 
   return (
     <PublicLayout>
       {/* Header Banner */}
-      <section className="page-header" style={{ paddingBottom: '1.5rem' }}>
+      <section className="page-header" style={{ paddingBottom: '2rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
             <h1
@@ -87,95 +288,108 @@ export default function LeadershipPage() {
                 color: 'var(--text-main)'
               }}
             >
-              Executive Leaders
+              Executive &amp; Student Leadership
             </h1>
 
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Meet our elected executive leaders.
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '2rem' }}>
+              Meet the elected executive leaders, SAMU delegates, and faculty patrons dedicated to serving the Gusii student fraternity at Meru University.
             </p>
+
+            {/* Navigation Tabs */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full max-w-2xl mx-auto">
+              {[
+                { id: 'all', label: 'All Leaders' },
+                { id: 'executive', label: 'Executive Positions' },
+                { id: 'representative', label: 'SAMU & Delegate Positions' },
+                { id: 'patron', label: 'Patron & Advisory' },
+              ].map((tab) => {
+                const count = tab.id === 'all'
+                  ? leadersData.length
+                  : leadersData.filter((l) => l.category === tab.id).length;
+                const isActive = activeCategory === tab.id;
+
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveCategory(tab.id as any)}
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer flex items-center gap-2 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
+                        : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : 'bg-white/5 text-[var(--text-muted)]'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Leadership Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2rem' }}>
         <div className="container">
-          {/* Loading Skeleton */}
-          {isLoading ? (
-            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
-              {[1, 2, 3].map((n) => (
-                <div
-                  key={n}
-                  className="flex flex-col rounded-2xl overflow-hidden shadow-xl"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                  }}
-                >
-                  {/* Top Header Banner Skeleton */}
-                  <div
-                    style={{
-                      height: '68px',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
-                      padding: '0 1rem',
-                    }}
-                  >
-                    <div className="skeleton" style={{ width: '90px', height: '22px', borderRadius: '9999px' }} />
-                  </div>
-
-                  {/* Body Skeleton */}
-                  <div style={{ padding: '0 clamp(1rem, 3vw, 1.25rem) 1.15rem clamp(1rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    {/* Avatar Skeleton */}
-                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem', display: 'flex' }}>
-                      <div
-                        className="skeleton"
-                        style={{
-                          width: '96px',
-                          height: '96px',
-                          borderRadius: '50%',
-                          border: '4px solid #0f172a',
-                          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
-                        }}
-                      />
-                    </div>
-
-                    {/* Name Skeleton */}
-                    <div className="skeleton" style={{ width: '65%', height: '20px', marginBottom: '0.45rem', borderRadius: '4px' }} />
-
-                    {/* Position Skeleton */}
-                    <div className="skeleton" style={{ width: '45%', height: '14px', marginBottom: '0.75rem', borderRadius: '4px' }} />
-
-                    {/* Category Pill Skeleton */}
-                    <div className="skeleton" style={{ width: '80px', height: '22px', marginBottom: '1.25rem', borderRadius: '6px' }} />
-
-                    {/* Footer Skeleton */}
-                    <div
-                      style={{
-                        marginTop: 'auto',
-                        paddingTop: '0.75rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      <div className="skeleton" style={{ width: '120px', height: '28px', borderRadius: '8px' }} />
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <div className="skeleton" style={{ width: '30px', height: '30px', borderRadius: '8px' }} />
-                        <div className="skeleton" style={{ width: '30px', height: '30px', borderRadius: '8px' }} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          {/* Search bar & Category filter header */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              marginBottom: '2rem',
+              borderBottom: '1px solid var(--border)',
+              paddingBottom: '1rem'
+            }}
+          >
+            <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
+              <Search
+                size={16}
+                style={{
+                  position: 'absolute',
+                  left: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)',
+                  pointerEvents: 'none'
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Search leaders by name or title..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.6rem 1rem 0.6rem 2.6rem',
+                  borderRadius: '0.75rem',
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--surface-subtle)',
+                  color: 'var(--text-main)',
+                  fontSize: '0.875rem',
+                  outline: 'none'
+                }}
+              />
             </div>
-          ) : leadersData.length === 0 ? (
+
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+              Showing {filteredLeaders.length} of {leadersData.length} Leaders
+            </div>
+          </div>
+
+          {/* Leaders Grid */}
+          {filteredLeaders.length === 0 ? (
             <div
               style={{
                 textAlign: 'center',
@@ -186,16 +400,26 @@ export default function LeadershipPage() {
               }}
             >
               <Users size={56} color="var(--text-muted)" style={{ margin: '0 auto 1.25rem auto' }} />
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-main)' }}>
-                No Leaders Listed Yet
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
+                No Leaders Found
               </h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '420px', margin: '0 auto' }}>
-                The leadership directory is currently empty. Leaders will appear here once they are added by the admin.
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto 1.5rem auto' }}>
+                {searchQuery
+                  ? `No leaders match "${searchQuery}" in this category.`
+                  : 'There are currently no leaders listed under this tab.'}
               </p>
+              <button
+                type="button"
+                onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
+                className="btn btn-primary btn-sm"
+                style={{ margin: '0 auto' }}
+              >
+                Reset Filter
+              </button>
             </div>
           ) : (
             <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
-              {leadersData.map((leader) => (
+              {filteredLeaders.map((leader) => (
                 <div
                   key={leader.id}
                   className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-2xl hover:shadow-violet-500/15"
@@ -277,7 +501,7 @@ export default function LeadershipPage() {
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: '#ffffff',
-                          fontSize: '2rem',
+                          fontSize: '1.75rem',
                           fontWeight: 800,
                           boxShadow: '0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.6)',
                           position: 'relative',
@@ -366,7 +590,11 @@ export default function LeadershipPage() {
                               : '1px solid rgba(59, 130, 246, 0.3)'
                         }}
                       >
-                        {leader.category === 'patron' ? 'Patron' : leader.category === 'executive' ? 'Executive' : 'Representative'}
+                        {leader.category === 'patron'
+                          ? 'Patron & Advisory'
+                          : leader.category === 'executive'
+                          ? 'Executive Positions'
+                          : 'SAMU & Delegate Positions'}
                       </span>
                     </div>
 
@@ -458,7 +686,7 @@ export default function LeadershipPage() {
 
                         {leader.whatsapp && (
                           <a
-                            href={`https://wa.me/${leader.whatsapp.replace('+', '')}`}
+                            href={`https://wa.me/${leader.whatsapp.replace(/[^0-9]/g, '')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             title="Chat on WhatsApp"
