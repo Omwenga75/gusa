@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   MessageCircle,
   Video,
-  ChevronDown,
   Building2,
   Headphones
 } from 'lucide-react'
@@ -29,7 +28,6 @@ export default function ContactPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,28 +69,7 @@ export default function ContactPage() {
     }
   }
 
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index)
-  }
 
-  const FAQS = [
-    {
-      q: 'How do I join GUSA Meru as a new student?',
-      a: 'Membership is open to all students at Meru University of Science and Technology affiliated with or interested in the Abagusii community. You can register online through our Member Portal or visit the GUSA Secretariat office at Student Center Room SC-208.'
-    },
-    {
-      q: 'How does the Comrade Emergency Welfare Kitty operate?',
-      a: 'The welfare kitty is a benevolent support fund reserved for verified student emergencies including sudden medical hospitalization, bereavement in the immediate family, and acute distress. Reach out directly to the Welfare Desk at +254 728 456 012 for swift intervention.'
-    },
-    {
-      q: 'Can alumni or well-wishers sponsor GUSA events and programs?',
-      a: 'Yes! We actively partner with Gusii professionals, alumni corporate entities, and cultural patrons. Contact the Secretariat at gusa@gmail.com or call +254 76 804 142 to explore partnership packages.'
-    },
-    {
-      q: 'When does the Annual Cultural Night take place?',
-      a: 'The flagship Annual Gusii Cultural Night is held each academic year in October at the MUST Main Auditorium, celebrating traditional music, cuisine, folklore, and dance.'
-    }
-  ]
 
   return (
     <PublicLayout>
@@ -278,75 +255,6 @@ export default function ContactPage() {
               )}
             </div>
 
-        </div>
-      </section>
-
-      {/* Frequently Asked Questions */}
-      <section className="section" style={{ background: 'var(--surface-subtle)', borderTop: '1px solid var(--border)' }}>
-        <div className="container" style={{ maxWidth: '850px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <span className="badge badge-info" style={{ marginBottom: '0.5rem' }}>Help Center</span>
-            <h2 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2rem)', fontWeight: 700, color: 'var(--text-main)' }}>
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {FAQS.map((faq, idx) => (
-              <div
-                key={idx}
-                className="card"
-                style={{
-                  borderRadius: 'var(--radius-lg)',
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--surface)',
-                  overflow: 'hidden'
-                }}
-              >
-                <button
-                  onClick={() => toggleFaq(idx)}
-                  style={{
-                    width: '100%',
-                    padding: '1rem clamp(1rem, 3vw, 1.5rem)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    textAlign: 'left',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--text-main)',
-                    fontWeight: 600,
-                    fontSize: '1rem',
-                    gap: '0.75rem'
-                  }}
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown
-                    size={20}
-                    style={{
-                      transform: openFaq === idx ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform var(--transition-fast)',
-                      flexShrink: 0
-                    }}
-                  />
-                </button>
-                {openFaq === idx && (
-                  <div
-                    style={{
-                      padding: '0 clamp(1rem, 3vw, 1.5rem) 1.25rem clamp(1rem, 3vw, 1.5rem)',
-                      color: 'var(--text-muted)',
-                      fontSize: '0.9375rem',
-                      lineHeight: 1.6,
-                      borderTop: '1px solid var(--border-light)'
-                    }}
-                  >
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </PublicLayout>
