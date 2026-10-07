@@ -484,9 +484,9 @@ export default function AdminPoliticsPage() {
                 <th style={{ width: '22%' }}>Candidate</th>
                 <th style={{ width: '18%' }}>Reg No. / Year</th>
                 <th style={{ width: '12%' }}>County</th>
-                <th style={{ width: '22%' }}>Seat Contested</th>
+                <th style={{ width: '21%' }}>Seat Contested</th>
                 <th style={{ width: '12%' }}>Status</th>
-                <th style={{ width: '14%', textAlign: 'right', whiteSpace: 'nowrap' }}>Actions</th>
+                <th style={{ width: '15%', textAlign: 'center', whiteSpace: 'nowrap' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -506,7 +506,7 @@ export default function AdminPoliticsPage() {
                     <td><div className="skeleton" style={{ width: '65px', height: '20px', borderRadius: '9999px' }} /></td>
                     <td><div className="skeleton" style={{ width: '120px', height: '14px', borderRadius: '4px' }} /></td>
                     <td><div className="skeleton" style={{ width: '70px', height: '20px', borderRadius: '9999px' }} /></td>
-                    <td style={{ textAlign: 'right' }}><div className="skeleton" style={{ width: '80px', height: '28px', borderRadius: '6px', marginLeft: 'auto' }} /></td>
+                    <td style={{ textAlign: 'center' }}><div className="skeleton" style={{ width: '80px', height: '28px', borderRadius: '6px', margin: '0 auto' }} /></td>
                   </tr>
                 ))
               ) : filteredNominations.length === 0 ? (
@@ -647,7 +647,7 @@ export default function AdminPoliticsPage() {
                       </td>
 
                       {/* Actions (View Details opens full modal with reject/approve/delete actions) */}
-                      <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                      <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
                         <button
                           onClick={() => setSelectedNomination(n)}
                           title="View Full Nomination Details"
@@ -656,14 +656,16 @@ export default function AdminPoliticsPage() {
                             border: '1px solid rgba(124, 58, 237, 0.35)',
                             color: '#c084fc',
                             borderRadius: '0.5rem',
-                            padding: '0.4rem 0.8rem',
+                            padding: '0.42rem 0.85rem',
                             fontSize: '0.78rem',
                             fontWeight: 600,
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '0.35rem',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
                             whiteSpace: 'nowrap',
+                            margin: '0 auto',
                             transition: 'all 0.15s ease'
                           }}
                         >
