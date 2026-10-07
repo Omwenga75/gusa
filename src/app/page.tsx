@@ -608,7 +608,7 @@ export default async function HomePage() {
                   CP
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Clinton Programmer</h4>
+                  <h4 className="text-white font-bold text-sm truncate">Clinton, Programmer</h4>
                   <p className="text-blue-400 text-xs truncate">Alumnus • School of Computing & Informatics</p>
                 </div>
               </div>
