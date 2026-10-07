@@ -571,7 +571,7 @@ export default function JoinPage() {
                       <input
                         type="text"
                         required
-                        placeholder="Your answer..."
+                        placeholder="Orotuba"
                         value={securityAnswer1}
                         onChange={e => setSecurityAnswer1(e.target.value)}
                         className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
@@ -580,12 +580,12 @@ export default function JoinPage() {
 
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1">
-                        eyemo omente eyemo = ? <span className="text-red-400">*</span>
+                        Eyemo omente eyemo = ? <span className="text-red-400">*</span>
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="Your answer..."
+                        placeholder="Isato"
                         value={securityAnswer2}
                         onChange={e => setSecurityAnswer2(e.target.value)}
                         className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"

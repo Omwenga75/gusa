@@ -237,7 +237,7 @@ export default function RegisterPage() {
                   name="securityAnswer1"
                   type="text"
                   className="form-input"
-                  placeholder="Your answer..."
+                  placeholder="Orotuba"
                   value={formData.securityAnswer1}
                   onChange={handleChange}
                   required
@@ -245,13 +245,13 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="form-label" htmlFor="securityAnswer2">eyemo omente eyemo = ?</label>
+                <label className="form-label" htmlFor="securityAnswer2">Eyemo omente eyemo = ?</label>
                 <input
                   id="securityAnswer2"
                   name="securityAnswer2"
                   type="text"
                   className="form-input"
-                  placeholder="Your answer..."
+                  placeholder="Isato"
                   value={formData.securityAnswer2}
                   onChange={handleChange}
                   required
