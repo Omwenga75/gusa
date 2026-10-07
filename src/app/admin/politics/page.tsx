@@ -508,7 +508,7 @@ export default function AdminPoliticsPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '28%' }}>Applicant</th>
+                <th style={{ width: '28%' }}>Candidate</th>
                 <th style={{ width: '16%' }}>Reg No. / Year</th>
                 <th style={{ width: '14%' }}>County</th>
                 <th style={{ width: '20%' }}>Seat Contested</th>
@@ -558,7 +558,7 @@ export default function AdminPoliticsPage() {
 
                   return (
                     <tr key={n.id}>
-                      {/* Applicant Info (Name and email hidden for anonymous review) */}
+                      {/* Candidate Name & Info (Email hidden from table, visible in View Details) */}
                       <td>
                         <div className={styles.userCell}>
                           <div
@@ -570,14 +570,16 @@ export default function AdminPoliticsPage() {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: '#ffffff'
+                              color: '#ffffff',
+                              fontWeight: 700,
+                              fontSize: '0.9rem'
                             }}
                           >
-                            <Vote size={15} />
+                            {n.fullName.charAt(0).toUpperCase()}
                           </div>
                           <div style={{ minWidth: 0 }}>
                             <div className={styles.userName} style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f8fafc' }}>
-                              Aspirant #{idx + 1}
+                              {n.fullName}
                             </div>
                             <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.15rem' }}>
                               {n.county} • {n.yearOfStudy}
