@@ -10,14 +10,14 @@ export async function GET() {
       annualEvents,
       totalPhotos
     ] = await Promise.all([
-      prisma.user.count(),
+      prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' } } }),
       prisma.event.count({ where: { status: 'PUBLISHED' } }),
       prisma.galleryImage.count()
     ])
 
     return NextResponse.json(
       {
-        activeMembers: totalMembers || 1,
+        activeMembers: totalMembers,
         annualEvents: annualEvents || 0,
         counties: 2,
         totalPhotos: totalPhotos || 0,

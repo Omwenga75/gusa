@@ -9,6 +9,7 @@ export async function GET() {
 
   try {
     const members = await prisma.user.findMany({
+      where: { role: { not: 'SUPER_ADMIN' } },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
