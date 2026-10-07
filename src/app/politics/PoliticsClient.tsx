@@ -78,7 +78,7 @@ export default function PoliticsClient() {
 
   const positions: PositionCard[] = [
     {
-      title: 'Executive Positions',
+      title: 'GUSA Executive Positions',
       category: 'Executive Positions',
       description: 'The executive leadership steering GUSA policy, campus administration representation, and overall member advocacy.',
       requirements: ['Must be in 2nd year or above', 'Good academic standing', 'Proven leadership track record'],
