@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  Timer,
   Trash2,
   Phone,
   Mail,
@@ -70,6 +71,39 @@ export default function AdminPoliticsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNomination, setSelectedNomination] = useState<Nomination | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+
+  // Nomination Countdown Timer targeting March 2027 cycle
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    const targetDate = new Date('2027-03-25T00:00:00').getTime();
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchNominations = async (showLoading = false) => {
     if (showLoading || !readCache(ADMIN_POLITICS_KEY)) setLoading(true);
@@ -285,40 +319,41 @@ export default function AdminPoliticsPage() {
         </div>
       </div>
 
-      {/* ── Stats Grid ────────────────────────────────────────── */}
-      <div className={styles.statsGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
-        {/* Total Seats */}
-        <div className={styles.statCard}>
+      {/* ── Stats Grid (4 cards per row) ────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* 1. Total Seats */}
+        <div className={styles.statCard} style={{ margin: 0 }}>
           <div className={styles.statIcon} style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#f472b6' }}>
             <Award size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Total Seats</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Total Seats</h3>
             <p>18</p>
           </div>
         </div>
 
-        {/* Total Aspirants */}
+        {/* 2. Total Aspirants */}
         <div
           onClick={() => { setStatusFilter('all'); setCountyFilter('all'); }}
           className={styles.statCard}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', margin: 0 }}
         >
           <div className={styles.statIcon} style={{ background: 'rgba(124, 58, 237, 0.15)', color: '#a78bfa' }}>
             <Vote size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Total Aspirants</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Total Aspirants</h3>
             <p>{totalCount}</p>
           </div>
         </div>
 
-        {/* Pending */}
+        {/* 3. Pending Review */}
         <div
           onClick={() => setStatusFilter('pending')}
           className={styles.statCard}
           style={{
             cursor: 'pointer',
+            margin: 0,
             borderColor: statusFilter === 'pending' ? '#f59e0b' : 'rgba(255,255,255,0.08)'
           }}
         >
@@ -326,17 +361,18 @@ export default function AdminPoliticsPage() {
             <Clock size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Pending Review</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Pending Review</h3>
             <p>{pendingCount}</p>
           </div>
         </div>
 
-        {/* Approved */}
+        {/* 4. Approved */}
         <div
           onClick={() => setStatusFilter('approved')}
           className={styles.statCard}
           style={{
             cursor: 'pointer',
+            margin: 0,
             borderColor: statusFilter === 'approved' ? '#10b981' : 'rgba(255,255,255,0.08)'
           }}
         >
@@ -344,17 +380,18 @@ export default function AdminPoliticsPage() {
             <CheckCircle2 size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Approved</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Approved</h3>
             <p>{approvedCount}</p>
           </div>
         </div>
 
-        {/* Rejected */}
+        {/* 5. Rejected */}
         <div
           onClick={() => setStatusFilter('rejected')}
           className={styles.statCard}
           style={{
             cursor: 'pointer',
+            margin: 0,
             borderColor: statusFilter === 'rejected' ? '#ef4444' : 'rgba(255,255,255,0.08)'
           }}
         >
@@ -362,17 +399,18 @@ export default function AdminPoliticsPage() {
             <XCircle size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Rejected</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Rejected</h3>
             <p>{rejectedCount}</p>
           </div>
         </div>
 
-        {/* Kisii County */}
+        {/* 6. Kisii County */}
         <div
           onClick={() => setCountyFilter(countyFilter === 'Kisii' ? 'all' : 'Kisii')}
           className={styles.statCard}
           style={{
             cursor: 'pointer',
+            margin: 0,
             borderColor: countyFilter === 'Kisii' ? '#38bdf8' : 'rgba(255,255,255,0.08)'
           }}
         >
@@ -380,17 +418,18 @@ export default function AdminPoliticsPage() {
             <MapPin size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Kisii County</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Kisii County</h3>
             <p>{kisiiCount}</p>
           </div>
         </div>
 
-        {/* Nyamira County */}
+        {/* 7. Nyamira County */}
         <div
           onClick={() => setCountyFilter(countyFilter === 'Nyamira' ? 'all' : 'Nyamira')}
           className={styles.statCard}
           style={{
             cursor: 'pointer',
+            margin: 0,
             borderColor: countyFilter === 'Nyamira' ? '#c084fc' : 'rgba(255,255,255,0.08)'
           }}
         >
@@ -398,8 +437,34 @@ export default function AdminPoliticsPage() {
             <MapPin size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Nyamira County</h3>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Nyamira County</h3>
             <p>{nyamiraCount}</p>
+          </div>
+        </div>
+
+        {/* 8. Nomination Countdown (Running Timer) */}
+        <div
+          className={styles.statCard}
+          style={{
+            margin: 0,
+            borderColor: 'rgba(250, 204, 21, 0.25)',
+            background: 'linear-gradient(135deg, rgba(13, 18, 37, 0.9) 0%, rgba(30, 27, 75, 0.3) 100%)'
+          }}
+        >
+          <div className={styles.statIcon} style={{ background: 'rgba(250, 204, 21, 0.15)', color: '#facc15' }}>
+            <Timer size={24} className="animate-pulse" />
+          </div>
+          <div className={styles.statInfo}>
+            <h3 style={{ whiteSpace: 'nowrap' }}>Nomination Countdown</h3>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#facc15', fontFamily: 'monospace', marginTop: '0.2rem', display: 'flex', alignItems: 'baseline', gap: '2px', whiteSpace: 'nowrap' }}>
+              <span>{timeLeft.days}d</span>
+              <span style={{ color: '#64748b' }}>:</span>
+              <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
+              <span style={{ color: '#64748b' }}>:</span>
+              <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
+              <span style={{ color: '#64748b' }}>:</span>
+              <span style={{ color: '#fbbf24' }}>{String(timeLeft.seconds).padStart(2, '0')}s</span>
+            </div>
           </div>
         </div>
       </div>
