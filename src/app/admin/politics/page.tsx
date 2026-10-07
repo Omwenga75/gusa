@@ -286,8 +286,19 @@ export default function AdminPoliticsPage() {
       </div>
 
       {/* ── Stats Grid ────────────────────────────────────────── */}
-      <div className={styles.statsGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
-        {/* Total */}
+      <div className={styles.statsGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
+        {/* Total Seats */}
+        <div className={styles.statCard}>
+          <div className={styles.statIcon} style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#f472b6' }}>
+            <Award size={24} />
+          </div>
+          <div className={styles.statInfo}>
+            <h3>Total Seats</h3>
+            <p>18</p>
+          </div>
+        </div>
+
+        {/* Total Aspirants */}
         <div
           onClick={() => { setStatusFilter('all'); setCountyFilter('all'); }}
           className={styles.statCard}
@@ -335,6 +346,24 @@ export default function AdminPoliticsPage() {
           <div className={styles.statInfo}>
             <h3>Approved</h3>
             <p>{approvedCount}</p>
+          </div>
+        </div>
+
+        {/* Rejected */}
+        <div
+          onClick={() => setStatusFilter('rejected')}
+          className={styles.statCard}
+          style={{
+            cursor: 'pointer',
+            borderColor: statusFilter === 'rejected' ? '#ef4444' : 'rgba(255,255,255,0.08)'
+          }}
+        >
+          <div className={styles.statIcon} style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171' }}>
+            <XCircle size={24} />
+          </div>
+          <div className={styles.statInfo}>
+            <h3>Rejected</h3>
+            <p>{rejectedCount}</p>
           </div>
         </div>
 
@@ -479,7 +508,7 @@ export default function AdminPoliticsPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '28%' }}>Candidate</th>
+                <th style={{ width: '28%' }}>Applicant</th>
                 <th style={{ width: '16%' }}>Reg No. / Year</th>
                 <th style={{ width: '14%' }}>County</th>
                 <th style={{ width: '20%' }}>Seat Contested</th>
@@ -504,7 +533,7 @@ export default function AdminPoliticsPage() {
                     <td><div className="skeleton" style={{ width: '65px', height: '20px', borderRadius: '9999px' }} /></td>
                     <td><div className="skeleton" style={{ width: '120px', height: '14px', borderRadius: '4px' }} /></td>
                     <td><div className="skeleton" style={{ width: '70px', height: '20px', borderRadius: '9999px' }} /></td>
-                    <td style={{ textAlign: 'right' }}><div className="skeleton" style={{ width: '60px', height: '28px', borderRadius: '6px', marginLeft: 'auto' }} /></td>
+                    <td style={{ textAlign: 'right' }}><div className="skeleton" style={{ width: '80px', height: '28px', borderRadius: '6px', marginLeft: 'auto' }} /></td>
                   </tr>
                 ))
               ) : filteredNominations.length === 0 ? (
@@ -524,13 +553,12 @@ export default function AdminPoliticsPage() {
                   </td>
                 </tr>
               ) : (
-                filteredNominations.map(n => {
-                  const isActing = actionLoadingId === n.id;
+                filteredNominations.map((n, idx) => {
                   const isKisii = n.county.toLowerCase() === 'kisii';
 
                   return (
                     <tr key={n.id}>
-                      {/* Candidate Name & Info */}
+                      {/* Applicant Info (Name and email hidden for anonymous review) */}
                       <td>
                         <div className={styles.userCell}>
                           <div
@@ -538,30 +566,21 @@ export default function AdminPoliticsPage() {
                             style={{
                               background: isKisii
                                 ? 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)'
-                                : 'linear-gradient(135deg, #9333ea 0%, #c026d3 100%)'
+                                : 'linear-gradient(135deg, #9333ea 0%, #c026d3 100%)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#ffffff'
                             }}
                           >
-                            {n.fullName.charAt(0).toUpperCase()}
+                            <Vote size={15} />
                           </div>
                           <div style={{ minWidth: 0 }}>
-                            <div className={styles.userName} style={{ fontSize: '0.9rem' }}>
-                              {n.fullName}
+                            <div className={styles.userName} style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f8fafc' }}>
+                              Aspirant #{idx + 1}
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
-                              <a
-                                href={`mailto:${n.email}`}
-                                style={{ color: '#94a3b8', fontSize: '0.75rem', textDecoration: 'none' }}
-                                title={n.email}
-                              >
-                                {n.email}
-                              </a>
-                              <span style={{ color: '#475569', fontSize: '0.7rem' }}>•</span>
-                              <a
-                                href={`tel:${n.phone}`}
-                                style={{ color: '#34d399', fontSize: '0.75rem', textDecoration: 'none' }}
-                              >
-                                {n.phone}
-                              </a>
+                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.15rem' }}>
+                              {n.county} • {n.yearOfStudy}
                             </div>
                           </div>
                         </div>
@@ -652,91 +671,28 @@ export default function AdminPoliticsPage() {
                         </span>
                       </td>
 
-                      {/* Actions */}
+                      {/* Actions (View Details opens full modal with reject/approve/delete actions) */}
                       <td style={{ textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                          {/* View Details Modal Button */}
-                          <button
-                            onClick={() => setSelectedNomination(n)}
-                            title="View Full Nomination Details"
-                            style={{
-                              background: 'rgba(99, 102, 241, 0.15)',
-                              border: '1px solid rgba(99, 102, 241, 0.3)',
-                              color: '#a5b4fc',
-                              borderRadius: '0.45rem',
-                              padding: '0.35rem 0.55rem',
-                              fontSize: '0.75rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.25rem'
-                            }}
-                          >
-                            <Eye size={13} /> View
-                          </button>
-
-                          {/* Quick Approve Button */}
-                          {n.status !== 'APPROVED' && (
-                            <button
-                              disabled={isActing}
-                              onClick={() => updateStatus(n.id, 'APPROVED')}
-                              title="Approve Candidate"
-                              style={{
-                                background: 'rgba(34, 197, 94, 0.12)',
-                                border: '1px solid rgba(34, 197, 94, 0.3)',
-                                color: '#4ade80',
-                                borderRadius: '0.45rem',
-                                padding: '0.35rem 0.5rem',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <CheckCircle2 size={13} />
-                            </button>
-                          )}
-
-                          {/* Quick Reject Button */}
-                          {n.status !== 'REJECTED' && (
-                            <button
-                              disabled={isActing}
-                              onClick={() => updateStatus(n.id, 'REJECTED')}
-                              title="Reject Candidate"
-                              style={{
-                                background: 'rgba(239, 68, 68, 0.12)',
-                                border: '1px solid rgba(239, 68, 68, 0.3)',
-                                color: '#f87171',
-                                borderRadius: '0.45rem',
-                                padding: '0.35rem 0.5rem',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              <XCircle size={13} />
-                            </button>
-                          )}
-
-                          {/* Delete Button */}
-                          <button
-                            disabled={isActing}
-                            onClick={() => deleteNomination(n.id, n.fullName)}
-                            title="Delete Nomination"
-                            style={{
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              color: '#94a3b8',
-                              borderRadius: '0.45rem',
-                              padding: '0.35rem 0.5rem',
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <Trash2 size={13} />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => setSelectedNomination(n)}
+                          title="View Full Nomination Details"
+                          style={{
+                            background: 'rgba(124, 58, 237, 0.15)',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
+                            color: '#c084fc',
+                            borderRadius: '0.5rem',
+                            padding: '0.4rem 0.75rem',
+                            fontSize: '0.78rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <Eye size={13} /> View Details
+                        </button>
                       </td>
                     </tr>
                   );
