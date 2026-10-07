@@ -6,17 +6,17 @@ import { usePathname } from 'next/navigation'
 import { Menu, X, Home, Users, Award, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Home',             href: '/',                    icon: Home },
-  { label: 'Leadership',       href: '/leadership',          icon: Users },
-  { label: 'Emeritus Leaders', href: '/leadership/emeritus', icon: Award },
-  { label: 'Events',           href: '/events',              icon: Calendar },
-  { label: 'Gallery',          href: '/gallery',             icon: Image },
-  { label: 'News',             href: '/news',                icon: Newspaper },
-  { label: 'Politics',         href: '/politics',            icon: Landmark },
-  { label: 'Welfare',          href: '/welfare',             icon: HeartHandshake },
-  { label: 'About',            href: '/about',               icon: Info },
-  { label: 'Contact',          href: '/contact',             icon: Mail },
-  { label: 'Join Us',          href: '/join',                icon: UserPlus },
+  { label: 'Home',             href: '/',           icon: Home },
+  { label: 'Leadership',       href: '/leadership', icon: Users },
+  { label: 'Emeritus Leaders', href: '/emeritus',   icon: Award },
+  { label: 'Events',           href: '/events',     icon: Calendar },
+  { label: 'Gallery',          href: '/gallery',    icon: Image },
+  { label: 'News',             href: '/news',       icon: Newspaper },
+  { label: 'Politics',         href: '/politics',   icon: Landmark },
+  { label: 'Welfare',          href: '/welfare',    icon: HeartHandshake },
+  { label: 'About',            href: '/about',      icon: Info },
+  { label: 'Contact',          href: '/contact',    icon: Mail },
+  { label: 'Join Us',          href: '/join',       icon: UserPlus },
 ]
 
 export function Navbar() {
@@ -28,7 +28,7 @@ export function Navbar() {
 
   const isLinkActive = useCallback((href: string) => {
     if (href === '/') return pathname === '/'
-    return pathname === href || pathname.startsWith(href + '/')
+    return pathname === href
   }, [pathname])
 
   const handleNavClick = useCallback((href: string) => {

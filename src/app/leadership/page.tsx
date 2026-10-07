@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
-import { clearCache } from '@/lib/cache'
-import { Phone } from 'lucide-react'
+import { readCache, writeCache, hasCache } from '@/lib/cache'
+import { Phone, Users } from 'lucide-react'
 
 interface LeaderProfile {
   id: string
@@ -15,18 +15,18 @@ interface LeaderProfile {
 }
 
 export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => {
+    return readCache<LeaderProfile[]>('leadership') || []
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    return !hasCache('leadership')
+  });
 
   const fetchLeaders = async () => {
     try {
-      // Clear any stale sessionStorage cache
-      clearCache('leaders');
-      clearCache('leadership');
-
       const res = await fetch('/api/leadership', { cache: 'no-store' });
       const data = await res.json();
-      if (data && Array.isArray(data.leaders) && data.leaders.length > 0) {
+      if (data && Array.isArray(data.leaders)) {
         const mapped: LeaderProfile[] = data.leaders.map((ldr: any) => ({
           id: ldr.id,
           name: ldr.name,
@@ -38,6 +38,7 @@ export default function LeadershipPage() {
           phone: ldr.phone || ''
         }));
         setLeadersData(mapped);
+        writeCache('leadership', mapped);
       }
     } catch (err) {
       console.error('Error fetching leadership:', err);
@@ -111,6 +112,16 @@ export default function LeadershipPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : leadersData.length === 0 ? (
+            <div className="text-center py-16 bg-slate-900/60 rounded-2xl border border-white/10 max-w-xl mx-auto p-8">
+              <div className="w-14 h-14 bg-violet-500/10 text-violet-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-violet-500/20">
+                <Users size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">No Executive Leaders Listed</h3>
+              <p className="text-slate-400 text-xs sm:text-sm">
+                Executive leaders will appear here once updated in the admin portal.
+              </p>
             </div>
           ) : (
             <div
