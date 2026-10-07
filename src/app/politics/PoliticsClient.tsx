@@ -238,9 +238,7 @@ export default function PoliticsClient() {
       <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4">
-              <Vote size={14} /> GUSA Electoral Commission 2026/2027
-            </div>
+
 
             <h1
               style={{
