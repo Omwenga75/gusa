@@ -469,116 +469,24 @@ export default function AdminPoliticsPage() {
         </div>
       </div>
 
-      {/* ── Filters & Search ──────────────────────────────────── */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem', justifyContent: 'space-between' }}>
-        {/* Search */}
-        <div style={{ position: 'relative', flex: 1, minWidth: '240px', maxWidth: '400px' }}>
-          <Search size={14} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', pointerEvents: 'none' }} />
-          <input
-            type="text"
-            placeholder="Search candidate, reg number, position..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              background: '#0d1225',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '0.6rem',
-              padding: '0.55rem 0.85rem 0.55rem 2.4rem',
-              color: '#fff',
-              fontSize: '0.85rem',
-              outline: 'none'
-            }}
-          />
-        </div>
-
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* Status Pills */}
-          <div style={{ display: 'flex', gap: '0.25rem', background: '#0d1225', padding: '0.2rem', borderRadius: '0.6rem', border: '1px solid rgba(255,255,255,0.08)' }}>
-            {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
-              <button
-                key={f}
-                onClick={() => setStatusFilter(f)}
-                style={{
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '0.45rem',
-                  border: 'none',
-                  background: statusFilter === f ? 'linear-gradient(135deg,#7c3aed,#3b82f6)' : 'transparent',
-                  color: statusFilter === f ? '#fff' : '#94a3b8',
-                  fontWeight: statusFilter === f ? 700 : 500,
-                  fontSize: '0.78rem',
-                  cursor: 'pointer',
-                  textTransform: 'capitalize',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-
-          {/* County Pills */}
-          <div style={{ display: 'flex', gap: '0.25rem', background: '#0d1225', padding: '0.2rem', borderRadius: '0.6rem', border: '1px solid rgba(255,255,255,0.08)' }}>
-            {(['all', 'Kisii', 'Nyamira'] as const).map(c => (
-              <button
-                key={c}
-                onClick={() => setCountyFilter(c)}
-                style={{
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '0.45rem',
-                  border: 'none',
-                  background: countyFilter === c ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-                  color: countyFilter === c ? '#38bdf8' : '#94a3b8',
-                  fontWeight: countyFilter === c ? 700 : 500,
-                  fontSize: '0.78rem',
-                  cursor: 'pointer',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  borderColor: countyFilter === c ? 'rgba(56, 189, 248, 0.4)' : 'transparent',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {c === 'all' ? 'All Counties' : c}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* ── Table Card ────────────────────────────────────────── */}
       <div className={styles.card} style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.35rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 className={styles.cardTitle} style={{ fontSize: '1.05rem', margin: 0 }}>
             Nomination Applications ({filteredNominations.length})
           </h2>
-          {(statusFilter !== 'all' || countyFilter !== 'all' || searchQuery) && (
-            <button
-              onClick={() => { setStatusFilter('all'); setCountyFilter('all'); setSearchQuery(''); }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#818cf8',
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                textDecoration: 'underline'
-              }}
-            >
-              Clear filters
-            </button>
-          )}
         </div>
 
         <div className={styles.tableWrapper} style={{ border: 'none', borderRadius: 0 }}>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{ width: '28%' }}>Candidate</th>
-                <th style={{ width: '16%' }}>Reg No. / Year</th>
-                <th style={{ width: '14%' }}>County</th>
-                <th style={{ width: '20%' }}>Seat Contested</th>
-                <th style={{ width: '10%' }}>Status</th>
-                <th style={{ width: '12%', textAlign: 'right' }}>Actions</th>
+                <th style={{ width: '22%' }}>Candidate</th>
+                <th style={{ width: '18%' }}>Reg No. / Year</th>
+                <th style={{ width: '12%' }}>County</th>
+                <th style={{ width: '22%' }}>Seat Contested</th>
+                <th style={{ width: '12%' }}>Status</th>
+                <th style={{ width: '14%', textAlign: 'right', whiteSpace: 'nowrap' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -739,7 +647,7 @@ export default function AdminPoliticsPage() {
                       </td>
 
                       {/* Actions (View Details opens full modal with reject/approve/delete actions) */}
-                      <td style={{ textAlign: 'right' }}>
+                      <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
                         <button
                           onClick={() => setSelectedNomination(n)}
                           title="View Full Nomination Details"
@@ -748,13 +656,14 @@ export default function AdminPoliticsPage() {
                             border: '1px solid rgba(124, 58, 237, 0.35)',
                             color: '#c084fc',
                             borderRadius: '0.5rem',
-                            padding: '0.4rem 0.75rem',
+                            padding: '0.4rem 0.8rem',
                             fontSize: '0.78rem',
                             fontWeight: 600,
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '0.35rem',
+                            whiteSpace: 'nowrap',
                             transition: 'all 0.15s ease'
                           }}
                         >
