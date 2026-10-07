@@ -646,8 +646,8 @@ export default function AdminPoliticsPage() {
                             <div className={styles.userName} style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f8fafc' }}>
                               {n.fullName}
                             </div>
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.15rem' }}>
-                              {n.county} • {n.yearOfStudy}
+                            <div style={{ fontSize: '0.72rem', color: '#a78bfa', fontWeight: 600, marginTop: '0.15rem' }}>
+                              Aspirant#{idx + 1}
                             </div>
                           </div>
                         </div>
