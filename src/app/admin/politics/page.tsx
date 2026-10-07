@@ -809,77 +809,81 @@ export default function AdminPoliticsPage() {
               </div>
             </div>
 
-            {/* Leadership Manifesto / Statement */}
-            <div style={{ background: 'rgba(6, 8, 15, 0.7)', padding: '0.85rem', borderRadius: '0.6rem', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '1.25rem' }}>
-              <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700, display: 'block', marginBottom: '0.4rem' }}>
-                Manifesto &amp; Statement of Intent
-              </span>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#e2e8f0', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-                {selectedNomination.statement || 'No detailed statement provided during submission.'}
-              </p>
-            </div>
-
             <div style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '1.25rem' }}>
               Submitted on: {new Date(selectedNomination.createdAt).toLocaleString()}
             </div>
 
             {/* Modal Actions */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
-              <button
-                type="button"
-                onClick={() => deleteNomination(selectedNomination.id, selectedNomination.fullName)}
-                style={{
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  color: '#ef4444',
-                  border: '1px solid rgba(239, 68, 68, 0.25)',
-                  borderRadius: '0.5rem',
-                  padding: '0.5rem 0.85rem',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.35rem'
-                }}
-              >
-                <Trash2 size={14} /> Delete Application
-              </button>
+            {(() => {
+              const isApproved = selectedNomination.status === 'APPROVED';
+              const isLoading = actionLoadingId === selectedNomination.id;
 
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {selectedNomination.status !== 'REJECTED' && (
+              return (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
                   <button
                     type="button"
-                    onClick={() => updateStatus(selectedNomination.id, 'REJECTED')}
+                    onClick={() => deleteNomination(selectedNomination.id, selectedNomination.fullName)}
+                    disabled={isApproved || isLoading}
+                    title={isApproved ? 'Approved applications cannot be deleted' : 'Delete Application'}
                     style={{
-                      background: 'rgba(239, 68, 68, 0.15)',
-                      color: '#f87171',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      background: isApproved ? 'rgba(255, 255, 255, 0.03)' : 'rgba(239, 68, 68, 0.1)',
+                      color: isApproved ? '#64748b' : '#ef4444',
+                      border: isApproved ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(239, 68, 68, 0.25)',
                       borderRadius: '0.5rem',
-                      padding: '0.5rem 0.9rem',
-                      fontSize: '0.8125rem',
+                      padding: '0.5rem 0.85rem',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
-                      cursor: 'pointer'
+                      cursor: isApproved || isLoading ? 'not-allowed' : 'pointer',
+                      opacity: isApproved ? 0.45 : 1,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.2s ease'
                     }}
                   >
-                    Reject Candidate
+                    <Trash2 size={14} /> Delete Application
                   </button>
-                )}
 
-                {selectedNomination.status !== 'APPROVED' && (
-                  <button
-                    type="button"
-                    onClick={() => updateStatus(selectedNomination.id, 'APPROVED')}
-                    className={styles.btnPrimary}
-                    style={{
-                      padding: '0.5rem 1.1rem',
-                      fontSize: '0.8125rem'
-                    }}
-                  >
-                    <CheckCircle2 size={15} /> Approve Nomination
-                  </button>
-                )}
-              </div>
-            </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => updateStatus(selectedNomination.id, 'REJECTED')}
+                      disabled={isApproved || isLoading}
+                      title={isApproved ? 'Approved candidates cannot be rejected' : 'Reject Candidate'}
+                      style={{
+                        background: isApproved ? 'rgba(255, 255, 255, 0.03)' : 'rgba(239, 68, 68, 0.15)',
+                        color: isApproved ? '#64748b' : '#f87171',
+                        border: isApproved ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(239, 68, 68, 0.3)',
+                        borderRadius: '0.5rem',
+                        padding: '0.5rem 0.9rem',
+                        fontSize: '0.8125rem',
+                        fontWeight: 600,
+                        cursor: isApproved || isLoading ? 'not-allowed' : 'pointer',
+                        opacity: isApproved ? 0.45 : 1,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      Reject Candidate
+                    </button>
+
+                    {!isApproved && (
+                      <button
+                        type="button"
+                        onClick={() => updateStatus(selectedNomination.id, 'APPROVED')}
+                        disabled={isLoading}
+                        className={styles.btnPrimary}
+                        style={{
+                          padding: '0.5rem 1.1rem',
+                          fontSize: '0.8125rem'
+                        }}
+                      >
+                        <CheckCircle2 size={15} /> Approve Nomination
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
