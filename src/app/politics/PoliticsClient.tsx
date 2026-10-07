@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Vote,
-  ShieldCheck,
   Calendar,
   CheckCircle2,
   AlertCircle,
@@ -17,16 +16,41 @@ import {
   GraduationCap,
   MapPin,
   Sparkles,
-  FileCheck
+  Award
 } from 'lucide-react';
+
+const EXECUTIVE_SEATS = [
+  'President / Chairperson',
+  'Vice Chairperson',
+  'Secretary General',
+  'Treasurer / Finance Director',
+  'Organizing Secretary',
+  'Gender & Social Welfare Secretary',
+  'Academics & Affairs Secretary'
+];
+
+const SAMU_EXECUTIVE_SEATS = [
+  'SAMU Executive Representative',
+  'SAMU Congress Delegate'
+];
+
+const DELEGATE_SEATS = [
+  'School of Pure & Applied Sciences Delegate',
+  'School of Engineering & Architecture Delegate',
+  'School of Computing & Informatics Delegate',
+  'School of Business & Economics Delegate',
+  'School of Agriculture & Food Science Delegate',
+  'School of Education Delegate',
+  'School of Nursing & Health Sciences Delegate',
+  'General Campus Delegate'
+];
 
 interface PositionCard {
   title: string;
-  category: string;
+  category: 'Executive Positions' | 'SAMU & Delegate Positions';
   description: string;
   requirements: string[];
   status: string;
-  availableSeats: string[];
 }
 
 export default function PoliticsClient() {
@@ -34,7 +58,8 @@ export default function PoliticsClient() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('Executive Positions');
+  const [selectedCategory, setSelectedCategory] = useState<'Executive Positions' | 'SAMU & Delegate Positions'>('Executive Positions');
+  const [samuSubtype, setSamuSubtype] = useState<'samu_executive' | 'delegate'>('samu_executive');
   const [selectedPosition, setSelectedPosition] = useState<string>('President / Chairperson');
   const [customPosition, setCustomPosition] = useState<string>('');
 
@@ -59,35 +84,14 @@ export default function PoliticsClient() {
       category: 'Executive Positions',
       description: 'The executive leadership steering GUSA policy, campus administration representation, and overall member advocacy.',
       requirements: ['Must be in 2nd year or above', 'Good academic standing', 'Proven leadership track record'],
-      status: 'Nominations Open',
-      availableSeats: [
-        'President / Chairperson',
-        'Vice Chairperson',
-        'Secretary General',
-        'Treasurer / Finance Director',
-        'Organizing Secretary',
-        'Gender & Social Welfare Secretary',
-        'Academics & Affairs Secretary'
-      ]
+      status: 'Nominations Open'
     },
     {
       title: 'SAMU & Delegate Positions',
       category: 'SAMU & Delegate Positions',
       description: 'Leaders representing GUSA as delegates and Students Association of Meru University (SAMU) representatives.',
       requirements: ['Strong organizational skills', 'Active member for at least 1 academic year', 'Enthusiasm for student welfare'],
-      status: 'Nominations Open',
-      availableSeats: [
-        'SAMU Executive Representative',
-        'SAMU Congress Delegate',
-        'School of Pure & Applied Sciences Delegate',
-        'School of Engineering & Architecture Delegate',
-        'School of Computing & Informatics Delegate',
-        'School of Business & Economics Delegate',
-        'School of Agriculture & Food Science Delegate',
-        'School of Education Delegate',
-        'School of Nursing & Health Sciences Delegate',
-        'General Campus Delegate'
-      ]
+      status: 'Nominations Open'
     }
   ];
 
@@ -118,15 +122,13 @@ export default function PoliticsClient() {
     }
   ];
 
-  const handleOpenModal = (category: string, defaultSeat?: string) => {
+  const handleOpenModal = (category: 'Executive Positions' | 'SAMU & Delegate Positions') => {
     setSelectedCategory(category);
-    const found = positions.find(p => p.category === category);
-    if (defaultSeat) {
-      setSelectedPosition(defaultSeat);
-    } else if (found && found.availableSeats.length > 0) {
-      setSelectedPosition(found.availableSeats[0]);
+    if (category === 'Executive Positions') {
+      setSelectedPosition(EXECUTIVE_SEATS[0]);
     } else {
-      setSelectedPosition('President / Chairperson');
+      setSamuSubtype('samu_executive');
+      setSelectedPosition(SAMU_EXECUTIVE_SEATS[0]);
     }
     setCustomPosition('');
     setSubmitError(null);
@@ -134,12 +136,21 @@ export default function PoliticsClient() {
     setIsModalOpen(true);
   };
 
-  const handleCategoryChange = (newCategory: string) => {
-    setSelectedCategory(newCategory);
-    const found = positions.find(p => p.category === newCategory);
-    if (found && found.availableSeats.length > 0) {
-      setSelectedPosition(found.availableSeats[0]);
+  const handleSamuSubtypeChange = (subtype: 'samu_executive' | 'delegate') => {
+    setSamuSubtype(subtype);
+    if (subtype === 'samu_executive') {
+      setSelectedPosition(SAMU_EXECUTIVE_SEATS[0]);
+    } else {
+      setSelectedPosition(DELEGATE_SEATS[0]);
     }
+    setCustomPosition('');
+  };
+
+  const getCurrentAvailableSeats = () => {
+    if (selectedCategory === 'Executive Positions') {
+      return EXECUTIVE_SEATS;
+    }
+    return samuSubtype === 'samu_executive' ? SAMU_EXECUTIVE_SEATS : DELEGATE_SEATS;
   };
 
   const handleSubmitNomination = async (e: React.FormEvent) => {
@@ -172,6 +183,13 @@ export default function PoliticsClient() {
       ? customPosition.trim()
       : selectedPosition;
 
+    const submittedCategory =
+      selectedCategory === 'Executive Positions'
+        ? 'Executive Positions'
+        : samuSubtype === 'samu_executive'
+        ? 'SAMU Executive'
+        : 'SAMU Delegate Positions';
+
     setIsSubmitting(true);
 
     try {
@@ -186,7 +204,7 @@ export default function PoliticsClient() {
           yearOfStudy,
           county,
           subcounty: subcounty.trim() || null,
-          positionCategory: selectedCategory,
+          positionCategory: submittedCategory,
           position: finalPosition,
           statement: statement.trim() || null
         })
@@ -218,8 +236,7 @@ export default function PoliticsClient() {
     setStatement('');
   };
 
-  const currentAvailableSeats =
-    positions.find(p => p.category === selectedCategory)?.availableSeats || [];
+  const availableSeats = getCurrentAvailableSeats();
 
   return (
     <PublicLayout>
@@ -464,28 +481,47 @@ export default function PoliticsClient() {
 
                 {/* Category & Position Selection */}
                 <div className="p-3.5 rounded-xl bg-slate-950/70 border border-white/5 space-y-3">
-                  {/* Category Switcher */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Position Category
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {positions.map(p => (
+                  {/* Category Display or Toggle */}
+                  {selectedCategory === 'Executive Positions' ? (
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Position Category
+                      </label>
+                      <div className="w-full py-2.5 px-3 rounded-lg text-xs font-bold text-center bg-violet-600/20 border border-violet-500/50 text-violet-300 shadow-sm flex items-center justify-center gap-2">
+                        <Award size={15} /> Executive Positions (House Leaders)
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        SAMU &amp; Delegate Category
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
                         <button
-                          key={p.category}
                           type="button"
-                          onClick={() => handleCategoryChange(p.category)}
-                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
-                            selectedCategory === p.category
-                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-sm'
-                              : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white'
+                          onClick={() => handleSamuSubtypeChange('samu_executive')}
+                          className={`py-2.5 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
+                            samuSubtype === 'samu_executive'
+                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-md shadow-violet-600/20'
+                              : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                           }`}
                         >
-                          {p.category}
+                          Executive
                         </button>
-                      ))}
+                        <button
+                          type="button"
+                          onClick={() => handleSamuSubtypeChange('delegate')}
+                          className={`py-2.5 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
+                            samuSubtype === 'delegate'
+                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-md shadow-violet-600/20'
+                              : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                          }`}
+                        >
+                          Delegate
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Seat / Position Dropdown */}
                   <div>
@@ -495,9 +531,9 @@ export default function PoliticsClient() {
                     <select
                       value={selectedPosition}
                       onChange={e => setSelectedPosition(e.target.value)}
-                      className="w-full bg-slate-900 border border-white/10 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-violet-500"
+                      className="w-full bg-slate-900 border border-white/10 rounded-lg py-2.5 px-3 text-xs text-white focus:outline-none focus:border-violet-500"
                     >
-                      {currentAvailableSeats.map(seat => (
+                      {availableSeats.map(seat => (
                         <option key={seat} value={seat}>
                           {seat}
                         </option>
