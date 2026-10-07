@@ -196,51 +196,17 @@ export default function AdminPoliticsPage() {
     }
   };
 
-  const exportCSV = () => {
-    if (nominations.length === 0) {
-      alert('No nominations to export.');
-      return;
-    }
-
-    const headers = [
-      'Full Name',
-      'Email',
-      'Phone',
-      'Registration Number',
-      'Year of Study',
-      'County',
-      'Subcounty',
-      'Position Category',
-      'Position',
-      'Status',
-      'Statement',
-      'Date Submitted'
-    ];
-
-    const rows = filteredNominations.map(n => [
-      `"${n.fullName.replace(/"/g, '""')}"`,
-      `"${n.email.replace(/"/g, '""')}"`,
-      `"${n.phone.replace(/"/g, '""')}"`,
-      `"${n.regNumber.replace(/"/g, '""')}"`,
-      `"${n.yearOfStudy.replace(/"/g, '""')}"`,
-      `"${n.county.replace(/"/g, '""')}"`,
-      `"${(n.subcounty || '').replace(/"/g, '""')}"`,
-      `"${(n.positionCategory || '').replace(/"/g, '""')}"`,
-      `"${n.position.replace(/"/g, '""')}"`,
-      `"${n.status}"`,
-      `"${(n.statement || '').replace(/"/g, '""')}"`,
-      `"${new Date(n.createdAt).toLocaleDateString()}"`
-    ]);
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `GUSA_Politics_Aspirants_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // Compute permanent chronological aspirant numbers (Aspirant #1 for 1st registrant, #2 for 2nd, #3 for 3rd, etc.)
+  const aspirantNumberMap = React.useMemo(() => {
+    const sortedChronological = [...nominations].sort((a, b) =>
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+    const map: Record<string, number> = {};
+    sortedChronological.forEach((nom, index) => {
+      map[nom.id] = index + 1;
+    });
+    return map;
+  }, [nominations]);
 
   const filteredNominations = nominations.filter(n => {
     if (statusFilter !== 'all' && n.status.toLowerCase() !== statusFilter) return false;
@@ -261,24 +227,56 @@ export default function AdminPoliticsPage() {
     return true;
   });
 
+  const exportCSV = () => {
+    if (nominations.length === 0) {
+      alert('No nominations to export.');
+      return;
+    }
+
+    const headers = [
+      'Aspirant #',
+      'Full Name',
+      'Email',
+      'Phone',
+      'Registration Number',
+      'Year of Study',
+      'County',
+      'Position Category',
+      'Position',
+      'Status',
+      'Date Submitted'
+    ];
+
+    const rows = filteredNominations.map(n => [
+      `"Aspirant#${aspirantNumberMap[n.id] || 1}"`,
+      `"${n.fullName.replace(/"/g, '""')}"`,
+      `"${n.email.replace(/"/g, '""')}"`,
+      `"${n.phone.replace(/"/g, '""')}"`,
+      `"${n.regNumber.replace(/"/g, '""')}"`,
+      `"${n.yearOfStudy.replace(/"/g, '""')}"`,
+      `"${n.county.replace(/"/g, '""')}"`,
+      `"${(n.positionCategory || '').replace(/"/g, '""')}"`,
+      `"${formatPositionName(n.position).replace(/"/g, '""')}"`,
+      `"${n.status}"`,
+      `"${new Date(n.createdAt).toLocaleDateString()}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `GUSA_Politics_Aspirants_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalCount = counts.total || nominations.length;
   const pendingCount = counts.pending || nominations.filter(n => n.status === 'PENDING').length;
   const approvedCount = counts.approved || nominations.filter(n => n.status === 'APPROVED').length;
   const rejectedCount = counts.rejected || nominations.filter(n => n.status === 'REJECTED').length;
   const kisiiCount = counts.kisii || nominations.filter(n => n.county === 'Kisii').length;
   const nyamiraCount = counts.nyamira || nominations.filter(n => n.county === 'Nyamira').length;
-
-  // Compute permanent chronological aspirant numbers (Aspirant #1 for 1st registrant, #2 for 2nd, #3 for 3rd, etc.)
-  const aspirantNumberMap = React.useMemo(() => {
-    const sortedChronological = [...nominations].sort((a, b) =>
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
-    const map: Record<string, number> = {};
-    sortedChronological.forEach((nom, index) => {
-      map[nom.id] = index + 1;
-    });
-    return map;
-  }, [nominations]);
 
   return (
     <>
