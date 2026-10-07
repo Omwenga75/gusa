@@ -581,11 +581,11 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-white/5">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 to-pink-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
-                  FM
+                  DF
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Faith Moraa</h4>
-                  <p className="text-violet-400 text-xs truncate">Year 3 • School of Nursing</p>
+                  <h4 className="text-white font-bold text-sm truncate">Daniel Fischer</h4>
+                  <p className="text-violet-400 text-xs truncate">Alumnus • School of Education</p>
                 </div>
               </div>
             </div>
@@ -605,11 +605,11 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-white/5">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
-                  BO
+                  CP
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Brian Omwoyo</h4>
-                  <p className="text-blue-400 text-xs truncate">Alumnus • Software Engineering</p>
+                  <h4 className="text-white font-bold text-sm truncate">Clinton Programmer</h4>
+                  <p className="text-blue-400 text-xs truncate">Alumnus • School of Computing & Informatics</p>
                 </div>
               </div>
             </div>
@@ -629,11 +629,11 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-white/5">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-600 to-amber-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
-                  DN
+                  EO
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Duke Nyambane</h4>
-                  <p className="text-pink-400 text-xs truncate">Year 4 • Business & Economics</p>
+                  <h4 className="text-white font-bold text-sm truncate">Eli Oenga</h4>
+                  <p className="text-pink-400 text-xs truncate">Alumnus • School of Education</p>
                 </div>
               </div>
             </div>
