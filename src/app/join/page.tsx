@@ -51,6 +51,8 @@ export default function JoinPage() {
   const [yearOfStudy, setYearOfStudy] = useState('Year 1');
   const [county, setCounty] = useState<'Kisii' | 'Nyamira'>('Kisii');
   const [password, setPassword] = useState('');
+  const [securityAnswer1, setSecurityAnswer1] = useState('');
+  const [securityAnswer2, setSecurityAnswer2] = useState('');
 
   // Submission State
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,6 +74,8 @@ export default function JoinPage() {
       setPhone('');
       setRegNumber('');
       setPassword('');
+      setSecurityAnswer1('');
+      setSecurityAnswer2('');
       setIsSubmittedSuccess(false);
     }
   };
@@ -111,7 +115,9 @@ export default function JoinPage() {
           school,
           yearOfStudy,
           county,
-          password: password.trim() || undefined
+          password: password.trim() || undefined,
+          securityAnswer1: securityAnswer1.trim(),
+          securityAnswer2: securityAnswer2.trim()
         })
       });
 
@@ -586,6 +592,45 @@ export default function JoinPage() {
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                       className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Security Questions */}
+                <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Shield size={14} className="text-violet-400" />
+                    <span className="text-xs font-bold text-violet-300 uppercase tracking-wider">Security Verification</span>
+                  </div>
+                  <p className="text-xs text-slate-400 -mt-1">Answer both questions correctly to complete registration.</p>
+
+                  {/* Q1 */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Naki ase chiombe chikolala akorokwa? <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your answer..."
+                      value={securityAnswer1}
+                      onChange={e => setSecurityAnswer1(e.target.value)}
+                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                    />
+                  </div>
+
+                  {/* Q2 */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      eyemo omente eyemo = ? <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your answer..."
+                      value={securityAnswer2}
+                      onChange={e => setSecurityAnswer2(e.target.value)}
+                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
                     />
                   </div>
                 </div>

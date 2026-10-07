@@ -5,12 +5,35 @@ import bcrypt from 'bcryptjs'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { fullName, email, password, phone, regNumber, school, yearOfStudy, county, subcounty } = body
+    const {
+      fullName,
+      email,
+      password,
+      phone,
+      regNumber,
+      school,
+      yearOfStudy,
+      county,
+      subcounty,
+      securityAnswer1,
+      securityAnswer2
+    } = body
 
     // Validate required fields
     if (!fullName || !email) {
       return NextResponse.json(
         { error: 'Full name and email are required.' },
+        { status: 400 }
+      )
+    }
+
+    // Validate Security Questions (case-insensitive)
+    const normalizedAns1 = (securityAnswer1 || '').trim().toLowerCase()
+    const normalizedAns2 = (securityAnswer2 || '').trim().toLowerCase()
+
+    if (normalizedAns1 !== 'obweri' || normalizedAns2 !== 'ibere') {
+      return NextResponse.json(
+        { error: 'Security question answers are incorrect. Both questions must be answered correctly to complete registration.' },
         { status: 400 }
       )
     }

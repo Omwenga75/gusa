@@ -18,7 +18,9 @@ export default function RegisterPage() {
     school: "",
     yearOfStudy: "1",
     county: "",
-    subcounty: ""
+    subcounty: "",
+    securityAnswer1: "",
+    securityAnswer2: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -218,6 +220,39 @@ export default function RegisterPage() {
                   className="form-input"
                   placeholder="e.g. Kitutu Chache"
                   value={formData.subcounty}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group" style={{ marginTop: "var(--space-4)", padding: "var(--space-4)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "var(--radius-md)", background: "rgba(139,92,246,0.05)" }}>
+              <p style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", marginBottom: "var(--space-3)", color: "var(--color-text-main)" }}>🔒 Security Verification</p>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-3)" }}>Answer both questions correctly to complete registration.</p>
+
+              <div style={{ marginBottom: "var(--space-3)" }}>
+                <label className="form-label" htmlFor="securityAnswer1">Naki ase chiombe chikolala akorokwa?</label>
+                <input
+                  id="securityAnswer1"
+                  name="securityAnswer1"
+                  type="text"
+                  className="form-input"
+                  placeholder="Your answer..."
+                  value={formData.securityAnswer1}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label" htmlFor="securityAnswer2">eyemo omente eyemo = ?</label>
+                <input
+                  id="securityAnswer2"
+                  name="securityAnswer2"
+                  type="text"
+                  className="form-input"
+                  placeholder="Your answer..."
+                  value={formData.securityAnswer2}
                   onChange={handleChange}
                   required
                 />
