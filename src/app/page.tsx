@@ -11,8 +11,7 @@ import {
   Image as ImageIcon,
   ChevronRight,
   Quote,
-  Star,
-  Sparkles
+  Star
 } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
@@ -561,15 +560,9 @@ export default async function HomePage() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-3">
-              <Sparkles size={13} /> Community Voices
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">
               What People Say About GUSA
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Real stories, experiences, and reflections from our members, alumni, and student leaders at Meru University.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
