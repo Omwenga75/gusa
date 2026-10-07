@@ -9,7 +9,10 @@ import {
   Calendar,
   MapPin,
   Image as ImageIcon,
-  ChevronRight
+  ChevronRight,
+  Quote,
+  Star,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
@@ -547,6 +550,100 @@ export default async function HomePage() {
             <Link href="/news" className="btn-glass w-full px-6 py-2.5 rounded-xl font-semibold text-slate-200 border border-white/10 text-sm flex items-center justify-center">
               Read all news <ArrowRight size={14} className="inline ml-1" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHAT PEOPLE SAY ABOUT GUSA (TESTIMONIALS) ───────────────── */}
+      <section className="py-14 sm:py-20 bg-slate-950 text-white border-t border-white/10 relative overflow-hidden">
+        {/* Subtle background ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-3">
+              <Sparkles size={13} /> Community Voices
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3">
+              What People Say About GUSA
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+              Real stories, experiences, and reflections from our members, alumni, and student leaders at Meru University.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Card 1 */}
+            <div className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-violet-500/40 transition-all flex flex-col justify-between relative group hover:shadow-xl hover:shadow-violet-950/40">
+              <Quote className="text-violet-500/30 absolute top-5 right-5 group-hover:text-violet-500/50 transition-colors" size={36} />
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-slate-200 text-sm leading-relaxed italic mb-6">
+                  &ldquo;Joining GUSA gave me a true sense of family away from home. From academic revision sessions to emergency welfare support when I needed help, the association stands with you through everything.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 to-pink-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
+                  FM
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-white font-bold text-sm truncate">Faith Moraa</h4>
+                  <p className="text-violet-400 text-xs truncate">Year 3 • School of Nursing</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-blue-500/40 transition-all flex flex-col justify-between relative group hover:shadow-xl hover:shadow-blue-950/40">
+              <Quote className="text-blue-500/30 absolute top-5 right-5 group-hover:text-blue-500/50 transition-colors" size={36} />
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-slate-200 text-sm leading-relaxed italic mb-6">
+                  &ldquo;The leadership mentorship and professional networking within GUSA shaped my career journey. It is not just about celebrating our cultural roots—it empowers students to excel in modern careers.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
+                  BO
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-white font-bold text-sm truncate">Brian Omwoyo</h4>
+                  <p className="text-blue-400 text-xs truncate">Alumnus • Software Engineering</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-pink-500/40 transition-all flex flex-col justify-between relative group hover:shadow-xl hover:shadow-pink-950/40">
+              <Quote className="text-pink-500/30 absolute top-5 right-5 group-hover:text-pink-500/50 transition-colors" size={36} />
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-slate-200 text-sm leading-relaxed italic mb-6">
+                  &ldquo;Cultural nights, inter-county sports tournaments, and community charity outreaches have made my campus experience unforgettable. GUSA gives every student an equal platform to shine.&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-600 to-amber-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
+                  DN
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-white font-bold text-sm truncate">Duke Nyambane</h4>
+                  <p className="text-pink-400 text-xs truncate">Year 4 • Business & Economics</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
