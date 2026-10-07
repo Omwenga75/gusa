@@ -19,8 +19,7 @@ import {
   GraduationCap,
   Building,
   Send,
-  CheckCircle2,
-  Sparkles
+  CheckCircle2
 } from 'lucide-react';
 
 const SCHOOL_OPTIONS = [
@@ -186,10 +185,6 @@ export default function JoinPage() {
       <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles size={14} className="text-violet-400" />
-              <span>Official Student Membership Portal</span>
-            </div>
             <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '0.75rem', color: 'var(--text-main)' }}>
               Join GUSA
             </h1>
