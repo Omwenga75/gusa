@@ -111,25 +111,33 @@ export default function PoliticsClient() {
 
   const timeline = [
     {
-      date: 'OCT 2026',
+      month: 'MAR',
+      year: '2027',
+      date: 'MAR 2027',
       title: 'Voter Registration & Verification',
       desc: 'All registered GUSA members verify their registration details in the electoral register.',
       status: 'Upcoming'
     },
     {
-      date: 'NOV 2026',
-      title: 'Nomination Papers Submission',
+      month: 'MAR',
+      year: '2027',
+      date: 'MAR 2027',
+      title: 'Nomination',
       desc: 'Aspirants submit their nomination packages to the GUSA Independent Electoral Commission.',
       status: 'Upcoming'
     },
     {
-      date: 'NOV 2026',
-      title: 'Campus Presidential Debate',
-      desc: 'Live townhall and presidential debate broadcasted across student community channels.',
+      month: 'MAR',
+      year: '2027',
+      date: 'MAR 2027',
+      title: 'Electoral Committee Meeting',
+      desc: 'Official briefing and stakeholder deliberation by the GUSA Electoral Committee to review aspirant vetting, campaign guidelines, and polling logistics.',
       status: 'Upcoming'
     },
     {
-      date: 'DEC 2026',
+      month: 'MAR',
+      year: '2027',
+      date: 'MAR 2027',
       title: 'General Elections & Swearing-In',
       desc: 'Secret ballot voting and official transition ceremony for the incoming executive council.',
       status: 'Upcoming'
@@ -371,9 +379,15 @@ export default function PoliticsClient() {
                     key={idx}
                     className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-white/10 flex flex-col sm:flex-row items-start gap-4 sm:gap-5"
                   >
-                    <div className="w-14 h-14 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex flex-col items-center justify-center text-violet-400 font-bold flex-shrink-0">
-                      <Calendar size={18} className="mb-1" />
-                      <span className="text-[10px] tracking-wider uppercase">{item.date}</span>
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600/25 via-purple-950/40 to-slate-950 border border-violet-500/40 flex flex-col items-center justify-center flex-shrink-0 shadow-md shadow-violet-950/50 relative overflow-hidden">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-violet-400 to-transparent opacity-90" />
+                      <Calendar size={13} className="text-violet-400 mb-0.5" />
+                      <span className="text-xs font-extrabold tracking-wider uppercase text-white leading-none">
+                        {item.month}
+                      </span>
+                      <span className="text-[9px] font-semibold text-violet-300/80 tracking-wide mt-0.5">
+                        {item.year}
+                      </span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
