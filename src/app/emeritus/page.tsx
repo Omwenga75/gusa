@@ -2,77 +2,192 @@
 
 import React, { useState } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
-import { Award, Calendar, Sparkles } from 'lucide-react'
+import { Award, Landmark, GraduationCap, Users, Sparkles } from 'lucide-react'
+
+type LeaderCategory = 'House Leaders' | 'SAMU Leaders' | 'Delegates'
 
 interface EmeritusLeader {
   id: string
   name: string
   position: string
   term: string
+  category: LeaderCategory
   image?: string | null
   avatarInitials: string
   achievement?: string
 }
 
 const EMERITUS_LEADERS: EmeritusLeader[] = [
+  // ── 1. House Leaders ───────────────────────────────────────────────
   {
-    id: '1',
+    id: 'h1',
     name: 'Hon. Kevin Ondieki',
-    position: 'Past President',
+    position: 'Past GUSA President',
     term: '2024/2025',
+    category: 'House Leaders',
     avatarInitials: 'KO',
     achievement: 'Expanded GUSA welfare emergency kitty and strengthened MUST Gusii alumni mentorship network.'
   },
   {
-    id: '2',
+    id: 'h2',
     name: 'Hon. Brenda Moraa',
-    position: 'Past Vice President',
+    position: 'Past GUSA Vice President',
     term: '2024/2025',
+    category: 'House Leaders',
     avatarInitials: 'BM',
     achievement: 'Pioneered the First-Year Gusii Student Academic Mentorship and Gender Inclusivity Network.'
   },
   {
-    id: '3',
+    id: 'h3',
     name: 'Hon. Brian Nyambane',
-    position: 'Past Secretary General',
+    position: 'Past GUSA Secretary General',
     term: '2024/2025',
+    category: 'House Leaders',
     avatarInitials: 'BN',
     achievement: 'Streamlined association digital communications and annual general meeting documentation.'
   },
   {
-    id: '4',
+    id: 'h4',
     name: 'Hon. Denis Mogaka',
-    position: 'Past President',
+    position: 'Past GUSA President',
     term: '2023/2024',
+    category: 'House Leaders',
     avatarInitials: 'DM',
     achievement: 'Organized the largest MUST Gusii Cultural Night and university-wide inter-county sports games.'
   },
   {
-    id: '5',
+    id: 'h5',
     name: 'Hon. Faith Kerubo',
-    position: 'Past Treasurer',
+    position: 'Past GUSA Treasurer',
     term: '2023/2024',
+    category: 'House Leaders',
     avatarInitials: 'FK',
     achievement: 'Maintained 100% financial audit compliance and timely bursary welfare disbursements.'
   },
   {
-    id: '6',
+    id: 'h6',
     name: 'Hon. Collins Omari',
-    position: 'Past Organizing Secretary',
+    position: 'Past GUSA Organizing Secretary',
     term: '2023/2024',
+    category: 'House Leaders',
     avatarInitials: 'CO',
     achievement: 'Coordinated educational symposiums and the Mt. Kenya region Gusii student leadership summit.'
+  },
+
+  // ── 2. SAMU Leaders ────────────────────────────────────────────────
+  {
+    id: 's1',
+    name: 'Hon. Joshua Omwamba',
+    position: 'Past SAMU Chairperson / President',
+    term: '2024/2025',
+    category: 'SAMU Leaders',
+    avatarInitials: 'JO',
+    achievement: 'Championed university-wide student comrade rights, campus security lighting, and Wi-Fi coverage.'
+  },
+  {
+    id: 's2',
+    name: 'Hon. Sylvia Kemunto',
+    position: 'Past SAMU Vice Chairperson',
+    term: '2024/2025',
+    category: 'SAMU Leaders',
+    avatarInitials: 'SK',
+    achievement: 'Spearheaded students health advocacy, mental health awareness, and hostel sanitization programs.'
+  },
+  {
+    id: 's3',
+    name: 'Hon. Geoffrey Nyachieo',
+    position: 'Past SAMU Secretary General',
+    term: '2023/2024',
+    category: 'SAMU Leaders',
+    avatarInitials: 'GN',
+    achievement: 'Facilitated prompt university senate representations and student disciplinary appeals.'
+  },
+  {
+    id: 's4',
+    name: 'Hon. Damaris Kwamboka',
+    position: 'Past SAMU Academic Secretary',
+    term: '2023/2024',
+    category: 'SAMU Leaders',
+    avatarInitials: 'DK',
+    achievement: 'Introduced 24/7 exam revision resource vaults and peer-to-peer supplementary study groups.'
+  },
+  {
+    id: 's5',
+    name: 'Hon. Victor Makori',
+    position: 'Past SAMU Sports & Entertainment Director',
+    term: '2023/2024',
+    category: 'SAMU Leaders',
+    avatarInitials: 'VM',
+    achievement: 'Revamped the MUST Annual Comrades Gala and inter-faculty championship leagues.'
+  },
+
+  // ── 3. Delegates ───────────────────────────────────────────────────
+  {
+    id: 'd1',
+    name: 'Hon. Brian Mokaya',
+    position: 'Past SCI Delegate (Computing & Informatics)',
+    term: '2024/2025',
+    category: 'Delegates',
+    avatarInitials: 'BM',
+    achievement: 'Advocated for computer lab software licenses and university hackathon funding for tech students.'
+  },
+  {
+    id: 'd2',
+    name: 'Hon. Cynthia Nyaboke',
+    position: 'Past SBE Delegate (Business & Economics)',
+    term: '2024/2025',
+    category: 'Delegates',
+    avatarInitials: 'CN',
+    achievement: 'Organized career placement workshops and entrepreneurship incubators for commerce students.'
+  },
+  {
+    id: 'd3',
+    name: 'Hon. Erick Mose',
+    position: 'Past SEA Delegate (Engineering & Architecture)',
+    term: '2024/2025',
+    category: 'Delegates',
+    avatarInitials: 'EM',
+    achievement: 'Secured workshop equipment upgrades and engineering industrial attachment sponsorships.'
+  },
+  {
+    id: 'd4',
+    name: 'Hon. Ruth Bosibori',
+    position: 'Past SHS Delegate (Health Sciences)',
+    term: '2023/2024',
+    category: 'Delegates',
+    avatarInitials: 'RB',
+    achievement: 'Spearheaded clinical rotation transport logistics and medical student community outreach camps.'
+  },
+  {
+    id: 'd5',
+    name: 'Hon. Jared Onduso',
+    position: 'Past SAFS Delegate (Agriculture & Food Science)',
+    term: '2023/2024',
+    category: 'Delegates',
+    avatarInitials: 'JO',
+    achievement: 'Initiated modern greenhouse farm research programs and agribusiness value-addition seminars.'
+  },
+  {
+    id: 'd6',
+    name: 'Hon. Lilian Kwamboka',
+    position: 'Past SED Delegate (Education)',
+    term: '2023/2024',
+    category: 'Delegates',
+    avatarInitials: 'LK',
+    achievement: 'Coordinated teaching practice orientation workshops and student-teacher placement facilitation.'
   }
 ]
 
+const CATEGORIES: { label: LeaderCategory; icon: any }[] = [
+  { label: 'House Leaders', icon: Landmark },
+  { label: 'SAMU Leaders', icon: GraduationCap },
+  { label: 'Delegates', icon: Users },
+]
+
 export default function EmeritusLeadersPage() {
-  const [selectedTerm, setSelectedTerm] = useState<string>('ALL')
+  const [selectedCategory, setSelectedCategory] = useState<LeaderCategory>('House Leaders')
 
-  const terms = ['ALL', '2024/2025', '2023/2024']
-
-  const filteredLeaders = selectedTerm === 'ALL'
-    ? EMERITUS_LEADERS
-    : EMERITUS_LEADERS.filter(l => l.term === selectedTerm)
+  const filteredLeaders = EMERITUS_LEADERS.filter(l => l.category === selectedCategory)
 
   return (
     <PublicLayout>
@@ -96,20 +211,21 @@ export default function EmeritusLeadersPage() {
               Past leaders who shaped and served GUSA
             </p>
 
-            {/* Term Filter Pills */}
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
-              {terms.map((term) => (
+            {/* 3 Category Filter Buttons: House Leaders, SAMU Leaders, Delegates */}
+            <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+              {CATEGORIES.map(({ label, icon: Icon }) => (
                 <button
-                  key={term}
-                  onClick={() => setSelectedTerm(term)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    selectedTerm === term
-                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25'
+                  key={label}
+                  type="button"
+                  onClick={() => setSelectedCategory(label)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                    selectedCategory === label
+                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25 scale-[1.02]'
                       : 'bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-violet-500/30'
                   }`}
                 >
-                  <Calendar size={13} />
-                  <span>{term === 'ALL' ? 'All Cohorts' : `Cohort ${term}`}</span>
+                  <Icon size={14} className={selectedCategory === label ? 'text-white' : 'text-violet-400'} />
+                  <span>{label}</span>
                 </button>
               ))}
             </div>
@@ -252,7 +368,7 @@ export default function EmeritusLeadersPage() {
                       }}
                     >
                       <Award size={11} className="text-violet-400" />
-                      EMERITUS
+                      {leader.category.toUpperCase().replace('S', '')}
                     </span>
                   </div>
 
