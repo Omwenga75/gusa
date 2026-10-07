@@ -584,7 +584,7 @@ export default async function HomePage() {
                   DF
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Daniel Fischer</h4>
+                  <h4 className="text-white font-bold text-sm truncate">Daniel, Fischer</h4>
                   <p className="text-violet-400 text-xs truncate">Alumnus • School of Education</p>
                 </div>
               </div>
@@ -632,7 +632,7 @@ export default async function HomePage() {
                   EO
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-bold text-sm truncate">Eli Oenga</h4>
+                  <h4 className="text-white font-bold text-sm truncate">Eli, Oenga</h4>
                   <p className="text-pink-400 text-xs truncate">Alumnus • School of Education</p>
                 </div>
               </div>
