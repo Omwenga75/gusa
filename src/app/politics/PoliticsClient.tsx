@@ -36,8 +36,7 @@ const SAMU_EXECUTIVE_SEATS = [
   'Finance',
   'HCA',
   'Sports, Gender & Social Welfare Secretary',
-  'Academics & Affairs Secretary',
-  'Other / Custom Seat'
+  'Academics & Affairs Secretary'
 ];
 
 const DELEGATE_SEATS = [
@@ -47,8 +46,9 @@ const DELEGATE_SEATS = [
   'School of Business & Economics Delegate',
   'School of Agriculture & Food Science Delegate',
   'School of Education Delegate',
-  'School of Nursing & Health Sciences Delegate',
-  'General Campus Delegate'
+  'School of Nursing Delegate',
+  'School of Health Sciences Delegate',
+  'PWD Delegate'
 ];
 
 interface PositionCard {
@@ -516,23 +516,8 @@ export default function PoliticsClient() {
                           {seat}
                         </option>
                       ))}
-                      <option value="Other">Other / Custom Seat</option>
                     </select>
                   </div>
-
-                  {/* Custom Position if "Other" */}
-                  {selectedPosition === 'Other' && (
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Type seat title (e.g. Deputy Delegate)"
-                        value={customPosition}
-                        onChange={e => setCustomPosition(e.target.value)}
-                        className="w-full bg-slate-900 border border-violet-500/40 rounded-lg py-2 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500"
-                        required
-                      />
-                    </div>
-                  )}
                 </div>
 
                 {/* Candidate Personal Details */}
