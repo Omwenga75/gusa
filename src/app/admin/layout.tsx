@@ -19,11 +19,13 @@ import {
   Bell,
   LogOut,
   Menu,
-  X
+  X,
+  Vote
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { label: 'Politics', path: '/admin/politics', icon: Vote },
   { label: 'Members', path: '/admin/members', icon: Users },
   { label: 'Events', path: '/admin/events', icon: Calendar },
   { label: 'Posts / News', path: '/admin/news', icon: Newspaper },
@@ -34,6 +36,7 @@ const navItems = [
 ];
 
 const SEARCHABLE_PAGES: Record<string, { placeholder: string }> = {
+  '/admin/politics': { placeholder: 'Search aspirants by name, reg no, seat...' },
   '/admin/events': { placeholder: 'Search events by title, venue...' },
   '/admin/gallery': { placeholder: 'Search albums by name...' },
   '/admin/welfare': { placeholder: 'Search welfare initiatives by title...' },

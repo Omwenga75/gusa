@@ -1,38 +1,93 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Vote,
   ShieldCheck,
-  Award,
-  Users,
   Calendar,
-  FileText,
   CheckCircle2,
   AlertCircle,
-  ArrowRight,
   Scale,
-  Megaphone,
-  BookOpen
+  X,
+  Send,
+  User,
+  Mail,
+  Phone,
+  GraduationCap,
+  MapPin,
+  Sparkles,
+  FileCheck
 } from 'lucide-react';
+
+interface PositionCard {
+  title: string;
+  category: string;
+  description: string;
+  requirements: string[];
+  status: string;
+  availableSeats: string[];
+}
 
 export default function PoliticsClient() {
   const [activeTab, setActiveTab] = useState<'aspirants' | 'elections'>('aspirants');
 
-  const positions = [
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Executive Positions');
+  const [selectedPosition, setSelectedPosition] = useState<string>('President / Chairperson');
+  const [customPosition, setCustomPosition] = useState<string>('');
+
+  // Form Fields State
+  const [fullName, setFullName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [regNumber, setRegNumber] = useState<string>('');
+  const [yearOfStudy, setYearOfStudy] = useState<string>('Year 3');
+  const [county, setCounty] = useState<'Kisii' | 'Nyamira'>('Kisii');
+  const [subcounty, setSubcounty] = useState<string>('');
+  const [statement, setStatement] = useState<string>('');
+
+  // Submission Status
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmittedSuccess, setIsSubmittedSuccess] = useState<boolean>(false);
+
+  const positions: PositionCard[] = [
     {
       title: 'Executive Positions',
+      category: 'Executive Positions',
       description: 'The executive leadership steering GUSA policy, campus administration representation, and overall member advocacy.',
       requirements: ['Must be in 2nd year or above', 'Good academic standing', 'Proven leadership track record'],
-      status: 'Nominations Open'
+      status: 'Nominations Open',
+      availableSeats: [
+        'President / Chairperson',
+        'Vice Chairperson',
+        'Secretary General',
+        'Treasurer / Finance Director',
+        'Organizing Secretary',
+        'Gender & Social Welfare Secretary',
+        'Academics & Affairs Secretary'
+      ]
     },
     {
       title: 'SAMU & Delegate Positions',
-      description: 'Leaders representing GUSA as delegates and Students Association of Meru University(SAMU)',
-      requirements: ['Strong organizational skills', 'Active member for at least 1 academic year'],
-      status: 'Nominations Open'
+      category: 'SAMU & Delegate Positions',
+      description: 'Leaders representing GUSA as delegates and Students Association of Meru University (SAMU) representatives.',
+      requirements: ['Strong organizational skills', 'Active member for at least 1 academic year', 'Enthusiasm for student welfare'],
+      status: 'Nominations Open',
+      availableSeats: [
+        'SAMU Executive Representative',
+        'SAMU Congress Delegate',
+        'School of Pure & Applied Sciences Delegate',
+        'School of Engineering & Architecture Delegate',
+        'School of Computing & Informatics Delegate',
+        'School of Business & Economics Delegate',
+        'School of Agriculture & Food Science Delegate',
+        'School of Education Delegate',
+        'School of Nursing & Health Sciences Delegate',
+        'General Campus Delegate'
+      ]
     }
   ];
 
@@ -63,12 +118,119 @@ export default function PoliticsClient() {
     }
   ];
 
+  const handleOpenModal = (category: string, defaultSeat?: string) => {
+    setSelectedCategory(category);
+    const found = positions.find(p => p.category === category);
+    if (defaultSeat) {
+      setSelectedPosition(defaultSeat);
+    } else if (found && found.availableSeats.length > 0) {
+      setSelectedPosition(found.availableSeats[0]);
+    } else {
+      setSelectedPosition('President / Chairperson');
+    }
+    setCustomPosition('');
+    setSubmitError(null);
+    setIsSubmittedSuccess(false);
+    setIsModalOpen(true);
+  };
+
+  const handleCategoryChange = (newCategory: string) => {
+    setSelectedCategory(newCategory);
+    const found = positions.find(p => p.category === newCategory);
+    if (found && found.availableSeats.length > 0) {
+      setSelectedPosition(found.availableSeats[0]);
+    }
+  };
+
+  const handleSubmitNomination = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+
+    // Form validation
+    if (!fullName.trim()) {
+      setSubmitError('Please enter your full name.');
+      return;
+    }
+    if (!email.trim() || !email.includes('@')) {
+      setSubmitError('Please provide a valid email address.');
+      return;
+    }
+    if (!phone.trim()) {
+      setSubmitError('Please provide a valid phone number.');
+      return;
+    }
+    if (!regNumber.trim()) {
+      setSubmitError('Please provide your university registration number.');
+      return;
+    }
+    if (!county) {
+      setSubmitError('Please select your county of origin (Kisii or Nyamira).');
+      return;
+    }
+
+    const finalPosition = selectedPosition === 'Other' && customPosition.trim()
+      ? customPosition.trim()
+      : selectedPosition;
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch('/api/politics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          regNumber: regNumber.trim().toUpperCase(),
+          yearOfStudy,
+          county,
+          subcounty: subcounty.trim() || null,
+          positionCategory: selectedCategory,
+          position: finalPosition,
+          statement: statement.trim() || null
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit nomination. Please try again.');
+      }
+
+      setIsSubmittedSuccess(true);
+    } catch (err: any) {
+      setSubmitError(err.message || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetFormAndClose = () => {
+    setIsModalOpen(false);
+    setIsSubmittedSuccess(false);
+    setSubmitError(null);
+    setFullName('');
+    setEmail('');
+    setPhone('');
+    setRegNumber('');
+    setSubcounty('');
+    setStatement('');
+  };
+
+  const currentAvailableSeats =
+    positions.find(p => p.category === selectedCategory)?.availableSeats || [];
+
   return (
     <PublicLayout>
       {/* ── HERO BANNER ───────────────────────────────────── */}
       <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4">
+              <Vote size={14} /> GUSA Electoral Commission 2026/2027
+            </div>
+
             <h1
               style={{
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
@@ -82,7 +244,7 @@ export default function PoliticsClient() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Elected leaders representing GUSA Community.
+              Elected leaders representing GUSA Community across Kisii &amp; Nyamira chapters at Meru University.
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
@@ -119,13 +281,20 @@ export default function PoliticsClient() {
           {activeTab === 'aspirants' && (
             <div>
               <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Executive, SAMU & Delegate Positions</h2>
-                <p className="text-slate-400 text-sm">Positions open for contestation in the upcoming GUSA General Elections.</p>
+                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">
+                  Executive, SAMU &amp; Delegate Positions
+                </h2>
+                <p className="text-slate-400 text-sm">
+                  Positions open for contestation in the upcoming GUSA General Elections. Click below to submit your official expression of interest.
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {positions.map((pos, idx) => (
-                  <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-white/10 hover:border-violet-500/40 transition-all flex flex-col justify-between">
+                  <div
+                    key={idx}
+                    className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-950/80 border border-white/10 hover:border-violet-500/40 transition-all flex flex-col justify-between"
+                  >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <span className="text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-3 py-1 rounded-full border border-violet-500/20">
@@ -133,30 +302,76 @@ export default function PoliticsClient() {
                         </span>
                         <Scale size={18} className="text-slate-400" />
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{pos.title}</h3>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{pos.title}</h3>
                       <p className="text-slate-300 text-sm leading-relaxed mb-4">{pos.description}</p>
-                      
-                      <div className="bg-slate-900/80 p-3.5 rounded-xl border border-white/5 mb-4">
-                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Requirements:</p>
-                        <ul className="space-y-1.5">
+
+                      <div className="bg-slate-900/80 p-4 rounded-xl border border-white/5 mb-4">
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">
+                          Electoral Requirements:
+                        </p>
+                        <ul className="space-y-2">
                           {pos.requirements.map((req, rIdx) => (
                             <li key={rIdx} className="text-xs text-slate-300 flex items-center gap-2">
-                              <CheckCircle2 size={13} className="text-violet-400 flex-shrink-0" />
+                              <CheckCircle2 size={14} className="text-violet-400 flex-shrink-0" />
                               <span>{req}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
+
+                      <div className="mb-5">
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                          Key Contestable Seats:
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {pos.availableSeats.slice(0, 4).map((seat, sIdx) => (
+                            <span
+                              key={sIdx}
+                              className="text-[11px] bg-slate-800/80 text-slate-300 border border-slate-700/60 px-2.5 py-1 rounded-md"
+                            >
+                              {seat}
+                            </span>
+                          ))}
+                          {pos.availableSeats.length > 4 && (
+                            <span className="text-[11px] bg-violet-500/10 text-violet-300 border border-violet-500/20 px-2.5 py-1 rounded-md font-semibold">
+                              +{pos.availableSeats.length - 4} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
-                    <Link
-                      href="/contact"
-                      className="btn-glass w-full py-2.5 rounded-xl text-xs font-bold text-center text-slate-200 hover:text-white border border-white/10 hover:border-violet-500/30 mt-2 block"
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(pos.category)}
+                      className="w-full py-3 rounded-xl text-sm font-bold text-center text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                      Express Interest / Nominate
-                    </Link>
+                      <Sparkles size={16} /> Express Interest / Nominate
+                    </button>
                   </div>
                 ))}
+              </div>
+
+              {/* Call to action notice banner */}
+              <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-violet-900/30 via-slate-900 to-blue-900/30 border border-violet-500/20 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-violet-400 flex-shrink-0 mx-auto md:mx-0">
+                    <Vote size={24} />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white">GUSA Independent Electoral Board</h4>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      All nominations are reviewed transparently and governed by the GUSA Meru University Constitution.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleOpenModal('Executive Positions')}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-violet-300 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 transition-all cursor-pointer whitespace-nowrap"
+                >
+                  Submit Nomination Papers
+                </button>
               </div>
             </div>
           )}
@@ -164,13 +379,16 @@ export default function PoliticsClient() {
           {activeTab === 'elections' && (
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-8 sm:mb-12">
-                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Elections Road Map & Timeline</h2>
+                <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Elections Road Map &amp; Timeline</h2>
                 <p className="text-slate-400 text-sm">Key milestones for the upcoming GUSA General Elections cycle.</p>
               </div>
 
               <div className="space-y-4 sm:space-y-6">
                 {timeline.map((item, idx) => (
-                  <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-white/10 flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+                  <div
+                    key={idx}
+                    className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-white/10 flex flex-col sm:flex-row items-start gap-4 sm:gap-5"
+                  >
                     <div className="w-14 h-14 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex flex-col items-center justify-center text-violet-400 font-bold flex-shrink-0">
                       <Calendar size={18} className="mb-1" />
                       <span className="text-[10px] tracking-wider uppercase">{item.date}</span>
@@ -191,6 +409,356 @@ export default function PoliticsClient() {
           )}
         </div>
       </section>
+
+      {/* ── NOMINATION FORM POPUP MODAL ────────────────────── */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn"
+          onClick={resetFormAndClose}
+        >
+          <div
+            className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-slate-900 border border-violet-500/30 rounded-2xl shadow-2xl shadow-black/80 text-white p-5 sm:p-7 relative"
+            onClick={e => e.stopPropagation()}
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(124, 58, 237, 0.4) transparent'
+            }}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={resetFormAndClose}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 p-1.5 rounded-lg transition-all cursor-pointer border border-white/10"
+              aria-label="Close nomination form"
+            >
+              <X size={18} />
+            </button>
+
+            {isSubmittedSuccess ? (
+              /* Success confirmation view */
+              <div className="text-center py-6 sm:py-8 space-y-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+                  <CheckCircle2 size={36} />
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-extrabold text-white">Nomination Submitted!</h3>
+                  <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                    Thank you, <strong className="text-white">{fullName}</strong>. Your expression of interest for{' '}
+                    <span className="text-violet-400 font-bold">
+                      {selectedPosition === 'Other' && customPosition ? customPosition : selectedPosition}
+                    </span>{' '}
+                    ({county} County) has been safely transmitted to the GUSA Executive Electoral Administration.
+                  </p>
+                </div>
+
+                <div className="bg-slate-950/80 p-4 rounded-xl border border-white/10 text-left max-w-md mx-auto text-xs space-y-2 text-slate-300">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Reg Number:</span>
+                    <span className="font-bold text-white">{regNumber.toUpperCase()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Year of Study:</span>
+                    <span className="font-bold text-white">{yearOfStudy}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">County:</span>
+                    <span className="font-bold text-emerald-400">{county}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Contact:</span>
+                    <span className="font-bold text-white">{email} • {phone}</span>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={resetFormAndClose}
+                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-bold text-sm shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer"
+                  >
+                    Done &amp; Return to Politics
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Active Nomination Form */
+              <form onSubmit={handleSubmitNomination} className="space-y-4">
+                {/* Modal Title */}
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-400 uppercase tracking-wider mb-1">
+                    <Vote size={14} /> Official Aspirant Registration
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-white">
+                    Express Interest &amp; Nominate
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Please provide your university credentials and electoral details below to register your candidacy.
+                  </p>
+                </div>
+
+                {/* Error Banner */}
+                {submitError && (
+                  <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+                    <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
+                {/* Category & Position Selection */}
+                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-white/5 space-y-3">
+                  {/* Category Switcher */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Position Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {positions.map(p => (
+                        <button
+                          key={p.category}
+                          type="button"
+                          onClick={() => handleCategoryChange(p.category)}
+                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
+                            selectedCategory === p.category
+                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-sm'
+                              : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {p.category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Seat / Position Dropdown */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                      Specific Seat Contested
+                    </label>
+                    <select
+                      value={selectedPosition}
+                      onChange={e => setSelectedPosition(e.target.value)}
+                      className="w-full bg-slate-900 border border-white/10 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-violet-500"
+                    >
+                      {currentAvailableSeats.map(seat => (
+                        <option key={seat} value={seat}>
+                          {seat}
+                        </option>
+                      ))}
+                      <option value="Other">Other / Custom Seat</option>
+                    </select>
+                  </div>
+
+                  {/* Custom Position if "Other" */}
+                  {selectedPosition === 'Other' && (
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Type seat title (e.g. Deputy Delegate)"
+                        value={customPosition}
+                        onChange={e => setCustomPosition(e.target.value)}
+                        className="w-full bg-slate-900 border border-violet-500/40 rounded-lg py-2 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500"
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Candidate Personal Details */}
+                <div className="space-y-3">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Full Name <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Dennis Omwenga"
+                        value={fullName}
+                        onChange={e => setFullName(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email & Phone Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Email */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Email Address <span className="text-red-400">*</span>
+                      </label>
+                      <div className="relative">
+                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="email"
+                          required
+                          placeholder="dennis@example.com"
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Phone (WhatsApp) <span className="text-red-400">*</span>
+                      </label>
+                      <div className="relative">
+                        <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="tel"
+                          required
+                          placeholder="0712 345 678"
+                          value={phone}
+                          onChange={e => setPhone(e.target.value)}
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Reg Number & Year of Study Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Registration Number */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Registration Number <span className="text-red-400">*</span>
+                      </label>
+                      <div className="relative">
+                        <GraduationCap size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. CT201/101234/23"
+                          value={regNumber}
+                          onChange={e => setRegNumber(e.target.value)}
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors uppercase"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Year of Study */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Year of Study <span className="text-red-400">*</span>
+                      </label>
+                      <select
+                        value={yearOfStudy}
+                        onChange={e => setYearOfStudy(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
+                      >
+                        <option value="Year 1">Year 1</option>
+                        <option value="Year 2">Year 2</option>
+                        <option value="Year 3">Year 3</option>
+                        <option value="Year 4">Year 4</option>
+                        <option value="Year 5">Year 5</option>
+                        <option value="Postgraduate">Postgraduate</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* County of Origin (Kisii vs Nyamira Selection) */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      County of Origin <span className="text-red-400">*</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setCounty('Kisii')}
+                        className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
+                          county === 'Kisii'
+                            ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-lg shadow-sky-500/10'
+                            : 'bg-slate-950/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                        }`}
+                      >
+                        <MapPin size={15} className={county === 'Kisii' ? 'text-sky-400' : 'text-slate-500'} />
+                        <span>Kisii County</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setCounty('Nyamira')}
+                        className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
+                          county === 'Nyamira'
+                            ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10'
+                            : 'bg-slate-950/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                        }`}
+                      >
+                        <MapPin size={15} className={county === 'Nyamira' ? 'text-purple-400' : 'text-slate-500'} />
+                        <span>Nyamira County</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Sub-county / Constituency (Optional) */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Sub-County / Constituency <span className="text-slate-500 text-[10px]">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Kitutu Chache, Borabu, West Mugirango, Bonchari"
+                      value={subcounty}
+                      onChange={e => setSubcounty(e.target.value)}
+                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                    />
+                  </div>
+
+                  {/* Brief Statement / Vision (Optional) */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Brief Leadership Statement / Vision <span className="text-slate-500 text-[10px]">(Optional)</span>
+                    </label>
+                    <textarea
+                      rows={3}
+                      placeholder="Share your goals and vision for GUSA students..."
+                      value={statement}
+                      onChange={e => setStatement(e.target.value)}
+                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Form Buttons */}
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={resetFormAndClose}
+                    className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-white/10 transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Submitting Application...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send size={14} />
+                        <span>Submit Nomination</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </PublicLayout>
   );
 }

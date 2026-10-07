@@ -15,7 +15,8 @@ import {
   Award,
   ShieldCheck,
   CheckCircle2,
-  Bell
+  Bell,
+  Vote
 } from 'lucide-react';
 
 export const revalidate = 0; // Ensure fresh DB counts on every page load
@@ -25,7 +26,7 @@ interface ActivityItem {
   title: string;
   subtitle: string;
   timestamp: Date;
-  type: 'leader' | 'message' | 'event' | 'news' | 'user' | 'system' | 'welfare';
+  type: 'leader' | 'message' | 'event' | 'news' | 'user' | 'system' | 'welfare' | 'nomination';
 }
 
 function formatRelativeTime(date: Date): string {
@@ -49,12 +50,14 @@ export default async function AdminDashboard() {
     publishedNewsCount,
     activeProjects,
     unreadMessages,
+    totalNominations,
     rawActivityLogs,
     recentMessages,
     recentLeaders,
     recentEventsList,
     recentPostsList,
-    recentUsersList
+    recentUsersList,
+    recentNominationsList
   ] = await Promise.all([
     prisma.user.count(),
     prisma.event.count({ where: { status: 'PUBLISHED' } }),
@@ -62,6 +65,7 @@ export default async function AdminDashboard() {
     prisma.post.count({ where: { status: 'PUBLISHED' } }),
     prisma.project.count(),
     prisma.contactMessage.count({ where: { status: 'UNREAD' } }),
+    prisma.nomination.count(),
     prisma.activityLog.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
@@ -88,6 +92,10 @@ export default async function AdminDashboard() {
       orderBy: { createdAt: 'desc' }
     }),
     prisma.user.findMany({
+      take: 3,
+      orderBy: { createdAt: 'desc' }
+    }),
+    prisma.nomination.findMany({
       take: 3,
       orderBy: { createdAt: 'desc' }
     })
@@ -118,7 +126,18 @@ export default async function AdminDashboard() {
     });
   });
 
-  // 3. Recent leaders updated/added
+  // 3. Recent nominations
+  recentNominationsList.forEach((nom) => {
+    activities.push({
+      id: `nom-${nom.id}`,
+      title: `Aspirant: ${nom.fullName}`,
+      subtitle: `${nom.position} (${nom.county} County)`,
+      timestamp: nom.createdAt,
+      type: 'nomination'
+    });
+  });
+
+  // 4. Recent leaders updated/added
   recentLeaders.forEach((ldr) => {
     activities.push({
       id: `ldr-${ldr.id}`,
@@ -188,6 +207,8 @@ export default async function AdminDashboard() {
 
   const getTypeStyle = (type: ActivityItem['type']) => {
     switch (type) {
+      case 'nomination':
+        return { color: '#c084fc', bg: 'rgba(168, 85, 247, 0.15)', icon: Vote };
       case 'leader':
         return { color: '#a78bfa', bg: 'rgba(124, 58, 237, 0.15)', icon: Award };
       case 'message':
@@ -284,6 +305,10 @@ export default async function AdminDashboard() {
             <h2 className={styles.cardTitle}>Quick Operations</h2>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <Link href="/admin/politics" className={styles.btnOutline}>
+              <span>Review Electoral Aspirants</span>
+              <Vote size={16} />
+            </Link>
             <Link href="/admin/events" className={styles.btnOutline}>
               <span>Create New Event</span>
               <Plus size={16} />
