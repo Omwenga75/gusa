@@ -318,27 +318,6 @@ export default function PoliticsClient() {
                           ))}
                         </ul>
                       </div>
-
-                      <div className="mb-5">
-                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                          Key Contestable Seats:
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {pos.availableSeats.slice(0, 4).map((seat, sIdx) => (
-                            <span
-                              key={sIdx}
-                              className="text-[11px] bg-slate-800/80 text-slate-300 border border-slate-700/60 px-2.5 py-1 rounded-md"
-                            >
-                              {seat}
-                            </span>
-                          ))}
-                          {pos.availableSeats.length > 4 && (
-                            <span className="text-[11px] bg-violet-500/10 text-violet-300 border border-violet-500/20 px-2.5 py-1 rounded-md font-semibold">
-                              +{pos.availableSeats.length - 4} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
                     </div>
 
                     <button
@@ -350,28 +329,6 @@ export default function PoliticsClient() {
                     </button>
                   </div>
                 ))}
-              </div>
-
-              {/* Call to action notice banner */}
-              <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-violet-900/30 via-slate-900 to-blue-900/30 border border-violet-500/20 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-violet-400 flex-shrink-0 mx-auto md:mx-0">
-                    <Vote size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-white">GUSA Independent Electoral Board</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      All nominations are reviewed transparently and governed by the GUSA Meru University Constitution.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleOpenModal('Executive Positions')}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-violet-300 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 transition-all cursor-pointer whitespace-nowrap"
-                >
-                  Submit Nomination Papers
-                </button>
               </div>
             </div>
           )}
