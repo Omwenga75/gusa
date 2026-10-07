@@ -93,7 +93,7 @@ export default function EmeritusLeadersPage() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Honoring the distinguished past leaders who shaped and served the Gusii University Students Association at MUST.
+              Past leaders who shaped and served GUSA
             </p>
 
             {/* Term Filter Pills */}
