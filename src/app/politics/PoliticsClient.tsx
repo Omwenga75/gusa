@@ -30,8 +30,14 @@ const EXECUTIVE_SEATS = [
 ];
 
 const SAMU_EXECUTIVE_SEATS = [
-  'SAMU Executive Representative',
-  'SAMU Congress Delegate'
+  'President / Chairperson',
+  'Vice Chairperson',
+  'Secretary General',
+  'Treasurer / Finance Director',
+  'Organizing Secretary',
+  'Gender & Social Welfare Secretary',
+  'Academics & Affairs Secretary',
+  'Other / Custom Seat'
 ];
 
 const DELEGATE_SEATS = [
