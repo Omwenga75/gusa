@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { readCache, writeCache } from '@/lib/cache';
+import { formatPositionName } from '@/lib/formatPosition';
 import {
   Vote,
   Users,
@@ -266,6 +267,18 @@ export default function AdminPoliticsPage() {
   const rejectedCount = counts.rejected || nominations.filter(n => n.status === 'REJECTED').length;
   const kisiiCount = counts.kisii || nominations.filter(n => n.county === 'Kisii').length;
   const nyamiraCount = counts.nyamira || nominations.filter(n => n.county === 'Nyamira').length;
+
+  // Compute permanent chronological aspirant numbers (Aspirant #1 for 1st registrant, #2 for 2nd, #3 for 3rd, etc.)
+  const aspirantNumberMap = React.useMemo(() => {
+    const sortedChronological = [...nominations].sort((a, b) =>
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+    const map: Record<string, number> = {};
+    sortedChronological.forEach((nom, index) => {
+      map[nom.id] = index + 1;
+    });
+    return map;
+  }, [nominations]);
 
   return (
     <>
@@ -555,7 +568,7 @@ export default function AdminPoliticsPage() {
                               {n.fullName}
                             </div>
                             <div style={{ fontSize: '0.72rem', color: '#a78bfa', fontWeight: 600, marginTop: '0.15rem' }}>
-                              Aspirant#{idx + 1}
+                              Aspirant#{aspirantNumberMap[n.id] || (idx + 1)}
                             </div>
                           </div>
                         </div>
@@ -601,7 +614,7 @@ export default function AdminPoliticsPage() {
                       {/* Seat / Position */}
                       <td>
                         <div style={{ fontWeight: 600, color: '#ffffff', fontSize: '0.85rem' }}>
-                          {n.position}
+                          {formatPositionName(n.position)}
                         </div>
                         {n.positionCategory && (
                           <div style={{ fontSize: '0.72rem', color: '#818cf8', marginTop: '0.15rem' }}>
@@ -732,11 +745,16 @@ export default function AdminPoliticsPage() {
                   {selectedNomination.fullName.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                    {selectedNomination.fullName}
-                  </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      {selectedNomination.fullName}
+                    </h2>
+                    <span style={{ fontSize: '0.72rem', color: '#a78bfa', background: 'rgba(124, 58, 237, 0.15)', border: '1px solid rgba(124, 58, 237, 0.3)', padding: '0.1rem 0.45rem', borderRadius: '4px', fontWeight: 700 }}>
+                      Aspirant#{aspirantNumberMap[selectedNomination.id] || 1}
+                    </span>
+                  </div>
                   <p style={{ fontSize: '0.8125rem', color: '#94a3b8', margin: '0.2rem 0 0 0' }}>
-                    Contesting: <strong style={{ color: '#c084fc' }}>{selectedNomination.position}</strong>
+                    Contesting: <strong style={{ color: '#c084fc' }}>{formatPositionName(selectedNomination.position)}</strong>
                   </p>
                 </div>
               </div>

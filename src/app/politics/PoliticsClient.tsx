@@ -50,14 +50,14 @@ const SAMU_EXECUTIVE_SEATS = [
 ];
 
 const DELEGATE_SEATS = [
-  'School of Pure & Applied Sciences Delegate',
-  'School of Engineering & Architecture Delegate',
-  'School of Computing & Informatics Delegate',
-  'School of Business & Economics Delegate',
-  'School of Agriculture & Food Science Delegate',
-  'School of Education Delegate',
-  'School of Nursing Delegate',
-  'School of Health Sciences Delegate',
+  'SAFS Delegate',
+  'SBE Delegate',
+  'SCI Delegate',
+  'SED Delegate',
+  'SEA Delegate',
+  'SHS Delegate',
+  'SON Delegate',
+  'SPA Delegate',
   'PWD Delegate'
 ];
 
