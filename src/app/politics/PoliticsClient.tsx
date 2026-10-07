@@ -70,8 +70,6 @@ export default function PoliticsClient() {
   const [regNumber, setRegNumber] = useState<string>('');
   const [yearOfStudy, setYearOfStudy] = useState<string>('Year 3');
   const [county, setCounty] = useState<'Kisii' | 'Nyamira'>('Kisii');
-  const [subcounty, setSubcounty] = useState<string>('');
-  const [statement, setStatement] = useState<string>('');
 
   // Submission Status
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -203,10 +201,8 @@ export default function PoliticsClient() {
           regNumber: regNumber.trim().toUpperCase(),
           yearOfStudy,
           county,
-          subcounty: subcounty.trim() || null,
           positionCategory: submittedCategory,
-          position: finalPosition,
-          statement: statement.trim() || null
+          position: finalPosition
         })
       });
 
@@ -232,8 +228,6 @@ export default function PoliticsClient() {
     setEmail('');
     setPhone('');
     setRegNumber('');
-    setSubcounty('');
-    setStatement('');
   };
 
   const availableSeats = getCurrentAvailableSeats();
@@ -458,19 +452,6 @@ export default function PoliticsClient() {
             ) : (
               /* Active Nomination Form */
               <form onSubmit={handleSubmitNomination} className="space-y-4">
-                {/* Modal Title */}
-                <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-400 uppercase tracking-wider mb-1">
-                    <Vote size={14} /> Official Aspirant Registration
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-                    Express Interest &amp; Nominate
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Please provide your university credentials and electoral details below to register your candidacy.
-                  </p>
-                </div>
-
                 {/* Error Banner */}
                 {submitError && (
                   <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
@@ -688,34 +669,6 @@ export default function PoliticsClient() {
                         <span>Nyamira County</span>
                       </button>
                     </div>
-                  </div>
-
-                  {/* Sub-county / Constituency (Optional) */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      Sub-County / Constituency <span className="text-slate-500 text-[10px]">(Optional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Kitutu Chache, Borabu, West Mugirango, Bonchari"
-                      value={subcounty}
-                      onChange={e => setSubcounty(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                    />
-                  </div>
-
-                  {/* Brief Statement / Vision (Optional) */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      Brief Leadership Statement / Vision <span className="text-slate-500 text-[10px]">(Optional)</span>
-                    </label>
-                    <textarea
-                      rows={3}
-                      placeholder="Share your goals and vision for GUSA students..."
-                      value={statement}
-                      onChange={e => setStatement(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors resize-none"
-                    />
                   </div>
                 </div>
 
