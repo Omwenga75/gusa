@@ -14,7 +14,6 @@ import {
   ChevronRight,
   Filter,
   Layers,
-  Sparkles,
   Camera,
   Share2,
   CheckCircle,

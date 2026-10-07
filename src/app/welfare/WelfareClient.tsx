@@ -8,7 +8,6 @@ import {
   Calendar,
   CheckCircle,
   Clock,
-  Sparkles,
   X,
   Share2,
   ChevronRight
@@ -247,7 +246,7 @@ export default function WelfareClient() {
                       >
                         {item.status === 'Ongoing' && <Clock size={12} />}
                         {item.status === 'Completed' && <CheckCircle size={12} />}
-                        {item.status === 'Upcoming' && <Sparkles size={12} />}
+                        {item.status === 'Upcoming' && <Calendar size={12} />}
                         {item.status}
                       </span>
 

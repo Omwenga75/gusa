@@ -17,7 +17,6 @@ import {
   X,
   Megaphone,
   BookOpen,
-  Sparkles,
   Mail,
   Bookmark,
   TrendingUp,
@@ -705,7 +704,7 @@ export default function NewsClient() {
                     gap: '0.4rem'
                   }}
                 >
-                  <Sparkles size={16} /> Key Highlights & Takeaways
+                  <Bookmark size={16} /> Key Highlights & Takeaways
                 </h4>
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {activeArticle.keyTakeaways.map((point, idx) => (

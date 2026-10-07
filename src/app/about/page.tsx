@@ -9,7 +9,7 @@ import {
   Users,
   ShieldCheck,
   Target,
-  Sparkles,
+  Globe,
   ChevronRight,
   Scale,
   Calendar,
@@ -194,7 +194,7 @@ export default function AboutPage() {
 
             <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <Sparkles size={20} color="#b78103" />
+                <Globe size={20} color="#b78103" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Cultural Preservation</h4>
               </div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: 1.6 }}>
