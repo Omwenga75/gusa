@@ -462,14 +462,7 @@ export default function PoliticsClient() {
                 <div className="p-3.5 rounded-xl bg-slate-950/70 border border-white/5 space-y-3">
                   {/* Category Display or Toggle */}
                   {selectedCategory === 'Executive Positions' ? (
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                        Position Category
-                      </label>
-                      <div className="w-full py-2.5 px-3 rounded-lg text-xs font-bold text-center bg-violet-600/20 border border-violet-500/50 text-violet-300 shadow-sm flex items-center justify-center gap-2">
-                        <Award size={15} /> Executive Positions (House Leaders)
-                      </div>
-                    </div>
+                    null
                   ) : (
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
