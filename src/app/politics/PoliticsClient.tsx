@@ -20,13 +20,23 @@ import {
 } from 'lucide-react';
 
 const EXECUTIVE_SEATS = [
-  'President / Chairperson',
+  'Chairperson',
   'Vice Chairperson',
   'Secretary General',
-  'Treasurer / Finance Director',
-  'Organizing Secretary',
-  'Gender & Social Welfare Secretary',
-  'Academics & Affairs Secretary'
+  'Speaker',
+  'Finance',
+  'Organising Secretary',
+  'OS Records',
+  'Sports Secretary',
+  'Legal Advisor',
+  'Editor',
+  'Welfare Coordinator',
+  'Nyamira County Rep',
+  'Kisii County Rep',
+  'Year 1 Rep',
+  'Year 2 Rep',
+  'Year 3 Rep',
+  'Year 4 Rep'
 ];
 
 const SAMU_EXECUTIVE_SEATS = [
@@ -613,8 +623,6 @@ export default function PoliticsClient() {
                         <option value="Year 2">Year 2</option>
                         <option value="Year 3">Year 3</option>
                         <option value="Year 4">Year 4</option>
-                        <option value="Year 5">Year 5</option>
-                        <option value="Postgraduate">Postgraduate</option>
                       </select>
                     </div>
                   </div>
