@@ -27,6 +27,26 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (phone) {
+      const stripped = phone.replace(/[\s\-().]/g, '')
+      const normalizedPhone = stripped.startsWith('+254') ? '0' + stripped.slice(4) : stripped
+      if (!/^(07|01)\d{8}$/.test(normalizedPhone)) {
+        return NextResponse.json(
+          { error: 'Invalid phone number format. Must be 10 digits (e.g. 07XXXXXXXX, 01XXXXXXXX, or +254...)' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (regNumber) {
+      if (!/^[A-Za-z]{2,4}\d{3}\/\d{5,7}\/(22|23|24|25|26)$/i.test(regNumber.trim())) {
+        return NextResponse.json(
+          { error: 'Invalid registration number format. Example: CT203/112233/23 (year must end with 22, 23, 24, 25, or 26).' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Validate Security Questions (case-insensitive)
     const normalizedAns1 = (securityAnswer1 || '').trim().toLowerCase()
     const normalizedAns2 = (securityAnswer2 || '').trim().toLowerCase()

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import PublicLayout from '@/components/layout/PublicLayout';
 import {
   Users,
@@ -11,9 +10,7 @@ import {
   Shield,
   Award,
   ChevronRight,
-  Zap,
   CheckCircle,
-  PhoneCall,
   MapPin,
   X,
   User,
@@ -21,26 +18,24 @@ import {
   Phone,
   GraduationCap,
   Building,
-  Lock,
   Send,
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
 
 const SCHOOL_OPTIONS = [
-  { value: 'School of Computing & Informatics', label: 'School of Computing & Informatics (SCI)' },
-  { value: 'School of Business & Economics', label: 'School of Business & Economics (SBE)' },
-  { value: 'School of Agriculture & Food Science', label: 'School of Agriculture & Food Science (SAFS)' },
-  { value: 'School of Education', label: 'School of Education (SED)' },
-  { value: 'School of Engineering & Architecture', label: 'School of Engineering & Architecture (SEA)' },
-  { value: 'School of Health Sciences', label: 'School of Health Sciences (SHS)' },
-  { value: 'School of Nursing', label: 'School of Nursing (SON)' },
-  { value: 'School of Pure & Applied Sciences', label: 'School of Pure & Applied Sciences (SPA)' }
+  { value: 'School of Computing & Informatics', label: 'SCI – Computing & Informatics' },
+  { value: 'School of Business & Economics', label: 'SBE – Business & Economics' },
+  { value: 'School of Agriculture & Food Science', label: 'SAFS – Agriculture & Food Science' },
+  { value: 'School of Education', label: 'SED – Education' },
+  { value: 'School of Engineering & Architecture', label: 'SEA – Engineering & Architecture' },
+  { value: 'School of Health Sciences', label: 'SHS – Health Sciences' },
+  { value: 'School of Nursing', label: 'SON – Nursing' },
+  { value: 'School of Pure & Applied Sciences', label: 'SPA – Pure & Applied Sciences' }
 ];
 
 export default function JoinPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [membershipTier, setMembershipTier] = useState<'Standard Member' | 'Associate Member'>('Standard Member');
 
   // Form State
   const [fullName, setFullName] = useState('');
@@ -49,8 +44,8 @@ export default function JoinPage() {
   const [regNumber, setRegNumber] = useState('');
   const [school, setSchool] = useState(SCHOOL_OPTIONS[0].value);
   const [yearOfStudy, setYearOfStudy] = useState('Year 1');
-  const [county, setCounty] = useState<'Kisii' | 'Nyamira'>('Kisii');
-  const [password, setPassword] = useState('');
+  const [county, setCounty] = useState<'Kisii' | 'Nyamira' | ''>('');
+  const [countySelected, setCountySelected] = useState(false);
   const [securityAnswer1, setSecurityAnswer1] = useState('');
   const [securityAnswer2, setSecurityAnswer2] = useState('');
 
@@ -59,10 +54,27 @@ export default function JoinPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
 
-  const handleOpenModal = (tier: 'Standard Member' | 'Associate Member' = 'Standard Member') => {
-    setMembershipTier(tier);
+  // ── Validators ────────────────────────────────────────────────────
+  const normalizePhone = (raw: string): string => {
+    const stripped = raw.replace(/[\s\-().]/g, '');
+    if (stripped.startsWith('+254')) return '0' + stripped.slice(4);
+    return stripped;
+  };
+
+  const isValidPhone = (raw: string): boolean => {
+    const n = normalizePhone(raw);
+    return /^(07|01)\d{8}$/.test(n);
+  };
+
+  // Format: LETTERS(2-4) + 3 digits / 5-7 digits / (22|23|24|25|26)
+  const isValidRegNumber = (raw: string): boolean => {
+    return /^[A-Za-z]{2,4}\d{3}\/\d{5,7}\/(22|23|24|25|26)$/i.test(raw.trim());
+  };
+
+  const handleOpenModal = () => {
     setSubmitError(null);
     setIsSubmittedSuccess(false);
+    setCountySelected(false);
     setIsModalOpen(true);
   };
 
@@ -73,11 +85,17 @@ export default function JoinPage() {
       setEmail('');
       setPhone('');
       setRegNumber('');
-      setPassword('');
+      setCounty('');
+      setCountySelected(false);
       setSecurityAnswer1('');
       setSecurityAnswer2('');
       setIsSubmittedSuccess(false);
     }
+  };
+
+  const handleCountySelect = (c: 'Kisii' | 'Nyamira') => {
+    setCounty(c);
+    setCountySelected(true);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -89,15 +107,19 @@ export default function JoinPage() {
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      setSubmitError('Please provide a valid university or personal email.');
+      setSubmitError('Please provide a valid email address.');
       return;
     }
-    if (!phone.trim()) {
-      setSubmitError('Please enter your phone/WhatsApp number.');
+    if (!isValidPhone(phone)) {
+      setSubmitError('Phone must be 10 digits (e.g. 0712345678 or +254712345678).');
       return;
     }
-    if (!regNumber.trim()) {
-      setSubmitError('Please provide your university registration number.');
+    if (!isValidRegNumber(regNumber)) {
+      setSubmitError('Registration number format: e.g. CT203/112233/23 — ending year must be 22–26.');
+      return;
+    }
+    if (!county) {
+      setSubmitError('Please select your county of origin.');
       return;
     }
 
@@ -110,12 +132,11 @@ export default function JoinPage() {
         body: JSON.stringify({
           fullName: fullName.trim(),
           email: email.trim().toLowerCase(),
-          phone: phone.trim(),
+          phone: normalizePhone(phone),
           regNumber: regNumber.trim().toUpperCase(),
           school,
           yearOfStudy,
           county,
-          password: password.trim() || undefined,
           securityAnswer1: securityAnswer1.trim(),
           securityAnswer2: securityAnswer2.trim()
         })
@@ -137,36 +158,12 @@ export default function JoinPage() {
   };
 
   const benefits = [
-    {
-      title: 'Community Connection',
-      description: 'Connect with fellow students from the Gusii region, forming lifelong friendships and a strong support network.',
-      icon: Users
-    },
-    {
-      title: 'Cultural Preservation',
-      description: 'Participate in events and activities that celebrate and preserve our rich Gusii heritage and traditions.',
-      icon: Globe
-    },
-    {
-      title: 'Academic Support',
-      description: 'Access mentorship programs, study groups, and academic resources tailored for our members.',
-      icon: BookOpen
-    },
-    {
-      title: 'Leadership Opportunities',
-      description: 'Develop your leadership skills by taking up roles in various committees and organizing events.',
-      icon: Star
-    },
-    {
-      title: 'Welfare & Support',
-      description: 'Benefit from our robust welfare system designed to support members during challenging emergency situations.',
-      icon: Shield
-    },
-    {
-      title: 'Career Growth',
-      description: 'Network with successful alumni and get access to exclusive career talks and mentoring opportunities.',
-      icon: Award
-    }
+    { title: 'Community Connection', description: 'Connect with fellow students from the Gusii region, forming lifelong friendships and a strong support network.', icon: Users },
+    { title: 'Cultural Preservation', description: 'Participate in events and activities that celebrate and preserve our rich Gusii heritage and traditions.', icon: Globe },
+    { title: 'Academic Support', description: 'Access mentorship programs, study groups, and academic resources tailored for our members.', icon: BookOpen },
+    { title: 'Leadership Opportunities', description: 'Develop your leadership skills by taking up roles in various committees and organizing events.', icon: Star },
+    { title: 'Welfare & Support', description: 'Benefit from our robust welfare system designed to support members during challenging emergency situations.', icon: Shield },
+    { title: 'Career Growth', description: 'Network with successful alumni and get access to exclusive career talks and mentoring opportunities.', icon: Award }
   ];
 
   const steps = [
@@ -177,22 +174,10 @@ export default function JoinPage() {
   ];
 
   const faqs = [
-    {
-      q: 'Who is eligible to join GUSA?',
-      a: 'Any student currently enrolled at Meru University of Science and Technology (MUST) who hails from or associates with the Gusii region is eligible to join.'
-    },
-    {
-      q: 'How much is the registration fee?',
-      a: 'The annual registration fee is Ksh 100, which is renewable every academic year.'
-    },
-    {
-      q: 'Do I have to speak Ekegusii to join?',
-      a: 'Not at all! While we celebrate our culture and language, fluency in Ekegusii is not a requirement. We welcome all who identify with or support our community.'
-    },
-    {
-      q: 'What if I am not from the Gusii region?',
-      a: 'We have an Associate Member tier for friends of GUSA! If you are passionate about our culture and want to participate in our events, you are welcome to join.'
-    }
+    { q: 'Who is eligible to join GUSA?', a: 'Any student currently enrolled at Meru University of Science and Technology (MUST) who hails from or associates with the Gusii region is eligible to join.' },
+    { q: 'How much is the registration fee?', a: 'The annual registration fee is Ksh 100, which is renewable every academic year.' },
+    { q: 'Do I have to speak Ekegusii to join?', a: 'Not at all! While we celebrate our culture and language, fluency in Ekegusii is not a requirement. We welcome all who identify with or support our community.' },
+    { q: 'What if I am not from the Gusii region?', a: 'We have an Associate Member tier for friends of GUSA! If you are passionate about our culture and want to participate in our events, you are welcome to join.' }
   ];
 
   return (
@@ -205,15 +190,7 @@ export default function JoinPage() {
               <Sparkles size={14} className="text-violet-400" />
               <span>Official Student Membership Portal</span>
             </div>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: '0.75rem',
-                color: 'var(--text-main)'
-              }}
-            >
+            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '0.75rem', color: 'var(--text-main)' }}>
               Join GUSA
             </h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
@@ -222,7 +199,7 @@ export default function JoinPage() {
             <div className="mt-6 flex justify-center">
               <button
                 type="button"
-                onClick={() => handleOpenModal('Standard Member')}
+                onClick={handleOpenModal}
                 className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
               >
                 <span>Register Now</span>
@@ -281,11 +258,7 @@ export default function JoinPage() {
                   ))}
                 </ul>
               </div>
-              <button
-                type="button"
-                onClick={() => handleOpenModal('Standard Member')}
-                className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all"
-              >
+              <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all">
                 Register Now
               </button>
             </div>
@@ -307,11 +280,7 @@ export default function JoinPage() {
                   ))}
                 </ul>
               </div>
-              <button
-                type="button"
-                onClick={() => handleOpenModal('Associate Member')}
-                className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto cursor-pointer transition-all"
-              >
+              <button type="button" onClick={handleOpenModal} className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto cursor-pointer transition-all">
                 Register as Associate
               </button>
             </div>
@@ -360,7 +329,7 @@ export default function JoinPage() {
       {/* ── Registration Modal ─────────────────────────────────────── */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
           onClick={handleCloseModal}
         >
           <div
@@ -375,15 +344,9 @@ export default function JoinPage() {
               <X size={20} />
             </button>
 
-            {/* Modal Header */}
+            {/* Modal Header — no tier badge */}
             <div className="mb-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold uppercase tracking-wider mb-2">
-                <Users size={13} />
-                <span>{membershipTier}</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-white">
-                Register as a GUSA Member
-              </h2>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Register as a GUSA Member</h2>
               <p className="text-xs sm:text-sm text-slate-400 mt-1">
                 Fill in your details below to activate your student membership.
               </p>
@@ -398,7 +361,7 @@ export default function JoinPage() {
                 <div>
                   <h3 className="text-xl font-bold text-white mb-1">Registration Successful!</h3>
                   <p className="text-sm text-slate-300 max-w-md mx-auto">
-                    Welcome to GUSA, <strong className="text-violet-400">{fullName}</strong>! Your registration details have been submitted and added to the official member directory.
+                    Welcome to GUSA, <strong className="text-violet-400">{fullName}</strong>! Your registration has been submitted and added to the official member directory.
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-950/80 border border-white/10 text-left text-xs space-y-2 text-slate-300">
@@ -432,25 +395,45 @@ export default function JoinPage() {
                   </div>
                 )}
 
-                {/* Full Name */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Full Name <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Dennis Omwenga"
-                      value={fullName}
-                      onChange={e => setFullName(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                    />
+                {/* Row 1: Full Name + School / Faculty */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Full Name <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Dennis Omwenga"
+                        value={fullName}
+                        onChange={e => setFullName(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      School / Faculty <span className="text-red-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <Building size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <select
+                        value={school}
+                        onChange={e => setSchool(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
+                      >
+                        {SCHOOL_OPTIONS.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
 
-                {/* Email & Phone Grid */}
+                {/* Row 2: Email + Phone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -478,16 +461,23 @@ export default function JoinPage() {
                       <input
                         type="tel"
                         required
-                        placeholder="0712 345 678"
+                        placeholder="0712345678 or +254712345678"
                         value={phone}
                         onChange={e => setPhone(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className={`w-full bg-slate-950/80 border rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none transition-colors ${
+                          phone && !isValidPhone(phone)
+                            ? 'border-red-500/60 focus:border-red-500'
+                            : 'border-white/10 focus:border-violet-500'
+                        }`}
                       />
                     </div>
+                    {phone && !isValidPhone(phone) && (
+                      <p className="text-red-400 text-[10px] mt-1">10 digits: 07XXXXXXXX, 01XXXXXXXX, or +254…</p>
+                    )}
                   </div>
                 </div>
 
-                {/* Reg Number & Year of Study Grid */}
+                {/* Row 3: Reg Number + Year of Study */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -498,12 +488,19 @@ export default function JoinPage() {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. CT201/101234/23"
+                        placeholder="e.g. CT203/112233/23"
                         value={regNumber}
                         onChange={e => setRegNumber(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors uppercase"
+                        className={`w-full bg-slate-950/80 border rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none transition-colors uppercase ${
+                          regNumber && !isValidRegNumber(regNumber)
+                            ? 'border-red-500/60 focus:border-red-500'
+                            : 'border-white/10 focus:border-violet-500'
+                        }`}
                       />
                     </div>
+                    {regNumber && !isValidRegNumber(regNumber) && (
+                      <p className="text-red-400 text-[10px] mt-1">Format: XX203/XXXXX/YY — year must be 22–26</p>
+                    )}
                   </div>
 
                   <div>
@@ -524,27 +521,6 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                {/* School / Faculty */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    School / Faculty <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    <Building size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <select
-                      value={school}
-                      onChange={e => setSchool(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
-                    >
-                      {SCHOOL_OPTIONS.map(opt => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
                 {/* County of Origin */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -553,7 +529,7 @@ export default function JoinPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
-                      onClick={() => setCounty('Kisii')}
+                      onClick={() => handleCountySelect('Kisii')}
                       className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
                         county === 'Kisii'
                           ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-lg shadow-sky-500/10'
@@ -566,7 +542,7 @@ export default function JoinPage() {
 
                     <button
                       type="button"
-                      onClick={() => setCounty('Nyamira')}
+                      onClick={() => handleCountySelect('Nyamira')}
                       className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
                         county === 'Nyamira'
                           ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10'
@@ -579,61 +555,44 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                {/* Optional Password */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Portal Account Password <span className="text-slate-500 font-normal">(Optional)</span>
-                  </label>
-                  <div className="relative">
-                    <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="password"
-                      placeholder="Optional or default Gusa@2026"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                    />
-                  </div>
-                </div>
+                {/* Security Questions — revealed only after county is selected */}
+                {countySelected && (
+                  <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Shield size={14} className="text-violet-400" />
+                      <span className="text-xs font-bold text-violet-300 uppercase tracking-wider">Security Verification</span>
+                    </div>
+                    <p className="text-xs text-slate-400 -mt-1">Answer both questions correctly to complete registration.</p>
 
-                {/* Security Questions */}
-                <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Shield size={14} className="text-violet-400" />
-                    <span className="text-xs font-bold text-violet-300 uppercase tracking-wider">Security Verification</span>
-                  </div>
-                  <p className="text-xs text-slate-400 -mt-1">Answer both questions correctly to complete registration.</p>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Naki ase chiombe chikolala akorokwa? <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Your answer..."
+                        value={securityAnswer1}
+                        onChange={e => setSecurityAnswer1(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                      />
+                    </div>
 
-                  {/* Q1 */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      Naki ase chiombe chikolala akorokwa? <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Your answer..."
-                      value={securityAnswer1}
-                      onChange={e => setSecurityAnswer1(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                    />
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        eyemo omente eyemo = ? <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Your answer..."
+                        value={securityAnswer2}
+                        onChange={e => setSecurityAnswer2(e.target.value)}
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                      />
+                    </div>
                   </div>
-
-                  {/* Q2 */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      eyemo omente eyemo = ? <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Your answer..."
-                      value={securityAnswer2}
-                      onChange={e => setSecurityAnswer2(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-                    />
-                  </div>
-                </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex items-center justify-end gap-3 pt-3">
