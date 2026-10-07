@@ -19,7 +19,10 @@ export async function GET() {
         phone: true,
         registrationNumber: true,
         course: true,
+        school: true,
         yearOfStudy: true,
+        county: true,
+        subcounty: true,
         createdAt: true,
       }
     })
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { name, email, role, status, password } = body
+    const { name, email, role, status, password, phone, registrationNumber, course, school, yearOfStudy, county, subcounty } = body
 
     if (!name || !email) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400 })
@@ -55,7 +58,14 @@ export async function POST(request: NextRequest) {
         email,
         passwordHash,
         role: role || 'MEMBER',
-        status: status || 'ACTIVE'
+        status: status || 'ACTIVE',
+        phone: phone || null,
+        registrationNumber: registrationNumber || null,
+        course: course || null,
+        school: school || null,
+        yearOfStudy: yearOfStudy ? String(yearOfStudy) : null,
+        county: county || null,
+        subcounty: subcounty || null,
       },
       select: {
         id: true,
@@ -63,6 +73,11 @@ export async function POST(request: NextRequest) {
         email: true,
         role: true,
         status: true,
+        phone: true,
+        registrationNumber: true,
+        school: true,
+        yearOfStudy: true,
+        county: true,
         createdAt: true
       }
     })

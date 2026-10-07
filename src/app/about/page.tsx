@@ -252,7 +252,7 @@ export default function AboutPage() {
                   the <strong>Gusii University Students Association – Meru (GUSA Meru)</strong>.
                 </p>
                 <p>
-                  Today, GUSA Meru encompasses over 1,200 active members across diploma, undergraduate, and postgraduate
+                  Today, GUSA Meru encompasses a thriving community of active members across diploma, undergraduate, and postgraduate
                   programs. We celebrate an unbroken record of peaceful democratic transitions, comprehensive emergency
                   welfare safety nets, vibrant cultural galas, and high-impact community outreach in Meru and beyond.
                 </p>
@@ -265,8 +265,8 @@ export default function AboutPage() {
                 </div>
                 <div className="hidden sm:block" style={{ width: '1px', height: '36px', backgroundColor: 'var(--border)' }} />
                 <div>
-                  <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.75rem)', fontWeight: 700, color: 'var(--primary)' }}>1,200+</h4>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Comrades Served</p>
+                  <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.75rem)', fontWeight: 700, color: 'var(--primary)' }}>Active</h4>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Comrades Community</p>
                 </div>
                 <div className="hidden sm:block" style={{ width: '1px', height: '36px', backgroundColor: 'var(--border)' }} />
                 <div>

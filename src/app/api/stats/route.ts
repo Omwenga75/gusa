@@ -6,20 +6,22 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const [
+      totalMembers,
       annualEvents,
       totalPhotos
     ] = await Promise.all([
+      prisma.user.count(),
       prisma.event.count({ where: { status: 'PUBLISHED' } }),
       prisma.galleryImage.count()
     ])
 
     return NextResponse.json(
       {
-        activeMembers: 1251,
+        activeMembers: totalMembers || 1,
         annualEvents: annualEvents || 0,
-        counties: 39,
+        counties: 2,
         totalPhotos: totalPhotos || 0,
-        subCounties: 39,
+        subCounties: 14,
         studentSupport: totalPhotos || 0
       },
       {
@@ -33,12 +35,12 @@ export async function GET() {
   } catch (error) {
     console.error('Stats API error:', error)
     return NextResponse.json({
-      activeMembers: 1251,
-      annualEvents: 3,
-      counties: 39,
-      totalPhotos: 6,
-      subCounties: 39,
-      studentSupport: 6
+      activeMembers: 1,
+      annualEvents: 0,
+      counties: 2,
+      totalPhotos: 0,
+      subCounties: 14,
+      studentSupport: 0
     })
   }
 }

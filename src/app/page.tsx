@@ -31,19 +31,20 @@ async function getHomePageData() {
       // Stats — never filtered by cutoff
       (async () => {
         try {
-          const [annualEvents, totalPhotos] = await Promise.all([
+          const [totalMembers, annualEvents, totalPhotos] = await Promise.all([
+            prisma.user.count(),
             prisma.event.count({ where: { status: { not: 'DRAFT' } } }),
             prisma.galleryImage.count(),
           ]);
           return {
-            activeMembers: 1251,
+            activeMembers: totalMembers,
             annualEvents,
-            counties: 39,
+            counties: 2,
             totalPhotos,
           };
         } catch (e) {
           console.error('Error fetching stats:', e);
-          return { activeMembers: 1251, annualEvents: 3, counties: 39, totalPhotos: 6 };
+          return { activeMembers: 1, annualEvents: 0, counties: 2, totalPhotos: 0 };
         }
       })(),
 
@@ -136,7 +137,7 @@ async function getHomePageData() {
   } catch (error) {
     console.error('getHomePageData error:', error);
     return {
-      stats: { activeMembers: 1251, annualEvents: 3, counties: 39, totalPhotos: 6 },
+      stats: { activeMembers: 1, annualEvents: 0, counties: 2, totalPhotos: 0 },
       events: [],
       albums: [],
       posts: [],
@@ -199,7 +200,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
             <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
               <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
-                {stats ? stats.activeMembers.toLocaleString() : '1,251'}
+                {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
               <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Active Members</p>
             </div>

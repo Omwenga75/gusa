@@ -8,16 +8,16 @@ export async function POST(request: NextRequest) {
     const { fullName, email, password, phone, regNumber, school, yearOfStudy, county, subcounty } = body
 
     // Validate required fields
-    if (!fullName || !email || !password) {
+    if (!fullName || !email) {
       return NextResponse.json(
-        { error: 'Full name, email, and password are required.' },
+        { error: 'Full name and email are required.' },
         { status: 400 }
       )
     }
 
-    if (password.length < 8) {
+    if (password && password.length < 6) {
       return NextResponse.json(
-        { error: 'Password must be at least 8 characters long.' },
+        { error: 'Password must be at least 6 characters long.' },
         { status: 400 }
       )
     }
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Hash password
-    const passwordHash = await bcrypt.hash(password, 10)
+    const passwordHash = await bcrypt.hash(password || 'Gusa@2026', 10)
 
     // Create user
     const user = await prisma.user.create({
