@@ -266,39 +266,8 @@ export default function EmeritusLeadersPage() {
                     background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    padding: '0 1rem',
                   }}
-                >
-                  {/* Status Badge */}
-                  <span
-                    style={{
-                      backgroundColor: 'rgba(10, 15, 29, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      color: '#e2e8f0',
-                      fontSize: '0.675rem',
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '9999px',
-                      fontWeight: 600,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        backgroundColor: '#10b981',
-                        boxShadow: '0 0 6px #10b981',
-                      }}
-                    />
-                    Cohort {leader.term}
-                  </span>
-                </div>
+                />
 
                 {/* Card Body */}
                 <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
