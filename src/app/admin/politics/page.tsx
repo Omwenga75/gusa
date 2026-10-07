@@ -447,16 +447,16 @@ export default function AdminPoliticsPage() {
           className={styles.statCard}
           style={{
             margin: 0,
-            borderColor: 'rgba(250, 204, 21, 0.25)',
-            background: 'linear-gradient(135deg, rgba(13, 18, 37, 0.9) 0%, rgba(30, 27, 75, 0.3) 100%)'
+            borderColor: 'rgba(250, 204, 21, 0.3)',
+            background: 'linear-gradient(135deg, rgba(13, 18, 37, 0.95) 0%, rgba(30, 27, 75, 0.35) 100%)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
           }}
         >
-          <div className={styles.statIcon} style={{ background: 'rgba(250, 204, 21, 0.15)', color: '#facc15' }}>
-            <Timer size={24} className="animate-pulse" />
-          </div>
-          <div className={styles.statInfo}>
-            <h3 style={{ whiteSpace: 'nowrap' }}>Nomination Countdown</h3>
-            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#facc15', fontFamily: 'monospace', marginTop: '0.2rem', display: 'flex', alignItems: 'baseline', gap: '2px', whiteSpace: 'nowrap' }}>
+          <div className={styles.statInfo} style={{ width: '100%' }}>
+            <h3 style={{ whiteSpace: 'nowrap', color: '#94a3b8' }}>Nomination Countdown</h3>
+            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#facc15', fontFamily: 'monospace', marginTop: '0.35rem', display: 'flex', alignItems: 'baseline', gap: '3px', whiteSpace: 'nowrap' }}>
               <span>{timeLeft.days}d</span>
               <span style={{ color: '#64748b' }}>:</span>
               <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
