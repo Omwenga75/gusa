@@ -3,19 +3,20 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Home, Users, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus } from 'lucide-react'
+import { Menu, X, Home, Users, Award, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Home',       href: '/',           icon: Home },
-  { label: 'Leadership', href: '/leadership', icon: Users },
-  { label: 'Events',     href: '/events',     icon: Calendar },
-  { label: 'Gallery',    href: '/gallery',    icon: Image },
-  { label: 'News',       href: '/news',       icon: Newspaper },
-  { label: 'Politics',   href: '/politics',   icon: Landmark },
-  { label: 'Welfare',    href: '/welfare',    icon: HeartHandshake },
-  { label: 'About',      href: '/about',      icon: Info },
-  { label: 'Contact',    href: '/contact',    icon: Mail },
-  { label: 'Join Us',    href: '/join',       icon: UserPlus },
+  { label: 'Home',             href: '/',                    icon: Home },
+  { label: 'Leadership',       href: '/leadership',          icon: Users },
+  { label: 'Emeritus Leaders', href: '/leadership/emeritus', icon: Award },
+  { label: 'Events',           href: '/events',              icon: Calendar },
+  { label: 'Gallery',          href: '/gallery',             icon: Image },
+  { label: 'News',             href: '/news',                icon: Newspaper },
+  { label: 'Politics',         href: '/politics',            icon: Landmark },
+  { label: 'Welfare',          href: '/welfare',             icon: HeartHandshake },
+  { label: 'About',            href: '/about',               icon: Info },
+  { label: 'Contact',          href: '/contact',             icon: Mail },
+  { label: 'Join Us',          href: '/join',                icon: UserPlus },
 ]
 
 export function Navbar() {
@@ -101,7 +102,7 @@ export function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => handleNavClick(href)}
-                  className={`px-2.5 xl:px-4 py-1.5 xl:py-2 rounded-full text-[11px] xl:text-xs font-semibold transition-all whitespace-nowrap ${
+                  className={`px-2 xl:px-3.5 py-1 xl:py-1.5 rounded-full text-[10.5px] xl:text-xs font-semibold transition-all whitespace-nowrap ${
                     active
                       ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30'
                       : '!text-slate-200 hover:!text-white hover:bg-white/10'

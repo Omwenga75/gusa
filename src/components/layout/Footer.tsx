@@ -50,6 +50,7 @@ export function Footer() {
               <li><Link href="/" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Home</Link></li>
               <li><Link href="/about" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">About GUSA</Link></li>
               <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leadership</Link></li>
+              <li><Link href="/leadership/emeritus" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Emeritus Leaders</Link></li>
               <li><Link href="/events" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Events & Programs</Link></li>
               <li><Link href="/politics" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Politics & Elections</Link></li>
               <li><Link href="/welfare" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Welfare & Initiatives</Link></li>
