@@ -219,7 +219,7 @@ export default function EventsPage() {
               Events
             </h1>
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              All GUSA academic forums, cultural festivals, sports fixtures, and student welfare initiatives.
+              All GUSA events
             </p>
           </div>
         </div>
