@@ -55,7 +55,10 @@ export default function GalleryPage() {
 
     setDeletingId(album.id);
     const prevAlbums = [...albums];
-    setAlbums(prev => prev.filter(a => a.id !== album.id));
+    const nextList = prevAlbums.filter(a => a.id !== album.id);
+    setAlbums(nextList);
+    writeCache(ADMIN_GALLERY_KEY, nextList);
+    clearCache('gallery');
 
     try {
       const res = await fetch(`/api/gallery/${album.id}`, {
@@ -64,15 +67,15 @@ export default function GalleryPage() {
 
       if (!res.ok) {
         setAlbums(prevAlbums);
+        writeCache(ADMIN_GALLERY_KEY, prevAlbums);
         alert('Failed to delete album.');
       } else {
-        const nextList = prevAlbums.filter(a => a.id !== album.id);
-        writeCache(ADMIN_GALLERY_KEY, nextList);
-        clearCache('gallery');
+        await fetchGallery();
       }
     } catch (err) {
       console.error(err);
       setAlbums(prevAlbums);
+      writeCache(ADMIN_GALLERY_KEY, prevAlbums);
       alert('Network error while deleting album.');
     } finally {
       setDeletingId(null);
@@ -101,6 +104,14 @@ export default function GalleryPage() {
       setIsLoading(false);
     }
     fetchGallery();
+
+    const handleCacheClear = (e: any) => {
+      if (!e.detail?.key || e.detail.key === ADMIN_GALLERY_KEY) {
+        fetchGallery();
+      }
+    };
+    window.addEventListener('gusa_cache_clear', handleCacheClear);
+    return () => window.removeEventListener('gusa_cache_clear', handleCacheClear);
   }, []);
 
   const handleImageUpload = async (index: number, file: File | undefined) => {
@@ -136,18 +147,40 @@ export default function GalleryPage() {
     setEditingAlbum(null);
   };
 
-  const handleOpenEdit = (album: Album) => {
+  const handleOpenEdit = async (album: Album) => {
     setEditingAlbum(album);
     setName(album.name);
     setDescription(album.description || '');
-    const existingUrls = (album.images && album.images.length > 0)
-      ? album.images.map(img => img.imageUrl)
-      : (album.coverImage ? [album.coverImage] : []);
-    const initialImages = Array(10).fill('');
-    existingUrls.slice(0, 10).forEach((url, i) => {
-      initialImages[i] = url;
-    });
-    setImages(initialImages);
+
+    const hasFullImages = album.images && album.images.length > 0 && album.images.some(img => Boolean(img.imageUrl));
+    if (hasFullImages) {
+      const existingUrls = album.images.map(img => img.imageUrl);
+      const initialImages = Array(10).fill('');
+      existingUrls.slice(0, 10).forEach((url, i) => {
+        initialImages[i] = url;
+      });
+      setImages(initialImages);
+    } else {
+      // If images were stripped in storage cache, seed coverImage and fetch full album on demand
+      const initialImages = Array(10).fill('');
+      if (album.coverImage) initialImages[0] = album.coverImage;
+      setImages(initialImages);
+
+      try {
+        const res = await fetch(`/api/gallery/${album.id}`, { cache: 'no-store' });
+        const data = await res.json();
+        if (data.album && Array.isArray(data.album.images)) {
+          const existingUrls = data.album.images.map((img: any) => img.imageUrl);
+          const freshImages = Array(10).fill('');
+          existingUrls.slice(0, 10).forEach((url: string, i: number) => {
+            freshImages[i] = url;
+          });
+          setImages(freshImages);
+        }
+      } catch (err) {
+        console.error('Failed to load full album images for editing:', err);
+      }
+    }
     setIsModalOpen(true);
   };
 
@@ -177,10 +210,22 @@ export default function GalleryPage() {
         });
 
         if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const updatedAlbum: Album = data.album || {
+            ...editingAlbum,
+            name: name.trim(),
+            description: description.trim(),
+            coverImage: finalUrls[0] || null,
+            images: finalUrls.map((url, i) => ({ id: `temp-${i}`, imageUrl: url }))
+          };
+
+          const nextAlbums = albums.map(a => a.id === updatedAlbum.id ? updatedAlbum : a);
+          setAlbums(nextAlbums);
+          writeCache(ADMIN_GALLERY_KEY, nextAlbums);
           clearCache('gallery');
           resetForm();
           setIsModalOpen(false);
-          fetchGallery();
+          await fetchGallery();
         } else {
           const errData = await res.json().catch(() => ({}));
           alert(errData.error || `Failed to update album (Status: ${res.status})`);
@@ -199,10 +244,22 @@ export default function GalleryPage() {
         });
 
         if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const newAlbum: Album = data.album || {
+            id: `temp-${Date.now()}`,
+            name: name.trim(),
+            description: description.trim(),
+            coverImage: finalUrls[0] || null,
+            images: finalUrls.map((url, i) => ({ id: `temp-${i}`, imageUrl: url }))
+          };
+
+          const nextAlbums = [newAlbum, ...albums];
+          setAlbums(nextAlbums);
+          writeCache(ADMIN_GALLERY_KEY, nextAlbums);
           clearCache('gallery');
           resetForm();
           setIsModalOpen(false);
-          fetchGallery();
+          await fetchGallery();
         } else {
           const errData = await res.json().catch(() => ({}));
           alert(errData.error || `Failed to create album (Status: ${res.status})`);

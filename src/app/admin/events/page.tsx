@@ -151,6 +151,7 @@ export default function EventsPage() {
 
       if (res.ok) {
         clearCache('events');
+        clearCache(ADMIN_EVENTS_KEY);
         resetForm();
         setIsModalOpen(false);
         fetchEvents();
@@ -251,6 +252,7 @@ export default function EventsPage() {
 
       if (res.ok) {
         clearCache('events');
+        clearCache(ADMIN_EVENTS_KEY);
         fetchEvents();
       } else {
         alert('Failed to delete event.');

@@ -60,17 +60,12 @@ export default function GalleryClient() {
   const [mediaFilter, setMediaFilter] = useState<'all' | 'photo' | 'video'>('all');
   const [sharedAlert, setSharedAlert] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    const cached = readCache<Album[]>(GALLERY_CACHE_KEY);
-    if (cached && cached.length > 0) {
-      setAlbumsData(cached);
-      setIsLoading(false);
-    }
+  const fetchGalleryData = React.useCallback(() => {
     fetch('/api/gallery', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.albums) {
-          const mapped = data.albums.map((alb: any) => {
+          const mapped: Album[] = data.albums.map((alb: any) => {
             const firstImage = alb.images && alb.images.length > 0 ? alb.images[0].imageUrl : undefined;
             return {
               id: alb.id,
@@ -86,7 +81,7 @@ export default function GalleryClient() {
               featured: true,
               media: (alb.images || []).map((img: any) => ({
                 id: img.id,
-                type: 'photo',
+                type: 'photo' as const,
                 title: img.caption || alb.name,
                 caption: img.caption || '',
                 thumbnailGradient: 'from-purple-600 to-indigo-600',
@@ -103,6 +98,23 @@ export default function GalleryClient() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  React.useEffect(() => {
+    const cached = readCache<Album[]>(GALLERY_CACHE_KEY);
+    if (cached && cached.length > 0) {
+      setAlbumsData(cached);
+      setIsLoading(false);
+    }
+    fetchGalleryData();
+
+    const handleCacheClear = (e: any) => {
+      if (!e.detail?.key || e.detail.key === GALLERY_CACHE_KEY) {
+        fetchGalleryData();
+      }
+    };
+    window.addEventListener('gusa_cache_clear', handleCacheClear);
+    return () => window.removeEventListener('gusa_cache_clear', handleCacheClear);
+  }, [fetchGalleryData]);
+
   // Filtered albums
   const filteredAlbums = useMemo(() => {
     if (selectedCategory === 'All') return albumsData;
@@ -115,10 +127,33 @@ export default function GalleryClient() {
   }, [albumsData]);
 
   // Open album modal
-  const handleOpenAlbum = (album: Album) => {
+  const handleOpenAlbum = async (album: Album) => {
     setActiveAlbum(album);
     setMediaFilter('all');
     setLightboxIndex(null);
+
+    // If album.media lacks loaded image URLs, fetch full album on demand
+    const hasMediaImages = album.media && album.media.length > 0 && album.media.some(m => Boolean(m.imageUrl));
+    if (!hasMediaImages) {
+      try {
+        const res = await fetch(`/api/gallery/${album.id}`, { cache: 'no-store' });
+        const data = await res.json();
+        if (data.album && Array.isArray(data.album.images)) {
+          const freshMedia: MediaItem[] = data.album.images.map((img: any) => ({
+            id: img.id,
+            type: 'photo' as const,
+            title: img.caption || data.album.name,
+            caption: img.caption || '',
+            thumbnailGradient: 'from-purple-600 to-indigo-600',
+            imageUrl: img.imageUrl,
+            date: new Date(img.createdAt).toLocaleDateString()
+          }));
+          setActiveAlbum(prev => prev && prev.id === album.id ? { ...prev, media: freshMedia } : prev);
+        }
+      } catch (err) {
+        console.error('Failed to load full album media:', err);
+      }
+    }
   };
 
   // Close album modal

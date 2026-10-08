@@ -99,6 +99,7 @@ export default function NewsPage() {
       if (res.ok) {
         clearCache('posts');
         clearCache('news');
+        clearCache(ADMIN_NEWS_KEY);
         setTitle('');
         setContent('');
         setErrorMsg('');

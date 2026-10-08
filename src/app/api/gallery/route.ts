@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
@@ -73,6 +74,9 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    revalidatePath('/gallery')
+    revalidatePath('/admin/gallery')
+
     return NextResponse.json({ success: true, album }, { status: 201 })
   } catch (error) {
     console.error('Create album error:', error)
@@ -104,6 +108,9 @@ export async function DELETE(request: NextRequest) {
     await prisma.album.delete({
       where: { id }
     })
+
+    revalidatePath('/gallery')
+    revalidatePath('/admin/gallery')
 
     return NextResponse.json({ success: true })
   } catch (error) {
