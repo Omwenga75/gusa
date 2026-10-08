@@ -166,6 +166,7 @@ model Leader {
   id           String   @id @default(cuid())
   name         String
   position     String
+  term         String?  // e.g. "2025/2026"
   biography    String?
   image        String?
   email        String?

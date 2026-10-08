@@ -14,6 +14,7 @@ export async function GET() {
         id: true,
         name: true,
         position: true,
+        term: true,
         image: true,
         phone: true,
       },
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { name, position, biography, email, phone, image } = body
+    const { name, position, term, biography, email, phone, image } = body
 
     if (!name || !position) {
       return NextResponse.json({ error: 'Leader name and position are required' }, { status: 400 })
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         position,
+        term: term || null,
         biography: biography || '',
         email: email || null,
         phone: phone || null,
@@ -71,7 +73,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, name, position, biography, email, phone, image } = body
+    const { id, name, position, term, biography, email, phone, image } = body
 
     if (!id) {
       return NextResponse.json({ error: 'Leader ID is required' }, { status: 400 })
@@ -83,6 +85,7 @@ export async function PUT(request: NextRequest) {
     const updateData: any = {
       name,
       position,
+      term: term !== undefined ? (term || null) : undefined,
       biography: biography !== undefined ? biography : undefined,
       email: email !== undefined ? (email || null) : undefined,
       phone: phone !== undefined ? (phone || null) : undefined,
