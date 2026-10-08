@@ -30,8 +30,8 @@ function compareTerms(termA: string, termB: string): number {
 }
 
 export default function LeadershipPage() {
-  const [leaders, setLeaders] = useState<LeaderProfile[]>([])
-  const [isLoading, setIsLoading] = useState(!hasCache(CACHE_KEY))
+  const [leaders, setLeaders] = useState<LeaderProfile[]>(() => readCache<LeaderProfile[]>(CACHE_KEY) || [])
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(CACHE_KEY))
 
   useEffect(() => {
     // Instantly hydrate from cache if available

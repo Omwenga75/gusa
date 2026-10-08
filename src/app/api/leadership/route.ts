@@ -1,13 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
-
+import sharp from 'sharp'
 
 export const dynamic = 'force-dynamic'
 
+async function optimizeImage(imageStr?: string | null): Promise<string | null> {
+  if (!imageStr) return null;
+  if (!imageStr.startsWith('data:image/')) return imageStr;
+  try {
+    const match = imageStr.match(/^data:image\/[a-zA-Z+]+;base64,(.+)$/);
+    if (!match) return imageStr;
+    const buf = Buffer.from(match[1], 'base64');
+    const compressed = await sharp(buf)
+      .resize(400, 400, { fit: 'cover', position: 'top' })
+      .jpeg({ quality: 75 })
+      .toBuffer();
+    return 'data:image/jpeg;base64,' + compressed.toString('base64');
+  } catch (err) {
+    console.error('Image optimization failed, saving original:', err);
+    return imageStr;
+  }
+}
+
 export async function GET() {
   try {
-    const leaders = await prisma.leader.findMany({
+    const rawLeaders = await prisma.leader.findMany({
       where: { isActive: true },
       orderBy: { displayOrder: 'asc' },
       select: {
@@ -19,6 +37,14 @@ export async function GET() {
         phone: true,
       },
     })
+
+    const leaders = rawLeaders.map((ldr) => ({
+      ...ldr,
+      avatarInitials: ldr.name
+        ? ldr.name.split(' ').map((n) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
+        : 'L'
+    }))
+
     return NextResponse.json(
       { leaders },
       {
@@ -47,6 +73,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Leader name and position are required' }, { status: 400 })
     }
 
+    const compressedImage = await optimizeImage(image);
+
     const leader = await prisma.leader.create({
       data: {
         name,
@@ -55,7 +83,7 @@ export async function POST(request: NextRequest) {
         biography: biography || '',
         email: email || null,
         phone: phone || null,
-        image: image || null,
+        image: compressedImage,
         isActive: true
       }
     })
@@ -92,7 +120,7 @@ export async function PUT(request: NextRequest) {
     }
 
     if (image !== undefined) {
-      updateData.image = image
+      updateData.image = await optimizeImage(image);
     }
 
     const leader = await prisma.leader.update({
