@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
-import { clearCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 
 interface Leader {
   id: string;
@@ -15,9 +15,11 @@ interface Leader {
   email?: string;
 }
 
+const ADMIN_LEADERSHIP_KEY = 'admin_leadership';
+
 export default function LeadershipPage() {
-  const [leaders, setLeaders] = useState<Leader[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [leaders, setLeaders] = useState<Leader[]>(() => readCache<Leader[]>(ADMIN_LEADERSHIP_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_LEADERSHIP_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -52,12 +54,13 @@ export default function LeadershipPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchLeaders = async () => {
-    setIsLoading(true);
     try {
-      const res = await fetch('/api/leadership?full=true', { cache: 'no-store' });
+      const res = await fetch('/api/leadership', { cache: 'no-store' });
       const data = await res.json();
-      if (data.leaders) {
+      if (data.leaders && Array.isArray(data.leaders)) {
         setLeaders(data.leaders);
+        writeCache(ADMIN_LEADERSHIP_KEY, data.leaders);
+        writeCache('leadership', data.leaders);
       }
     } catch (err) {
       console.error(err);
@@ -149,6 +152,7 @@ export default function LeadershipPage() {
         if (res.ok) {
           clearCache('leaders');
           clearCache('leadership');
+          clearCache(ADMIN_LEADERSHIP_KEY);
           resetForm();
           fetchLeaders();
         }
@@ -168,6 +172,7 @@ export default function LeadershipPage() {
         if (res.ok) {
           clearCache('leaders');
           clearCache('leadership');
+          clearCache(ADMIN_LEADERSHIP_KEY);
           resetForm();
           fetchLeaders();
         }
@@ -188,6 +193,7 @@ export default function LeadershipPage() {
       if (res.ok) {
         clearCache('leaders');
         clearCache('leadership');
+        clearCache(ADMIN_LEADERSHIP_KEY);
         fetchLeaders();
       }
     } catch (err) {

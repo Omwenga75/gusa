@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Camera, Pencil, Landmark, GraduationCap, Users } from 'lucide-react';
-import { clearCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 
 type LeaderCategory = 'House Leaders' | 'SAMU Leaders' | 'Delegates';
 
@@ -18,6 +18,8 @@ interface EmeritusLeader {
   achievement?: string;
   createdAt?: string;
 }
+
+const ADMIN_EMERITUS_KEY = 'admin_emeritus';
 
 const HOUSE_POSITIONS = [
   'Past Chairperson',
@@ -47,8 +49,8 @@ const DELEGATE_POSITIONS = [
 ];
 
 export default function AdminEmeritusPage() {
-  const [leaders, setLeaders] = useState<EmeritusLeader[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [leaders, setLeaders] = useState<EmeritusLeader[]>(() => readCache<EmeritusLeader[]>(ADMIN_EMERITUS_KEY) || []);
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_EMERITUS_KEY));
   const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
 
   // Modal State
@@ -67,12 +69,13 @@ export default function AdminEmeritusPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchLeaders = async () => {
-    setIsLoading(true);
     try {
       const res = await fetch('/api/emeritus', { cache: 'no-store' });
       const data = await res.json();
       if (data && Array.isArray(data.leaders)) {
         setLeaders(data.leaders);
+        writeCache(ADMIN_EMERITUS_KEY, data.leaders);
+        writeCache('emeritus_leaders', data.leaders);
       }
     } catch (err) {
       console.error('Failed to fetch emeritus leaders:', err);
@@ -168,6 +171,7 @@ export default function AdminEmeritusPage() {
 
       if (res.ok) {
         clearCache('emeritus_leaders');
+        clearCache(ADMIN_EMERITUS_KEY);
         setIsModalOpen(false);
         fetchLeaders();
       } else {
@@ -189,6 +193,7 @@ export default function AdminEmeritusPage() {
       const res = await fetch(`/api/emeritus?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         clearCache('emeritus_leaders');
+        clearCache(ADMIN_EMERITUS_KEY);
         fetchLeaders();
       }
     } catch (err) {
