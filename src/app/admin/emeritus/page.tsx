@@ -51,7 +51,6 @@ const DELEGATE_POSITIONS = [
 export default function AdminEmeritusPage() {
   const [leaders, setLeaders] = useState<EmeritusLeader[]>(() => readCache<EmeritusLeader[]>(ADMIN_EMERITUS_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_EMERITUS_KEY));
-  const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -203,12 +202,8 @@ export default function AdminEmeritusPage() {
     }
   };
 
-  const filteredLeaders = selectedFilter === 'ALL'
-    ? leaders
-    : leaders.filter(l => l.category === selectedFilter);
-
   // Group leaders by Term / Period
-  const groupedByTerm = filteredLeaders.reduce<Record<string, EmeritusLeader[]>>((acc, leader) => {
+  const groupedByTerm = leaders.reduce<Record<string, EmeritusLeader[]>>((acc, leader) => {
     const termKey = leader.term?.trim() || 'Other Terms';
     if (!acc[termKey]) acc[termKey] = [];
     acc[termKey].push(leader);
@@ -241,38 +236,6 @@ export default function AdminEmeritusPage() {
           <Plus size={18} />
           Add Emeritus Leader
         </button>
-      </div>
-
-      {/* Filter Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-        {[
-          { label: 'All Leaders', value: 'ALL', icon: Users },
-          { label: 'House Leaders', value: 'House Leaders', icon: Landmark },
-          { label: 'SAMU Leaders', value: 'SAMU Leaders', icon: GraduationCap },
-          { label: 'Delegates', value: 'Delegates', icon: Award }
-        ].map(tab => (
-          <button
-            key={tab.value}
-            onClick={() => setSelectedFilter(tab.value)}
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '0.75rem',
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              border: selectedFilter === tab.value ? '1px solid #7c3aed' : '1px solid rgba(255, 255, 255, 0.1)',
-              background: selectedFilter === tab.value ? 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)' : 'rgba(15, 23, 42, 0.6)',
-              color: '#ffffff',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <tab.icon size={14} />
-            <span>{tab.label}</span>
-          </button>
-        ))}
       </div>
 
       {/* Leaders List */}
