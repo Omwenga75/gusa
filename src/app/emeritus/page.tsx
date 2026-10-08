@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import EmeritusClient, { EmeritusLeader } from './EmeritusClient'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,7 @@ export default async function EmeritusPage() {
       const parsed = JSON.parse(record.value)
       if (Array.isArray(parsed)) {
         initialLeaders = parsed
+        initialLeaders.sort(compareLeaderHierarchy)
       }
     }
   } catch (err) {

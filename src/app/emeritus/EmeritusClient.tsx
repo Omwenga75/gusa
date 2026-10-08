@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { Award, Landmark, GraduationCap, Users } from 'lucide-react'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
 export type LeaderCategory = 'House Leaders' | 'SAMU Leaders' | 'Delegates'
 
@@ -92,6 +93,11 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
     acc[termKey].push(leader)
     return acc
   }, {})
+
+  // Sort leaders within each term by hierarchy (Past Chairperson, Past Vice, Past SG...)
+  Object.keys(groupedByTerm).forEach((termKey) => {
+    groupedByTerm[termKey].sort(compareLeaderHierarchy)
+  })
 
   // Sort terms in descending order (e.g. 2025/2026 before 2024/2025)
   const sortedTerms = Object.keys(groupedByTerm).sort(compareTerms)

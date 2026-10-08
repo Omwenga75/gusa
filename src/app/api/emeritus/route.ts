@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +50,7 @@ async function saveStoredLeaders(leaders: EmeritusLeaderItem[]): Promise<void> {
 export async function GET() {
   try {
     const leaders = await getStoredLeaders()
+    leaders.sort(compareLeaderHierarchy)
     return NextResponse.json(
       { leaders },
       {

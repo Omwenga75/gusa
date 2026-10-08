@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 import { Phone, Users } from 'lucide-react'
 
 export interface LeaderProfile {
@@ -89,6 +90,12 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
     acc[key].push(ldr)
     return acc
   }, {})
+
+  // Sort leaders within each term by hierarchy (Chairperson, Vice, SG, Finance, Speaker...)
+  Object.keys(groupedByTerm).forEach((key) => {
+    groupedByTerm[key].sort(compareLeaderHierarchy)
+  })
+
   const sortedTerms = Object.keys(groupedByTerm).sort((a, b) => {
     if (a === 'Active') return -1
     if (b === 'Active') return 1

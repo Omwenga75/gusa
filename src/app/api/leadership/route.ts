@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 import sharp from 'sharp'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,6 +45,8 @@ export async function GET() {
         ? ldr.name.split(' ').map((n) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
         : 'L'
     }))
+
+    leaders.sort(compareLeaderHierarchy)
 
     return NextResponse.json(
       { leaders },

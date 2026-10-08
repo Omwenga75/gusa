@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
+import { compareLeaderHierarchy } from '@/lib/hierarchy';
 
 interface Leader {
   id: string;
@@ -66,6 +67,12 @@ export default function LeadershipPage() {
     acc[key].push(ldr);
     return acc;
   }, {});
+
+  // Sort leaders within each term by hierarchy (Chairperson, Vice, SG, Finance, Speaker...)
+  Object.keys(groupedByTerm).forEach((key) => {
+    groupedByTerm[key].sort(compareLeaderHierarchy);
+  });
+
   const sortedTerms = Object.keys(groupedByTerm).sort((a, b) => {
     if (a === 'No Term') return 1;
     if (b === 'No Term') return -1;

@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import LeadershipClient, { LeaderProfile } from './LeadershipClient'
+import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,6 +32,8 @@ export default async function LeadershipPage() {
         : 'L',
       phone: ldr.phone || '',
     }))
+
+    initialLeaders.sort(compareLeaderHierarchy)
   } catch (err) {
     console.error('Failed to prefetch leadership in server component:', err)
   }
