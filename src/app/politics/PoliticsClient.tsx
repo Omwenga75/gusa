@@ -75,7 +75,7 @@ export default function PoliticsClient() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<'Executive Positions' | 'SAMU & Delegate Positions'>('Executive Positions');
   const [samuSubtype, setSamuSubtype] = useState<'samu_executive' | 'delegate'>('samu_executive');
-  const [selectedPosition, setSelectedPosition] = useState<string>('President / Chairperson');
+  const [selectedPosition, setSelectedPosition] = useState<string>('Chairperson');
   const [customPosition, setCustomPosition] = useState<string>('');
 
   // Form Fields State

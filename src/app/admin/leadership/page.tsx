@@ -614,7 +614,7 @@ export default function LeadershipPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. President / Organizing Secretary"
+                  placeholder="e.g. Chairperson / Organizing Secretary"
                   value={position}
                   onChange={e => setPosition(e.target.value)}
                   className={styles.searchInput}

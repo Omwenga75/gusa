@@ -22,7 +22,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
   {
     id: 'h1',
     name: 'Hon. Kevin Ondieki',
-    position: 'Past GUSA President',
+    position: 'Past GUSA Chairperson',
     term: '2024/2025',
     category: 'House Leaders',
     avatarInitials: 'KO',
@@ -31,7 +31,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
   {
     id: 'h2',
     name: 'Hon. Brenda Moraa',
-    position: 'Past GUSA Vice President',
+    position: 'Past GUSA Vice Chairperson',
     term: '2024/2025',
     category: 'House Leaders',
     avatarInitials: 'BM',
@@ -49,7 +49,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
   {
     id: 'h4',
     name: 'Hon. Denis Mogaka',
-    position: 'Past GUSA President',
+    position: 'Past GUSA Chairperson',
     term: '2023/2024',
     category: 'House Leaders',
     avatarInitials: 'DM',
@@ -78,7 +78,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
   {
     id: 's1',
     name: 'Hon. Joshua Omwamba',
-    position: 'Past SAMU Chairperson / President',
+    position: 'Past SAMU Chairperson',
     term: '2024/2025',
     category: 'SAMU Leaders',
     avatarInitials: 'JO',
