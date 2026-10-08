@@ -217,7 +217,7 @@ export default function GalleryPage() {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Gallery & Albums</h1>
@@ -227,11 +227,6 @@ export default function GalleryPage() {
           <Upload size={16} /> Upload Photos
         </button>
       </div>
-
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>Media Albums ({albums.length})</h2>
-        </div>
 
         {isLoading && albums.length === 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
@@ -318,7 +313,6 @@ export default function GalleryPage() {
             ))}
           </div>
         )}
-      </div>
 
       {/* Upload Album Modal */}
       {isModalOpen && (
@@ -497,6 +491,6 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
