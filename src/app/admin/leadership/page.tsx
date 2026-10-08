@@ -220,7 +220,7 @@ export default function LeadershipPage() {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Leadership Management</h1>
@@ -231,12 +231,7 @@ export default function LeadershipPage() {
         </button>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>Leaders ({leaders.length})</h2>
-        </div>
-
-        {isLoading && leaders.length === 0 ? (
+      {isLoading && leaders.length === 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
             {[1, 2, 3, 4].map((n) => (
               <div
@@ -482,7 +477,6 @@ export default function LeadershipPage() {
             ))}
           </div>
         )}
-      </div>
 
       {/* Add / Edit Leader Modal */}
       {isModalOpen && (
@@ -616,6 +610,6 @@ export default function LeadershipPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
