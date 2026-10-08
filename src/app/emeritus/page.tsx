@@ -26,7 +26,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'House Leaders',
     avatarInitials: 'KO',
-    achievement: 'Expanded GUSA welfare emergency kitty and strengthened MUST Gusii alumni mentorship network.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'h2',
@@ -35,7 +35,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'House Leaders',
     avatarInitials: 'BM',
-    achievement: 'Pioneered the First-Year Gusii Student Academic Mentorship and Gender Inclusivity Network.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'h3',
@@ -44,7 +44,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'House Leaders',
     avatarInitials: 'BN',
-    achievement: 'Streamlined association digital communications and annual general meeting documentation.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'h4',
@@ -53,7 +53,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'House Leaders',
     avatarInitials: 'DM',
-    achievement: 'Organized the largest MUST Gusii Cultural Night and university-wide inter-county sports games.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'h5',
@@ -62,7 +62,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'House Leaders',
     avatarInitials: 'FK',
-    achievement: 'Maintained 100% financial audit compliance and timely bursary welfare disbursements.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'h6',
@@ -71,7 +71,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'House Leaders',
     avatarInitials: 'CO',
-    achievement: 'Coordinated educational symposiums and the Mt. Kenya region Gusii student leadership summit.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
 
   // ── 2. SAMU Leaders ────────────────────────────────────────────────
@@ -82,7 +82,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'SAMU Leaders',
     avatarInitials: 'JO',
-    achievement: 'Championed university-wide student comrade rights, campus security lighting, and Wi-Fi coverage.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 's2',
@@ -91,7 +91,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'SAMU Leaders',
     avatarInitials: 'SK',
-    achievement: 'Spearheaded students health advocacy, mental health awareness, and hostel sanitization programs.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 's3',
@@ -100,7 +100,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'SAMU Leaders',
     avatarInitials: 'GN',
-    achievement: 'Facilitated prompt university senate representations and student disciplinary appeals.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 's4',
@@ -109,7 +109,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'SAMU Leaders',
     avatarInitials: 'DK',
-    achievement: 'Introduced 24/7 exam revision resource vaults and peer-to-peer supplementary study groups.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 's5',
@@ -118,7 +118,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'SAMU Leaders',
     avatarInitials: 'VM',
-    achievement: 'Revamped the MUST Annual Comrades Gala and inter-faculty championship leagues.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
 
   // ── 3. Delegates ───────────────────────────────────────────────────
@@ -129,7 +129,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'Delegates',
     avatarInitials: 'BM',
-    achievement: 'Advocated for computer lab software licenses and university hackathon funding for tech students.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'd2',
@@ -138,7 +138,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'Delegates',
     avatarInitials: 'CN',
-    achievement: 'Organized career placement workshops and entrepreneurship incubators for commerce students.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'd3',
@@ -147,7 +147,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2024/2025',
     category: 'Delegates',
     avatarInitials: 'EM',
-    achievement: 'Secured workshop equipment upgrades and engineering industrial attachment sponsorships.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'd4',
@@ -156,7 +156,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'Delegates',
     avatarInitials: 'RB',
-    achievement: 'Spearheaded clinical rotation transport logistics and medical student community outreach camps.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'd5',
@@ -165,7 +165,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'Delegates',
     avatarInitials: 'JO',
-    achievement: 'Initiated modern greenhouse farm research programs and agribusiness value-addition seminars.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   },
   {
     id: 'd6',
@@ -174,7 +174,7 @@ const EMERITUS_LEADERS: EmeritusLeader[] = [
     term: '2023/2024',
     category: 'Delegates',
     avatarInitials: 'LK',
-    achievement: 'Coordinated teaching practice orientation workshops and student-teacher placement facilitation.'
+    achievement: 'A committed leader who served GUSA well and will be forever remembered.'
   }
 ]
 
