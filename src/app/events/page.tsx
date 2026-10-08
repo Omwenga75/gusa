@@ -336,12 +336,6 @@ export default function EventsPage() {
                           </Link>
                         </h3>
 
-                        {/* Description snippet */}
-                        {event.description && event.description !== event.title && (
-                          <p className="text-slate-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">
-                            {event.description}
-                          </p>
-                        )}
                       </div>
 
                       {/* Card Action Footer */}
