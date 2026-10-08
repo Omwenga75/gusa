@@ -5,10 +5,25 @@ import { verifyAdminSession } from '@/lib/adminAuth'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const full = searchParams.get('full') === 'true'
+
     const leaders = await prisma.leader.findMany({
-      orderBy: { createdAt: 'asc' }
+      where: { isActive: true },
+      orderBy: { displayOrder: 'asc' },
+      // Public page: select only lightweight fields (omit biography, socialLinks, etc.)
+      // Admin page: pass ?full=true to get all fields for editing
+      ...(full ? {} : {
+        select: {
+          id: true,
+          name: true,
+          position: true,
+          image: true,
+          phone: true,
+        },
+      }),
     })
     return NextResponse.json(
       { leaders },

@@ -54,7 +54,7 @@ export default function LeadershipPage() {
   const fetchLeaders = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/leadership', { cache: 'no-store' });
+      const res = await fetch('/api/leadership?full=true', { cache: 'no-store' });
       const data = await res.json();
       if (data.leaders) {
         setLeaders(data.leaders);
