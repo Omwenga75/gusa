@@ -517,45 +517,31 @@ export default function AdminEmeritusPage() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSaveLeader} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Photo Upload */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '0.75rem', border: '1px dashed rgba(255, 255, 255, 0.15)' }}>
+            <form onSubmit={handleSaveLeader} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {/* Photo Upload & Change */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   style={{
-                    width: '80px',
-                    height: '80px',
+                    width: '96px',
+                    height: '96px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                    border: '2px dashed rgba(124, 58, 237, 0.4)',
+                    cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    border: '2px solid rgba(255, 255, 255, 0.2)'
+                    transition: 'border-color 0.2s ease',
+                    position: 'relative'
                   }}
                 >
                   {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                   ) : (
-                    <Camera size={28} style={{ color: '#ffffff', opacity: 0.8 }} />
+                    <Camera size={28} color="#7c3aed" style={{ opacity: 0.6 }} />
                   )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    color: '#c4b5fd',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {imagePreview ? 'Change Photo' : 'Upload Leader Picture from Device'}
-                </button>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -563,116 +549,136 @@ export default function AdminEmeritusPage() {
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
                 />
-              </div>
-
-              {/* Category Dropdown */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
-                  Category <span style={{ color: '#f87171' }}>*</span>
-                </label>
-                <select
-                  value={category}
-                  onChange={e => handleCategoryChange(e.target.value as LeaderCategory)}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
                   style={{
-                    background: 'rgba(6, 8, 15, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '0.6rem',
-                    color: '#ffffff',
-                    fontSize: '0.875rem'
+                    background: 'none',
+                    border: 'none',
+                    color: '#a78bfa',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    fontWeight: 600
                   }}
                 >
-                  <option value="House Leaders">House Leader</option>
-                  <option value="SAMU Leaders">SAMU Leader</option>
-                  <option value="Delegates">Delegate</option>
-                </select>
+                  {imagePreview ? 'Click to change photo' : 'Click to upload photo'}
+                </button>
               </div>
 
-              {/* Position Dropdown */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
-                  Position <span style={{ color: '#f87171' }}>*</span>
-                </label>
-                <select
-                  value={position}
-                  onChange={e => setPosition(e.target.value)}
-                  style={{
-                    background: 'rgba(6, 8, 15, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '0.6rem',
-                    color: '#ffffff',
-                    fontSize: '0.875rem'
-                  }}
-                >
-                  {category === 'House Leaders' && (
-                    <>
-                      {HOUSE_POSITIONS.map(pos => (
-                        <option key={pos} value={pos}>{pos}</option>
-                      ))}
-                    </>
-                  )}
+              {/* Row 1: Category & Position */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                {/* Category Dropdown */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Category <span style={{ color: '#f87171' }}>*</span>
+                  </label>
+                  <select
+                    value={category}
+                    onChange={e => handleCategoryChange(e.target.value as LeaderCategory)}
+                    style={{
+                      background: 'rgba(6, 8, 15, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      padding: '0.65rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: '#ffffff',
+                      fontSize: '0.875rem'
+                    }}
+                  >
+                    <option value="House Leaders">House Leader</option>
+                    <option value="SAMU Leaders">SAMU Leader</option>
+                    <option value="Delegates">Delegate</option>
+                  </select>
+                </div>
 
-                  {category === 'SAMU Leaders' && (
-                    <>
-                      {SAMU_POSITIONS.map(pos => (
-                        <option key={pos} value={pos}>{pos}</option>
-                      ))}
-                    </>
-                  )}
+                {/* Position Dropdown */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Position <span style={{ color: '#f87171' }}>*</span>
+                  </label>
+                  <select
+                    value={position}
+                    onChange={e => setPosition(e.target.value)}
+                    style={{
+                      background: 'rgba(6, 8, 15, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      padding: '0.65rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: '#ffffff',
+                      fontSize: '0.875rem'
+                    }}
+                  >
+                    {category === 'House Leaders' && (
+                      <>
+                        {HOUSE_POSITIONS.map(pos => (
+                          <option key={pos} value={pos}>{pos}</option>
+                        ))}
+                      </>
+                    )}
 
-                  {category === 'Delegates' && (
-                    <>
-                      {DELEGATE_POSITIONS.map(pos => (
-                        <option key={pos} value={pos}>{pos}</option>
-                      ))}
-                    </>
-                  )}
-                </select>
+                    {category === 'SAMU Leaders' && (
+                      <>
+                        {SAMU_POSITIONS.map(pos => (
+                          <option key={pos} value={pos}>{pos}</option>
+                        ))}
+                      </>
+                    )}
+
+                    {category === 'Delegates' && (
+                      <>
+                        {DELEGATE_POSITIONS.map(pos => (
+                          <option key={pos} value={pos}>{pos}</option>
+                        ))}
+                      </>
+                    )}
+                  </select>
+                </div>
               </div>
 
-              {/* Full Name */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
-                  Leader Full Name <span style={{ color: '#f87171' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Hon. Kevin Ondieki"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={{
-                    background: 'rgba(6, 8, 15, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '0.6rem',
-                    color: '#ffffff',
-                    fontSize: '0.875rem'
-                  }}
-                />
-              </div>
+              {/* Row 2: Full Name & Period / Term */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                {/* Full Name */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Leader Full Name <span style={{ color: '#f87171' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Hon. Kevin Ondieki"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    style={{
+                      background: 'rgba(6, 8, 15, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      padding: '0.65rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: '#ffffff',
+                      fontSize: '0.875rem'
+                    }}
+                  />
+                </div>
 
-              {/* Term / Period */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
-                  Period / Term <span style={{ color: '#f87171' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. 2024/2025"
-                  value={term}
-                  onChange={e => setTerm(e.target.value)}
-                  style={{
-                    background: 'rgba(6, 8, 15, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '0.6rem',
-                    color: '#ffffff',
-                    fontSize: '0.875rem'
-                  }}
-                />
+                {/* Term / Period */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Period / Term <span style={{ color: '#f87171' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 2024/2025"
+                    value={term}
+                    onChange={e => setTerm(e.target.value)}
+                    style={{
+                      background: 'rgba(6, 8, 15, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      padding: '0.65rem 1rem',
+                      borderRadius: '0.6rem',
+                      color: '#ffffff',
+                      fontSize: '0.875rem'
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Actions */}
