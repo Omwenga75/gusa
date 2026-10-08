@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 import { PublicLayout } from '@/components/layout/PublicLayout'
@@ -8,7 +8,6 @@ import {
   Calendar,
   MapPin,
   Clock,
-  Search,
   ArrowRight,
   X,
   Image as ImageIcon,
@@ -117,22 +116,11 @@ const parseEventImages = (coverImage?: string): string[] => {
   }
 }
 
-const CATEGORIES = [
-  { id: 'all', label: 'All Events' },
-  { id: 'academic', label: 'Academic' },
-  { id: 'cultural', label: 'Cultural' },
-  { id: 'sports', label: 'Sports' },
-  { id: 'welfare', label: 'Welfare' },
-  { id: 'upcoming', label: 'Upcoming' },
-] as const
-
 const EVENTS_CACHE_KEY = 'events'
 
 export default function EventsPage() {
   const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(EVENTS_CACHE_KEY))
-  const [selectedTab, setSelectedTab] = useState<string>('all')
-  const [searchQuery, setSearchQuery] = useState<string>('')
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
   const [fullscreenImageIndex, setFullscreenImageIndex] = useState<number | null>(null)
   const [isFullscreenMode, setIsFullscreenMode] = useState<boolean>(false)
@@ -215,25 +203,7 @@ export default function EventsPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  // Filtered Events
-  const filteredEvents = useMemo(() => {
-    return eventsData.filter((event) => {
-      const matchesTab =
-        selectedTab === 'all' ||
-        (selectedTab === 'upcoming' && event.status === 'upcoming') ||
-        event.category.toLowerCase() === selectedTab.toLowerCase()
-
-      const query = searchQuery.toLowerCase().trim()
-      const matchesSearch =
-        query === '' ||
-        event.title.toLowerCase().includes(query) ||
-        event.venue.toLowerCase().includes(query) ||
-        event.description.toLowerCase().includes(query) ||
-        event.category.toLowerCase().includes(query)
-
-      return matchesTab && matchesSearch
-    })
-  }, [eventsData, selectedTab, searchQuery])
+  const filteredEvents = eventsData
 
   return (
     <PublicLayout>
@@ -244,11 +214,7 @@ export default function EventsPage() {
         <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-600/10 blur-[90px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 border border-violet-500/20 mb-3 shadow-sm">
-              <Calendar size={13} />
-              GUSA Activities & Programs
-            </span>
+          <div className="text-center max-w-2xl mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
               Events
             </h1>
@@ -256,80 +222,12 @@ export default function EventsPage() {
               All GUSA academic forums, cultural festivals, sports fixtures, and student welfare initiatives.
             </p>
           </div>
-
-          {/* Search Bar & Category Filters */}
-          <div className="flex flex-col gap-4 sm:gap-5 max-w-3xl mx-auto">
-            {/* Search Input */}
-            <div className="relative w-full">
-              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search events by title, venue, or keyword..."
-                className="w-full bg-slate-900/90 border border-white/10 hover:border-violet-500/30 focus:border-violet-500 rounded-2xl pl-11 pr-10 py-3 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 backdrop-blur-md transition-all shadow-inner"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
-                  title="Clear search"
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
-
-            {/* Category Pills */}
-            <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              {CATEGORIES.map((cat) => {
-                const isActive = selectedTab === cat.id
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setSelectedTab(cat.id)}
-                    className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-500/25 border border-violet-400/40'
-                        : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-850 border border-white/10'
-                    }`}
-                  >
-                    <span>{cat.label}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
         </div>
       </section>
 
       {/* ── Main Events Grid Section ── */}
       <section className="flex-1 w-full bg-[#090e1c] py-10 sm:py-14">
         <div className="container mx-auto px-4 max-w-7xl">
-          {/* Active Filter Status Line */}
-          <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8 text-xs sm:text-sm text-slate-400">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-white">
-                {isLoading && eventsData.length === 0
-                  ? 'Loading events...'
-                  : `${filteredEvents.length} ${filteredEvents.length === 1 ? 'event' : 'events'} found`}
-              </span>
-              {(selectedTab !== 'all' || searchQuery) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedTab('all')
-                    setSearchQuery('')
-                  }}
-                  className="text-violet-400 hover:text-violet-300 underline underline-offset-2 ml-2 transition-colors cursor-pointer font-medium"
-                >
-                  Reset filters
-                </button>
-              )}
-            </div>
-          </div>
 
           {/* Skeletons while initial loading */}
           {isLoading && eventsData.length === 0 ? (
@@ -362,21 +260,9 @@ export default function EventsPage() {
                 <Calendar size={32} />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">No events found</h3>
-              <p className="text-slate-400 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
-                {searchQuery || selectedTab !== 'all'
-                  ? 'We could not find any events matching your selected criteria. Try adjusting your search or category filter.'
-                  : 'There are no events scheduled at this moment. Check back soon for updates!'}
+              <p className="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
+                There are no events scheduled at this moment. Check back soon for updates!
               </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedTab('all')
-                  setSearchQuery('')
-                }}
-                className="btn btn-outline inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-semibold border border-white/20 text-slate-200 hover:text-white"
-              >
-                Reset Filters
-              </button>
             </div>
           ) : (
             /* Events Cards Grid: 1 col on mobile, 2 cols on tablet, 3 cols on desktop */
