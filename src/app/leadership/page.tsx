@@ -14,42 +14,49 @@ interface LeaderProfile {
   phone?: string
 }
 
-export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => {
-    return readCache<LeaderProfile[]>('leadership') || []
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(() => {
-    return !hasCache('leadership')
-  });
+const CACHE_KEY = 'leadership';
 
-  const fetchLeaders = async () => {
-    try {
-      const res = await fetch('/api/leadership', { cache: 'no-store' });
-      const data = await res.json();
-      if (data && Array.isArray(data.leaders)) {
-        const mapped: LeaderProfile[] = data.leaders.map((ldr: any) => ({
-          id: ldr.id,
-          name: ldr.name,
-          position: ldr.position,
-          image: ldr.image || null,
-          avatarInitials: ldr.name
-            ? ldr.name.split(' ').map((n: string) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
-            : 'L',
-          phone: ldr.phone || ''
-        }));
-        setLeadersData(mapped);
-        writeCache('leadership', mapped);
-      }
-    } catch (err) {
-      console.error('Error fetching leadership:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default function LeadershipPage() {
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>([])
+  const [isLoading, setIsLoading] = useState(!hasCache(CACHE_KEY))
 
   useEffect(() => {
-    fetchLeaders();
-  }, []);
+    // Instantly hydrate from cache if available
+    const cached = readCache<LeaderProfile[]>(CACHE_KEY)
+    if (cached) {
+      setLeadersData(cached)
+      setIsLoading(false)
+    }
+
+    // Fetch fresh data in background
+    const fetchLeaders = async () => {
+      try {
+        const res = await fetch('/api/leadership', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (data && Array.isArray(data.leaders)) {
+          const mapped: LeaderProfile[] = data.leaders.map((ldr: any) => ({
+            id: ldr.id,
+            name: ldr.name,
+            position: ldr.position,
+            image: ldr.image || null,
+            avatarInitials: ldr.name
+              ? ldr.name.split(' ').map((n: string) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()
+              : 'L',
+            phone: ldr.phone || ''
+          }))
+          setLeadersData(mapped)
+          writeCache(CACHE_KEY, mapped)
+        }
+      } catch (err) {
+        console.error('Error fetching leadership:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchLeaders()
+  }, [])
 
   return (
     <PublicLayout>
@@ -77,10 +84,10 @@ export default function LeadershipPage() {
       </section>
 
       {/* Main Leadership Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
         <div className="container">
           {/* Loading Skeletons */}
-          {isLoading && leadersData.length === 0 ? (
+          {isLoading ? (
             <div
               style={{
                 display: 'grid',
@@ -92,25 +99,13 @@ export default function LeadershipPage() {
                 <div
                   key={n}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '1rem',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
                     height: '280px',
+                    borderRadius: '1rem',
+                    background: 'linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(9,14,26,0.98) 100%)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite'
                   }}
-                >
-                  <div style={{ height: '64px', background: 'rgba(255, 255, 255, 0.02)', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }} />
-                  <div style={{ padding: '0 1.25rem 1rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ marginTop: '-48px', marginBottom: '0.75rem' }}>
-                      <div className="skeleton" style={{ width: '96px', height: '96px', borderRadius: '50%', border: '4px solid #0f172a' }} />
-                    </div>
-                    <div className="skeleton" style={{ width: '60%', height: '18px', marginBottom: '0.5rem', borderRadius: '4px' }} />
-                    <div className="skeleton" style={{ width: '40%', height: '14px', marginBottom: '0.75rem', borderRadius: '4px' }} />
-                    <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '6px' }} />
-                  </div>
-                </div>
+                />
               ))}
             </div>
           ) : leadersData.length === 0 ? (

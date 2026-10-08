@@ -70,6 +70,12 @@ export default function LeadershipPage() {
   };
 
   useEffect(() => {
+    // Instantly hydrate from cache if available
+    const cached = readCache<Leader[]>(ADMIN_LEADERSHIP_KEY);
+    if (cached) {
+      setLeaders(cached);
+      setIsLoading(false);
+    }
     fetchLeaders();
   }, []);
 
@@ -231,70 +237,17 @@ export default function LeadershipPage() {
         </div>
 
         {isLoading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
-            {[1, 2].map((n) => (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+            {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
                 style={{
-                  background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  height: '280px',
                   borderRadius: '1rem',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                 }}
-              >
-                {/* Header Skeleton */}
-                <div
-                  style={{
-                    height: '64px',
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0 1rem',
-                  }}
-                >
-                  <div className="skeleton" style={{ width: '80px', height: '20px', borderRadius: '9999px' }} />
-                  <div className="skeleton" style={{ width: '28px', height: '28px', borderRadius: '8px' }} />
-                </div>
-
-                {/* Body Skeleton */}
-                <div style={{ padding: '0 1.25rem 1rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                  <div style={{ marginTop: '-48px', marginBottom: '0.75rem' }}>
-                    <div
-                      className="skeleton"
-                      style={{
-                        width: '96px',
-                        height: '96px',
-                        borderRadius: '50%',
-                        border: '4px solid #0f172a',
-                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7)',
-                      }}
-                    />
-                  </div>
-
-                  <div className="skeleton" style={{ width: '60%', height: '18px', marginBottom: '0.4rem', borderRadius: '4px' }} />
-                  <div className="skeleton" style={{ width: '40%', height: '12px', marginBottom: '0.75rem', borderRadius: '4px' }} />
-                  <div className="skeleton" style={{ width: '70px', height: '18px', marginBottom: '1rem', borderRadius: '4px' }} />
-
-                  <div
-                    style={{
-                      width: '100%',
-                      marginTop: 'auto',
-                      paddingTop: '0.75rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <div className="skeleton" style={{ width: '110px', height: '26px', borderRadius: '8px' }} />
-                  </div>
-                </div>
-              </div>
+              />
             ))}
           </div>
         ) : filteredLeaders.length === 0 ? (
