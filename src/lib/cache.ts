@@ -1,17 +1,13 @@
 /**
- * Lightweight SWR (Stale-While-Revalidate) cache using sessionStorage.
+ * Dual-tier SWR (Stale-While-Revalidate) cache using in-memory Map + sessionStorage.
  *
- * - On first visit:  no cache → show skeleton → fetch → store in sessionStorage
- * - On return visit: read cached data instantly (no skeleton) → fetch fresh data silently in background → update
- * - On refresh (F5): sessionStorage persists within the tab session, so cached data is still available → no skeleton
- * - On hard refresh or new tab: sessionStorage is empty → skeleton shows once, then caches
- *
- * This avoids the slow skeleton flash on every navigation that module-level caches can't prevent
- * (since Next.js may re-evaluate modules on route changes in production).
+ * - Fast RAM lookup (0ms) across client route navigations.
+ * - Persistent sessionStorage across page refreshes within the tab.
+ * - When going back and forth between pages, cached data is displayed instantly with 0ms delay and no skeleton.
  */
 
 const CACHE_PREFIX = 'gusa_swr_';
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes - after this, data is considered stale but still shown
+const memoryCache = new Map<string, any>();
 
 interface CacheEntry<T> {
   data: T;
@@ -19,26 +15,32 @@ interface CacheEntry<T> {
 }
 
 /**
- * Read cached data from sessionStorage.
- * Returns null if no cache or if cache is corrupted.
+ * Read cached data synchronously from memory cache or sessionStorage.
  */
 export function readCache<T>(key: string): T | null {
+  if (memoryCache.has(key)) {
+    return memoryCache.get(key) as T;
+  }
   if (typeof window === 'undefined') return null;
   try {
     const raw = sessionStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
     const entry: CacheEntry<T> = JSON.parse(raw);
-    // Return data even if stale - the component will revalidate in background
-    return entry.data;
+    if (entry && entry.data !== undefined) {
+      memoryCache.set(key, entry.data);
+      return entry.data;
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
 /**
- * Write data to sessionStorage cache.
+ * Write data to memory cache and sessionStorage.
  */
 export function writeCache<T>(key: string, data: T): void {
+  memoryCache.set(key, data);
   if (typeof window === 'undefined') return;
   try {
     const entry: CacheEntry<T> = { data, timestamp: Date.now() };
@@ -49,22 +51,35 @@ export function writeCache<T>(key: string, data: T): void {
 }
 
 /**
- * Check if cached data exists (without reading it).
- * Useful for determining initial loading state.
+ * Check if cached data exists in memory or sessionStorage.
  */
 export function hasCache(key: string): boolean {
+  if (memoryCache.has(key)) return true;
   if (typeof window === 'undefined') return false;
   try {
-    return sessionStorage.getItem(CACHE_PREFIX + key) !== null;
+    const raw = sessionStorage.getItem(CACHE_PREFIX + key);
+    if (raw) {
+      try {
+        const entry = JSON.parse(raw);
+        if (entry && entry.data !== undefined) {
+          memoryCache.set(key, entry.data);
+          return true;
+        }
+      } catch {
+        return false;
+      }
+    }
+    return false;
   } catch {
     return false;
   }
 }
 
 /**
- * Clear a specific cache entry.
+ * Clear a specific cache entry from memory and sessionStorage.
  */
 export function clearCache(key: string): void {
+  memoryCache.delete(key);
   if (typeof window === 'undefined') return;
   try {
     sessionStorage.removeItem(CACHE_PREFIX + key);

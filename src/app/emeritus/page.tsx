@@ -133,7 +133,7 @@ export default function EmeritusLeadersPage() {
       {/* Main Content Section */}
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
         <div className="container">
-          {isLoading ? (
+          {isLoading && leaders.length === 0 ? (
             // Loading skeletons
             <div
               style={{

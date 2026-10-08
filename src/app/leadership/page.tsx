@@ -17,13 +17,13 @@ interface LeaderProfile {
 const CACHE_KEY = 'leadership';
 
 export default function LeadershipPage() {
-  const [leadersData, setLeadersData] = useState<LeaderProfile[]>([])
-  const [isLoading, setIsLoading] = useState(!hasCache(CACHE_KEY))
+  const [leadersData, setLeadersData] = useState<LeaderProfile[]>(() => readCache<LeaderProfile[]>(CACHE_KEY) || [])
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(CACHE_KEY))
 
   useEffect(() => {
     // Instantly hydrate from cache if available
     const cached = readCache<LeaderProfile[]>(CACHE_KEY)
-    if (cached) {
+    if (cached && cached.length > 0) {
       setLeadersData(cached)
       setIsLoading(false)
     }
@@ -87,7 +87,7 @@ export default function LeadershipPage() {
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
         <div className="container">
           {/* Loading Skeletons */}
-          {isLoading ? (
+          {isLoading && leadersData.length === 0 ? (
             <div
               style={{
                 display: 'grid',

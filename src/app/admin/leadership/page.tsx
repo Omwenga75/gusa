@@ -236,7 +236,7 @@ export default function LeadershipPage() {
           <h2 className={styles.cardTitle}>Leaders ({leaders.length})</h2>
         </div>
 
-        {isLoading ? (
+        {isLoading && leaders.length === 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
             {[1, 2, 3, 4].map((n) => (
               <div
