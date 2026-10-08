@@ -337,7 +337,11 @@ export default function EmeritusLeadersPage() {
                       }}
                     >
                       <Award size={11} className="text-violet-400" />
-                      {leader.category.toUpperCase().replace('S', '')}
+                      {leader.category === 'House Leaders'
+                        ? 'HOUSE LEADER'
+                        : leader.category === 'SAMU Leaders'
+                        ? 'SAMU LEADER'
+                        : 'DELEGATE'}
                     </span>
                   </div>
 
