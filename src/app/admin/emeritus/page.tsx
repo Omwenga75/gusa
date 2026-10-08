@@ -212,7 +212,7 @@ export default function AdminEmeritusPage() {
             Manage and celebrate honored past GUSA executive leaders, SAMU leaders, and delegates.
           </p>
         </div>
-        <button className={styles.primaryButton} onClick={handleOpenAdd}>
+        <button className={styles.btnPrimary} onClick={handleOpenAdd}>
           <Plus size={18} />
           Add Emeritus Leader
         </button>
@@ -266,7 +266,7 @@ export default function AdminEmeritusPage() {
           <p style={{ color: '#94a3b8', fontSize: '0.875rem', margin: '0 0 1.5rem 0' }}>
             Click &quot;Add Emeritus Leader&quot; to add past leaders to the hall of fame.
           </p>
-          <button className={styles.primaryButton} onClick={handleOpenAdd} style={{ margin: '0 auto' }}>
+          <button className={styles.btnPrimary} onClick={handleOpenAdd} style={{ margin: '0 auto' }}>
             <Plus size={16} /> Add Emeritus Leader
           </button>
         </div>
@@ -696,7 +696,7 @@ export default function AdminEmeritusPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={styles.primaryButton}
+                  className={styles.btnPrimary}
                   style={{ padding: '0.6rem 1.5rem', fontSize: '0.8125rem' }}
                 >
                   {isSubmitting ? 'Saving...' : editingLeader ? 'Update Leader' : 'Save Leader'}
