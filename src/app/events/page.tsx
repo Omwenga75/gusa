@@ -65,15 +65,7 @@ function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?: strin
     return () => clearInterval(timer)
   }, [dateStr, timeStr])
 
-  if (isPast) {
-    return (
-      <span className="text-[11px] font-bold uppercase tracking-wider bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/60 backdrop-blur-md shadow-sm whitespace-nowrap">
-        Passed
-      </span>
-    )
-  }
-
-  if (!timeLeft) return null
+  if (isPast) return null
 
   return (
     <span className="text-[11px] font-extrabold font-mono tracking-tight bg-violet-950/85 text-violet-300 px-2.5 py-1 rounded-full border border-violet-500/35 backdrop-blur-md inline-flex items-center gap-1.5 whitespace-nowrap shadow-md">
