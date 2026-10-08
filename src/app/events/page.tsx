@@ -1,7 +1,24 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
+import { PublicLayout } from '@/components/layout/PublicLayout'
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  Search,
+  ArrowRight,
+  X,
+  Image as ImageIcon,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  Minimize2,
+  Sparkles,
+  Tag
+} from 'lucide-react'
 
 const getTargetDateTime = (dateStr: string, timeStr?: string): Date | null => {
   const dateObj = new Date(dateStr)
@@ -51,17 +68,7 @@ function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?: strin
 
   if (isPast) {
     return (
-      <span style={{
-        fontSize: '0.7rem',
-        fontWeight: 700,
-        textTransform: 'uppercase',
-        backgroundColor: 'rgba(34, 197, 94, 0.15)',
-        color: '#4ade80',
-        padding: '0.2rem 0.55rem',
-        borderRadius: '0.5rem',
-        border: '1px solid rgba(34, 197, 94, 0.3)',
-        whiteSpace: 'nowrap'
-      }}>
+      <span className="text-[11px] font-bold uppercase tracking-wider bg-slate-800/80 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700/60 backdrop-blur-md shadow-sm whitespace-nowrap">
         Passed
       </span>
     )
@@ -70,48 +77,18 @@ function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?: strin
   if (!timeLeft) return null
 
   return (
-    <span style={{
-      fontSize: '0.725rem',
-      fontWeight: 800,
-      fontFamily: 'monospace',
-      letterSpacing: '0.04em',
-      backgroundColor: 'rgba(139, 92, 246, 0.15)',
-      color: '#c084fc',
-      padding: '0.25rem 0.6rem',
-      borderRadius: '0.5rem',
-      border: '1px solid rgba(139, 92, 246, 0.35)',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.35rem',
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 8px rgba(139, 92, 246, 0.15)'
-    }}>
-      <Clock size={12} style={{ color: '#a78bfa' }} />
+    <span className="text-[11px] font-extrabold font-mono tracking-tight bg-violet-950/85 text-violet-300 px-2.5 py-1 rounded-full border border-violet-500/35 backdrop-blur-md inline-flex items-center gap-1.5 whitespace-nowrap shadow-md">
+      <Clock size={11} className="text-violet-400" />
       {timeLeft}
     </span>
   )
 }
-import { PublicLayout } from '@/components/layout/PublicLayout'
-import {
-  Calendar,
-  MapPin,
-  Clock,
-  Search,
-  Users,
-  CheckCircle2,
-  ArrowRight,
-  X,
-  Image as ImageIcon,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  Minimize2
-} from 'lucide-react'
 
 interface EventItem {
   id: string
+  slug?: string
   title: string
-  category: 'academic' | 'cultural' | 'sports' | 'welfare'
+  category: 'academic' | 'cultural' | 'sports' | 'welfare' | string
   date: string
   time: string
   month: string
@@ -140,7 +117,16 @@ const parseEventImages = (coverImage?: string): string[] => {
   }
 }
 
-const EVENTS_CACHE_KEY = 'events';
+const CATEGORIES = [
+  { id: 'all', label: 'All Events' },
+  { id: 'academic', label: 'Academic' },
+  { id: 'cultural', label: 'Cultural' },
+  { id: 'sports', label: 'Sports' },
+  { id: 'welfare', label: 'Welfare' },
+  { id: 'upcoming', label: 'Upcoming' },
+] as const
+
+const EVENTS_CACHE_KEY = 'events'
 
 export default function EventsPage() {
   const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
@@ -189,20 +175,21 @@ export default function EventsPage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [fullscreenImageIndex, galleryModalEvent])
 
-  React.useEffect(() => {
-    const cached = readCache<EventItem[]>(EVENTS_CACHE_KEY);
+  useEffect(() => {
+    const cached = readCache<EventItem[]>(EVENTS_CACHE_KEY)
     if (cached && cached.length > 0) {
-      setEventsData(cached);
-      setIsLoading(false);
+      setEventsData(cached)
+      setIsLoading(false)
     }
     fetch('/api/events', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.events) {
-          const mapped = data.events.map((evt: any) => {
+          const mapped: EventItem[] = data.events.map((evt: any) => {
             const dateObj = new Date(evt.date)
             return {
               id: evt.id,
+              slug: evt.slug || evt.id,
               title: evt.title,
               category: evt.organizer || 'academic',
               date: dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
@@ -210,8 +197,8 @@ export default function EventsPage() {
               month: dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
               day: dateObj.getDate().toString(),
               year: dateObj.getFullYear().toString(),
-              venue: evt.venue || 'Meru University',
-              description: evt.description,
+              venue: evt.venue || 'Meru University of Science and Technology',
+              description: evt.description || '',
               organizer: 'GUSA Executive',
               capacity: evt.capacity || 100,
               registeredCount: evt._count?.registrations || 0,
@@ -228,15 +215,13 @@ export default function EventsPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-
-
   // Filtered Events
   const filteredEvents = useMemo(() => {
     return eventsData.filter((event) => {
       const matchesTab =
         selectedTab === 'all' ||
         (selectedTab === 'upcoming' && event.status === 'upcoming') ||
-        event.category === selectedTab
+        event.category.toLowerCase() === selectedTab.toLowerCase()
 
       const query = searchQuery.toLowerCase().trim()
       const matchesSearch =
@@ -252,148 +237,258 @@ export default function EventsPage() {
 
   return (
     <PublicLayout>
-      {/* Page Header */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: '0.75rem',
-                color: 'var(--text-main)'
-              }}
-            >
+      {/* ── Page Header with Search & Filter Tabs ── */}
+      <section className="relative overflow-hidden bg-slate-950 border-b border-white/10 pt-10 pb-10 sm:pt-14 sm:pb-12">
+        {/* Ambient Gradient Background Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-600/10 blur-[90px] rounded-full pointer-events-none" />
+
+        <div className="container mx-auto px-4 max-w-5xl relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 border border-violet-500/20 mb-3 shadow-sm">
+              <Calendar size={13} />
+              GUSA Activities & Programs
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
               Events
             </h1>
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              All GUSA academic, cultural, sports, and welfare events.
+            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+              All GUSA academic forums, cultural festivals, sports fixtures, and student welfare initiatives.
             </p>
+          </div>
+
+          {/* Search Bar & Category Filters */}
+          <div className="flex flex-col gap-4 sm:gap-5 max-w-3xl mx-auto">
+            {/* Search Input */}
+            <div className="relative w-full">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search events by title, venue, or keyword..."
+                className="w-full bg-slate-900/90 border border-white/10 hover:border-violet-500/30 focus:border-violet-500 rounded-2xl pl-11 pr-10 py-3 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 backdrop-blur-md transition-all shadow-inner"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                  title="Clear search"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            {/* Category Pills */}
+            <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {CATEGORIES.map((cat) => {
+                const isActive = selectedTab === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedTab(cat.id)}
+                    className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-500/25 border border-violet-400/40'
+                        : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-850 border border-white/10'
+                    }`}
+                  >
+                    <span>{cat.label}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Main Events Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem' }}>
-        <div className="container">
+      {/* ── Main Events Grid Section ── */}
+      <section className="flex-1 w-full bg-[#090e1c] py-10 sm:py-14">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {/* Active Filter Status Line */}
+          <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8 text-xs sm:text-sm text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-white">
+                {isLoading && eventsData.length === 0
+                  ? 'Loading events...'
+                  : `${filteredEvents.length} ${filteredEvents.length === 1 ? 'event' : 'events'} found`}
+              </span>
+              {(selectedTab !== 'all' || searchQuery) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedTab('all')
+                    setSearchQuery('')
+                  }}
+                  className="text-violet-400 hover:text-violet-300 underline underline-offset-2 ml-2 transition-colors cursor-pointer font-medium"
+                >
+                  Reset filters
+                </button>
+              )}
+            </div>
+          </div>
 
+          {/* Skeletons while initial loading */}
           {isLoading && eventsData.length === 0 ? (
-            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="flex flex-col aspect-square rounded-2xl overflow-hidden"
-                  style={{
-                    backgroundColor: 'var(--surface-subtle)',
-                    border: '1px solid var(--border)',
-                    boxShadow: 'var(--shadow-md)',
-                    aspectRatio: '1 / 1'
-                  }}
+                  className="flex flex-col bg-slate-900/80 border border-white/10 rounded-2xl overflow-hidden shadow-lg"
                 >
-                  {/* Event Image Banner Skeleton */}
-                  <div className="skeleton" style={{ height: '72%', width: '100%', borderRadius: 0 }} />
-
-                  {/* Card Body Skeleton */}
-                  <div style={{ padding: 'clamp(0.75rem, 3vw, 1.25rem)', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <div className="skeleton" style={{ width: '85%', height: '20px', borderRadius: '4px' }} />
-                      <div className="skeleton" style={{ width: '60%', height: '14px', borderRadius: '4px' }} />
+                  <div className="skeleton h-52 sm:h-56 w-full" style={{ borderRadius: 0 }} />
+                  <div className="p-5 sm:p-6 flex flex-col gap-3.5 flex-1 justify-between">
+                    <div className="space-y-3">
+                      <div className="skeleton w-1/3 h-4" />
+                      <div className="skeleton w-3/4 h-6" />
+                      <div className="skeleton w-full h-3.5" />
+                      <div className="skeleton w-4/5 h-3.5" />
                     </div>
-
-                    <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div className="skeleton" style={{ height: '16px', width: '40%', borderRadius: '4px' }} />
-                      <div className="skeleton" style={{ height: '24px', width: '35%', borderRadius: '8px' }} />
+                    <div className="pt-4 border-t border-white/10 flex justify-between items-center">
+                      <div className="skeleton w-1/3 h-4" />
+                      <div className="skeleton w-1/4 h-8 rounded-lg" />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : filteredEvents.length === 0 ? (
-            <div
-              className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg"
-              style={{
-                backgroundColor: 'var(--surface-subtle)',
-                borderRadius: 'var(--radius-xl)',
-                border: '1px dashed var(--border)'
-              }}
-            >
-              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
+            /* Empty State */
+            <div className="flex flex-col items-center justify-center text-center mx-auto py-16 px-4 w-full max-w-lg bg-slate-900/50 rounded-2xl border border-dashed border-white/15">
+              <div className="flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
                 <Calendar size={32} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2 text-center">No events found</h3>
-              <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 text-center leading-relaxed">
-                We couldn&apos;t find any events matching your selected criteria. Try resetting the filters.
+              <h3 className="text-xl font-bold text-white mb-2">No events found</h3>
+              <p className="text-slate-400 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
+                {searchQuery || selectedTab !== 'all'
+                  ? 'We could not find any events matching your selected criteria. Try adjusting your search or category filter.'
+                  : 'There are no events scheduled at this moment. Check back soon for updates!'}
               </p>
               <button
+                type="button"
                 onClick={() => {
                   setSelectedTab('all')
                   setSearchQuery('')
                 }}
-                className="btn btn-outline inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold border border-white/20 text-slate-200 hover:text-white"
+                className="btn btn-outline inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-semibold border border-white/20 text-slate-200 hover:text-white"
               >
-                Reset Filter
+                Reset Filters
               </button>
             </div>
           ) : (
-            <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
+            /* Events Cards Grid: 1 col on mobile, 2 cols on tablet, 3 cols on desktop */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {filteredEvents.map((event) => {
                 const images = parseEventImages(event.coverImage)
                 const coverUrl = images.length > 0 ? images[0] : undefined
 
                 return (
-                  <div
+                  <article
                     key={event.id}
-                    onClick={() => setGalleryModalEvent(event)}
-                    className="group flex flex-col aspect-square glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all cursor-pointer shadow-lg hover:shadow-violet-500/10"
-                    style={{ aspectRatio: '1 / 1' }}
+                    className="group flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
                   >
-                    {coverUrl ? (
-                      <div className="relative w-full h-[72%] overflow-hidden bg-slate-950 flex-shrink-0">
-                        <img 
-                          src={coverUrl} 
-                          alt={event.title} 
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" 
+                    {/* Event Banner Image with Aspect Ratio */}
+                    <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-slate-950 flex-shrink-0">
+                      {coverUrl ? (
+                        <img
+                          src={coverUrl}
+                          alt={event.title}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
-                          {event.category}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="relative w-full h-[72%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
-                        <Calendar size={36} className="text-violet-400/40" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
-                          {event.category}
-                        </span>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-violet-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5">
+                          <Calendar size={44} className="text-violet-400/40" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
 
-                    <div className="p-3 sm:p-3.5 flex flex-col flex-1 justify-between overflow-hidden">
-                      <div>
-                        <h3 className="text-white font-bold text-sm sm:text-base leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-1">
-                          {event.title}
-                        </h3>
+                      {/* Category Badge & Photos Count Overlay */}
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10">
+                        <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {event.category}
+                        </span>
+
+                        {images.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              e.preventDefault()
+                              setGalleryModalEvent(event)
+                            }}
+                            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-200 hover:text-white bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 hover:border-violet-400/50 shadow-md transition-colors cursor-pointer"
+                            title="View event gallery photos"
+                          >
+                            <ImageIcon size={12} className="text-violet-400" />
+                            <span>{images.length} {images.length === 1 ? 'photo' : 'photos'}</span>
+                          </button>
+                        )}
                       </div>
-                      <div className="mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
-                        <div className="flex flex-col gap-0.5 text-slate-400 text-[11px] sm:text-xs min-w-0">
-                          <span className="flex items-center gap-1.5">
-                            <Calendar size={11} className="text-violet-400 shrink-0" />
-                            <span className="truncate">{event.date}</span>
+
+                      {/* Countdown Badge on Banner */}
+                      <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
+                        <EventCountdown dateStr={event.date} timeStr={event.time} />
+                      </div>
+                    </div>
+
+                    {/* Card Content Body */}
+                    <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4">
+                      <div className="space-y-2.5">
+                        {/* Date & Venue Metadata */}
+                        <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-400 font-medium">
+                          <span className="flex items-center gap-1.5 text-slate-300">
+                            <Calendar size={13} className="text-violet-400 shrink-0" />
+                            <span>{event.date}</span>
                           </span>
                           {event.venue && (
-                            <span className="flex items-center gap-1.5">
-                              <MapPin size={11} className="text-violet-400 shrink-0" />
+                            <span className="flex items-center gap-1.5 text-slate-400 max-w-[200px] truncate" title={event.venue}>
+                              <MapPin size={13} className="text-violet-400 shrink-0" />
                               <span className="truncate">{event.venue}</span>
                             </span>
                           )}
                         </div>
-                        <div className="shrink-0">
-                          <EventCountdown dateStr={event.date} timeStr={event.time} />
-                        </div>
+
+                        {/* Title (2-line clamp) */}
+                        <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors leading-snug line-clamp-2">
+                          <Link href={`/events/${event.slug || event.id}`} className="hover:underline">
+                            {event.title}
+                          </Link>
+                        </h3>
+
+                        {/* Description snippet */}
+                        {event.description && event.description !== event.title && (
+                          <p className="text-slate-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                            {event.description}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Card Action Footer */}
+                      <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2.5 mt-auto">
+                        <Link
+                          href={`/events/${event.slug || event.id}`}
+                          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-violet-400 hover:text-violet-300 group/link transition-colors"
+                        >
+                          <span>View Details</span>
+                          <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                        </Link>
+
+                        {images.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setGalleryModalEvent(event)}
+                            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/5 hover:bg-violet-500/15 border border-white/10 hover:border-violet-500/30 text-slate-300 hover:text-white transition-all cursor-pointer"
+                          >
+                            <ImageIcon size={13} className="text-violet-400" />
+                            <span>Gallery ({images.length})</span>
+                          </button>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  </article>
                 )
               })}
             </div>
@@ -401,180 +496,76 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Fullscreen Gallery Lightbox Modal */}
+      {/* ── Gallery Modal & Lightbox ── */}
       {galleryModalEvent && (
-        <div 
-          onClick={() => { setGalleryModalEvent(null); setFullscreenImageIndex(null) }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(3, 7, 18, 0.96)',
-            backdropFilter: 'blur(16px)',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 'clamp(0.75rem, 3vw, 1.5rem)',
-            overflowY: 'auto'
+        <div
+          onClick={() => {
+            setGalleryModalEvent(null)
+            setFullscreenImageIndex(null)
           }}
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex flex-col p-4 sm:p-6 overflow-y-auto"
         >
           {/* Modal Header */}
-          <div 
+          <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '1rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              paddingBottom: '1rem',
-              maxWidth: '1200px',
-              width: '100%',
-              margin: '0 auto 1.5rem auto',
-              gap: '0.75rem',
-              flexWrap: 'wrap'
-            }}
+            className="flex items-center justify-between pb-4 border-b border-white/15 max-w-5xl w-full mx-auto gap-4 mb-6"
           >
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
-                <span style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(139, 92, 246, 0.2)',
-                  color: '#c084fc',
-                  border: '1px solid rgba(139, 92, 246, 0.3)'
-                }}>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
                   {galleryModalEvent.category}
                 </span>
-                <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>
-                  {galleryModalEvent.date}
-                </span>
+                <span className="text-xs text-slate-400">{galleryModalEvent.date}</span>
               </div>
-              <h2 style={{ fontSize: 'clamp(1.15rem, 3.5vw, 1.5rem)', fontWeight: 800, color: '#ffffff', margin: 0, overflowWrap: 'anywhere' }}>
-                {galleryModalEvent.title} — Gallery
+              <h2 className="text-lg sm:text-2xl font-bold text-white truncate">
+                {galleryModalEvent.title} — Photos
               </h2>
             </div>
             <button
-              onClick={() => { setGalleryModalEvent(null); setFullscreenImageIndex(null) }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: '#ffffff',
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                flexShrink: 0
+              type="button"
+              onClick={() => {
+                setGalleryModalEvent(null)
+                setFullscreenImageIndex(null)
               }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer shrink-0"
               title="Close gallery"
             >
               <X size={20} />
             </button>
           </div>
 
-          {/* Modal Body / Image Grid */}
-          <div 
+          {/* Modal Body / Thumbnails Grid */}
+          <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              maxWidth: '1200px',
-              margin: '0 auto'
-            }}
+            className="flex-1 flex items-center justify-center max-w-5xl w-full mx-auto"
           >
             {(() => {
               const images = parseEventImages(galleryModalEvent.coverImage)
               if (images.length === 0) {
                 return (
-                  <div style={{
-                    textAlign: 'center',
-                    padding: 'clamp(2rem, 5vw, 4rem) 1.5rem',
-                    color: '#94a3b8',
-                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                    borderRadius: '1.5rem',
-                    border: '1px dashed rgba(255, 255, 255, 0.15)',
-                    maxWidth: '480px',
-                    width: '100%'
-                  }}>
-                    <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#a78bfa' }} />
-                    <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>No Gallery Photos</h3>
-                    <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0 }}>There are no pictures added for this event yet.</p>
+                  <div className="text-center py-16 px-6 bg-slate-900/60 rounded-2xl border border-dashed border-white/15 max-w-md w-full">
+                    <ImageIcon size={44} className="mx-auto mb-3 text-violet-400/40" />
+                    <h3 className="text-base font-bold text-white mb-1">No Photos Found</h3>
+                    <p className="text-xs text-slate-400">There are no gallery photos uploaded for this event yet.</p>
                   </div>
                 )
               }
 
               return (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: images.length === 1 ? '1fr' : 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
-                  gap: '1rem',
-                  width: '100%',
-                  maxHeight: '80vh',
-                  overflowY: 'auto',
-                  padding: '0.25rem'
-                }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-h-[75vh] overflow-y-auto p-1">
                   {images.map((imgSrc, i) => (
                     <div
                       key={i}
                       onClick={() => setFullscreenImageIndex(i)}
-                      style={{
-                        borderRadius: '1rem',
-                        overflow: 'hidden',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: images.length === 1 ? 'auto' : '260px',
-                        maxHeight: images.length === 1 ? '75vh' : undefined,
-                        cursor: 'pointer',
-                        position: 'relative',
-                        maxWidth: images.length === 1 ? '700px' : undefined,
-                        margin: images.length === 1 ? '0 auto' : undefined
-                      }}
+                      className="group/thumb relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15 bg-slate-900 shadow-xl cursor-pointer hover:border-violet-400/60 transition-all"
                     >
                       <img
                         src={imgSrc}
-                        alt={`${galleryModalEvent.title} picture ${i + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          maxHeight: images.length === 1 ? '75vh' : undefined
-                        }}
+                        alt={`${galleryModalEvent.title} photo ${i + 1}`}
+                        className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300"
                       />
-                      {/* Fullscreen hint overlay */}
-                      <div style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'rgba(0, 0, 0, 0)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'background 0.2s ease',
-                        pointerEvents: 'none'
-                      }}
-                        className="group-hover-overlay"
-                      >
-                        <Maximize2
-                          size={28}
-                          style={{
-                            color: '#ffffff',
-                            opacity: 0,
-                            transition: 'opacity 0.2s ease',
-                            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
-                          }}
-                        />
+                      <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 flex items-center justify-center transition-colors">
+                        <Maximize2 size={24} className="text-white opacity-0 group-hover/thumb:opacity-100 transition-opacity drop-shadow-md" />
                       </div>
                     </div>
                   ))}
@@ -590,152 +581,71 @@ export default function EventsPage() {
             return (
               <div
                 onClick={() => setFullscreenImageIndex(null)}
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  zIndex: 200,
-                  backgroundColor: 'rgba(0, 0, 0, 0.97)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column'
-                }}
+                className="fixed inset-0 z-[200] bg-black/98 flex items-center justify-center flex-col"
               >
-                {/* Top bar: counter + fullscreen toggle + close */}
+                {/* Lightbox Top Bar */}
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '1rem 1.25rem',
-                    zIndex: 210,
-                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)'
-                  }}
+                  className="absolute top-0 inset-x-0 flex items-center justify-between p-4 sm:p-6 z-[210] bg-gradient-to-b from-black/80 to-transparent"
                 >
-                  <span style={{ color: '#ffffff', fontSize: '0.875rem', fontWeight: 600 }}>
+                  <span className="text-white text-sm font-semibold">
                     {fullscreenImageIndex + 1} / {images.length}
                   </span>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div className="flex gap-2">
                     <button
+                      type="button"
                       onClick={toggleBrowserFullscreen}
                       title={isFullscreenMode ? 'Exit fullscreen' : 'Enter fullscreen'}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.12)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        color: '#ffffff',
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                      }}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                     >
                       {isFullscreenMode ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
                     </button>
                     <button
+                      type="button"
                       onClick={() => setFullscreenImageIndex(null)}
-                      title="Close"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.12)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        color: '#ffffff',
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                      }}
+                      title="Close preview"
+                      className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                     >
                       <X size={20} />
                     </button>
                   </div>
                 </div>
 
-                {/* Previous arrow */}
+                {/* Previous Image Chevron */}
                 {images.length > 1 && (
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation()
                       setFullscreenImageIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : images.length - 1))
                     }}
                     aria-label="Previous image"
-                    style={{
-                      position: 'absolute',
-                      left: 'clamp(0.5rem, 2vw, 1.5rem)',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'rgba(255, 255, 255, 0.12)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: '#ffffff',
-                      width: 'clamp(40px, 8vw, 52px)',
-                      height: 'clamp(40px, 8vw, 52px)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      zIndex: 210,
-                      transition: 'background 0.2s'
-                    }}
+                    className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-[210] cursor-pointer"
                   >
-                    <ChevronLeft size={24} />
+                    <ChevronLeft size={26} />
                   </button>
                 )}
 
-                {/* Image */}
+                {/* Main Fullscreen Image */}
                 <img
                   onClick={(e) => e.stopPropagation()}
                   src={images[fullscreenImageIndex]}
-                  alt={`${galleryModalEvent.title} picture ${fullscreenImageIndex + 1}`}
-                  style={{
-                    maxWidth: '95vw',
-                    maxHeight: '90vh',
-                    objectFit: 'contain',
-                    borderRadius: '0.5rem',
-                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6)',
-                    userSelect: 'none'
-                  }}
+                  alt={`${galleryModalEvent.title} photo ${fullscreenImageIndex + 1}`}
+                  className="max-w-[92vw] max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
                 />
 
-                {/* Next arrow */}
+                {/* Next Image Chevron */}
                 {images.length > 1 && (
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation()
                       setFullscreenImageIndex((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : 0))
                     }}
                     aria-label="Next image"
-                    style={{
-                      position: 'absolute',
-                      right: 'clamp(0.5rem, 2vw, 1.5rem)',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'rgba(255, 255, 255, 0.12)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: '#ffffff',
-                      width: 'clamp(40px, 8vw, 52px)',
-                      height: 'clamp(40px, 8vw, 52px)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      zIndex: 210,
-                      transition: 'background 0.2s'
-                    }}
+                    className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-[210] cursor-pointer"
                   >
-                    <ChevronRight size={24} />
+                    <ChevronRight size={26} />
                   </button>
                 )}
               </div>

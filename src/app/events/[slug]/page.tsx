@@ -7,8 +7,10 @@ import { PublicLayout } from '@/components/layout/PublicLayout';
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const event = await prisma.event.findUnique({
-    where: { slug },
+  const event = await prisma.event.findFirst({
+    where: {
+      OR: [{ slug }, { id: slug }],
+    },
   });
 
   if (!event) {

@@ -237,13 +237,16 @@ img, video, canvas, svg {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .grid-2,
   .grid-3,
   .grid-4 {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
   }
+}
+
+@media (max-width: 768px) {
   .section {
     padding-block: 3.5rem;
   }

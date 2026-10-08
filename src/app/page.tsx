@@ -308,53 +308,57 @@ export default async function HomePage() {
 
                 return (
                   <Link
-                    href="/events"
+                    href={`/events/${ev.slug || ev.id}`}
                     key={ev.id}
-                    className="group flex flex-col aspect-square glass-card bg-slate-800/60 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all shadow-lg hover:shadow-violet-500/10"
-                    style={{ aspectRatio: '1 / 1' }}
+                    className="group flex flex-col glass-card bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1"
                   >
                     {coverUrl ? (
-                      <div className="relative w-full h-[72%] overflow-hidden bg-slate-950 flex-shrink-0">
+                      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-950 flex-shrink-0">
                         <img 
                           src={coverUrl} 
                           alt={ev.title} 
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" 
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" 
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {category}
                         </span>
+                        <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
+                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
+                        </div>
                       </div>
                     ) : (
-                      <div className="relative w-full h-[72%] bg-gradient-to-br from-violet-900/40 to-slate-900 flex items-center justify-center border-b border-white/5 flex-shrink-0">
-                        <Calendar size={36} className="text-violet-400/40" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                      <div className="relative w-full h-48 sm:h-52 bg-gradient-to-br from-violet-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                        <Calendar size={40} className="text-violet-400/40" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {category}
                         </span>
+                        <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
+                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
+                        </div>
                       </div>
                     )}
-                    <div className="p-3 sm:p-3.5 flex flex-col flex-1 justify-between overflow-hidden">
-                      <div>
-                        <h3 className="text-white font-bold text-sm sm:text-base leading-snug group-hover:text-violet-300 transition-colors break-words line-clamp-1">
-                          {ev.title}
-                        </h3>
-                      </div>
-                      <div className="mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
-                        <div className="flex flex-col gap-0.5 text-slate-400 text-[11px] sm:text-xs min-w-0">
-                          <span className="flex items-center gap-1.5">
-                            <Calendar size={11} className="text-violet-400 shrink-0" />
-                            <span className="truncate">{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
+                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs text-slate-400 font-medium">
+                          <span className="flex items-center gap-1.5 text-slate-300">
+                            <Calendar size={12} className="text-violet-400 shrink-0" />
+                            <span>{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
                           </span>
                           {ev.venue && (
-                            <span className="flex items-center gap-1.5">
-                              <MapPin size={11} className="text-violet-400 shrink-0" />
+                            <span className="flex items-center gap-1.5 text-slate-400 max-w-[180px] truncate" title={ev.venue}>
+                              <MapPin size={12} className="text-violet-400 shrink-0" />
                               <span className="truncate">{ev.venue}</span>
                             </span>
                           )}
                         </div>
-                        <div className="shrink-0">
-                          <EventCountdown dateStr={dateISO} timeStr={ev.startTime} />
-                        </div>
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors line-clamp-2">
+                          {ev.title}
+                        </h3>
+                      </div>
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-violet-400 group-hover:text-violet-300">
+                        <span>View Details</span>
+                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </Link>
