@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { readCache, writeCache } from '@/lib/cache';
+import { readCache, writeCache, hasCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Image as ImageIcon,
@@ -53,7 +53,7 @@ const GALLERY_CACHE_KEY = 'gallery';
 
 export default function GalleryClient() {
   const [albumsData, setAlbumsData] = useState<Album[]>(() => readCache<Album[]>(GALLERY_CACHE_KEY) || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(GALLERY_CACHE_KEY));
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(GALLERY_CACHE_KEY));
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -256,7 +256,7 @@ export default function GalleryClient() {
 
 
           {/* Albums Grid */}
-          {isLoading ? (
+          {isLoading && albumsData.length === 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div

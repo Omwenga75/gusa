@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
-import { readCache, writeCache, clearCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
 interface Album {
@@ -18,7 +18,7 @@ const ADMIN_GALLERY_KEY = 'admin_gallery';
 
 export default function GalleryPage() {
   const [albums, setAlbums] = useState<Album[]>(() => readCache<Album[]>(ADMIN_GALLERY_KEY) || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_GALLERY_KEY));
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_GALLERY_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,9 +80,6 @@ export default function GalleryPage() {
   };
 
   const fetchGallery = async () => {
-    if (!readCache(ADMIN_GALLERY_KEY)) {
-      setIsLoading(true);
-    }
     try {
       const res = await fetch('/api/gallery', { cache: 'no-store' });
       const data = await res.json();
@@ -98,6 +95,11 @@ export default function GalleryPage() {
   };
 
   useEffect(() => {
+    const cached = readCache<Album[]>(ADMIN_GALLERY_KEY);
+    if (cached && cached.length > 0) {
+      setAlbums(cached);
+      setIsLoading(false);
+    }
     fetchGallery();
   }, []);
 
@@ -231,7 +233,7 @@ export default function GalleryPage() {
           <h2 className={styles.cardTitle}>Media Albums ({albums.length})</h2>
         </div>
 
-        {isLoading ? (
+        {isLoading && albums.length === 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
             {[1, 2, 3, 4].map((n) => (
               <div key={n} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>

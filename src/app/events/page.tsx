@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
-import { readCache, writeCache } from '@/lib/cache'
+import { readCache, writeCache, hasCache } from '@/lib/cache'
 
 const getTargetDateTime = (dateStr: string, timeStr?: string): Date | null => {
   const dateObj = new Date(dateStr)
@@ -144,7 +144,7 @@ const EVENTS_CACHE_KEY = 'events';
 
 export default function EventsPage() {
   const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(EVENTS_CACHE_KEY))
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(EVENTS_CACHE_KEY))
   const [selectedTab, setSelectedTab] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
@@ -278,7 +278,7 @@ export default function EventsPage() {
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem' }}>
         <div className="container">
 
-          {isLoading ? (
+          {isLoading && eventsData.length === 0 ? (
             <div className="grid-3" style={{ gap: 'clamp(1.25rem, 3vw, 2rem)' }}>
               {[1, 2, 3].map((n) => (
                 <div

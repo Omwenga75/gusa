@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Plus, Calendar as CalendarIcon, MapPin, X, Pencil, Trash2 } from 'lucide-react';
-import { readCache, writeCache, clearCache } from '@/lib/cache';
+import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
 interface Event {
@@ -23,7 +23,7 @@ const ADMIN_EVENTS_KEY = 'admin_events';
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>(() => readCache<Event[]>(ADMIN_EVENTS_KEY) || []);
-  const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_EVENTS_KEY));
+  const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_EVENTS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,10 +85,7 @@ export default function EventsPage() {
     });
   };
 
-  const fetchEvents = async (forceLoading = false) => {
-    if (forceLoading || !readCache(ADMIN_EVENTS_KEY)) {
-      setIsLoading(true);
-    }
+  const fetchEvents = async () => {
     try {
       const res = await fetch('/api/events', { cache: 'no-store' });
       const data = await res.json();
@@ -104,6 +101,11 @@ export default function EventsPage() {
   };
 
   useEffect(() => {
+    const cached = readCache<Event[]>(ADMIN_EVENTS_KEY);
+    if (cached && cached.length > 0) {
+      setEvents(cached);
+      setIsLoading(false);
+    }
     fetchEvents();
   }, []);
 
@@ -378,7 +380,7 @@ export default function EventsPage() {
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
+              {isLoading && events.length === 0 ? (
                 [1, 2, 3, 4, 5].map((n) => (
                   <tr key={n}>
                     <td>
