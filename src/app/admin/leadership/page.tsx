@@ -262,7 +262,7 @@ export default function LeadershipPage() {
 
       {isLoading && leaders.length === 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          {[1, 2, 3, 4].map((n) => (
+          {[1, 2, 3].map((n) => (
             <div
               key={n}
               style={{

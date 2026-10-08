@@ -278,7 +278,7 @@ export default function AdminEmeritusPage() {
       {/* Leaders List */}
       {isLoading && leaders.length === 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          {[1, 2, 3, 4].map(n => (
+          {[1, 2, 3].map(n => (
             <div key={n} style={{ height: '300px', borderRadius: '1rem', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)' }} />
           ))}
         </div>
