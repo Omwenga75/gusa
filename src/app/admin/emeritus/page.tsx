@@ -207,6 +207,26 @@ export default function AdminEmeritusPage() {
     ? leaders
     : leaders.filter(l => l.category === selectedFilter);
 
+  // Group leaders by Term / Period
+  const groupedByTerm = filteredLeaders.reduce<Record<string, EmeritusLeader[]>>((acc, leader) => {
+    const termKey = leader.term?.trim() || 'Other Terms';
+    if (!acc[termKey]) acc[termKey] = [];
+    acc[termKey].push(leader);
+    return acc;
+  }, {});
+
+  // Sort terms in descending order (e.g. 2025/2026 before 2024/2025)
+  const sortedTerms = Object.keys(groupedByTerm).sort((a, b) => {
+    const matchA = a.match(/(\d{4})/);
+    const matchB = b.match(/(\d{4})/);
+    const yearA = matchA ? parseInt(matchA[1], 10) : 0;
+    const yearB = matchB ? parseInt(matchB[1], 10) : 0;
+    if (yearA !== yearB) {
+      return yearB - yearA; // Descending: 2025/2026 before 2024/2025
+    }
+    return b.localeCompare(a);
+  });
+
   return (
     <div className={styles.container}>
       {/* Page Header */}
@@ -262,7 +282,7 @@ export default function AdminEmeritusPage() {
             <div key={n} style={{ height: '300px', borderRadius: '1rem', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)' }} />
           ))}
         </div>
-      ) : filteredLeaders.length === 0 ? (
+      ) : sortedTerms.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '4rem 1rem', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <GraduationCap size={40} style={{ color: '#7c3aed', margin: '0 auto 1rem auto' }} />
           <h3 style={{ color: '#ffffff', fontSize: '1.125rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>
@@ -276,189 +296,226 @@ export default function AdminEmeritusPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
-          {filteredLeaders.map(leader => (
-            <div
-              key={leader.id}
-              style={{
-                background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '1rem',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              {/* Glowing Gradient Header Banner */}
-              <div
-                style={{
-                  height: '64px',
-                  background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0 1rem',
-                }}
-              >
-                {/* Term Badge */}
-                <span
-                  style={{
-                    backgroundColor: 'rgba(10, 15, 29, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#e2e8f0',
-                    fontSize: '0.675rem',
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '9999px',
-                    fontWeight: 600,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                  }}
-                >
-                  <span
-                    style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      backgroundColor: '#a78bfa',
-                      boxShadow: '0 0 6px #a78bfa',
-                    }}
-                  />
-                  {leader.term}
-                </span>
-
-                {/* Edit & Delete icon buttons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <button
-                    onClick={() => handleOpenEdit(leader)}
-                    title="Edit leader"
-                    style={{
-                      background: 'rgba(124, 58, 237, 0.2)',
-                      border: '1px solid rgba(124, 58, 237, 0.4)',
-                      color: '#c4b5fd',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '0.5rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <Pencil size={13} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(leader.id)}
-                    disabled={deletingId === leader.id}
-                    title="Remove leader"
-                    style={{
-                      background: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      color: '#f87171',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '0.5rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      opacity: deletingId === leader.id ? 0.5 : 1,
-                    }}
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div style={{ padding: '0 1.25rem 1rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                {/* Avatar overlapping the banner */}
-                <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 10 }}>
-                  <div
-                    style={{
-                      width: '96px',
-                      height: '96px',
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
-                      border: '4px solid #0f172a',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '1.85rem',
-                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {leader.image ? (
-                      <img
-                        src={leader.image}
-                        alt={leader.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
-                      />
-                    ) : (
-                      leader.avatarInitials || 'EL'
-                    )}
-                  </div>
-                </div>
-
-                {/* Name & Position */}
-                <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
-                    {leader.name}
-                  </h3>
-                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    {leader.position}
-                  </p>
-                </div>
-
-                {/* Category Badge */}
-                <div style={{ marginBottom: '0.75rem' }}>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      padding: '0.2rem 0.65rem',
-                      borderRadius: '0.375rem',
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      backgroundColor: 'rgba(124, 58, 237, 0.15)',
-                      color: '#ddd6fe',
-                      border: '1px solid rgba(124, 58, 237, 0.35)',
-                    }}
-                  >
-                    {leader.category === 'House Leaders'
-                      ? 'House Leader'
-                      : leader.category === 'SAMU Leaders'
-                      ? 'SAMU Leader'
-                      : 'Delegate'}
-                  </span>
-                </div>
-
-                {/* Legacy Note */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+          {sortedTerms.map(term => (
+            <div key={term}>
+              {/* Term Header Title on Left */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div
                   style={{
-                    width: '100%',
-                    marginTop: 'auto',
-                    paddingTop: '0.75rem',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.35rem 0.9rem',
+                    borderRadius: '0.75rem',
+                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
+                    border: '1px solid rgba(124, 58, 237, 0.4)',
+                    boxShadow: '0 4px 15px rgba(124, 58, 237, 0.15)'
                   }}
                 >
-                  <p style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.5, margin: 0, textAlign: 'center' }}>
-                    A committed leader who served GUSA well and will be forever remembered.
-                  </p>
+                  <span
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: '#a78bfa',
+                      boxShadow: '0 0 8px #a78bfa'
+                    }}
+                  />
+                  <span style={{ fontSize: '0.875rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.025em' }}>
+                    Term {term}
+                  </span>
                 </div>
+                <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
+              </div>
+
+              {/* Leaders Grid for this Term */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
+                {groupedByTerm[term].map(leader => (
+                  <div
+                    key={leader.id}
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '1rem',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    {/* Glowing Gradient Header Banner */}
+                    <div
+                      style={{
+                        height: '64px',
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0 1rem',
+                      }}
+                    >
+                      {/* Term Badge */}
+                      <span
+                        style={{
+                          backgroundColor: 'rgba(10, 15, 29, 0.85)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          color: '#e2e8f0',
+                          fontSize: '0.675rem',
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '9999px',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: '#a78bfa',
+                            boxShadow: '0 0 6px #a78bfa',
+                          }}
+                        />
+                        {leader.term}
+                      </span>
+
+                      {/* Edit & Delete icon buttons */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <button
+                          onClick={() => handleOpenEdit(leader)}
+                          title="Edit leader"
+                          style={{
+                            background: 'rgba(124, 58, 237, 0.2)',
+                            border: '1px solid rgba(124, 58, 237, 0.4)',
+                            color: '#c4b5fd',
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '0.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                          }}
+                        >
+                          <Pencil size={13} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(leader.id)}
+                          disabled={deletingId === leader.id}
+                          title="Remove leader"
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            color: '#f87171',
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '0.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            opacity: deletingId === leader.id ? 0.5 : 1,
+                          }}
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div style={{ padding: '0 1.25rem 1rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                      {/* Avatar overlapping the banner */}
+                      <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 10 }}>
+                        <div
+                          style={{
+                            width: '96px',
+                            height: '96px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                            border: '4px solid #0f172a',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '1.85rem',
+                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {leader.image ? (
+                            <img
+                              src={leader.image}
+                              alt={leader.name}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
+                            />
+                          ) : (
+                            leader.avatarInitials || 'EL'
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Name & Position */}
+                      <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
+                        <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
+                          {leader.name}
+                        </h3>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          {leader.position}
+                        </p>
+                      </div>
+
+                      {/* Category Badge */}
+                      <div style={{ marginBottom: '0.75rem' }}>
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            padding: '0.2rem 0.65rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.65rem',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.08em',
+                            backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                            color: '#ddd6fe',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
+                          }}
+                        >
+                          {leader.category === 'House Leaders'
+                            ? 'House Leader'
+                            : leader.category === 'SAMU Leaders'
+                            ? 'SAMU Leader'
+                            : 'Delegate'}
+                        </span>
+                      </div>
+
+                      {/* Legacy Note */}
+                      <div
+                        style={{
+                          width: '100%',
+                          marginTop: 'auto',
+                          paddingTop: '0.75rem',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                        }}
+                      >
+                        <p style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.5, margin: 0, textAlign: 'center' }}>
+                          A committed leader who served GUSA well and will be forever remembered.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
