@@ -40,6 +40,30 @@ export async function POST(request: NextRequest) {
 
     const assignedPosition = position?.trim() || positionCategory?.trim() || 'General Aspirant';
 
+    // Check for duplicate nomination by email OR registration number
+    const existingNomination = await prisma.nomination.findFirst({
+      where: {
+        OR: [
+          { email: email.trim().toLowerCase() },
+          { regNumber: regNumber.trim().toUpperCase() },
+        ],
+      },
+      select: { email: true, regNumber: true, position: true },
+    });
+
+    if (existingNomination) {
+      const matchedBy =
+        existingNomination.email?.toLowerCase() === email.trim().toLowerCase()
+          ? 'email address'
+          : 'registration number';
+      return NextResponse.json(
+        {
+          error: `A nomination has already been submitted using this ${matchedBy}. Each person can only submit one nomination.`,
+        },
+        { status: 409 }
+      );
+    }
+
     // Create nomination record in database
     const nomination = await prisma.nomination.create({
       data: {

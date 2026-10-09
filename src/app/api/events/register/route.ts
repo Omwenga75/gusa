@@ -22,15 +22,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Event not found.' }, { status: 404 })
     }
 
-    // Check for duplicate registration
+    // Check for duplicate registration by email OR registration number
+    const orConditions: any[] = [{ studentEmail: email.toLowerCase() }];
+    if (regNumber && regNumber.trim()) {
+      orConditions.push({ studentRegNumber: regNumber.trim().toUpperCase() });
+    }
+
     const existing = await prisma.eventRegistration.findFirst({
-      where: { eventId, studentEmail: email }
-    })
+      where: {
+        eventId,
+        OR: orConditions,
+      },
+      select: { studentEmail: true, studentRegNumber: true },
+    });
+
     if (existing) {
+      const matchedBy =
+        existing.studentEmail?.toLowerCase() === email.toLowerCase()
+          ? 'email address'
+          : 'registration number';
       return NextResponse.json(
-        { error: 'You have already registered for this event.' },
+        { error: `You have already registered for this event using this ${matchedBy}.` },
         { status: 409 }
-      )
+      );
     }
 
     // Create new event registration with real data
@@ -38,9 +52,9 @@ export async function POST(request: NextRequest) {
       data: {
         eventId,
         studentName: fullName,
-        studentEmail: email,
+        studentEmail: email.toLowerCase(),
         studentPhone: phone || null,
-        studentRegNumber: regNumber || null,
+        studentRegNumber: regNumber ? regNumber.trim().toUpperCase() : null,
         studentCourse: course || null,
         status: 'CONFIRMED'
       }
