@@ -89,3 +89,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create member' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) return NextResponse.json({ error: 'Member ID is required' }, { status: 400 })
+
+    await prisma.user.delete({ where: { id } })
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('Delete member error:', err)
+    return NextResponse.json({ error: 'Failed to delete member' }, { status: 500 })
+  }
+}

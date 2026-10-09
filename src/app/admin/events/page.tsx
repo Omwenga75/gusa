@@ -618,7 +618,9 @@ export default function EventsPage() {
                       <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} />
                     </td>
                     <td>
-                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem' }}>
+                        <div className="skeleton" style={{ width: '56px', height: '26px', borderRadius: '0.375rem' }} />
+                        <div className="skeleton" style={{ width: '56px', height: '26px', borderRadius: '0.375rem' }} />
                         <div className="skeleton" style={{ width: '65px', height: '26px', borderRadius: '0.375rem' }} />
                       </div>
                     </td>
@@ -646,28 +648,71 @@ export default function EventsPage() {
                     </span>
                   </td>
                   <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
-                    <button
-                      onClick={() => handleDeleteEvent(event)}
-                      style={{
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
-                        color: '#f87171',
-                        padding: '0.35rem 0.85rem',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.35rem',
-                        whiteSpace: 'nowrap',
-                        transition: 'all 0.15s ease'
-                      }}
-                      title="Delete event"
-                    >
-                      <Trash2 size={13} /> Delete
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center' }}>
+                      <button
+                        onClick={() => openListPanel(event)}
+                        style={{
+                          background: 'rgba(139, 92, 246, 0.15)',
+                          border: '1px solid rgba(139, 92, 246, 0.3)',
+                          color: '#a78bfa',
+                          padding: '0.35rem 0.7rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="View ticket list"
+                      >
+                        <List size={12} /> List
+                      </button>
+                      <button
+                        onClick={() => handleOpenEdit(event)}
+                        style={{
+                          background: 'rgba(59, 130, 246, 0.15)',
+                          border: '1px solid rgba(59, 130, 246, 0.3)',
+                          color: '#60a5fa',
+                          padding: '0.35rem 0.7rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="Edit event"
+                      >
+                        <Pencil size={12} /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteEvent(event)}
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.15)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          color: '#f87171',
+                          padding: '0.35rem 0.7rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="Delete event"
+                      >
+                        <Trash2 size={13} /> Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

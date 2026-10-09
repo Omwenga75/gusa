@@ -124,6 +124,22 @@ export default function MembersPage() {
     }
   };
 
+  const handleDeleteMember = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this member? This action cannot be undone.')) return;
+    try {
+      const res = await fetch(`/api/members?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setMembers(prev => prev.filter(m => m.id !== id));
+      } else {
+        const d = await res.json();
+        alert(d.error || 'Failed to delete member.');
+      }
+    } catch (err) {
+      console.error('Delete member error:', err);
+      alert('Network error while deleting member.');
+    }
+  };
+
   return (
     <>
       <div className={styles.pageHeader}>
@@ -158,7 +174,7 @@ export default function MembersPage() {
                 <th style={{ width: '22%' }}>Reg No. / Year</th>
                 <th style={{ width: '22%' }}>School &amp; Faculty</th>
                 <th style={{ width: '13%' }}>County</th>
-                <th style={{ width: '18%' }}>Role &amp; Status</th>
+                <th style={{ width: '18%', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -177,7 +193,7 @@ export default function MembersPage() {
                     <td><div className="skeleton" style={{ width: '110px', height: '14px', borderRadius: '4px' }} /></td>
                     <td><div className="skeleton" style={{ width: '130px', height: '14px', borderRadius: '4px' }} /></td>
                     <td><div className="skeleton" style={{ width: '70px', height: '22px', borderRadius: '9999px' }} /></td>
-                    <td><div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '9999px' }} /></td>
+                    <td style={{ textAlign: 'center' }}><div className="skeleton" style={{ width: '70px', height: '28px', borderRadius: '0.375rem', margin: '0 auto' }} /></td>
                   </tr>
                 ))
               ) : (
@@ -263,39 +279,29 @@ export default function MembersPage() {
                         )}
                       </td>
 
-                      {/* Role & Status */}
-                      <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
-                          <span
-                            style={{
-                              padding: '0.2rem 0.6rem',
-                              borderRadius: '9999px',
-                              fontSize: '0.72rem',
-                              fontWeight: 700,
-                              backgroundColor: member.role === 'SUPER_ADMIN' || member.role === 'ADMIN' ? 'rgba(124, 58, 237, 0.2)' : 'rgba(59, 130, 246, 0.15)',
-                              color: member.role === 'SUPER_ADMIN' || member.role === 'ADMIN' ? '#c084fc' : '#60a5fa',
-                              border: '1px solid rgba(124, 58, 237, 0.3)',
-                              display: 'inline-block'
-                            }}
-                          >
-                            {member.role}
-                          </span>
-
-                          <span
-                            style={{
-                              padding: '0.15rem 0.55rem',
-                              borderRadius: '9999px',
-                              fontSize: '0.68rem',
-                              fontWeight: 700,
-                              backgroundColor: member.status === 'ACTIVE' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                              color: member.status === 'ACTIVE' ? '#4ade80' : '#f87171',
-                              border: '1px solid rgba(34, 197, 94, 0.2)',
-                              display: 'inline-block'
-                            }}
-                          >
-                            {member.status}
-                          </span>
-                        </div>
+                      {/* Actions */}
+                      <td style={{ textAlign: 'center' }}>
+                        <button
+                          onClick={() => handleDeleteMember(member.id)}
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            color: '#f87171',
+                            padding: '0.35rem 0.85rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            whiteSpace: 'nowrap',
+                            transition: 'all 0.15s ease'
+                          }}
+                          title="Delete member"
+                        >
+                          <Trash2 size={13} /> Delete
+                        </button>
                       </td>
                     </tr>
                   );
