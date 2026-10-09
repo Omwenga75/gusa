@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 const SLIDES = [
   '/hero-slide-1.jpg',
@@ -29,28 +29,52 @@ const SLIDES = [
 ];
 
 const INTERVAL_MS = 10_000; // 10 seconds per slide
+const TRANSITION_MS = 900;  // 0.9s smooth slide
 
 export function HeroSlider() {
   const [current, setCurrent] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
-  const [sliding, setSliding] = useState(false);
+  const [isSliding, setIsSliding] = useState(false);
+  const slidingRef = useRef(false);
+  slidingRef.current = isSliding;
 
-  const goNext = useCallback(() => {
-    setSliding(true);
-    setPrev(current);
-    setCurrent(c => (c + 1) % SLIDES.length);
+  const nextIndex = (current + 1) % SLIDES.length;
 
-    // After the CSS transition finishes, clear the "prev" layer
-    setTimeout(() => {
-      setPrev(null);
-      setSliding(false);
-    }, 800); // matches the CSS transition duration
+  // Preload all slides in the browser cache so they never lag or flash black
+  useEffect(() => {
+    SLIDES.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  const triggerSlide = useCallback(() => {
+    if (slidingRef.current) return;
+
+    // Ensure next slide image is fully loaded in memory before initiating slide
+    const nextSrc = SLIDES[(current + 1) % SLIDES.length];
+    const preloader = new Image();
+    preloader.src = nextSrc;
+
+    const startAnimation = () => {
+      setIsSliding(true);
+      setTimeout(() => {
+        setCurrent(prev => (prev + 1) % SLIDES.length);
+        setIsSliding(false);
+      }, TRANSITION_MS);
+    };
+
+    if (preloader.complete) {
+      startAnimation();
+    } else {
+      preloader.onload = startAnimation;
+      preloader.onerror = startAnimation;
+    }
   }, [current]);
 
   useEffect(() => {
-    const id = setInterval(goNext, INTERVAL_MS);
+    const id = setInterval(triggerSlide, INTERVAL_MS);
     return () => clearInterval(id);
-  }, [goNext]);
+  }, [triggerSlide]);
 
   return (
     <div
@@ -64,52 +88,47 @@ export function HeroSlider() {
         userSelect: 'none',
       }}
     >
-      {/* Previous slide — slides out to the left */}
-      {prev !== null && (
-        <img
-          key={`prev-${prev}`}
-          src={SLIDES[prev]}
-          alt=""
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center 35%',
-            transform: sliding ? 'translateX(-100%)' : 'translateX(0)',
-            transition: 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)',
-            willChange: 'transform',
-          }}
-        />
-      )}
-
-      {/* Current slide — slides in from the right */}
-      <img
-        key={`curr-${current}`}
-        src={SLIDES[current]}
-        alt=""
+      {/* 2-Slide continuous track: eliminates any gap or black background between photos */}
+      <div
         style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
+          display: 'flex',
+          width: '200%',
           height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center 35%',
-          transform: sliding ? 'translateX(0)' : 'translateX(0)',
-          transition: 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)',
+          transform: isSliding ? 'translateX(-50%)' : 'translateX(0%)',
+          transition: isSliding ? `transform ${TRANSITION_MS}ms cubic-bezier(0.25, 1, 0.5, 1)` : 'none',
           willChange: 'transform',
-          // Starts offscreen-right when sliding in
-          animation: prev !== null ? 'slideIn 0.8s cubic-bezier(0.77,0,0.175,1) forwards' : 'none',
         }}
-      />
+      >
+        {/* Current slide */}
+        <div style={{ width: '50%', height: '100%', position: 'relative', flexShrink: 0 }}>
+          <img
+            src={SLIDES[current]}
+            alt=""
+            decoding="async"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 35%',
+            }}
+          />
+        </div>
 
-      <style>{`
-        @keyframes slideIn {
-          from { transform: translateX(100%); }
-          to   { transform: translateX(0); }
-        }
-      `}</style>
+        {/* Next slide (seamlessly connected side-by-side) */}
+        <div style={{ width: '50%', height: '100%', position: 'relative', flexShrink: 0 }}>
+          <img
+            src={SLIDES[nextIndex]}
+            alt=""
+            decoding="async"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 35%',
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
