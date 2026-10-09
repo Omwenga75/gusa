@@ -11,7 +11,8 @@ import {
   Image as ImageIcon,
   ChevronRight,
   Quote,
-  Star
+  Star,
+  Ticket
 } from 'lucide-react';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
@@ -51,7 +52,7 @@ async function getHomePageData() {
       // Events — only show events whose date is within the last 5 days or in the future
       (async () => {
         try {
-          return await prisma.event.findMany({
+          const events = await prisma.event.findMany({
             where: {
               status: { not: 'DRAFT' },
               date: { gte: cutoffDate }, // hide events that ended more than 5 days ago
@@ -73,6 +74,28 @@ async function getHomePageData() {
               _count: { select: { registrations: true } },
             },
           });
+
+          const eventIds = events.map(e => `event_list_${e.id}`);
+          const ticketSettings = await prisma.siteSetting.findMany({
+            where: { key: { in: eventIds } },
+            select: { key: true, value: true }
+          });
+
+          const ticketCounts: Record<string, number> = {};
+          for (const ts of ticketSettings) {
+            const eventId = ts.key.replace('event_list_', '');
+            try {
+              const list = JSON.parse(ts.value);
+              if (Array.isArray(list)) {
+                ticketCounts[eventId] = list.length;
+              }
+            } catch {}
+          }
+
+          return events.map(e => ({
+            ...e,
+            ticketCount: ticketCounts[e.id] || 0,
+          }));
         } catch (e) {
           console.error('Error fetching events:', e);
           return [];
@@ -352,9 +375,17 @@ export default async function HomePage() {
                             </span>
                           )}
                         </div>
-                        <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors line-clamp-2">
-                          {ev.title}
-                        </h3>
+                        <div className="flex items-start justify-between gap-2.5">
+                          <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors line-clamp-2 flex-1">
+                            {ev.title}
+                          </h3>
+                          {(ev.ticketCount ?? 0) > 0 && (
+                            <span className="inline-flex items-center gap-1 text-[10.5px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shrink-0 shadow-sm mt-0.5">
+                              <Ticket size={11} className="text-violet-400" />
+                              <span>Tickets</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-violet-400 group-hover:text-violet-300">
                         <span>View Details</span>
