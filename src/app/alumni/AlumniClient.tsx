@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
-import { GraduationCap, Sparkles } from 'lucide-react';
+import { GraduationCap, Award } from 'lucide-react';
 import { readCache, writeCache, hasCache } from '@/lib/cache';
 
 export interface AlumniItem {
@@ -102,7 +102,13 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
             </div>
           ) : (
             /* Alumni Grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))',
+                gap: '1.5rem',
+              }}
+            >
               {alumniList.map((alumnus) => {
                 const initials = alumnus.name
                   ? alumnus.name
@@ -115,60 +121,129 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                   : 'AL';
 
                 return (
-                  <article
+                  <div
                     key={alumnus.id}
-                    className="group flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '1rem',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                      transition: 'all 0.3s ease',
+                    }}
+                    className="hover:-translate-y-1 hover:shadow-violet-500/15"
                   >
-                    {/* Picture Banner with Aspect Ratio */}
-                    <div className="relative w-full aspect-square overflow-hidden bg-slate-950 flex-shrink-0">
-                      {alumnus.image ? (
-                        <img
-                          src={alumnus.image}
-                          alt={alumnus.name}
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-violet-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5">
-                          <span className="text-4xl font-extrabold text-violet-400/60">
-                            {initials}
-                          </span>
+                    {/* Glowing Graphic Header Banner */}
+                    <div
+                      style={{
+                        height: '64px',
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        position: 'relative',
+                      }}
+                    />
+
+                    {/* Card Body */}
+                    <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                      {/* Avatar Container */}
+                      <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 10 }}>
+                        <div
+                          style={{
+                            width: '96px',
+                            height: '96px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                            border: '4px solid #0f172a',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '1.85rem',
+                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {alumnus.image ? (
+                            <img
+                              src={alumnus.image}
+                              alt={alumnus.name}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                objectPosition: 'top center',
+                              }}
+                            />
+                          ) : (
+                            initials
+                          )}
                         </div>
-                      )}
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Alumni Badge */}
-                      <div className="absolute top-3 left-3 z-10 pointer-events-none">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
-                          <GraduationCap size={12} className="text-violet-400" />
-                          Alumni
-                        </span>
                       </div>
-                    </div>
 
-                    {/* Content */}
-                    <div className="p-5 flex flex-col flex-1 justify-between gap-3">
-                      <div>
-                        {/* Name */}
-                        <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors leading-snug mb-2">
+                      {/* Name */}
+                      <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
+                        <h3
+                          style={{
+                            margin: 0,
+                            fontSize: '1.05rem',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.025em',
+                            lineHeight: 1.3,
+                          }}
+                        >
                           {alumnus.name}
                         </h3>
-
-                        {/* Short Description (Max 60 chars) */}
-                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed break-words bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
-                          {alumnus.shortDescription}
-                        </p>
                       </div>
 
-                      <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
-                        <span>GUSA Alumni</span>
-                        <span className="flex items-center gap-1 text-violet-400/80">
-                          <Sparkles size={11} />
-                          Legacy
+                      {/* Alumni Badge */}
+                      <div style={{ marginBottom: '0.75rem' }}>
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            padding: '0.2rem 0.65rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.65rem',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.08em',
+                            backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                            color: '#ddd6fe',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
+                          }}
+                        >
+                          <GraduationCap size={11} className="text-violet-400" />
+                          ALUMNI
                         </span>
                       </div>
+
+                      {/* Key Legacy */}
+                      <div
+                        style={{
+                          width: '100%',
+                          marginTop: 'auto',
+                          paddingTop: '0.75rem',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                        }}
+                      >
+                        <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                          <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
+                          <p className="text-[11px] text-slate-300 leading-snug m-0">
+                            <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
+                            {alumnus.shortDescription}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </article>
+                  </div>
                 );
               })}
             </div>

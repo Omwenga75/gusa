@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap } from 'lucide-react';
+import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap, Award } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 
 export interface AlumniItem {
@@ -259,7 +259,13 @@ export default function AdminAlumniPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))',
+            gap: '1.5rem',
+          }}
+        >
           {alumniList.map(item => {
             const initials = item.name
               ? item.name
@@ -274,61 +280,196 @@ export default function AdminAlumniPage() {
             return (
               <div
                 key={item.id}
-                className="group relative flex flex-col justify-between p-5 rounded-2xl bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-violet-500/10"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '1rem',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                  transition: 'all 0.3s ease',
+                }}
+                className="hover:-translate-y-1 hover:shadow-violet-500/15"
               >
-                <div>
-                  {/* Top row: Avatar & Actions */}
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-800 border border-white/10 shrink-0">
+                {/* Glowing Graphic Header Banner with Actions */}
+                <div
+                  style={{
+                    height: '64px',
+                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0 1rem',
+                    position: 'relative',
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.68rem',
+                      fontWeight: 700,
+                      backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                      border: '1px solid rgba(124, 58, 237, 0.4)',
+                      color: '#ddd6fe',
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        backgroundColor: '#a78bfa',
+                        boxShadow: '0 0 6px #a78bfa',
+                      }}
+                    />
+                    Alumni
+                  </span>
+
+                  {/* Actions */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEdit(item)}
+                      title="Edit Alumni"
+                      style={{
+                        background: 'rgba(124, 58, 237, 0.2)',
+                        border: '1px solid rgba(124, 58, 237, 0.4)',
+                        color: '#c4b5fd',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <Pencil size={13} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteAlumni(item.id)}
+                      disabled={deletingId === item.id}
+                      title="Remove Alumni"
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#f87171',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        opacity: deletingId === item.id ? 0.5 : 1,
+                      }}
+                    >
+                      {deletingId === item.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Card Body */}
+                <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                  {/* Avatar overlapping banner */}
+                  <div style={{ marginTop: '-48px', marginBottom: '0.75rem', position: 'relative', zIndex: 10 }}>
+                    <div
+                      style={{
+                        width: '96px',
+                        height: '96px',
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                        border: '4px solid #0f172a',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '1.85rem',
+                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                        flexShrink: 0,
+                      }}
+                    >
                       {item.image ? (
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-full h-full object-cover object-top"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center font-bold text-violet-400 text-lg bg-violet-500/10">
-                          {initials}
-                        </div>
+                        initials
                       )}
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenEdit(item)}
-                        className="p-2 rounded-xl bg-white/5 hover:bg-violet-500/20 text-slate-300 hover:text-violet-300 border border-white/10 transition-colors cursor-pointer"
-                        title="Edit Alumni"
-                      >
-                        <Pencil size={15} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteAlumni(item.id)}
-                        disabled={deletingId === item.id}
-                        className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-white/10 transition-colors cursor-pointer disabled:opacity-50"
-                        title="Delete Alumni"
-                      >
-                        {deletingId === item.id ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
-                      </button>
                     </div>
                   </div>
 
                   {/* Name */}
-                  <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors leading-snug mb-2">
-                    {item.name}
-                  </h3>
+                  <div style={{ textAlign: 'center', marginBottom: '0.5rem', width: '100%' }}>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: '1.05rem',
+                        color: '#ffffff',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.025em',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {item.name}
+                    </h3>
+                  </div>
 
-                  {/* Short Description (Max 60 chars) */}
-                  <p className="text-sm text-slate-300 leading-relaxed break-words bg-slate-950/50 p-2.5 rounded-xl border border-white/5">
-                    {item.shortDescription}
-                  </p>
-                </div>
+                  {/* Alumni Badge */}
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.2rem 0.65rem',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.65rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                        color: '#ddd6fe',
+                        border: '1px solid rgba(124, 58, 237, 0.35)',
+                      }}
+                    >
+                      <GraduationCap size={11} className="text-violet-400" />
+                      ALUMNI
+                    </span>
+                  </div>
 
-                {/* Footer metadata */}
-                <div className="flex items-center justify-between pt-3 mt-4 border-t border-white/5 text-[11px] text-slate-500">
-                  <span>GUSA Alumni</span>
-                  <span>{item.shortDescription.length}/60 chars</span>
+                  {/* Key Legacy */}
+                  <div
+                    style={{
+                      width: '100%',
+                      marginTop: 'auto',
+                      paddingTop: '0.75rem',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                    }}
+                  >
+                    <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                      <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
+                      <p className="text-[11px] text-slate-300 leading-snug m-0">
+                        <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
+                        {item.shortDescription}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
