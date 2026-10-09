@@ -428,6 +428,74 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* ==================== Independent Card Rows Table Design ==================== */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  padding: 0 0.25rem;
+}
+
+.independentTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: transparent;
+  border: none;
+}
+
+.independentTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  text-align: left;
+}
+
+.independentTable th {
+  padding: 0.4rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  white-space: nowrap;
+}
+
+.independentTable tbody tr {
+  transition: transform 0.15s ease;
+}
+
+.independentTable td {
+  padding: 1.05rem 1.25rem;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  background: #0d1225;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.independentTable td:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-left-radius: 0.85rem;
+  border-bottom-left-radius: 0.85rem;
+}
+
+.independentTable td:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-right-radius: 0.85rem;
+  border-bottom-right-radius: 0.85rem;
+}
+
+.independentTable tbody tr:hover td {
+  background: #131b38;
+  border-color: rgba(124, 58, 237, 0.35);
+}
+
 .userCell {
   display: flex;
   align-items: center;

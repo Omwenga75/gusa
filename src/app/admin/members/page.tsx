@@ -146,15 +146,12 @@ export default function MembersPage() {
         </div>
       </div>
 
-      <div className={styles.card} style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '1rem 1.35rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 className={styles.cardTitle} style={{ fontSize: '1.05rem', margin: 0 }}>
-            Registered Members ({members.length})
-          </h2>
-        </div>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.cardTitle}>Registered Members ({members.length})</h2>
+      </div>
 
-        <div className={styles.tableWrapper} style={{ border: 'none', borderRadius: 0 }}>
-          <table className={styles.table}>
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable}>
             <thead>
               <tr>
                 <th style={{ width: '25%' }}>Member Name</th>
@@ -318,7 +315,6 @@ export default function MembersPage() {
             </tbody>
           </table>
         </div>
-      </div>
 
       {/* Add Member Modal */}
       {isModalOpen && (

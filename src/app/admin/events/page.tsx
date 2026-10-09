@@ -590,13 +590,12 @@ export default function EventsPage() {
         </button>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>All Events ({events.length})</h2>
-        </div>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.cardTitle}>All Events ({events.length})</h2>
+      </div>
 
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable}>
             <thead>
               <tr>
                 <th style={{ width: '40%' }}>Event Title</th>
@@ -727,7 +726,6 @@ export default function EventsPage() {
             </tbody>
           </table>
         </div>
-      </div>
 
       {/* Create Event Modal */}
       {isModalOpen && (

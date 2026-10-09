@@ -129,13 +129,12 @@ export default function NewsPage() {
         </button>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>Published Articles ({posts.length})</h2>
-        </div>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.cardTitle}>Published Articles ({posts.length})</h2>
+      </div>
 
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable}>
             <thead>
               <tr>
                 <th style={{ width: '45%' }}>Title</th>
@@ -196,7 +195,6 @@ export default function NewsPage() {
             </tbody>
           </table>
         </div>
-      </div>
 
       {/* Create Article Modal */}
       {isModalOpen && (

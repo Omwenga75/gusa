@@ -107,13 +107,12 @@ export default function WelfarePage() {
         </button>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>Welfare Initiatives ({projects.length})</h2>
-        </div>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.cardTitle}>Welfare Initiatives ({projects.length})</h2>
+      </div>
 
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable}>
             <thead>
               <tr>
                 <th style={{ width: '35%' }}>Initiative Title</th>
@@ -198,7 +197,6 @@ export default function WelfarePage() {
             </tbody>
           </table>
         </div>
-      </div>
 
       {/* Add Welfare Initiative Modal */}
       {isModalOpen && (
