@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../admin.module.css';
-import { Plus, X, Pencil, Trash2, List, Download, Loader2 } from 'lucide-react';
+import { Plus, X, Pencil, Trash2, List, Download, Loader2, Eye, Check } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
@@ -73,14 +73,27 @@ export default function EventsPage() {
   const [isListSubmitting, setIsListSubmitting] = useState(false);
   const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
 
+  // Modal tab: 'add' or 'view'
+  const [ticketModalTab, setTicketModalTab] = useState<'add' | 'view'>('add');
+
   // Add-entry form
   const [newName, setNewName] = useState('');
   const [newTicketType, setNewTicketType] = useState<TicketType>('Regular');
   const [newPayStatus, setNewPayStatus] = useState<PayStatus>('Paid');
   const [newQuantity, setNewQuantity] = useState('1');
 
+  // Edit-entry form
+  const [editingTicketEntry, setEditingTicketEntry] = useState<TicketEntry | null>(null);
+  const [editTicketName, setEditTicketName] = useState('');
+  const [editTicketType, setEditTicketType] = useState<TicketType>('Regular');
+  const [editTicketStatus, setEditTicketStatus] = useState<PayStatus>('Paid');
+  const [editTicketQuantity, setEditTicketQuantity] = useState('1');
+  const [isSavingTicketEdit, setIsSavingTicketEdit] = useState(false);
+
   const openListPanel = useCallback(async (event: Event) => {
     setListPanelEvent(event);
+    setTicketModalTab('add');
+    setEditingTicketEntry(null);
     setIsListLoading(true);
     setTicketEntries([]);
     try {
@@ -93,6 +106,47 @@ export default function EventsPage() {
       setIsListLoading(false);
     }
   }, []);
+
+  const handleStartEditTicket = (entry: TicketEntry) => {
+    setEditingTicketEntry(entry);
+    setEditTicketName(entry.name);
+    setEditTicketType(entry.ticketType);
+    setEditTicketStatus(entry.status);
+    setEditTicketQuantity(String(entry.quantity));
+  };
+
+  const handleSaveTicketEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!listPanelEvent || !editingTicketEntry || !editTicketName.trim()) return;
+    setIsSavingTicketEdit(true);
+    try {
+      const res = await fetch(`/api/events/${listPanelEvent.id}/list`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingTicketEntry.id,
+          name: editTicketName.trim(),
+          ticketType: editTicketType,
+          status: editTicketStatus,
+          quantity: parseInt(editTicketQuantity) || 1,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.entry) {
+        setTicketEntries(prev =>
+          prev.map(item => (item.id === data.entry.id ? data.entry : item))
+        );
+        setEditingTicketEntry(null);
+      } else {
+        alert(data.error || 'Failed to update ticket entry');
+      }
+    } catch (err) {
+      console.error('Update ticket error:', err);
+      alert('Error updating ticket entry');
+    } finally {
+      setIsSavingTicketEdit(false);
+    }
+  };
 
   const handleAddEntry = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -949,13 +1003,43 @@ export default function EventsPage() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
                   <List size={18} color="#a78bfa" />
-                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>Ticket List</span>
+                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>
+                    {ticketModalTab === 'add' ? 'Add to Ticket List' : 'Ticket List'}
+                  </span>
                 </div>
-                <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, maxWidth: '260px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {listPanelEvent.title}
                 </p>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                {/* View / Add Toggle Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTicketModalTab(ticketModalTab === 'add' ? 'view' : 'add');
+                    setEditingTicketEntry(null);
+                  }}
+                  title={ticketModalTab === 'add' ? 'View and edit tickets' : 'Add new ticket'}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                    padding: '0.4rem 0.75rem', borderRadius: '0.5rem',
+                    fontSize: '0.75rem', fontWeight: 700,
+                    background: ticketModalTab === 'view' ? 'rgba(124,58,237,0.3)' : 'rgba(124,58,237,0.15)',
+                    border: '1px solid rgba(124,58,237,0.4)',
+                    color: '#c4b5fd', cursor: 'pointer',
+                  }}
+                >
+                  {ticketModalTab === 'add' ? (
+                    <>
+                      <Eye size={13} /> View
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={13} /> Add
+                    </>
+                  )}
+                </button>
+
                 {ticketEntries.length > 0 && (
                   <>
                     <button
@@ -963,7 +1047,7 @@ export default function EventsPage() {
                       title="Download CSV"
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-                        padding: '0.4rem 0.85rem', borderRadius: '0.5rem',
+                        padding: '0.4rem 0.75rem', borderRadius: '0.5rem',
                         fontSize: '0.75rem', fontWeight: 700,
                         background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)',
                         color: '#4ade80', cursor: 'pointer',
@@ -976,7 +1060,7 @@ export default function EventsPage() {
                       title="Download / Print PDF"
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-                        padding: '0.4rem 0.85rem', borderRadius: '0.5rem',
+                        padding: '0.4rem 0.75rem', borderRadius: '0.5rem',
                         fontSize: '0.75rem', fontWeight: 700,
                         background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)',
                         color: '#fbbf24', cursor: 'pointer',
@@ -996,162 +1080,412 @@ export default function EventsPage() {
             </div>
 
             {/* Modal Body */}
-            <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <form onSubmit={handleAddEntry} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {/* Full Name */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
-                    Full Name <span style={{ color: '#f87171' }}>*</span>
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    placeholder="e.g. Jane Mwangi"
-                    value={newName}
-                    onChange={e => setNewName(e.target.value)}
-                    className={styles.searchInput}
+            <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+              {ticketModalTab === 'add' ? (
+                <>
+                  <form onSubmit={handleAddEntry} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {/* Full Name */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                        Full Name <span style={{ color: '#f87171' }}>*</span>
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="e.g. Jane Mwangi"
+                        value={newName}
+                        onChange={e => setNewName(e.target.value)}
+                        className={styles.searchInput}
+                        style={{
+                          background: 'rgba(6,8,15,0.8)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '0.5rem',
+                          padding: '0.6rem 1rem',
+                          fontSize: '0.875rem',
+                          color: '#f8fafc',
+                          outline: 'none',
+                          width: '100%',
+                        }}
+                      />
+                    </div>
+
+                    {/* Ticket Type, Status, Quantity — 3 columns */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
+                        <select
+                          value={newTicketType}
+                          onChange={e => setNewTicketType(e.target.value as TicketType)}
+                          className={styles.searchInput}
+                          style={{
+                            background: 'rgba(6,8,15,0.8)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '0.5rem',
+                            padding: '0.6rem 0.75rem',
+                            fontSize: '0.8125rem',
+                            color: '#f8fafc',
+                          }}
+                        >
+                          {TICKET_TYPES.map(t => (
+                            <option key={t} value={t} style={{ background: '#0d1225', color: '#fff' }}>{t}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Status</label>
+                        <select
+                          value={newPayStatus}
+                          onChange={e => setNewPayStatus(e.target.value as PayStatus)}
+                          className={styles.searchInput}
+                          style={{
+                            background: 'rgba(6,8,15,0.8)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '0.5rem',
+                            padding: '0.6rem 0.75rem',
+                            fontSize: '0.8125rem',
+                            color: '#f8fafc',
+                          }}
+                        >
+                          {PAY_STATUSES.map(s => (
+                            <option key={s} value={s} style={{ background: '#0d1225', color: '#fff' }}>{s}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Quantity</label>
+                        <input
+                          type="number"
+                          min={1}
+                          max={999}
+                          value={newQuantity}
+                          onChange={e => setNewQuantity(e.target.value)}
+                          className={styles.searchInput}
+                          style={{
+                            background: 'rgba(6,8,15,0.8)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '0.5rem',
+                            padding: '0.6rem 0.75rem',
+                            fontSize: '0.8125rem',
+                            color: '#f8fafc',
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => setListPanelEvent(null)}
+                        className={styles.btnOutline}
+                        style={{ width: 'auto' }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isListSubmitting}
+                        className={styles.btnPrimary}
+                      >
+                        {isListSubmitting ? (
+                          <>
+                            <Loader2 size={14} className="animate-spin" /> Adding...
+                          </>
+                        ) : (
+                          <>
+                            <Plus size={16} /> Add to List
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+
+                  {/* Bottom Center Indicator */}
+                  <div
                     style={{
-                      background: 'rgba(6,8,15,0.8)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '0.5rem',
-                      padding: '0.6rem 1rem',
-                      fontSize: '0.875rem',
-                      color: '#f8fafc',
-                      outline: 'none',
-                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingTop: '0.75rem',
+                      borderTop: '1px solid rgba(255,255,255,0.06)',
+                      textAlign: 'center',
                     }}
-                  />
-                </div>
-
-                {/* Ticket Type, Status, Quantity — 3 columns */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
-                    <select
-                      value={newTicketType}
-                      onChange={e => setNewTicketType(e.target.value as TicketType)}
-                      className={styles.searchInput}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setTicketModalTab('view')}
                       style={{
-                        background: 'rgba(6,8,15,0.8)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.5rem',
-                        padding: '0.6rem 0.75rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
                         fontSize: '0.8125rem',
-                        color: '#f8fafc',
+                        color: '#a78bfa',
+                        fontWeight: 600,
+                        background: 'rgba(124, 58, 237, 0.1)',
+                        border: '1px solid rgba(124, 58, 237, 0.25)',
+                        padding: '0.3rem 0.85rem',
+                        borderRadius: '9999px',
+                        cursor: 'pointer',
                       }}
                     >
-                      {TICKET_TYPES.map(t => (
-                        <option key={t} value={t} style={{ background: '#0d1225', color: '#fff' }}>{t}</option>
-                      ))}
-                    </select>
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: '#a78bfa',
+                          boxShadow: '0 0 6px #a78bfa',
+                        }}
+                      />
+                      {ticketEntries.length} added · View list
+                    </button>
+                  </div>
+                </>
+              ) : editingTicketEntry ? (
+                /* Edit Ticket Entry Form */
+                <form onSubmit={handleSaveTicketEdit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', margin: 0 }}>
+                      Edit Ticket Entry
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setEditingTicketEntry(null)}
+                      style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.75rem' }}
+                    >
+                      Back to list
+                    </button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Status</label>
-                    <select
-                      value={newPayStatus}
-                      onChange={e => setNewPayStatus(e.target.value as PayStatus)}
-                      className={styles.searchInput}
-                      style={{
-                        background: 'rgba(6,8,15,0.8)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.5rem',
-                        padding: '0.6rem 0.75rem',
-                        fontSize: '0.8125rem',
-                        color: '#f8fafc',
-                      }}
-                    >
-                      {PAY_STATUSES.map(s => (
-                        <option key={s} value={s} style={{ background: '#0d1225', color: '#fff' }}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Quantity</label>
+                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                      Full Name <span style={{ color: '#f87171' }}>*</span>
+                    </label>
                     <input
-                      type="number"
-                      min={1}
-                      max={999}
-                      value={newQuantity}
-                      onChange={e => setNewQuantity(e.target.value)}
+                      required
+                      type="text"
+                      value={editTicketName}
+                      onChange={e => setEditTicketName(e.target.value)}
                       className={styles.searchInput}
                       style={{
                         background: 'rgba(6,8,15,0.8)',
                         border: '1px solid rgba(255,255,255,0.1)',
                         borderRadius: '0.5rem',
-                        padding: '0.6rem 0.75rem',
-                        fontSize: '0.8125rem',
+                        padding: '0.6rem 1rem',
+                        fontSize: '0.875rem',
                         color: '#f8fafc',
+                        outline: 'none',
+                        width: '100%',
                       }}
                     />
                   </div>
-                </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
-                  <button
-                    type="button"
-                    onClick={() => setListPanelEvent(null)}
-                    className={styles.btnOutline}
-                    style={{ width: 'auto' }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isListSubmitting}
-                    className={styles.btnPrimary}
-                  >
-                    {isListSubmitting ? (
-                      <>
-                        <Loader2 size={14} className="animate-spin" /> Adding...
-                      </>
-                    ) : (
-                      <>
-                        <Plus size={16} /> Add to List
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
+                      <select
+                        value={editTicketType}
+                        onChange={e => setEditTicketType(e.target.value as TicketType)}
+                        className={styles.searchInput}
+                        style={{
+                          background: 'rgba(6,8,15,0.8)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '0.5rem',
+                          padding: '0.6rem 0.75rem',
+                          fontSize: '0.8125rem',
+                          color: '#f8fafc',
+                        }}
+                      >
+                        {TICKET_TYPES.map(t => (
+                          <option key={t} value={t} style={{ background: '#0d1225', color: '#fff' }}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
 
-              {/* Bottom Center Indicator */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingTop: '0.75rem',
-                  borderTop: '1px solid rgba(255,255,255,0.06)',
-                  textAlign: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    fontSize: '0.8125rem',
-                    color: '#a78bfa',
-                    fontWeight: 600,
-                    background: 'rgba(124, 58, 237, 0.1)',
-                    border: '1px solid rgba(124, 58, 237, 0.25)',
-                    padding: '0.3rem 0.85rem',
-                    borderRadius: '9999px',
-                  }}
-                >
-                  <span
-                    style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      backgroundColor: '#a78bfa',
-                      boxShadow: '0 0 6px #a78bfa',
-                    }}
-                  />
-                  {ticketEntries.length} added
-                </span>
-              </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Status</label>
+                      <select
+                        value={editTicketStatus}
+                        onChange={e => setEditTicketStatus(e.target.value as PayStatus)}
+                        className={styles.searchInput}
+                        style={{
+                          background: 'rgba(6,8,15,0.8)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '0.5rem',
+                          padding: '0.6rem 0.75rem',
+                          fontSize: '0.8125rem',
+                          color: '#f8fafc',
+                        }}
+                      >
+                        {PAY_STATUSES.map(s => (
+                          <option key={s} value={s} style={{ background: '#0d1225', color: '#fff' }}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Quantity</label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={999}
+                        value={editTicketQuantity}
+                        onChange={e => setEditTicketQuantity(e.target.value)}
+                        className={styles.searchInput}
+                        style={{
+                          background: 'rgba(6,8,15,0.8)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '0.5rem',
+                          padding: '0.6rem 0.75rem',
+                          fontSize: '0.8125rem',
+                          color: '#f8fafc',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => setEditingTicketEntry(null)}
+                      className={styles.btnOutline}
+                      style={{ width: 'auto' }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSavingTicketEdit}
+                      className={styles.btnPrimary}
+                    >
+                      {isSavingTicketEdit ? (
+                        <>
+                          <Loader2 size={14} className="animate-spin" /> Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Check size={16} /> Save Changes
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                /* Ticket List Table View */
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600 }}>
+                      {ticketEntries.length} {ticketEntries.length === 1 ? 'entry' : 'entries'} in total
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setTicketModalTab('add')}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                        fontSize: '0.75rem', color: '#a78bfa', background: 'rgba(124,58,237,0.12)',
+                        border: '1px solid rgba(124,58,237,0.3)', padding: '0.25rem 0.6rem',
+                        borderRadius: '0.375rem', cursor: 'pointer', fontWeight: 600,
+                      }}
+                    >
+                      <Plus size={12} /> Add More
+                    </button>
+                  </div>
+
+                  {ticketEntries.length === 0 ? (
+                    <div style={{
+                      textAlign: 'center', padding: '2.5rem 1rem',
+                      border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem',
+                      color: '#64748b', fontSize: '0.875rem',
+                    }}>
+                      No entries added yet.
+                    </div>
+                  ) : (
+                    <div style={{ overflowX: 'auto', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.07)' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
+                        <thead>
+                          <tr style={{ background: 'rgba(124,58,237,0.1)' }}>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>#</th>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>Name</th>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Ticket</th>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>Status</th>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>Qty</th>
+                            <th style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {ticketEntries.map((entry, i) => (
+                            <tr key={entry.id} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                              <td style={{ padding: '0.6rem 0.75rem', color: '#64748b' }}>{i + 1}</td>
+                              <td style={{ padding: '0.6rem 0.75rem', color: '#ffffff', fontWeight: 600 }}>{entry.name}</td>
+                              <td style={{ padding: '0.6rem 0.75rem', textAlign: 'center' }}>
+                                <span style={{
+                                  display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
+                                  fontSize: '0.7rem', fontWeight: 700,
+                                  background: entry.ticketType === 'VVIP' ? 'rgba(250,204,21,0.15)' :
+                                    entry.ticketType === 'VIP' ? 'rgba(124,58,237,0.2)' :
+                                    entry.ticketType === 'Couple' ? 'rgba(236,72,153,0.15)' :
+                                    entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.07)',
+                                  color: entry.ticketType === 'VVIP' ? '#fde047' :
+                                    entry.ticketType === 'VIP' ? '#c4b5fd' :
+                                    entry.ticketType === 'Couple' ? '#f9a8d4' :
+                                    entry.ticketType === 'Group of 5' ? '#93c5fd' : '#94a3b8',
+                                  border: '1px solid rgba(255,255,255,0.1)',
+                                }}>
+                                  {entry.ticketType}
+                                </span>
+                              </td>
+                              <td style={{ padding: '0.6rem 0.75rem', textAlign: 'center' }}>
+                                <span style={{
+                                  display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
+                                  fontSize: '0.7rem', fontWeight: 700,
+                                  background: entry.status === 'Paid' ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
+                                  color: entry.status === 'Paid' ? '#4ade80' : '#fbbf24',
+                                  border: `1px solid ${entry.status === 'Paid' ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
+                                }}>
+                                  {entry.status}
+                                </span>
+                              </td>
+                              <td style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#e2e8f0', fontWeight: 700 }}>{entry.quantity}</td>
+                              <td style={{ padding: '0.6rem 0.75rem', textAlign: 'center' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleStartEditTicket(entry)}
+                                    title="Edit entry"
+                                    style={{
+                                      background: 'rgba(124, 58, 237, 0.15)', border: '1px solid rgba(124, 58, 237, 0.3)',
+                                      color: '#c4b5fd', width: '26px', height: '26px', borderRadius: '0.4rem',
+                                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    <Pencil size={12} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteEntry(entry.id)}
+                                    disabled={deletingEntryId === entry.id}
+                                    title="Delete entry"
+                                    style={{
+                                      background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+                                      color: '#f87171', width: '26px', height: '26px', borderRadius: '0.4rem',
+                                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                      cursor: 'pointer', opacity: deletingEntryId === entry.id ? 0.5 : 1,
+                                    }}
+                                  >
+                                    {deletingEntryId === entry.id ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -101,6 +101,63 @@ export async function POST(
   }
 }
 
+// PUT /api/events/[id]/list  — admin only (update entry)
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
+  const { id: eventId } = await params
+  if (!eventId) return NextResponse.json({ error: 'Event ID required' }, { status: 400 })
+
+  try {
+    const body = await request.json()
+    const { id, name, ticketType, status, quantity } = body
+
+    if (!id || !name || !ticketType || !status || !quantity) {
+      return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
+    }
+
+    const validTicketTypes = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP']
+    const validStatuses = ['Paid', 'Partially Paid']
+
+    if (!validTicketTypes.includes(ticketType)) {
+      return NextResponse.json({ error: 'Invalid ticket type' }, { status: 400 })
+    }
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    }
+
+    const qty = parseInt(String(quantity), 10)
+    if (isNaN(qty) || qty < 1) {
+      return NextResponse.json({ error: 'Quantity must be a positive number' }, { status: 400 })
+    }
+
+    const entries = await readEntries(eventId)
+    const index = entries.findIndex(e => e.id === id)
+    if (index === -1) {
+      return NextResponse.json({ error: 'Entry not found' }, { status: 404 })
+    }
+
+    entries[index] = {
+      ...entries[index],
+      name: String(name).trim(),
+      ticketType,
+      status,
+      quantity: qty,
+    }
+
+    await writeEntries(eventId, entries)
+
+    return NextResponse.json({ success: true, entry: entries[index] })
+  } catch (err) {
+    console.error('Update ticket list entry error:', err)
+    return NextResponse.json({ error: 'Failed to update entry' }, { status: 500 })
+  }
+}
+
 // DELETE /api/events/[id]/list?entryId=xxx  — admin only
 export async function DELETE(
   request: NextRequest,
@@ -126,3 +183,4 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete entry' }, { status: 500 })
   }
 }
+
