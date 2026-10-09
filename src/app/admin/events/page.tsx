@@ -7,7 +7,7 @@ import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
 // ─── Ticket List Types ──────────────────────────────────────────────────────
-type TicketType = 'Regular' | 'Couple' | 'Group of 5' | 'VIP' | 'VVIP';
+type TicketType = 'Regular' | 'Couple' | 'Group of 5' | 'VIP' | 'VVIP' | 'Special';
 type PayStatus = 'Paid' | 'Partially Paid';
 
 interface TicketEntry {
@@ -19,7 +19,7 @@ interface TicketEntry {
   addedAt: string;
 }
 
-const TICKET_TYPES: TicketType[] = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP'];
+const TICKET_TYPES: TicketType[] = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP', 'Special'];
 const PAY_STATUSES: PayStatus[] = ['Paid', 'Partially Paid'];
 
 interface Event {
@@ -1425,12 +1425,14 @@ export default function EventsPage() {
                                   background: entry.ticketType === 'VVIP' ? 'rgba(250,204,21,0.15)' :
                                     entry.ticketType === 'VIP' ? 'rgba(124,58,237,0.2)' :
                                     entry.ticketType === 'Couple' ? 'rgba(236,72,153,0.15)' :
-                                    entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.07)',
+                                    entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' :
+                                    entry.ticketType === 'Special' ? 'rgba(20,184,166,0.15)' : 'rgba(255,255,255,0.07)',
                                   color: entry.ticketType === 'VVIP' ? '#fde047' :
                                     entry.ticketType === 'VIP' ? '#c4b5fd' :
                                     entry.ticketType === 'Couple' ? '#f9a8d4' :
-                                    entry.ticketType === 'Group of 5' ? '#93c5fd' : '#94a3b8',
-                                  border: '1px solid rgba(255,255,255,0.1)',
+                                    entry.ticketType === 'Group of 5' ? '#93c5fd' :
+                                    entry.ticketType === 'Special' ? '#2dd4bf' : '#94a3b8',
+                                  border: `1px solid ${entry.ticketType === 'Special' ? 'rgba(20,184,166,0.3)' : 'rgba(255,255,255,0.1)'}`,
                                 }}>
                                   {entry.ticketType}
                                 </span>

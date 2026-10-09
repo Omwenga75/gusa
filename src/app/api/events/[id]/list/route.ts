@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 export interface TicketEntry {
   id: string
   name: string
-  ticketType: 'Regular' | 'Couple' | 'Group of 5' | 'VIP' | 'VVIP'
+  ticketType: 'Regular' | 'Couple' | 'Group of 5' | 'VIP' | 'VVIP' | 'Special'
   status: 'Paid' | 'Partially Paid'
   quantity: number
   addedAt: string
@@ -66,7 +66,7 @@ export async function POST(
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
-    const validTicketTypes = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP']
+    const validTicketTypes = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP', 'Special']
     const validStatuses = ['Paid', 'Partially Paid']
 
     if (!validTicketTypes.includes(ticketType)) {
@@ -120,7 +120,7 @@ export async function PUT(
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
-    const validTicketTypes = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP']
+    const validTicketTypes = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP', 'Special']
     const validStatuses = ['Paid', 'Partially Paid']
 
     if (!validTicketTypes.includes(ticketType)) {
