@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { EventDetailGallery } from './EventDetailGallery';
 
+export const revalidate = 60;
+
 const parseEventImages = (coverImage?: string | null): string[] => {
   if (!coverImage) return [];
   try {
@@ -136,89 +138,117 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
       <div className="container mx-auto px-4 py-8 md:py-10">
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* Main Content */}
-          <div className="lg:w-2/3">
-            {/* About This Event Card */}
-            <div className="glass-card p-6 mb-8">
-              <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>About This Event</h2>
-              <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 space-y-4">
-                {event.description.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="leading-relaxed">{paragraph}</p>
-                ))}
+          {images.length > 0 ? (
+            <>
+              {/* Event Pictures Gallery */}
+              <div className="lg:w-2/3">
+                <EventDetailGallery images={images} title={event.title} />
               </div>
-            </div>
 
-            {/* Event Pictures Gallery */}
-            <EventDetailGallery images={images} title={event.title} />
+              {/* Sidebar */}
+              <div className="lg:w-1/3">
+                <div className="glass-card p-6 sticky top-24">
+                  <h3 className="text-xl font-bold mb-6 border-b pb-4 dark:border-gray-700" style={{ color: 'var(--text-main)' }}>Event Details</h3>
 
-            {/* Event Type Card */}
-            {eventType && (
-              <div className="glass-card p-6">
-                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Event Type</h3>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-xl font-bold text-violet-400">
-                    {eventType.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg text-white">{eventType}</h4>
-                    <p className="text-sm text-gray-500">Gusii University Students Association</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+                  <div className="space-y-4 mb-8">
+                    <div className="flex items-start gap-3">
+                      <Calendar className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                      <div>
+                        <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Date</p>
+                        <p className="text-gray-600 dark:text-gray-400">{eventDate}</p>
+                      </div>
+                    </div>
 
-          {/* Sidebar */}
-          <div className="lg:w-1/3">
-            <div className="glass-card p-6 sticky top-24">
-              <h3 className="text-xl font-bold mb-6 border-b pb-4 dark:border-gray-700" style={{ color: 'var(--text-main)' }}>Event Details</h3>
+                    {event.startTime && (
+                      <div className="flex items-start gap-3">
+                        <Clock className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                        <div>
+                          <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Time</p>
+                          <p className="text-gray-600 dark:text-gray-400">{event.startTime}</p>
+                        </div>
+                      </div>
+                    )}
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start gap-3">
-                  <Calendar className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Date</p>
-                    <p className="text-gray-600 dark:text-gray-400">{eventDate}</p>
-                  </div>
-                </div>
+                    <div className="flex items-start gap-3">
+                      <MapPin className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                      <div>
+                        <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Venue</p>
+                        <p className="text-gray-600 dark:text-gray-400">{event.venue}</p>
+                      </div>
+                    </div>
 
-                {event.startTime && (
-                  <div className="flex items-start gap-3">
-                    <Clock className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                    <div>
-                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Time</p>
-                      <p className="text-gray-600 dark:text-gray-400">{event.startTime}</p>
+                    <div className="flex items-start gap-3">
+                      <Tag className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                      <div>
+                        <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Event Type</p>
+                        <p className="text-gray-600 dark:text-gray-400">{eventType}</p>
+                      </div>
+                    </div>
+
+                    {/* Constant Capacity: 500+ for all events */}
+                    <div className="flex items-start gap-3">
+                      <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                      <div>
+                        <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
+                        <p className="text-gray-600 dark:text-gray-400">500+ attendees</p>
+                      </div>
                     </div>
                   </div>
-                )}
-
-                <div className="flex items-start gap-3">
-                  <MapPin className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Venue</p>
-                    <p className="text-gray-600 dark:text-gray-400">{event.venue}</p>
-                  </div>
                 </div>
+              </div>
+            </>
+          ) : (
+            <div className="w-full max-w-2xl mx-auto">
+              <div className="glass-card p-6">
+                <h3 className="text-xl font-bold mb-6 border-b pb-4 dark:border-gray-700" style={{ color: 'var(--text-main)' }}>Event Details</h3>
 
-                <div className="flex items-start gap-3">
-                  <Tag className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Event Type</p>
-                    <p className="text-gray-600 dark:text-gray-400">{eventType}</p>
+                <div className="space-y-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <Calendar className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Date</p>
+                      <p className="text-gray-600 dark:text-gray-400">{eventDate}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Constant Capacity: 500+ for all events */}
-                <div className="flex items-start gap-3">
-                  <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
-                    <p className="text-gray-600 dark:text-gray-400">500+ attendees</p>
+                  {event.startTime && (
+                    <div className="flex items-start gap-3">
+                      <Clock className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                      <div>
+                        <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Time</p>
+                        <p className="text-gray-600 dark:text-gray-400">{event.startTime}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Venue</p>
+                      <p className="text-gray-600 dark:text-gray-400">{event.venue}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Tag className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Event Type</p>
+                      <p className="text-gray-600 dark:text-gray-400">{eventType}</p>
+                    </div>
+                  </div>
+
+                  {/* Constant Capacity: 500+ for all events */}
+                  <div className="flex items-start gap-3">
+                    <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
+                      <p className="text-gray-600 dark:text-gray-400">500+ attendees</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* ── Ticket List Section ─────────────────────────────────────────── */}

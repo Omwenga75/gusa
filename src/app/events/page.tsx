@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import {
@@ -120,7 +119,6 @@ const parseEventImages = (coverImage?: string): string[] => {
 const EVENTS_CACHE_KEY = 'events'
 
 export default function EventsPage() {
-  const router = useRouter()
   const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(EVENTS_CACHE_KEY))
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
@@ -275,9 +273,10 @@ export default function EventsPage() {
                 const eventUrl = `/events/${event.slug || event.id}`
 
                 return (
-                  <article
+                  <Link
                     key={event.id}
-                    onClick={() => router.push(eventUrl)}
+                    href={eventUrl}
+                    prefetch={true}
                     className="group cursor-pointer flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
                   >
                     {/* Event Banner Image with Aspect Ratio */}
@@ -342,6 +341,7 @@ export default function EventsPage() {
                           <button
                             type="button"
                             onClick={(e) => {
+                              e.preventDefault()
                               e.stopPropagation()
                               setGalleryModalEvent(event)
                             }}
@@ -353,7 +353,7 @@ export default function EventsPage() {
                         )}
                       </div>
                     </div>
-                  </article>
+                  </Link>
                 )
               })}
             </div>
