@@ -290,8 +290,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   <tr style={{ background: 'rgba(124,58,237,0.07)' }}>
                     <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>#</th>
                     <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket Type</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket Type</th>
+                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
                     <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Qty</th>
                   </tr>
                 </thead>
@@ -302,19 +302,20 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                       <tr key={entry.id} style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                         <td style={{ padding: '0.85rem 1rem', color: '#475569', fontSize: '0.8rem' }}>{i + 1}</td>
                         <td style={{ padding: '0.85rem 1rem', color: '#f1f5f9', fontWeight: 600 }}>{entry.name}</td>
-                        <td style={{ padding: '0.85rem 1rem' }}>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>
                           <span style={{
-                            display: 'inline-block', padding: '0.2rem 0.65rem', borderRadius: '9999px',
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            padding: '0.2rem 0.75rem', borderRadius: '9999px',
                             fontSize: '0.72rem', fontWeight: 700,
                             background: tc.bg, color: tc.color, border: `1px solid ${tc.border}`,
                           }}>
                             {entry.ticketType}
                           </span>
                         </td>
-                        <td style={{ padding: '0.85rem 1rem' }}>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>
                           <span style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                            padding: '0.2rem 0.65rem', borderRadius: '9999px',
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.2rem 0.75rem', borderRadius: '9999px',
                             fontSize: '0.72rem', fontWeight: 700,
                             background: entry.status === 'Paid' ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)',
                             color: entry.status === 'Paid' ? '#4ade80' : '#fbbf24',

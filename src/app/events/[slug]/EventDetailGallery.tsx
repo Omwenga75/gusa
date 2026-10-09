@@ -31,19 +31,19 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
   if (!images || images.length === 0) return null;
 
   return (
-    <section className="glass-card p-6 mb-8">
+    <section className="glass-card p-4 sm:p-6 mb-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5 border-b pb-4 dark:border-gray-800">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-            <ImageIcon size={20} />
+      <div className="flex items-center justify-between gap-3 mb-5 border-b pb-4 dark:border-gray-800">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+            <ImageIcon size={18} />
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-white leading-tight">Event Pictures</h2>
-            <p className="text-xs text-slate-400">Official media and event captures</p>
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-xl font-bold text-white leading-tight truncate">Event Pictures</h2>
+            <p className="text-xs text-slate-400 truncate">Official media and event captures</p>
           </div>
         </div>
-        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/25">
+        <span className="text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/25 whitespace-nowrap shrink-0">
           {images.length} {images.length === 1 ? 'photo' : 'photos'}
         </span>
       </div>
