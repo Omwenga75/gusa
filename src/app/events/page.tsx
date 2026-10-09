@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import {
@@ -119,6 +120,7 @@ const parseEventImages = (coverImage?: string): string[] => {
 const EVENTS_CACHE_KEY = 'events'
 
 export default function EventsPage() {
+  const router = useRouter()
   const [eventsData, setEventsData] = useState<EventItem[]>(() => readCache<EventItem[]>(EVENTS_CACHE_KEY) || [])
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(EVENTS_CACHE_KEY))
   const [galleryModalEvent, setGalleryModalEvent] = useState<EventItem | null>(null)
@@ -270,11 +272,13 @@ export default function EventsPage() {
               {filteredEvents.map((event) => {
                 const images = parseEventImages(event.coverImage)
                 const coverUrl = images.length > 0 ? images[0] : undefined
+                const eventUrl = `/events/${event.slug || event.id}`
 
                 return (
                   <article
                     key={event.id}
-                    className="group flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
+                    onClick={() => router.push(eventUrl)}
+                    className="group cursor-pointer flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
                   >
                     {/* Event Banner Image with Aspect Ratio */}
                     <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-slate-950 flex-shrink-0">
@@ -292,7 +296,7 @@ export default function EventsPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
 
                       {/* Category Badge & Photos Count Overlay */}
-                      <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10">
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10 pointer-events-none">
                         <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category ? event.category.charAt(0).toUpperCase() + event.category.slice(1).toLowerCase() : 'General'}
                         </span>
@@ -323,27 +327,24 @@ export default function EventsPage() {
 
                         {/* Title (2-line clamp) */}
                         <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors leading-snug line-clamp-2">
-                          <Link href={`/events/${event.slug || event.id}`} className="hover:underline">
-                            {event.title}
-                          </Link>
+                          {event.title}
                         </h3>
-
                       </div>
 
                       {/* Card Action Footer */}
                       <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2.5 mt-auto">
-                        <Link
-                          href={`/events/${event.slug || event.id}`}
-                          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-violet-400 hover:text-violet-300 group/link transition-colors"
-                        >
+                        <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-violet-400 group-hover:text-violet-300 transition-colors">
                           <span>View Details</span>
-                          <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-                        </Link>
+                          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </span>
 
                         {images.length > 0 && (
                           <button
                             type="button"
-                            onClick={() => setGalleryModalEvent(event)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setGalleryModalEvent(event)
+                            }}
                             className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/5 hover:bg-violet-500/15 border border-white/10 hover:border-violet-500/30 text-slate-300 hover:text-white transition-all cursor-pointer"
                           >
                             <ImageIcon size={13} className="text-violet-400" />
