@@ -995,195 +995,163 @@ export default function EventsPage() {
               </div>
             </div>
 
-            {/* Scrollable Body */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-
-              {/* ── Add Entry Form ── */}
-              <form onSubmit={handleAddEntry} style={{
-                background: 'rgba(124,58,237,0.06)',
-                border: '1px solid rgba(124,58,237,0.2)',
-                borderRadius: '0.75rem',
-                padding: '1rem 1.1rem',
-                display: 'flex', flexDirection: 'column', gap: '0.75rem',
-              }}>
-                <p style={{ margin: 0, fontSize: '0.8125rem', fontWeight: 700, color: '#c4b5fd' }}>
-                  + Add Entry
-                </p>
-
-                {/* Name */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Full Name *</label>
+            {/* Modal Body */}
+            <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <form onSubmit={handleAddEntry} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Full Name */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
+                    Full Name <span style={{ color: '#f87171' }}>*</span>
+                  </label>
                   <input
                     required
                     type="text"
                     placeholder="e.g. Jane Mwangi"
                     value={newName}
                     onChange={e => setNewName(e.target.value)}
+                    className={styles.searchInput}
                     style={{
-                      background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '0.5rem', padding: '0.55rem 0.9rem',
-                      fontSize: '0.875rem', color: '#f8fafc', outline: 'none', width: '100%',
+                      background: 'rgba(6,8,15,0.8)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '0.5rem',
+                      padding: '0.6rem 1rem',
+                      fontSize: '0.875rem',
+                      color: '#f8fafc',
+                      outline: 'none',
+                      width: '100%',
                     }}
                   />
                 </div>
 
                 {/* Ticket Type, Status, Quantity — 3 columns */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Ticket Type</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
                     <select
                       value={newTicketType}
                       onChange={e => setNewTicketType(e.target.value as TicketType)}
+                      className={styles.searchInput}
                       style={{
-                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
-                        fontSize: '0.8rem', color: '#f8fafc',
+                        background: 'rgba(6,8,15,0.8)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem',
+                        padding: '0.6rem 0.75rem',
+                        fontSize: '0.8125rem',
+                        color: '#f8fafc',
                       }}
                     >
                       {TICKET_TYPES.map(t => (
-                        <option key={t} value={t} style={{ background: '#0d1225' }}>{t}</option>
+                        <option key={t} value={t} style={{ background: '#0d1225', color: '#fff' }}>{t}</option>
                       ))}
                     </select>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Status</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Status</label>
                     <select
                       value={newPayStatus}
                       onChange={e => setNewPayStatus(e.target.value as PayStatus)}
+                      className={styles.searchInput}
                       style={{
-                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
-                        fontSize: '0.8rem', color: '#f8fafc',
+                        background: 'rgba(6,8,15,0.8)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem',
+                        padding: '0.6rem 0.75rem',
+                        fontSize: '0.8125rem',
+                        color: '#f8fafc',
                       }}
                     >
                       {PAY_STATUSES.map(s => (
-                        <option key={s} value={s} style={{ background: '#0d1225' }}>{s}</option>
+                        <option key={s} value={s} style={{ background: '#0d1225', color: '#fff' }}>{s}</option>
                       ))}
                     </select>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Quantity</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Quantity</label>
                     <input
                       type="number"
                       min={1}
                       max={999}
                       value={newQuantity}
                       onChange={e => setNewQuantity(e.target.value)}
+                      className={styles.searchInput}
                       style={{
-                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
-                        fontSize: '0.8rem', color: '#f8fafc',
+                        background: 'rgba(6,8,15,0.8)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem',
+                        padding: '0.6rem 0.75rem',
+                        fontSize: '0.8125rem',
+                        color: '#f8fafc',
                       }}
                     />
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isListSubmitting}
-                  style={{
-                    alignSelf: 'flex-end',
-                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                    padding: '0.5rem 1.25rem', borderRadius: '0.5rem',
-                    fontSize: '0.8125rem', fontWeight: 700,
-                    background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-                    border: 'none', color: '#ffffff', cursor: 'pointer',
-                    opacity: isListSubmitting ? 0.6 : 1,
-                  }}
-                >
-                  {isListSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-                  {isListSubmitting ? 'Adding…' : 'Add to List'}
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setListPanelEvent(null)}
+                    className={styles.btnOutline}
+                    style={{ width: 'auto' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isListSubmitting}
+                    className={styles.btnPrimary}
+                  >
+                    {isListSubmitting ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" /> Adding...
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} /> Add to List
+                      </>
+                    )}
+                  </button>
+                </div>
               </form>
 
-              {/* ── Entries Table ── */}
-              {isListLoading ? (
-                <div style={{ textAlign: 'center', color: '#64748b', padding: '2rem', fontSize: '0.875rem' }}>
-                  <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto 0.5rem', display: 'block' }} />
-                  Loading list…
-                </div>
-              ) : ticketEntries.length === 0 ? (
-                <div style={{
-                  textAlign: 'center', padding: '3rem 1rem',
-                  border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem',
-                  color: '#64748b', fontSize: '0.875rem',
-                }}>
-                  No entries yet. Use the form above to add the first entry.
-                </div>
-              ) : (
-                <div>
-                  <p style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.6rem' }}>
-                    {ticketEntries.length} {ticketEntries.length === 1 ? 'entry' : 'entries'} · Use CSV or PDF to download
-                  </p>
-                  <div style={{ overflowX: 'auto', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.07)' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
-                      <thead>
-                        <tr style={{ background: 'rgba(124,58,237,0.1)' }}>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>#</th>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket</th>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Qty</th>
-                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Del</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {ticketEntries.map((entry, i) => (
-                          <tr key={entry.id} style={{ borderTop: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.15s' }}>
-                            <td style={{ padding: '0.65rem 0.85rem', color: '#64748b' }}>{i + 1}</td>
-                            <td style={{ padding: '0.65rem 0.85rem', color: '#ffffff', fontWeight: 600 }}>{entry.name}</td>
-                            <td style={{ padding: '0.65rem 0.85rem' }}>
-                              <span style={{
-                                display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
-                                fontSize: '0.7rem', fontWeight: 700,
-                                background: entry.ticketType === 'VVIP' ? 'rgba(250,204,21,0.15)' :
-                                  entry.ticketType === 'VIP' ? 'rgba(124,58,237,0.2)' :
-                                  entry.ticketType === 'Couple' ? 'rgba(236,72,153,0.15)' :
-                                  entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.07)',
-                                color: entry.ticketType === 'VVIP' ? '#fde047' :
-                                  entry.ticketType === 'VIP' ? '#c4b5fd' :
-                                  entry.ticketType === 'Couple' ? '#f9a8d4' :
-                                  entry.ticketType === 'Group of 5' ? '#93c5fd' : '#94a3b8',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                              }}>
-                                {entry.ticketType}
-                              </span>
-                            </td>
-                            <td style={{ padding: '0.65rem 0.85rem' }}>
-                              <span style={{
-                                display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
-                                fontSize: '0.7rem', fontWeight: 700,
-                                background: entry.status === 'Paid' ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
-                                color: entry.status === 'Paid' ? '#4ade80' : '#fbbf24',
-                                border: `1px solid ${entry.status === 'Paid' ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
-                              }}>
-                                {entry.status}
-                              </span>
-                            </td>
-                            <td style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#e2e8f0', fontWeight: 700 }}>{entry.quantity}</td>
-                            <td style={{ padding: '0.65rem 0.85rem', textAlign: 'center' }}>
-                              <button
-                                onClick={() => handleDeleteEntry(entry.id)}
-                                disabled={deletingEntryId === entry.id}
-                                style={{
-                                  background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
-                                  color: '#f87171', width: '26px', height: '26px', borderRadius: '0.4rem',
-                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                  cursor: 'pointer', opacity: deletingEntryId === entry.id ? 0.5 : 1,
-                                }}
-                              >
-                                {deletingEntryId === entry.id ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+              {/* Bottom Center Indicator */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingTop: '0.75rem',
+                  borderTop: '1px solid rgba(255,255,255,0.06)',
+                  textAlign: 'center',
+                }}
+              >
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    fontSize: '0.8125rem',
+                    color: '#a78bfa',
+                    fontWeight: 600,
+                    background: 'rgba(124, 58, 237, 0.1)',
+                    border: '1px solid rgba(124, 58, 237, 0.25)',
+                    padding: '0.3rem 0.85rem',
+                    borderRadius: '9999px',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: '#a78bfa',
+                      boxShadow: '0 0 6px #a78bfa',
+                    }}
+                  />
+                  {ticketEntries.length} added
+                </span>
+              </div>
             </div>
           </div>
         </div>
