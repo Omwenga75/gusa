@@ -1,10 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../admin.module.css';
-import { Plus, Calendar as CalendarIcon, MapPin, X, Pencil, Trash2 } from 'lucide-react';
+import { Plus, X, Pencil, Trash2, List, Download, Loader2 } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
+
+// ─── Ticket List Types ──────────────────────────────────────────────────────
+type TicketType = 'Regular' | 'Couple' | 'Group of 5' | 'VIP' | 'VVIP';
+type PayStatus = 'Paid' | 'Partially Paid';
+
+interface TicketEntry {
+  id: string;
+  name: string;
+  ticketType: TicketType;
+  status: PayStatus;
+  quantity: number;
+  addedAt: string;
+}
+
+const TICKET_TYPES: TicketType[] = ['Regular', 'Couple', 'Group of 5', 'VIP', 'VVIP'];
+const PAY_STATUSES: PayStatus[] = ['Paid', 'Partially Paid'];
 
 interface Event {
   id: string;
@@ -50,6 +66,160 @@ export default function EventsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
+  // ─── Ticket List State ──────────────────────────────────────────────────────
+  const [listPanelEvent, setListPanelEvent] = useState<Event | null>(null); // which event's list panel is open
+  const [ticketEntries, setTicketEntries] = useState<TicketEntry[]>([]);
+  const [isListLoading, setIsListLoading] = useState(false);
+  const [isListSubmitting, setIsListSubmitting] = useState(false);
+  const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
+
+  // Add-entry form
+  const [newName, setNewName] = useState('');
+  const [newTicketType, setNewTicketType] = useState<TicketType>('Regular');
+  const [newPayStatus, setNewPayStatus] = useState<PayStatus>('Paid');
+  const [newQuantity, setNewQuantity] = useState('1');
+
+  const openListPanel = useCallback(async (event: Event) => {
+    setListPanelEvent(event);
+    setIsListLoading(true);
+    setTicketEntries([]);
+    try {
+      const res = await fetch(`/api/events/${event.id}/list`, { cache: 'no-store' });
+      const data = await res.json();
+      if (Array.isArray(data.entries)) setTicketEntries(data.entries);
+    } catch (err) {
+      console.error('Failed to load ticket list:', err);
+    } finally {
+      setIsListLoading(false);
+    }
+  }, []);
+
+  const handleAddEntry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!listPanelEvent || !newName.trim()) return;
+    setIsListSubmitting(true);
+    try {
+      const res = await fetch(`/api/events/${listPanelEvent.id}/list`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newName.trim(),
+          ticketType: newTicketType,
+          status: newPayStatus,
+          quantity: parseInt(newQuantity) || 1,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.entry) {
+        setTicketEntries(prev => [...prev, data.entry]);
+        setNewName('');
+        setNewQuantity('1');
+      } else {
+        alert(data.error || 'Failed to add entry');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsListSubmitting(false);
+    }
+  };
+
+  const handleDeleteEntry = async (entryId: string) => {
+    if (!listPanelEvent) return;
+    setDeletingEntryId(entryId);
+    try {
+      await fetch(`/api/events/${listPanelEvent.id}/list?entryId=${entryId}`, { method: 'DELETE' });
+      setTicketEntries(prev => prev.filter(e => e.id !== entryId));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeletingEntryId(null);
+    }
+  };
+
+  // ── CSV download ──────────────────────────────────────────────────────────
+  const downloadCSV = () => {
+    if (!listPanelEvent || ticketEntries.length === 0) return;
+    const header = ['#', 'Name', 'Ticket Type', 'Status', 'Quantity', 'Added At'];
+    const rows = ticketEntries.map((e, i) => [
+      i + 1,
+      `"${e.name.replace(/"/g, '""')}"`,
+      e.ticketType,
+      e.status,
+      e.quantity,
+      new Date(e.addedAt).toLocaleString(),
+    ]);
+    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${listPanelEvent.title.replace(/[^a-z0-9]/gi, '_')}_ticket_list.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ── PDF download (pure-browser, no lib needed) ────────────────────────────
+  const downloadPDF = () => {
+    if (!listPanelEvent || ticketEntries.length === 0) return;
+    const eventTitle = listPanelEvent.title;
+    const now = new Date().toLocaleString();
+
+    const statusColor = (s: string) =>
+      s === 'Paid'
+        ? 'color:#16a34a;font-weight:700'
+        : 'color:#d97706;font-weight:700';
+
+    const rows = ticketEntries
+      .map(
+        (e, i) => `
+        <tr style="border-bottom:1px solid #e5e7eb">
+          <td style="padding:8px 10px;font-size:13px">${i + 1}</td>
+          <td style="padding:8px 10px;font-size:13px;font-weight:600">${e.name}</td>
+          <td style="padding:8px 10px;font-size:13px">${e.ticketType}</td>
+          <td style="padding:8px 10px;font-size:13px;${statusColor(e.status)}">${e.status}</td>
+          <td style="padding:8px 10px;font-size:13px;text-align:center">${e.quantity}</td>
+        </tr>`
+      )
+      .join('');
+
+    const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>${eventTitle} – Ticket List</title>
+<style>
+  body{font-family:Arial,sans-serif;color:#111;padding:32px}
+  h1{font-size:20px;margin-bottom:4px}
+  .meta{font-size:12px;color:#6b7280;margin-bottom:24px}
+  table{width:100%;border-collapse:collapse}
+  thead{background:#f3f4f6}
+  th{padding:10px;font-size:12px;text-align:left;color:#374151;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  tr:nth-child(even){background:#f9fafb}
+</style>
+</head>
+<body>
+  <h1>${eventTitle}</h1>
+  <div class="meta">Ticket List &nbsp;·&nbsp; Generated: ${now}</div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Name</th><th>Ticket Type</th><th>Status</th><th>Qty</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+</body>
+</html>`;
+
+    const printWin = window.open('', '_blank');
+    if (!printWin) return;
+    printWin.document.write(html);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(() => {
+      printWin.print();
+      printWin.close();
+    }, 400);
+  };
 
 
   // Form State (used for both Create & Edit)
@@ -426,6 +596,27 @@ export default function EventsPage() {
                   <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                       <button
+                        onClick={() => openListPanel(event)}
+                        style={{
+                          background: 'rgba(124, 58, 237, 0.15)',
+                          border: '1px solid rgba(124, 58, 237, 0.3)',
+                          color: '#a78bfa',
+                          padding: '0.35rem 0.75rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.3rem',
+                          whiteSpace: 'nowrap'
+                        }}
+                        title="Manage ticket list"
+                      >
+                        <List size={12} /> List
+                      </button>
+                      <button
                         onClick={() => handleOpenEdit(event)}
                         style={{
                           background: 'rgba(59, 130, 246, 0.15)',
@@ -712,7 +903,286 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* Attendees List Modal Removed */}
+      {/* ─── Ticket List Panel ────────────────────────────────────────────────── */}
+      {listPanelEvent && (
+        <div
+          onClick={() => setListPanelEvent(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(6px)',
+            zIndex: 200,
+            display: 'flex',
+            alignItems: 'stretch',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {/* Slide-over panel */}
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '680px',
+              background: '#0d1225',
+              borderLeft: '1px solid rgba(255,255,255,0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Panel Header */}
+            <div style={{
+              padding: '1.25rem 1.5rem',
+              borderBottom: '1px solid rgba(255,255,255,0.08)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              background: 'rgba(124,58,237,0.07)',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
+                  <List size={18} color="#a78bfa" />
+                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>Ticket List</span>
+                </div>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {listPanelEvent.title}
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+                {ticketEntries.length > 0 && (
+                  <>
+                    <button
+                      onClick={downloadCSV}
+                      title="Download CSV"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        padding: '0.4rem 0.85rem', borderRadius: '0.5rem',
+                        fontSize: '0.75rem', fontWeight: 700,
+                        background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)',
+                        color: '#4ade80', cursor: 'pointer',
+                      }}
+                    >
+                      <Download size={13} /> CSV
+                    </button>
+                    <button
+                      onClick={downloadPDF}
+                      title="Download / Print PDF"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        padding: '0.4rem 0.85rem', borderRadius: '0.5rem',
+                        fontSize: '0.75rem', fontWeight: 700,
+                        background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)',
+                        color: '#fbbf24', cursor: 'pointer',
+                      }}
+                    >
+                      <Download size={13} /> PDF
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => setListPanelEvent(null)}
+                  style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '0.25rem' }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable Body */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+              {/* ── Add Entry Form ── */}
+              <form onSubmit={handleAddEntry} style={{
+                background: 'rgba(124,58,237,0.06)',
+                border: '1px solid rgba(124,58,237,0.2)',
+                borderRadius: '0.75rem',
+                padding: '1.1rem 1.25rem',
+                display: 'flex', flexDirection: 'column', gap: '0.85rem',
+              }}>
+                <p style={{ margin: 0, fontSize: '0.8125rem', fontWeight: 700, color: '#c4b5fd' }}>
+                  + Add Entry
+                </p>
+
+                {/* Name */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Full Name *</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="e.g. Jane Mwangi"
+                    value={newName}
+                    onChange={e => setNewName(e.target.value)}
+                    style={{
+                      background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '0.5rem', padding: '0.55rem 0.9rem',
+                      fontSize: '0.875rem', color: '#f8fafc', outline: 'none', width: '100%',
+                    }}
+                  />
+                </div>
+
+                {/* Ticket Type, Status, Quantity — 3 columns */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Ticket Type</label>
+                    <select
+                      value={newTicketType}
+                      onChange={e => setNewTicketType(e.target.value as TicketType)}
+                      style={{
+                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
+                        fontSize: '0.8rem', color: '#f8fafc',
+                      }}
+                    >
+                      {TICKET_TYPES.map(t => (
+                        <option key={t} value={t} style={{ background: '#0d1225' }}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Status</label>
+                    <select
+                      value={newPayStatus}
+                      onChange={e => setNewPayStatus(e.target.value as PayStatus)}
+                      style={{
+                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
+                        fontSize: '0.8rem', color: '#f8fafc',
+                      }}
+                    >
+                      {PAY_STATUSES.map(s => (
+                        <option key={s} value={s} style={{ background: '#0d1225' }}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8' }}>Quantity</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={999}
+                      value={newQuantity}
+                      onChange={e => setNewQuantity(e.target.value)}
+                      style={{
+                        background: 'rgba(6,8,15,0.8)', border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0.5rem', padding: '0.55rem 0.7rem',
+                        fontSize: '0.8rem', color: '#f8fafc',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isListSubmitting}
+                  style={{
+                    alignSelf: 'flex-end',
+                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.5rem 1.25rem', borderRadius: '0.5rem',
+                    fontSize: '0.8125rem', fontWeight: 700,
+                    background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
+                    border: 'none', color: '#ffffff', cursor: 'pointer',
+                    opacity: isListSubmitting ? 0.6 : 1,
+                  }}
+                >
+                  {isListSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                  {isListSubmitting ? 'Adding…' : 'Add to List'}
+                </button>
+              </form>
+
+              {/* ── Entries Table ── */}
+              {isListLoading ? (
+                <div style={{ textAlign: 'center', color: '#64748b', padding: '2rem', fontSize: '0.875rem' }}>
+                  <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto 0.5rem', display: 'block' }} />
+                  Loading list…
+                </div>
+              ) : ticketEntries.length === 0 ? (
+                <div style={{
+                  textAlign: 'center', padding: '3rem 1rem',
+                  border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '0.75rem',
+                  color: '#64748b', fontSize: '0.875rem',
+                }}>
+                  No entries yet. Use the form above to add the first entry.
+                </div>
+              ) : (
+                <div>
+                  <p style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.6rem' }}>
+                    {ticketEntries.length} {ticketEntries.length === 1 ? 'entry' : 'entries'} · Use CSV or PDF to download
+                  </p>
+                  <div style={{ overflowX: 'auto', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.07)' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
+                      <thead>
+                        <tr style={{ background: 'rgba(124,58,237,0.1)' }}>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>#</th>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket</th>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Qty</th>
+                          <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Del</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {ticketEntries.map((entry, i) => (
+                          <tr key={entry.id} style={{ borderTop: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.15s' }}>
+                            <td style={{ padding: '0.65rem 0.85rem', color: '#64748b' }}>{i + 1}</td>
+                            <td style={{ padding: '0.65rem 0.85rem', color: '#ffffff', fontWeight: 600 }}>{entry.name}</td>
+                            <td style={{ padding: '0.65rem 0.85rem' }}>
+                              <span style={{
+                                display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
+                                fontSize: '0.7rem', fontWeight: 700,
+                                background: entry.ticketType === 'VVIP' ? 'rgba(250,204,21,0.15)' :
+                                  entry.ticketType === 'VIP' ? 'rgba(124,58,237,0.2)' :
+                                  entry.ticketType === 'Couple' ? 'rgba(236,72,153,0.15)' :
+                                  entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.07)',
+                                color: entry.ticketType === 'VVIP' ? '#fde047' :
+                                  entry.ticketType === 'VIP' ? '#c4b5fd' :
+                                  entry.ticketType === 'Couple' ? '#f9a8d4' :
+                                  entry.ticketType === 'Group of 5' ? '#93c5fd' : '#94a3b8',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}>
+                                {entry.ticketType}
+                              </span>
+                            </td>
+                            <td style={{ padding: '0.65rem 0.85rem' }}>
+                              <span style={{
+                                display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
+                                fontSize: '0.7rem', fontWeight: 700,
+                                background: entry.status === 'Paid' ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
+                                color: entry.status === 'Paid' ? '#4ade80' : '#fbbf24',
+                                border: `1px solid ${entry.status === 'Paid' ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
+                              }}>
+                                {entry.status}
+                              </span>
+                            </td>
+                            <td style={{ padding: '0.65rem 0.85rem', textAlign: 'center', color: '#e2e8f0', fontWeight: 700 }}>{entry.quantity}</td>
+                            <td style={{ padding: '0.65rem 0.85rem', textAlign: 'center' }}>
+                              <button
+                                onClick={() => handleDeleteEntry(entry.id)}
+                                disabled={deletingEntryId === entry.id}
+                                style={{
+                                  background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+                                  color: '#f87171', width: '26px', height: '26px', borderRadius: '0.4rem',
+                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                  cursor: 'pointer', opacity: deletingEntryId === entry.id ? 0.5 : 1,
+                                }}
+                              >
+                                {deletingEntryId === entry.id ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
