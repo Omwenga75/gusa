@@ -47,8 +47,10 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
 
   return (
     <div
+      id="ticket-list"
       style={{
         marginTop: '3rem',
+        scrollMarginTop: '5rem',
         background: 'linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(9,14,26,0.98) 100%)',
         border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: '1rem',

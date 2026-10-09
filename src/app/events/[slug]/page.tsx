@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Calendar, MapPin, Users, ArrowLeft, Clock, Tag } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, Clock, Tag, Ticket } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { EventDetailGallery } from './EventDetailGallery';
@@ -121,9 +121,20 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
               </span>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-1 tracking-tight drop-shadow-md">
-            {event.title}
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 mt-1">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-1 tracking-tight drop-shadow-md">
+              {event.title}
+            </h1>
+            {ticketList.length > 0 && (
+              <a
+                href="#ticket-list"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs sm:text-sm md:text-base font-bold shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all border border-violet-400/30 cursor-pointer hover:scale-105 active:scale-95 shrink-0 self-start sm:self-auto"
+              >
+                <Ticket size={18} className="text-violet-200" />
+                <span>Tickets ({ticketList.length})</span>
+              </a>
+            )}
+          </div>
         </div>
       </div>
 

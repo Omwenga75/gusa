@@ -16,7 +16,8 @@ import {
   Maximize2,
   Minimize2,
   Sparkles,
-  Tag
+  Tag,
+  Ticket
 } from 'lucide-react'
 
 const getTargetDateTime = (dateStr: string, timeStr?: string): Date | null => {
@@ -98,6 +99,7 @@ interface EventItem {
   organizer: string
   capacity: number
   registeredCount: number
+  ticketCount?: number
   status: 'upcoming' | 'ongoing' | 'past'
   tagColor: string
   coverImage?: string
@@ -190,6 +192,7 @@ export default function EventsPage() {
               organizer: 'GUSA Executive',
               capacity: evt.capacity || 100,
               registeredCount: evt._count?.registrations || 0,
+              ticketCount: evt.ticketCount || 0,
               status: 'upcoming',
               tagColor: '#8b5cf6',
               coverImage: evt.coverImage || undefined
@@ -324,10 +327,18 @@ export default function EventsPage() {
                           )}
                         </div>
 
-                        {/* Title (2-line clamp) */}
-                        <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors leading-snug line-clamp-2">
-                          {event.title}
-                        </h3>
+                        {/* Title (2-line clamp) & Tickets badge on same line at end */}
+                        <div className="flex items-start justify-between gap-2.5">
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors leading-snug line-clamp-2 flex-1">
+                            {event.title}
+                          </h3>
+                          {(event.ticketCount ?? 0) > 0 && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shrink-0 shadow-sm mt-0.5">
+                              <Ticket size={11} className="text-violet-400" />
+                              <span>Tickets</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Card Action Footer */}

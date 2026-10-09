@@ -40,8 +40,30 @@ export async function GET(request: NextRequest) {
       prisma.event.count({ where }),
     ])
 
+    const eventIds = events.map(e => `event_list_${e.id}`)
+    const ticketSettings = await prisma.siteSetting.findMany({
+      where: { key: { in: eventIds } },
+      select: { key: true, value: true }
+    })
+
+    const ticketCounts: Record<string, number> = {}
+    for (const ts of ticketSettings) {
+      const eventId = ts.key.replace('event_list_', '')
+      try {
+        const list = JSON.parse(ts.value)
+        if (Array.isArray(list)) {
+          ticketCounts[eventId] = list.length
+        }
+      } catch {}
+    }
+
+    const eventsWithTickets = events.map(e => ({
+      ...e,
+      ticketCount: ticketCounts[e.id] || 0,
+    }))
+
     return NextResponse.json(
-      { events, total, take, skip },
+      { events: eventsWithTickets, total, take, skip },
       {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
