@@ -4,7 +4,7 @@ import AlumniClient, { AlumniItem } from './AlumniClient';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Alumni Network | Gusii University Students Association (GUSA)',
+  title: 'Alumni | Gusii University Students Association (GUSA)',
   description: 'Honoring our esteemed alumni community, their professional milestones, and lasting impact.',
 };
 
