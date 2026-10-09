@@ -107,10 +107,6 @@ export default function WelfarePage() {
         </button>
       </div>
 
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.cardTitle}>Welfare Initiatives ({projects.length})</h2>
-      </div>
-
       <div className={styles.independentTableWrapper}>
         <table className={styles.independentTable}>
             <thead>

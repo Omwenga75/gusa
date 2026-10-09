@@ -481,11 +481,6 @@ export default function AdminPoliticsPage() {
       </div>
 
       {/* ── Table List ────────────────────────────────────────── */}
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.cardTitle}>
-          Nomination Applications ({filteredNominations.length})
-        </h2>
-      </div>
 
       <div className={styles.independentTableWrapper}>
         <table className={styles.independentTable}>

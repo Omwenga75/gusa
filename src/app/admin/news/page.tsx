@@ -129,10 +129,6 @@ export default function NewsPage() {
         </button>
       </div>
 
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.cardTitle}>Published Articles ({posts.length})</h2>
-      </div>
-
       <div className={styles.independentTableWrapper}>
         <table className={styles.independentTable}>
             <thead>

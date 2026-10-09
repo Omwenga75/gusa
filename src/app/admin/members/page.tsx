@@ -162,10 +162,6 @@ export default function MembersPage() {
         </div>
       </div>
 
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.cardTitle}>Registered Members ({members.length})</h2>
-      </div>
-
       <div className={styles.independentTableWrapper}>
         <table className={styles.independentTable}>
             <thead>

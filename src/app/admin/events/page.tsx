@@ -590,10 +590,6 @@ export default function EventsPage() {
         </button>
       </div>
 
-      <div className={styles.sectionHeader}>
-        <h2 className={styles.cardTitle}>All Events ({events.length})</h2>
-      </div>
-
       <div className={styles.independentTableWrapper}>
         <table className={styles.independentTable}>
             <thead>
