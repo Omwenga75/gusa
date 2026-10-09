@@ -19,7 +19,8 @@ import {
   Menu,
   X,
   Vote,
-  GraduationCap
+  GraduationCap,
+  UserCheck
 } from 'lucide-react';
 
 const navItems = [
@@ -32,6 +33,7 @@ const navItems = [
   { label: 'Welfare', path: '/admin/welfare', icon: HeartHandshake },
   { label: 'Leadership', path: '/admin/leadership', icon: Award },
   { label: 'Emeritus Leaders', path: '/admin/emeritus', icon: GraduationCap },
+  { label: 'Alumni', path: '/admin/alumni', icon: UserCheck },
   { label: 'Messages', path: '/admin/messages', icon: Mail },
 ];
 

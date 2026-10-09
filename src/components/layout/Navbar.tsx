@@ -3,12 +3,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Home, Users, Award, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus } from 'lucide-react'
+import { Menu, X, Home, Users, Award, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus, GraduationCap } from 'lucide-react'
 
 const NAV_LINKS = [
   { label: 'Home',             href: '/',           icon: Home },
   { label: 'Leadership',       href: '/leadership', icon: Users },
   { label: 'Emeritus Leaders', href: '/emeritus',   icon: Award },
+  { label: 'Alumni',           href: '/alumni',     icon: GraduationCap },
   { label: 'Events',           href: '/events',     icon: Calendar },
   { label: 'Gallery',          href: '/gallery',    icon: Image },
   { label: 'News',             href: '/news',       icon: Newspaper },

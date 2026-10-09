@@ -51,6 +51,7 @@ export function Footer() {
               <li><Link href="/about" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">About GUSA</Link></li>
               <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leadership</Link></li>
               <li><Link href="/emeritus" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Emeritus Leaders</Link></li>
+              <li><Link href="/alumni" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Alumni Network</Link></li>
             </ul>
           </div>
 
