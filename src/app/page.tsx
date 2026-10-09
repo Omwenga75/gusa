@@ -111,8 +111,8 @@ async function getHomePageData() {
             orderBy: { createdAt: 'desc' },
             take: 3,
             include: {
+              _count: { select: { images: true } },
               images: {
-                take: 8,
                 select: { id: true, imageUrl: true, caption: true, category: true, createdAt: true },
               },
             },
@@ -451,9 +451,9 @@ export default async function HomePage() {
                         {alb.description && (
                           <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,1)]">{alb.description}</p>
                         )}
-                        {alb.images && alb.images.length > 0 && (
+                        {((alb as any)._count?.images ?? alb.images?.length ?? 0) > 0 && (
                           <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-pink-300 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-pink-500/30 drop-shadow-sm">
-                            {alb.images.length} photos
+                            {(alb as any)._count?.images ?? alb.images?.length} photos
                           </span>
                         )}
                       </div>
