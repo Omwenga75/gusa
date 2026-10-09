@@ -17,6 +17,7 @@ import {
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { EventCountdown } from '@/components/events/EventCountdown';
+import { JoinGusaButton } from '@/components/JoinGusaButton';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -207,10 +208,7 @@ export default async function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
-              <Link href="/join" className="btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform">
-                <span>Join GUSA</span>
-                <ArrowRight size={18} />
-              </Link>
+              <JoinGusaButton />
               <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center">
                 Explore Events
               </Link>

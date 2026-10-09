@@ -23,6 +23,23 @@ import {
 } from 'lucide-react'
 
 export default function AboutPage() {
+  const [hasJoined, setHasJoined] = React.useState(false);
+
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== 'undefined' && localStorage.getItem('gusa_joined')) {
+        setHasJoined(true);
+      }
+    };
+    check();
+    window.addEventListener('storage', check);
+    window.addEventListener('gusa_joined_change', check);
+    return () => {
+      window.removeEventListener('storage', check);
+      window.removeEventListener('gusa_joined_change', check);
+    };
+  }, []);
+
   return (
     <PublicLayout>
       {/* Hero Section */}
@@ -531,9 +548,18 @@ export default function AboutPage() {
             our arms and doors are open.
           </p>
           <div className="responsive-btn-group" style={{ justifyContent: 'center' }}>
-            <Link href="/auth/register" className="btn btn-secondary btn-lg w-full sm:w-auto" style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}>
-              Register as Member Now <ArrowRight size={18} />
-            </Link>
+            {hasJoined ? (
+              <span
+                className="btn btn-secondary btn-lg w-full sm:w-auto flex items-center justify-center gap-2 cursor-not-allowed opacity-80 select-none"
+                style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}
+              >
+                <CheckCircle2 size={18} /> Joined GUSA
+              </span>
+            ) : (
+              <Link href="/join" className="btn btn-secondary btn-lg w-full sm:w-auto" style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}>
+                Register as Member Now <ArrowRight size={18} />
+              </Link>
+            )}
             <Link href="/leadership" className="btn btn-outline btn-lg w-full sm:w-auto" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
               Meet The Leaders
             </Link>

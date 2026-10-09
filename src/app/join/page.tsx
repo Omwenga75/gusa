@@ -52,6 +52,23 @@ export default function JoinPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
+
+  // Read localStorage on mount and react to changes
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== 'undefined' && localStorage.getItem('gusa_joined')) {
+        setHasJoined(true);
+      }
+    };
+    check();
+    window.addEventListener('storage', check);
+    window.addEventListener('gusa_joined_change', check);
+    return () => {
+      window.removeEventListener('storage', check);
+      window.removeEventListener('gusa_joined_change', check);
+    };
+  }, []);
 
   // ── Validators ────────────────────────────────────────────────────
   const normalizePhone = (raw: string): string => {
@@ -71,6 +88,7 @@ export default function JoinPage() {
   };
 
   const handleOpenModal = () => {
+    if (hasJoined) return;
     setSubmitError(null);
     setIsSubmittedSuccess(false);
     setCountySelected(false);
@@ -146,6 +164,11 @@ export default function JoinPage() {
       if (!res.ok) {
         setSubmitError(data.error || 'Failed to complete registration. Please check your details.');
       } else {
+        localStorage.setItem('gusa_joined', 'true');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('gusa_joined_change'));
+        }
+        setHasJoined(true);
         setIsSubmittedSuccess(true);
       }
     } catch (err) {
@@ -192,14 +215,25 @@ export default function JoinPage() {
               Become an active registered member of the Gusii University Students Association at MUST.
             </p>
             <div className="mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={handleOpenModal}
-                className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
-              >
-                <span>Register Now</span>
-                <ChevronRight size={18} />
-              </button>
+              {hasJoined ? (
+                <button
+                  type="button"
+                  disabled
+                  className="px-8 py-3.5 rounded-xl font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 cursor-not-allowed opacity-80 select-none shadow-lg shadow-emerald-500/10"
+                >
+                  <CheckCircle2 size={18} />
+                  <span>Joined GUSA</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleOpenModal}
+                  className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span>Register Now</span>
+                  <ChevronRight size={18} />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -253,9 +287,20 @@ export default function JoinPage() {
                   ))}
                 </ul>
               </div>
-              <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all">
-                Register Now
-              </button>
+              {hasJoined ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full py-3.5 rounded-xl font-bold text-center flex items-center justify-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 mt-auto cursor-not-allowed opacity-80 select-none"
+                >
+                  <CheckCircle2 size={18} />
+                  <span>Joined GUSA</span>
+                </button>
+              ) : (
+                <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all">
+                  Register Now
+                </button>
+              )}
             </div>
 
             {/* Associate Member */}
@@ -275,9 +320,20 @@ export default function JoinPage() {
                   ))}
                 </ul>
               </div>
-              <button type="button" onClick={handleOpenModal} className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto cursor-pointer transition-all">
-                Register as Associate
-              </button>
+              {hasJoined ? (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full py-3.5 rounded-xl font-bold text-center flex items-center justify-center gap-2 text-slate-400 bg-slate-800/40 border border-white/5 mt-auto cursor-not-allowed opacity-60 select-none"
+                >
+                  <CheckCircle2 size={18} />
+                  <span>Already Joined</span>
+                </button>
+              ) : (
+                <button type="button" onClick={handleOpenModal} className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto cursor-pointer transition-all">
+                  Register as Associate
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -601,13 +657,18 @@ export default function JoinPage() {
 
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || hasJoined}
                     className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
                         <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         <span>Submitting...</span>
+                      </>
+                    ) : hasJoined ? (
+                      <>
+                        <CheckCircle2 size={14} className="text-emerald-400" />
+                        <span>Already Registered</span>
                       </>
                     ) : (
                       <>
