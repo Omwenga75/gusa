@@ -57,10 +57,16 @@ export async function GET(request: NextRequest) {
       } catch {}
     }
 
-    const eventsWithTickets = events.map(e => ({
-      ...e,
-      ticketCount: ticketCounts[e.id] || 0,
-    }))
+    const eventsWithTickets = events.map(e => {
+      const ticketsCount = ticketCounts[e.id] || 0
+      return {
+        ...e,
+        ticketCount: ticketsCount,
+        _count: {
+          registrations: ticketsCount > 0 ? ticketsCount : (e._count?.registrations || 0),
+        },
+      }
+    })
 
     return NextResponse.json(
       { events: eventsWithTickets, total, take, skip },

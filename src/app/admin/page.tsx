@@ -61,7 +61,36 @@ export default async function AdminDashboard() {
   ] = await Promise.all([
     prisma.user.count(),
     prisma.event.count({ where: { status: 'PUBLISHED' } }),
-    prisma.eventRegistration.count(),
+    (async () => {
+      try {
+        const [ticketSettings, onlineRegs] = await Promise.all([
+          prisma.siteSetting.findMany({
+            where: { key: { startsWith: 'event_list_' } },
+            select: { value: true },
+          }),
+          prisma.eventRegistration.count({
+            where: {
+              studentName: { not: 'GUSA Registered Student' },
+            },
+          }).catch(() => 0),
+        ]);
+
+        let ticketCount = 0;
+        for (const ts of ticketSettings) {
+          try {
+            const list = JSON.parse(ts.value);
+            if (Array.isArray(list)) {
+              ticketCount += list.length;
+            }
+          } catch {}
+        }
+
+        return ticketCount + onlineRegs;
+      } catch (err) {
+        console.error('Error fetching registrations count:', err);
+        return 0;
+      }
+    })(),
     prisma.post.count({ where: { status: 'PUBLISHED' } }),
     prisma.project.count(),
     prisma.contactMessage.count({ where: { status: 'UNREAD' } }),
