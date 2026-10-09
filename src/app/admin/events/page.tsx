@@ -903,43 +903,48 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* ─── Ticket List Panel ────────────────────────────────────────────────── */}
+      {/* ─── Ticket List Modal (Centered & Compact) ─────────────────────────── */}
       {listPanelEvent && (
         <div
           onClick={() => setListPanelEvent(null)}
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(6px)',
-            zIndex: 200,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 150,
             display: 'flex',
-            alignItems: 'stretch',
-            justifyContent: 'flex-end',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
           }}
         >
-          {/* Slide-over panel */}
           <div
+            className={styles.card}
             onClick={e => e.stopPropagation()}
             style={{
               width: '100%',
-              maxWidth: '680px',
+              maxWidth: '540px',
+              maxHeight: '90vh',
               background: '#0d1225',
-              borderLeft: '1px solid rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '1rem',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
+              padding: 0,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
             }}
           >
             {/* Panel Header */}
             <div style={{
-              padding: '1.25rem 1.5rem',
+              padding: '1rem 1.25rem',
               borderBottom: '1px solid rgba(255,255,255,0.08)',
               display: 'flex',
-              alignItems: 'flex-start',
+              alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '1rem',
-              background: 'rgba(124,58,237,0.07)',
+              gap: '0.75rem',
+              background: 'rgba(124,58,237,0.08)',
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
@@ -991,15 +996,15 @@ export default function EventsPage() {
             </div>
 
             {/* Scrollable Body */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
               {/* ── Add Entry Form ── */}
               <form onSubmit={handleAddEntry} style={{
                 background: 'rgba(124,58,237,0.06)',
                 border: '1px solid rgba(124,58,237,0.2)',
                 borderRadius: '0.75rem',
-                padding: '1.1rem 1.25rem',
-                display: 'flex', flexDirection: 'column', gap: '0.85rem',
+                padding: '1rem 1.1rem',
+                display: 'flex', flexDirection: 'column', gap: '0.75rem',
               }}>
                 <p style={{ margin: 0, fontSize: '0.8125rem', fontWeight: 700, color: '#c4b5fd' }}>
                   + Add Entry
