@@ -296,22 +296,6 @@ export default function EventsPage() {
                         <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category}
                         </span>
-
-                        {images.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              e.preventDefault()
-                              setGalleryModalEvent(event)
-                            }}
-                            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-200 hover:text-white bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 hover:border-violet-400/50 shadow-md transition-colors cursor-pointer"
-                            title="View event gallery photos"
-                          >
-                            <ImageIcon size={12} className="text-violet-400" />
-                            <span>{images.length} {images.length === 1 ? 'photo' : 'photos'}</span>
-                          </button>
-                        )}
                       </div>
 
                       {/* Countdown Badge on Banner */}
