@@ -18,6 +18,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { EventCountdown } from '@/components/events/EventCountdown';
 import { JoinGusaButton } from '@/components/JoinGusaButton';
+import { HeroSlider } from '@/components/HeroSlider';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -178,11 +179,7 @@ export default async function HomePage() {
       <section className="relative min-h-0 lg:min-h-[84vh] flex flex-col justify-between pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-6 sm:pb-10 md:pb-14 text-white overflow-hidden border-b border-white/10">
         {/* Full-bleed Responsive Background Image Layer */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
-          <img 
-            src="/hero-gusa.jpg" 
-            alt="GUSA Students Community and Cultural Heritage at Meru University" 
-            className="w-full h-full object-cover object-[center_30%] sm:object-[center_35%] md:object-[center_40%] lg:object-[65%_42%] xl:object-[70%_45%] scale-[1.01]"
-          />
+          <HeroSlider />
           {/* Directional Desktop Left-to-Right Scrim: Rich dark backing for text on the left, completely natural, clear & bright on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 via-40% sm:via-50% md:via-55% lg:via-50% xl:via-46% to-slate-950/20 lg:to-transparent" />
           
