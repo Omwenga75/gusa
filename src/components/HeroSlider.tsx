@@ -10,7 +10,7 @@ const SLIDES = [
   '/hero-slide-5.jpg',
 ];
 
-const INTERVAL_MS = 60_000; // 1 minute per slide
+const INTERVAL_MS = 10_000; // 10 seconds per slide
 
 export function HeroSlider() {
   const [current, setCurrent] = useState(0);
