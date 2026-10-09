@@ -229,10 +229,6 @@ export default function AdminAlumniPage() {
         </button>
       </div>
 
-      {/* Stats Bar */}
-      <div className="flex items-center justify-between mb-6 text-xs text-slate-400 font-medium">
-        <span>Total: <strong className="text-white font-bold">{alumniList.length}</strong> alumni records</span>
-      </div>
 
       {/* Main Content Grid */}
       {isLoading ? (
