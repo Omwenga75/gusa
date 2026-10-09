@@ -46,7 +46,7 @@ export default async function AdminDashboard() {
   const [
     totalMembers,
     activeEvents,
-    registrationsCount,
+    emeritusLeadersCount,
     publishedNewsCount,
     activeProjects,
     unreadMessages,
@@ -63,31 +63,15 @@ export default async function AdminDashboard() {
     prisma.event.count({ where: { status: 'PUBLISHED' } }),
     (async () => {
       try {
-        const [ticketSettings, onlineRegs] = await Promise.all([
-          prisma.siteSetting.findMany({
-            where: { key: { startsWith: 'event_list_' } },
-            select: { value: true },
-          }),
-          prisma.eventRegistration.count({
-            where: {
-              studentName: { not: 'GUSA Registered Student' },
-            },
-          }).catch(() => 0),
-        ]);
-
-        let ticketCount = 0;
-        for (const ts of ticketSettings) {
-          try {
-            const list = JSON.parse(ts.value);
-            if (Array.isArray(list)) {
-              ticketCount += list.length;
-            }
-          } catch {}
-        }
-
-        return ticketCount + onlineRegs;
+        const record = await prisma.siteSetting.findUnique({
+          where: { key: 'emeritus_leaders' },
+          select: { value: true },
+        });
+        if (!record || !record.value) return 0;
+        const list = JSON.parse(record.value);
+        return Array.isArray(list) ? list.length : 0;
       } catch (err) {
-        console.error('Error fetching registrations count:', err);
+        console.error('Error fetching emeritus leaders count:', err);
         return 0;
       }
     })(),
@@ -288,12 +272,12 @@ export default async function AdminDashboard() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(244, 114, 182, 0.12)', color: '#f472b6' }}>
-            <Ticket size={24} />
+          <div className={styles.statIcon} style={{ background: 'rgba(234, 179, 8, 0.12)', color: '#eab308' }}>
+            <Award size={24} />
           </div>
           <div className={styles.statInfo}>
-            <h3>Registrations</h3>
-            <p>{registrationsCount.toLocaleString()}</p>
+            <h3>Emeritus Leaders</h3>
+            <p>{emeritusLeadersCount.toLocaleString()}</p>
           </div>
         </div>
 
