@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Calendar, MapPin, Users, ArrowLeft, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, Clock, Tag } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { EventDetailGallery } from './EventDetailGallery';
@@ -18,6 +18,12 @@ const parseEventImages = (coverImage?: string | null): string[] => {
   }
 };
 
+const formatEventType = (type?: string | null): string => {
+  if (!type) return 'General';
+  const clean = type.trim();
+  return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
+};
+
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
@@ -33,6 +39,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
   const images = parseEventImages(event.coverImage);
   const primaryCover = images[0] || null;
+  const rawType = event.organizer || (event as any).category || 'General';
+  const eventType = formatEventType(rawType);
 
   const eventDate = new Date(event.date).toLocaleDateString('en-US', {
     weekday: 'long',
@@ -78,6 +86,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             >
               {event.status}
             </span>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+              {eventType}
+            </span>
             {images.length > 0 && (
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-violet-300 border border-violet-500/30 backdrop-blur-md">
                 {images.length} {images.length === 1 ? 'photo' : 'photos'}
@@ -107,16 +118,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             {/* Event Pictures Gallery */}
             <EventDetailGallery images={images} title={event.title} />
 
-            {/* Organizer Card */}
-            {event.organizer && (
+            {/* Event Type Card */}
+            {eventType && (
               <div className="glass-card p-6">
-                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Organizer</h3>
+                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Event Type</h3>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl font-bold text-gray-500">
-                    {event.organizer.charAt(0).toUpperCase()}
+                  <div className="w-12 h-12 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-xl font-bold text-violet-400">
+                    {eventType.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg">{event.organizer}</h4>
+                    <h4 className="font-semibold text-lg text-white">{eventType}</h4>
                     <p className="text-sm text-gray-500">Gusii University Students Association</p>
                   </div>
                 </div>
@@ -153,6 +164,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   <div>
                     <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Venue</p>
                     <p className="text-gray-600 dark:text-gray-400">{event.venue}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Tag className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Event Type</p>
+                    <p className="text-gray-600 dark:text-gray-400">{eventType}</p>
                   </div>
                 </div>
 

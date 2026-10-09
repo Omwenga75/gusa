@@ -293,8 +293,8 @@ export default function EventsPage() {
 
                       {/* Category Badge & Photos Count Overlay */}
                       <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10">
-                        <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
-                          {event.category}
+                        <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
+                          {event.category ? event.category.charAt(0).toUpperCase() + event.category.slice(1).toLowerCase() : 'General'}
                         </span>
                       </div>
 
