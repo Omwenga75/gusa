@@ -482,11 +482,11 @@ export default function AdminAlumniPage() {
                   maxLength={MAX_DESC_LENGTH}
                   value={shortDescription}
                   onChange={(e) => setShortDescription(e.target.value)}
-                  placeholder="e.g. Software Engineer at Safaricom | Class of 2024"
+                  placeholder="Legacy left"
                   className="w-full bg-slate-950 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
                 />
                 <p className="text-[11px] text-slate-500 mt-1">
-                  Maximum 60 characters. Provide current role, company, or graduation class.
+                  Maximum 60 characters. Describe the legacy left.
                 </p>
               </div>
 
