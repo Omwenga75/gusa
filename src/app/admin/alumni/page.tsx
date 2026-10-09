@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { UserCheck, Plus, X, Trash2, Camera, Pencil, Search, Loader2 } from 'lucide-react';
+import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 
 export interface AlumniItem {
@@ -23,7 +23,6 @@ export default function AdminAlumniPage() {
     () => readCache<AlumniItem[]>(ADMIN_ALUMNI_KEY) || []
   );
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_ALUMNI_KEY));
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -210,24 +209,12 @@ export default function AdminAlumniPage() {
     }
   };
 
-  const filteredAlumni = alumniList.filter(item => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      item.name.toLowerCase().includes(q) ||
-      item.shortDescription.toLowerCase().includes(q)
-    );
-  });
-
   return (
     <div className={styles.container}>
       {/* Header */}
       <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.pageTitle} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <UserCheck size={28} className="text-violet-400" />
-            Alumni Management
-          </h1>
+          <h1 className={styles.pageTitle}>Alumni</h1>
           <p className={styles.pageSubtitle}>
             Manage esteemed GUSA alumni records, achievements, and portraits.
           </p>
@@ -242,22 +229,9 @@ export default function AdminAlumniPage() {
         </button>
       </div>
 
-      {/* Search & Stats Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <div className="relative w-full sm:w-80">
-          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search alumni by name or description..."
-            className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
-          />
-        </div>
-
-        <div className="text-xs text-slate-400 font-medium">
-          Total: <strong className="text-white font-bold">{alumniList.length}</strong> alumni records
-        </div>
+      {/* Stats Bar */}
+      <div className="flex items-center justify-between mb-6 text-xs text-slate-400 font-medium">
+        <span>Total: <strong className="text-white font-bold">{alumniList.length}</strong> alumni records</span>
       </div>
 
       {/* Main Content Grid */}
@@ -271,30 +245,26 @@ export default function AdminAlumniPage() {
             </div>
           ))}
         </div>
-      ) : filteredAlumni.length === 0 ? (
+      ) : alumniList.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-900/40 border border-dashed border-white/15 rounded-2xl">
           <div className="w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-4">
-            <UserCheck size={32} />
+            <GraduationCap size={32} />
           </div>
           <h3 className="text-lg font-bold text-white mb-1">No alumni records found</h3>
           <p className="text-sm text-slate-400 max-w-sm mb-5">
-            {searchQuery
-              ? 'No alumni matched your search criteria. Try a different query.'
-              : 'Start by adding your first alumni record using the button above.'}
+            Start by adding your first alumni record using the button above.
           </p>
-          {!searchQuery && (
-            <button
-              onClick={handleOpenAdd}
-              className="btn btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer"
-            >
-              <Plus size={16} />
-              <span>Add Alumni Now</span>
-            </button>
-          )}
+          <button
+            onClick={handleOpenAdd}
+            className="btn btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer"
+          >
+            <Plus size={16} />
+            <span>Add Alumni Now</span>
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredAlumni.map(item => {
+          {alumniList.map(item => {
             const initials = item.name
               ? item.name
                   .split(' ')
@@ -405,53 +375,76 @@ export default function AdminAlumniPage() {
 
             {/* Form */}
             <form onSubmit={handleSaveAlumni} className="space-y-4">
-              {/* Picture Upload (Leadership Style) */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  Alumni Portrait / Picture
-                </label>
-                <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-slate-800 border-2 border-dashed border-white/20 flex items-center justify-center shrink-0">
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="w-full h-full object-cover object-top"
-                      />
-                    ) : (
-                      <Camera size={24} className="text-slate-500" />
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
+              {/* Photo Upload & Change (Circular dashed matching leadership) */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    width: '96px',
+                    height: '96px',
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '2px dashed rgba(124, 58, 237, 0.5)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'border-color 0.2s ease',
+                    position: 'relative',
+                    backgroundColor: 'rgba(15, 23, 42, 0.6)'
+                  }}
+                  title={imagePreview ? 'Click to change photo' : 'Click to upload photo'}
+                >
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                     />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/15 text-white border border-white/15 transition-colors cursor-pointer"
-                    >
-                      {imagePreview ? 'Change Photo' : 'Upload Photo'}
-                    </button>
-                    {imagePreview && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setImagePreview(null);
-                          if (fileInputRef.current) fileInputRef.current.value = '';
-                        }}
-                        className="text-xs text-rose-400 hover:text-rose-300 text-left transition-colors cursor-pointer"
-                      >
-                        Remove photo
-                      </button>
-                    )}
-                  </div>
+                  ) : (
+                    <Camera size={28} color="#7c3aed" style={{ opacity: 0.7 }} />
+                  )}
                 </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#a78bfa',
+                    fontSize: '0.8125rem',
+                    cursor: 'pointer',
+                    fontWeight: 600
+                  }}
+                >
+                  {imagePreview ? 'Click to change photo' : 'Click to upload photo'}
+                </button>
+                {imagePreview && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImagePreview(null);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#f87171',
+                      fontSize: '0.725rem',
+                      cursor: 'pointer',
+                      fontWeight: 500
+                    }}
+                  >
+                    Remove photo
+                  </button>
+                )}
               </div>
 
               {/* Full Name */}
