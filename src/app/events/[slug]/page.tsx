@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Calendar, MapPin, Users, ArrowLeft, Clock, Tag, List, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, Clock, Tag } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { EventDetailGallery } from './EventDetailGallery';
+import { EventTicketList } from './EventTicketList';
 
 export const revalidate = 60;
 
@@ -73,16 +74,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   });
 
   const ticketList = await getTicketList(event.id);
-
-  const ticketTypeColor = (t: string) => {
-    switch (t) {
-      case 'VVIP': return { bg: 'rgba(250,204,21,0.12)', color: '#fde047', border: 'rgba(250,204,21,0.3)' };
-      case 'VIP': return { bg: 'rgba(124,58,237,0.15)', color: '#c4b5fd', border: 'rgba(124,58,237,0.4)' };
-      case 'Couple': return { bg: 'rgba(236,72,153,0.12)', color: '#f9a8d4', border: 'rgba(236,72,153,0.3)' };
-      case 'Group of 5': return { bg: 'rgba(59,130,246,0.12)', color: '#93c5fd', border: 'rgba(59,130,246,0.3)' };
-      default: return { bg: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: 'rgba(255,255,255,0.1)' };
-    }
-  };
 
   return (
     <PublicLayout>
@@ -252,90 +243,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         </div>
 
         {/* ── Ticket List Section ─────────────────────────────────────────── */}
-        {ticketList.length > 0 && (
-          <div
-            style={{
-              marginTop: '3rem',
-              background: 'linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(9,14,26,0.98) 100%)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '1rem',
-              overflow: 'hidden',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.4)',
-            }}
-          >
-            {/* Section Header */}
-            <div
-              style={{
-                padding: '1.25rem 1.5rem',
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(59,130,246,0.12) 100%)',
-                borderBottom: '1px solid rgba(255,255,255,0.07)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.65rem',
-              }}
-            >
-              <List size={20} color="#a78bfa" />
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>Ticket List</h3>
-                <p style={{ margin: 0, fontSize: '0.78rem', color: '#94a3b8' }}>
-                  {ticketList.length} registered {ticketList.length === 1 ? 'entry' : 'entries'}
-                </p>
-              </div>
-            </div>
-
-            {/* Table */}
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-                <thead>
-                  <tr style={{ background: 'rgba(124,58,237,0.07)' }}>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>#</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket Type</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Qty</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ticketList.map((entry, i) => {
-                    const tc = ticketTypeColor(entry.ticketType);
-                    return (
-                      <tr key={entry.id} style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                        <td style={{ padding: '0.85rem 1rem', color: '#475569', fontSize: '0.8rem' }}>{i + 1}</td>
-                        <td style={{ padding: '0.85rem 1rem', color: '#f1f5f9', fontWeight: 600 }}>{entry.name}</td>
-                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>
-                          <span style={{
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                            padding: '0.2rem 0.75rem', borderRadius: '9999px',
-                            fontSize: '0.72rem', fontWeight: 700,
-                            background: tc.bg, color: tc.color, border: `1px solid ${tc.border}`,
-                          }}>
-                            {entry.ticketType}
-                          </span>
-                        </td>
-                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>
-                          <span style={{
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                            padding: '0.2rem 0.75rem', borderRadius: '9999px',
-                            fontSize: '0.72rem', fontWeight: 700,
-                            background: entry.status === 'Paid' ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)',
-                            color: entry.status === 'Paid' ? '#4ade80' : '#fbbf24',
-                            border: `1px solid ${entry.status === 'Paid' ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
-                          }}>
-                            {entry.status === 'Paid'
-                              ? <CheckCircle size={11} />
-                              : <AlertCircle size={11} />}
-                            {entry.status}
-                          </span>
-                        </td>
-                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#e2e8f0', fontWeight: 700 }}>{entry.quantity}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+        <EventTicketList ticketList={ticketList} />
       </div>
     </PublicLayout>
   );
