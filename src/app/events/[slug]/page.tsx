@@ -3,6 +3,20 @@ import { notFound } from 'next/navigation';
 import { Calendar, MapPin, Users, ArrowLeft, Clock } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { PublicLayout } from '@/components/layout/PublicLayout';
+import { EventDetailGallery } from './EventDetailGallery';
+
+const parseEventImages = (coverImage?: string | null): string[] => {
+  if (!coverImage) return [];
+  try {
+    const parsed = JSON.parse(coverImage);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((img: any) => typeof img === 'string' && img.trim() !== '');
+    }
+    return [coverImage];
+  } catch {
+    return [coverImage];
+  }
+};
 
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -17,6 +31,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
     notFound();
   }
 
+  const images = parseEventImages(event.coverImage);
+  const primaryCover = images[0] || null;
+
   const eventDate = new Date(event.date).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -27,21 +44,27 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   return (
     <PublicLayout>
       {/* Hero Banner */}
-      <div
-        className="w-full relative flex items-end pb-8"
-        style={{
-          minHeight: event.coverImage ? '320px' : '200px',
-          background: event.coverImage
-            ? `linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3)), url(${event.coverImage}) center/cover no-repeat`
-            : 'linear-gradient(135deg, var(--primary) 0%, #005a36 100%)',
-        }}
-      >
+      <div className="w-full relative min-h-[320px] md:min-h-[380px] flex items-end pb-8 overflow-hidden bg-slate-950">
+        {primaryCover ? (
+          <>
+            <img
+              src={primaryCover}
+              alt={event.title}
+              className="absolute inset-0 w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-transparent" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950" />
+        )}
+
         <div className="container mx-auto px-4 relative z-10">
-          <Link href="/events" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors">
+          <Link href="/events" className="inline-flex items-center text-slate-300 hover:text-white mb-6 transition-colors">
             <ArrowLeft size={16} className="mr-2" />
             Back to Events
           </Link>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
             <span
               className="badge"
               style={{
@@ -55,8 +78,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             >
               {event.status}
             </span>
+            {images.length > 0 && (
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+                {images.length} {images.length === 1 ? 'photo' : 'photos'}
+              </span>
+            )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">{event.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 tracking-tight drop-shadow-md">
+            {event.title}
+          </h1>
         </div>
       </div>
 
@@ -64,6 +94,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content */}
           <div className="lg:w-2/3">
+            {/* About This Event Card */}
             <div className="glass-card p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>About This Event</h2>
               <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 space-y-4">
@@ -73,6 +104,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
               </div>
             </div>
 
+            {/* Event Pictures Gallery */}
+            <EventDetailGallery images={images} title={event.title} />
+
+            {/* Organizer Card */}
             {event.organizer && (
               <div className="glass-card p-6">
                 <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-main)' }}>Organizer</h3>
@@ -121,15 +156,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   </div>
                 </div>
 
-                {event.capacity && (
-                  <div className="flex items-start gap-3">
-                    <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
-                    <div>
-                      <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
-                      <p className="text-gray-600 dark:text-gray-400">{event.capacity} attendees</p>
-                    </div>
+                {/* Constant Capacity: 500+ for all events */}
+                <div className="flex items-start gap-3">
+                  <Users className="mt-1 flex-shrink-0" size={20} style={{ color: 'var(--primary)' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: 'var(--text-main)' }}>Capacity</p>
+                    <p className="text-gray-600 dark:text-gray-400">500+ attendees</p>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

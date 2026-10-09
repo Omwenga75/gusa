@@ -51,9 +51,6 @@ export function Footer() {
               <li><Link href="/about" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">About GUSA</Link></li>
               <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leadership</Link></li>
               <li><Link href="/emeritus" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Emeritus Leaders</Link></li>
-              <li><Link href="/events" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Events & Programs</Link></li>
-              <li><Link href="/politics" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Politics & Elections</Link></li>
-              <li><Link href="/welfare" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Welfare & Initiatives</Link></li>
             </ul>
           </div>
 
@@ -84,8 +81,8 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3 min-w-0">
                 <Phone size={16} className="text-violet-400 mt-1 shrink-0" />
-                <a href="tel:+25476804142" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">
-                  +254 76 804 142
+                <a href="tel:+254 768 004 142" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">
+                  +254 768 004 142
                 </a>
               </li>
               <li className="flex items-start gap-3 min-w-0">
@@ -99,7 +96,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex justify-center items-center text-center">
           <p className="text-slate-500 text-xs text-center w-full">
-            &copy; 2026 GUSII UNIVERSITY STUDENTS ASSOCIATION – MERU (GUSA). All Rights Reserved.
+            &copy; 2026 GUSII UNIVERSITY STUDENTS ASSOCIATION (GUSA) – MERU. All Rights Reserved.
           </p>
         </div>
       </div>
