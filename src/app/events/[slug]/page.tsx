@@ -52,7 +52,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   return (
     <PublicLayout>
       {/* Hero Banner */}
-      <div className="w-full relative min-h-[320px] md:min-h-[380px] flex items-end pb-8 overflow-hidden bg-slate-950">
+      <div className="w-full relative min-h-[220px] md:min-h-[260px] flex flex-col justify-center pt-6 pb-6 md:pt-8 md:pb-8 overflow-hidden bg-slate-950">
         {primaryCover ? (
           <>
             <img
@@ -60,25 +60,25 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
               alt={event.title}
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/30" />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950" />
         )}
 
         <div className="container mx-auto px-4 relative z-10">
-          <Link href="/events" className="inline-flex items-center text-slate-300 hover:text-white mb-6 transition-colors">
+          <Link href="/events" className="inline-flex items-center text-slate-300 hover:text-white mb-3 md:mb-4 transition-colors text-sm font-medium">
             <ArrowLeft size={16} className="mr-2" />
             Back to Events
           </Link>
-          <div className="flex flex-wrap items-center gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
             <span
               className="badge"
               style={{
                 backgroundColor: event.status === 'PUBLISHED' ? 'var(--accent-gold, #d4af37)' : '#6b7280',
                 color: '#000',
-                padding: '0.25rem 0.75rem',
+                padding: '0.2rem 0.65rem',
                 borderRadius: '9999px',
                 fontSize: '0.75rem',
                 fontWeight: 700,
@@ -86,22 +86,22 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             >
               {event.status}
             </span>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
               {eventType}
             </span>
             {images.length > 0 && (
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-900/80 text-violet-300 border border-violet-500/30 backdrop-blur-md">
                 {images.length} {images.length === 1 ? 'photo' : 'photos'}
               </span>
             )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 tracking-tight drop-shadow-md">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-1 tracking-tight drop-shadow-md">
             {event.title}
           </h1>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8 md:py-10">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content */}
           <div className="lg:w-2/3">
