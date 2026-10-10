@@ -180,27 +180,27 @@ export default async function HomePage() {
         {/* Full-bleed Responsive Background Image Layer */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
           <HeroSlider />
-          {/* Directional Desktop Left-to-Right Scrim: Rich dark backing for text on the left, completely natural, clear & bright on the right */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 via-40% sm:via-50% md:via-55% lg:via-50% xl:via-46% to-slate-950/20 lg:to-transparent" />
+          {/* Subtle directional scrim: gentle soft darkening on the left quadrant, leaving the rest of the image vivid, clear, and bright */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-slate-950/30 via-45% to-transparent" />
           
-          {/* Top-to-Bottom Scrim: Clean readability on mobile/tablets & seamless nav/bottom blend */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/40 via-30% to-slate-950/95 lg:from-slate-950/70 lg:via-transparent lg:to-slate-950/95" />
+          {/* Gentle top/bottom blend into navbar and stat counters */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-transparent via-30% to-slate-950/80" />
           
-          {/* Soft ambient violet glow localized to the left text quadrant */}
-          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Soft ambient violet glow */}
+          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Content Layer (Positioned higher up to match screenshot 2) */}
+        {/* Content Layer with Frosted Glass Card for perfect readability without darkening the photo */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-start pt-2 sm:pt-4 md:pt-6">
-          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-4 mx-auto lg:mx-0">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl break-words">
+          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-6 px-4 sm:px-7 rounded-3xl bg-slate-950/40 border border-white/10 backdrop-blur-md shadow-2xl mx-auto lg:mx-0">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] break-words">
               Building Community. <br />
               <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
                 Celebrating Culture.
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-slate-200 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-md">
+            <p className="text-sm sm:text-base md:text-lg text-slate-100 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
               The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
             </p>
 
