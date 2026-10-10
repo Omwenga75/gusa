@@ -38,7 +38,7 @@ export function JoinGusaButton({ className }: { className?: string }) {
   if (hasJoined) {
     return (
       <span
-        className="btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-emerald-400 border border-emerald-500/40 bg-emerald-500/10 shadow-lg shadow-emerald-500/10 cursor-default select-none"
+        className="btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-emerald-300 border border-emerald-500/50 bg-slate-950/60 backdrop-blur-sm shadow-xl shadow-black/50 cursor-default select-none"
         aria-disabled="true"
       >
         <CheckCircle2 size={18} className="text-emerald-400" />
@@ -50,7 +50,7 @@ export function JoinGusaButton({ className }: { className?: string }) {
   return (
     <Link
       href="/join"
-      className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform'}
+      className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-black/40 hover:scale-[1.02] transition-transform'}
     >
       <span>Join GUSA</span>
       <ArrowRight size={18} />

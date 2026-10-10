@@ -187,23 +187,23 @@ export default async function HomePage() {
           <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Content Layer: No blur box so all people in the photo remain 100% visible and sharp */}
+        {/* Content Layer: Bright translucent glass card for clean readability while keeping people and image details clearly visible */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-start pt-2 sm:pt-4 md:pt-6">
-          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-3 mx-auto lg:mx-0">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-[1.15] text-white break-words drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] drop-shadow-[0_0_30px_rgba(0,0,0,0.85)]">
+          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-6 px-4 sm:px-7 rounded-3xl bg-slate-950/25 border border-white/15 backdrop-blur-[3px] shadow-[0_8px_32px_rgba(0,0,0,0.35)] mx-auto lg:mx-0">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-[1.15] text-white break-words drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
               Building Community. <br />
               <span className="bg-gradient-to-r from-violet-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
                 Celebrating Culture.
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-white font-medium mb-5 sm:mb-7 max-w-lg mx-auto lg:mx-0 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] drop-shadow-[0_0_16px_rgba(0,0,0,0.8)]">
+            <p className="text-sm sm:text-base md:text-lg text-slate-100 font-medium mb-5 sm:mb-7 max-w-lg mx-auto lg:mx-0 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
               The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
               <JoinGusaButton />
-              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center shadow-xl">
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center shadow-xl shadow-black/40">
                 Explore Events
               </Link>
             </div>
