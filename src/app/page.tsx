@@ -180,30 +180,33 @@ export default async function HomePage() {
         {/* Full-bleed Responsive Background Image Layer */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
           <HeroSlider />
-          {/* Ultra-gentle top & bottom blend: middle is 100% transparent so all people are completely clear & unblurred */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent via-30% to-slate-950/80" />
+          {/* Directional Desktop Left-to-Right Scrim: Rich dark backing for text on the left, completely natural, clear & bright on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/85 via-40% sm:via-50% md:via-55% lg:via-50% xl:via-46% to-slate-950/20 lg:to-transparent" />
           
-          {/* Subtle ambient violet accent */}
-          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+          {/* Top-to-Bottom Scrim: Clean readability on mobile/tablets & seamless nav/bottom blend */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/40 via-30% to-slate-950/95 lg:from-slate-950/70 lg:via-transparent lg:to-slate-950/95" />
+          
+          {/* Soft ambient violet glow localized to the left text quadrant */}
+          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Content Layer: Bright translucent glass card for clean readability while keeping people and image details clearly visible */}
+        {/* Content Layer (Positioned higher up to match screenshot 2) */}
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex flex-col justify-start pt-2 sm:pt-4 md:pt-6">
-          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-4 sm:py-6 px-4 sm:px-7 rounded-3xl bg-slate-950/25 border border-white/15 backdrop-blur-[3px] shadow-[0_8px_32px_rgba(0,0,0,0.35)] mx-auto lg:mx-0">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 leading-[1.15] text-white break-words drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
+          <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-4 mx-auto lg:mx-0">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl break-words">
               Building Community. <br />
-              <span className="bg-gradient-to-r from-violet-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
                 Celebrating Culture.
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-slate-100 font-medium mb-5 sm:mb-7 max-w-lg mx-auto lg:mx-0 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+            <p className="text-sm sm:text-base md:text-lg text-slate-200 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-md">
               The official digital platform for the Gusii University Students Association at Meru University of Science and Technology. Empowering students, fostering academic success, and preserving heritage.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
               <JoinGusaButton />
-              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center shadow-xl shadow-black/40">
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center">
                 Explore Events
               </Link>
             </div>

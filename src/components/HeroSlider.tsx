@@ -110,7 +110,6 @@ export function HeroSlider() {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center 35%',
-              filter: 'contrast(1.04) brightness(1.02) saturate(1.04)',
             }}
           />
         </div>
@@ -126,7 +125,6 @@ export function HeroSlider() {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center 35%',
-              filter: 'contrast(1.04) brightness(1.02) saturate(1.04)',
             }}
           />
         </div>
