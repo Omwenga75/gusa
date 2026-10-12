@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Camera, Pencil, Landmark, GraduationCap, Users } from 'lucide-react';
