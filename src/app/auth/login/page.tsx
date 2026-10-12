@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { getFirstPermittedPath } from "@/lib/permissions";
 
 function LoginForm() {
   const router = useRouter();
@@ -31,8 +32,28 @@ function LoginForm() {
       if (res?.error) {
         setError("Invalid admin email or password");
       } else {
-        const callbackUrl = searchParams.get("callbackUrl") || "/admin";
-        router.push(callbackUrl);
+        const callbackUrl = searchParams.get("callbackUrl");
+        if (callbackUrl && callbackUrl !== "/admin") {
+          router.push(callbackUrl);
+          router.refresh();
+        } else {
+          try {
+            const sessionRes = await fetch("/api/auth/session");
+            const sessionData = await sessionRes.json();
+            const userRole = sessionData?.user?.role;
+            const userPerms = sessionData?.user?.permissions;
+            if (userRole === "ADMIN") {
+              const dest = getFirstPermittedPath(userPerms);
+              router.push(dest);
+            } else {
+              router.push("/admin");
+            }
+            router.refresh();
+          } catch {
+            router.push("/admin");
+            router.refresh();
+          }
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");

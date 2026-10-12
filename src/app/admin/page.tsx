@@ -1,6 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { getFirstPermittedPath } from '@/lib/permissions';
 import styles from './admin.module.css';
 import {
   Users,
@@ -42,6 +45,32 @@ function formatRelativeTime(date: Date): string {
 }
 
 export default async function AdminDashboard() {
+  const session = await auth();
+
+  if (!session || !session.user) {
+    redirect('/auth/login');
+  }
+
+  const role = (session.user as any)?.role;
+  const permissions = (session.user as any)?.permissions;
+
+  // Non-Super Admins are scoped to specific sections and should not see the Executive Overview
+  if (role !== 'SUPER_ADMIN') {
+    const target = getFirstPermittedPath(permissions);
+    if (target && target !== '/admin') {
+      redirect(target);
+    }
+
+    return (
+      <div style={{ padding: '3rem', textAlign: 'center' }}>
+        <h2 style={{ color: '#f8fafc', marginBottom: '0.75rem', fontSize: '1.25rem' }}>Access Restricted</h2>
+        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+          Your admin account does not have access to any sections yet. Please contact a Super Admin to assign permissions.
+        </p>
+      </div>
+    );
+  }
+
   // Query real metrics directly from the PostgreSQL database
   const [
     totalMembers,

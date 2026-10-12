@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import styles from './admin.module.css';
 import {
@@ -22,7 +22,7 @@ import {
   GraduationCap,
   ShieldCheck,
 } from 'lucide-react';
-import { ADMIN_PERMISSIONS, hasPermission } from '@/lib/permissions';
+import { ADMIN_PERMISSIONS, hasPermission, getFirstPermittedPath } from '@/lib/permissions';
 
 const ALL_NAV_ITEMS = [
   { label: 'Dashboard',       path: '/admin',            icon: LayoutDashboard, key: null },
@@ -41,6 +41,7 @@ const ALL_NAV_ITEMS = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(false);
@@ -48,6 +49,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const role = (session?.user as any)?.role as string | undefined;
   const permissions = (session?.user as any)?.permissions as string[] | null | undefined;
   const isSuperAdmin = role === 'SUPER_ADMIN';
+
+  // Automatically redirect restricted admins away from /admin to their assigned section
+  React.useEffect(() => {
+    if (role === 'ADMIN' && pathname === '/admin') {
+      const dest = getFirstPermittedPath(permissions);
+      if (dest !== '/admin') {
+        router.replace(dest);
+      }
+    }
+  }, [role, permissions, pathname, router]);
 
   // Filter nav items based on role + permissions
   const navItems = ALL_NAV_ITEMS.filter((item) => {
@@ -208,7 +219,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className={styles.profileInfo}>
                 <span className={styles.profileName}>{session?.user?.name ?? 'Admin'}</span>
                 <span className={styles.profileRole}>
-                  {isSuperAdmin ? 'Super Admin' : 'Admin'}
+                  {isSuperAdmin
+                    ? 'Super Admin'
+                    : permissions && permissions.length === 1
+                    ? `${ADMIN_PERMISSIONS.find(p => p.key === permissions[0])?.label || 'Admin'} Admin`
+                    : 'Admin'}
                 </span>
               </div>
             </div>
@@ -216,7 +231,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         <div className={styles.pageContainer}>
-          {children}
+          {role === 'ADMIN' && pathname === '/admin' ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', color: '#94a3b8' }}>
+              Redirecting to your dashboard...
+            </div>
+          ) : (
+            children
+          )}
         </div>
       </main>
     </div>
