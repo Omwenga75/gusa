@@ -12,14 +12,14 @@ const SLIDES = [
   '/hero-slide-7.jpg',
   '/hero-slide-8.jpg',
   '/hero-slide-9.jpg',
+  '/hero-slide-10.jpg',
   '/hero-slide-11.jpg',
+  '/hero-slide-12.jpg',
   '/hero-slide-13.jpg',
   '/hero-slide-14.jpg',
+  '/hero-slide-15.jpg',
   '/hero-slide-16.jpg',
-  '/hero-slide-19.jpg',
-  '/hero-slide-21.jpg',
-  '/hero-slide-22.jpg',
-  '/hero-slide-23.jpg',
+  '/hero-slide-17.jpg',
 ];
 
 const INTERVAL_MS = 10_000; // 10 seconds per slide
