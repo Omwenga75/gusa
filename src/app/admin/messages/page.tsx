@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { readCache, writeCache } from '@/lib/cache';
@@ -43,7 +45,7 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-export default function AdminMessagesPage() {
+function AdminMessagesPageInner() {
   const [messages, setMessages] = useState<ContactMessage[]>(
     () => readCache<ContactMessage[]>(ADMIN_MESSAGES_KEY) || []
   );
@@ -514,5 +516,13 @@ export default function AdminMessagesPage() {
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
     </>
+  );
+}
+
+export default function AdminMessagesPage() {
+  return (
+    <AdminPermissionGuard permissionKey="messages">
+      <AdminMessagesPageInner />
+    </AdminPermissionGuard>
   );
 }

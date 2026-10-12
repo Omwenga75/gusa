@@ -25,6 +25,8 @@ model User {
   profileImage       String?
   // Role Enum: MEMBER, ADMIN, SUPER_ADMIN
   role               String             @default("MEMBER")
+  // Scoped permissions for ADMIN role (JSON array string e.g. ["events","welfare"])
+  permissions        String?
   // UserStatus Enum: ACTIVE, INACTIVE, SUSPENDED
   status             String             @default("ACTIVE")
   createdAt          DateTime           @default(now())

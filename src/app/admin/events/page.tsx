@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../admin.module.css';
 import { Plus, X, Pencil, Trash2, List, Download, Loader2, Eye, Check } from 'lucide-react';
@@ -37,7 +39,7 @@ interface Event {
 
 const ADMIN_EVENTS_KEY = 'admin_events';
 
-export default function EventsPage() {
+function EventsPageInner() {
   const [events, setEvents] = useState<Event[]>(() => readCache<Event[]>(ADMIN_EVENTS_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_EVENTS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -1488,5 +1490,13 @@ export default function EventsPage() {
         </div>
       )}
     </>
+  );
+}
+
+export default function EventsPage() {
+  return (
+    <AdminPermissionGuard permissionKey="events">
+      <EventsPageInner />
+    </AdminPermissionGuard>
   );
 }

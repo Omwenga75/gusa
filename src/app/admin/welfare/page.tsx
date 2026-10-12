@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { HeartHandshake, Plus, X, Trash2 } from 'lucide-react';
@@ -16,7 +18,7 @@ interface WelfareProject {
 
 const ADMIN_WELFARE_KEY = 'admin_welfare';
 
-export default function WelfarePage() {
+function WelfarePageInner() {
   const [projects, setProjects] = useState<WelfareProject[]>(() => readCache<WelfareProject[]>(ADMIN_WELFARE_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_WELFARE_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -278,5 +280,13 @@ export default function WelfarePage() {
         </div>
       )}
     </>
+  );
+}
+
+export default function WelfarePage() {
+  return (
+    <AdminPermissionGuard permissionKey="welfare">
+      <WelfarePageInner />
+    </AdminPermissionGuard>
   );
 }

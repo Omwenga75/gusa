@@ -49,7 +49,7 @@ const DELEGATE_POSITIONS = [
   'SPA Delegate'
 ];
 
-export default function AdminEmeritusPage() {
+function AdminEmeritusPageInner() {
   const [leaders, setLeaders] = useState<EmeritusLeader[]>(() => readCache<EmeritusLeader[]>(ADMIN_EMERITUS_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_EMERITUS_KEY));
 
@@ -744,5 +744,13 @@ export default function AdminEmeritusPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminEmeritusPage() {
+  return (
+    <AdminPermissionGuard permissionKey="emeritus">
+      <AdminEmeritusPageInner />
+    </AdminPermissionGuard>
   );
 }

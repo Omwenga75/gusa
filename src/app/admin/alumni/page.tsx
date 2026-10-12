@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap, Award } from 'lucide-react';
@@ -18,7 +20,7 @@ const ADMIN_ALUMNI_KEY = 'admin_alumni';
 const PUBLIC_ALUMNI_KEY = 'alumni';
 const MAX_DESC_LENGTH = 60;
 
-export default function AdminAlumniPage() {
+function AdminAlumniPageInner() {
   const [alumniList, setAlumniList] = useState<AlumniItem[]>(
     () => readCache<AlumniItem[]>(ADMIN_ALUMNI_KEY) || []
   );
@@ -661,5 +663,13 @@ export default function AdminAlumniPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminAlumniPage() {
+  return (
+    <AdminPermissionGuard permissionKey="alumni">
+      <AdminAlumniPageInner />
+    </AdminPermissionGuard>
   );
 }

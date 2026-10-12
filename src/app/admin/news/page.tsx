@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Newspaper, Plus, X } from 'lucide-react';
@@ -17,7 +19,7 @@ interface Post {
 
 const ADMIN_NEWS_KEY = 'admin_news';
 
-export default function NewsPage() {
+function NewsPageInner() {
   const [posts, setPosts] = useState<Post[]>(() => readCache<Post[]>(ADMIN_NEWS_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_NEWS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -337,5 +339,13 @@ export default function NewsPage() {
         </div>
       )}
     </>
+  );
+}
+
+export default function NewsPage() {
+  return (
+    <AdminPermissionGuard permissionKey="news">
+      <NewsPageInner />
+    </AdminPermissionGuard>
   );
 }

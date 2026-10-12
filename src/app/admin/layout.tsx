@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import styles from './admin.module.css';
 import {
   LayoutDashboard,
@@ -19,27 +19,42 @@ import {
   Menu,
   X,
   Vote,
-  GraduationCap
+  GraduationCap,
+  ShieldCheck,
 } from 'lucide-react';
+import { ADMIN_PERMISSIONS, hasPermission } from '@/lib/permissions';
 
-const navItems = [
-  { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-  { label: 'Politics', path: '/admin/politics', icon: Vote },
-  { label: 'Members', path: '/admin/members', icon: Users },
-  { label: 'Events', path: '/admin/events', icon: Calendar },
-  { label: 'Posts / News', path: '/admin/news', icon: Newspaper },
-  { label: 'Gallery', path: '/admin/gallery', icon: ImageIcon },
-  { label: 'Welfare', path: '/admin/welfare', icon: HeartHandshake },
-  { label: 'Leadership', path: '/admin/leadership', icon: Award },
-  { label: 'Emeritus Leaders', path: '/admin/emeritus', icon: Award },
-  { label: 'Alumni', path: '/admin/alumni', icon: GraduationCap },
-  { label: 'Messages', path: '/admin/messages', icon: Mail },
-];
+const ALL_NAV_ITEMS = [
+  { label: 'Dashboard',       path: '/admin',            icon: LayoutDashboard, key: null },
+  { label: 'Politics',        path: '/admin/politics',   icon: Vote,            key: 'politics' },
+  { label: 'Members',         path: '/admin/members',    icon: Users,           key: 'members' },
+  { label: 'Events',          path: '/admin/events',     icon: Calendar,        key: 'events' },
+  { label: 'Posts / News',    path: '/admin/news',       icon: Newspaper,       key: 'news' },
+  { label: 'Gallery',         path: '/admin/gallery',    icon: ImageIcon,       key: 'gallery' },
+  { label: 'Welfare',         path: '/admin/welfare',    icon: HeartHandshake,  key: 'welfare' },
+  { label: 'Leadership',      path: '/admin/leadership', icon: Award,           key: 'leadership' },
+  { label: 'Emeritus Leaders',path: '/admin/emeritus',   icon: Award,           key: 'emeritus' },
+  { label: 'Alumni',          path: '/admin/alumni',     icon: GraduationCap,   key: 'alumni' },
+  { label: 'Messages',        path: '/admin/messages',   icon: Mail,            key: 'messages' },
+  { label: 'Manage Admins',   path: '/admin/settings/admins', icon: ShieldCheck, key: '__super_only__' },
+] as const;
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(false);
+
+  const role = (session?.user as any)?.role as string | undefined;
+  const permissions = (session?.user as any)?.permissions as string[] | null | undefined;
+  const isSuperAdmin = role === 'SUPER_ADMIN';
+
+  // Filter nav items based on role + permissions
+  const navItems = ALL_NAV_ITEMS.filter((item) => {
+    if (item.key === null) return isSuperAdmin; // Dashboard: super admin only
+    if (item.key === '__super_only__') return isSuperAdmin; // Manage Admins: super admin only
+    return hasPermission(role, permissions, item.key as any);
+  });
 
   // Automatically close mobile sidebar on navigation
   React.useEffect(() => {
@@ -187,10 +202,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
 
             <div className={styles.profile}>
-              <div className={styles.avatar}>A</div>
+              <div className={styles.avatar}>
+                {session?.user?.name?.[0]?.toUpperCase() ?? 'A'}
+              </div>
               <div className={styles.profileInfo}>
-                <span className={styles.profileName}>Executive Team</span>
-                <span className={styles.profileRole}>Super Admin</span>
+                <span className={styles.profileName}>{session?.user?.name ?? 'Admin'}</span>
+                <span className={styles.profileRole}>
+                  {isSuperAdmin ? 'Super Admin' : 'Admin'}
+                </span>
               </div>
             </div>
           </div>

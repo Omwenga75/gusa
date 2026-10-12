@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
 import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
@@ -31,7 +33,7 @@ function compareTerms(termA: string, termB: string): number {
   return termB.localeCompare(termA);
 }
 
-export default function LeadershipPage() {
+function LeadershipPageInner() {
   const [leaders, setLeaders] = useState<Leader[]>(() => readCache<Leader[]>(ADMIN_LEADERSHIP_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_LEADERSHIP_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -697,5 +699,13 @@ export default function LeadershipPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function LeadershipPage() {
+  return (
+    <AdminPermissionGuard permissionKey="leadership">
+      <LeadershipPageInner />
+    </AdminPermissionGuard>
   );
 }

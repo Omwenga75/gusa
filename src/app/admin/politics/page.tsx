@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { readCache, writeCache } from '@/lib/cache';
@@ -54,7 +56,7 @@ interface NominationCounts {
 
 const ADMIN_POLITICS_KEY = 'admin_politics_nominations';
 
-export default function AdminPoliticsPage() {
+function AdminPoliticsPageInner() {
   const [nominations, setNominations] = useState<Nomination[]>(
     () => readCache<Nomination[]>(ADMIN_POLITICS_KEY) || []
   );
@@ -897,5 +899,13 @@ export default function AdminPoliticsPage() {
         </div>
       )}
     </>
+  );
+}
+
+export default function AdminPoliticsPage() {
+  return (
+    <AdminPermissionGuard permissionKey="politics">
+      <AdminPoliticsPageInner />
+    </AdminPermissionGuard>
   );
 }

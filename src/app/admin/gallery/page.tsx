@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
@@ -16,7 +18,7 @@ interface Album {
 
 const ADMIN_GALLERY_KEY = 'admin_gallery';
 
-export default function GalleryPage() {
+function GalleryPageInner() {
   const [albums, setAlbums] = useState<Album[]>(() => readCache<Album[]>(ADMIN_GALLERY_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_GALLERY_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -549,5 +551,13 @@ export default function GalleryPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function GalleryPage() {
+  return (
+    <AdminPermissionGuard permissionKey="gallery">
+      <GalleryPageInner />
+    </AdminPermissionGuard>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
+
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 import { readCache, writeCache } from '@/lib/cache';
@@ -45,7 +47,7 @@ const SCHOOL_OPTIONS = [
   'School of Pure & Applied Sciences'
 ];
 
-export default function MembersPage() {
+function MembersPageInner() {
   const [members, setMembers] = useState<Member[]>(() => readCache<Member[]>(ADMIN_MEMBERS_KEY) || []);
   const [isLoading, setIsLoading] = useState<boolean>(() => !readCache(ADMIN_MEMBERS_KEY));
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -478,5 +480,13 @@ export default function MembersPage() {
         </div>
       )}
     </>
+  );
+}
+
+export default function MembersPage() {
+  return (
+    <AdminPermissionGuard permissionKey="members">
+      <MembersPageInner />
+    </AdminPermissionGuard>
   );
 }
