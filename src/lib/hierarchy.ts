@@ -1,34 +1,26 @@
 /**
  * Hierarchy ranking for leadership positions in GUSA.
  *
- * Rank Order:
- * 1. Chairperson / Past Chairperson
- * 2. Vice Chairperson / Past Vice Chairperson
- * 3. Secretary General / Past Secretary General
+ * Rank Order (fixed top positions regardless of when they were added or edited):
+ * 1. Chairperson
+ * 2. Vice Chairperson
+ * 3. Secretary General
  * 4. Finance / Treasurer
  * 5. Speaker
- * 6. Deputy Speaker
- * 7. HCA
- * 8. Sports, Gender & Social Welfare Secretary
- * 9. Academics & Affairs Secretary
- * 10. Delegates
- * ... Other positions
+ * 6. Legal Advisor
+ * ... All other positions (any order among themselves)
  */
 
 export function getPositionRank(position?: string | null): number {
   if (!position) return 999;
   const p = position.toLowerCase().trim();
 
-  // Vice / Deputy checks first
-  if (p.includes('vice') || p.includes('deputy')) {
-    if (p.includes('chair') || p.includes('president')) return 2; // Vice Chairperson / Past Vice Chairperson
-    if (p.includes('speaker')) return 6; // Deputy Speaker
-    if (p.includes('sec') || p.includes('sg')) return 4; // Deputy SG
-    return 20;
-  }
+  // Vice Chairperson must be matched before the generic "chair" check
+  if (p.includes('vice') && (p.includes('chair') || p.includes('president'))) return 2;
 
-  // Top Executives
-  if (p.includes('chair') || p.includes('president')) return 1; // Chairperson / Past Chairperson
+  // Top Executives (in fixed order)
+  if (p.includes('chair') || p.includes('president')) return 1; // Chairperson
+
   if (
     p.includes('secretary general') ||
     p.includes('sec gen') ||
@@ -37,14 +29,14 @@ export function getPositionRank(position?: string | null): number {
   ) {
     return 3; // Secretary General
   }
-  if (p.includes('finance') || p.includes('treasurer')) return 4; // Finance
-  if (p.includes('speaker')) return 5; // Speaker
-  if (p.includes('hca')) return 7; // HCA
-  if (p.includes('sport') || p.includes('gender') || p.includes('welfare')) return 8; // Sports & Welfare
-  if (p.includes('academic') || p.includes('affairs')) return 9; // Academics
-  if (p.includes('delegate')) return 10; // Delegates
 
-  return 50; // Other roles
+  if (p.includes('finance') || p.includes('treasurer')) return 4; // Finance
+
+  if (p.includes('speaker')) return 5; // Speaker
+
+  if (p.includes('legal')) return 6; // Legal Advisor
+
+  return 50; // All other positions
 }
 
 export function compareLeaderHierarchy<T extends { position: string; name?: string }>(a: T, b: T): number {
