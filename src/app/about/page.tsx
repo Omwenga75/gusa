@@ -425,9 +425,7 @@ export default function AboutPage() {
             >
               <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>Advisory Level</span>
               <h4 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>Patron & Faculty Advisors</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                Academic mentorship, university liaison & constitutional custodial oversight
-              </p>
+
             </div>
 
             {/* Connecting Line */}
@@ -449,7 +447,7 @@ export default function AboutPage() {
               <span className="badge badge-warning" style={{ marginBottom: '0.5rem' }}>Executive Level</span>
               <h4 style={{ fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)' }}>The Executive Committee</h4>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginTop: '0.25rem', marginBottom: '1rem' }}>
-                Chairperson &bull; Vice-Chairperson &bull; Secretary General &bull; Deputy SG &bull; Treasurer
+                Chairperson &bull; Vice-Chairperson &bull; Secretary General &bull; Treasurer
               </p>
               <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span className="badge badge-neutral">Organizing Secretary</span>

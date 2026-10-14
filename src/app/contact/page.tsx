@@ -40,7 +40,6 @@ export default function ContactPage() {
         leadership: 'Leadership & Governance',
         welfare: 'Student Welfare & Emergency',
         events: 'Cultural Night & Event Tickets',
-        mentorship: 'Academic Mentorship & Attachments',
         partnership: 'Sponsorship & Alumni Network'
       }
 
@@ -90,7 +89,7 @@ export default function ContactPage() {
             </h1>
 
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Have questions regarding membership, academic mentorship,<br />
+              Have questions regarding membership,<br />
               welfare aid, or event sponsorships?
             </p>
           </div>
@@ -218,7 +217,7 @@ export default function ContactPage() {
                         <option value="leadership">Leadership & Governance</option>
                         <option value="welfare">Student Welfare & Emergency</option>
                         <option value="events">Cultural Night & Event Tickets</option>
-                        <option value="mentorship">Academic Mentorship & Attachments</option>
+                        <option value="mentorship" style={{display:'none'}} aria-hidden="true"></option>
                         <option value="partnership">Sponsorship & Alumni Network</option>
                       </select>
                     </div>

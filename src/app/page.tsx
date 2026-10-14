@@ -265,7 +265,7 @@ export default async function HomePage() {
                 <GraduationCap size={24} />
               </div>
               <h3 className="text-lg font-bold mb-2 text-white">Academic Excellence</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">Study groups, exam prep sessions, and academic mentorship.</p>
+              <p className="text-slate-400 text-sm leading-relaxed">Study groups and exam prep sessions.</p>
             </div>
 
             <div className="glass-card p-6 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-pink-500/30 transition-all">
