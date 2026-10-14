@@ -304,7 +304,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                               {leader.name}
                             </h3>
                             <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                              {leader.position}
+                              {leader.position.replace(/^past\s+/i, '')}
                             </p>
                           </div>
 
