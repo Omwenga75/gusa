@@ -50,6 +50,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const permissions = (session?.user as any)?.permissions as string[] | null | undefined;
   const isSuperAdmin = role === 'SUPER_ADMIN';
 
+  // Only super admins and admins with 'messages' permission can see notification counts
+  const canSeeMessages = isSuperAdmin || hasPermission(role, permissions, 'messages');
+
   // Automatically redirect restricted admins away from /admin to their assigned section
   React.useEffect(() => {
     if (role === 'ADMIN' && pathname === '/admin') {
@@ -73,6 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [pathname]);
 
   const fetchUnreadCount = React.useCallback(async () => {
+    if (!canSeeMessages) return; // Don't fetch if no messages permission
     try {
       const res = await fetch('/api/contact?countOnly=true', { cache: 'no-store' });
       const data = await res.json();
@@ -82,7 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     } catch (err) {
       console.error('Failed to fetch unread messages count', err);
     }
-  }, []);
+  }, [canSeeMessages]);
 
   React.useEffect(() => {
     fetchUnreadCount();
@@ -208,9 +212,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className={styles.topbarActions}>
-            <button className={styles.iconBtn} title="Notifications">
-              <Bell size={18} />
-            </button>
+            {canSeeMessages && (
+              <button
+                className={styles.iconBtn}
+                title={unreadCount > 0 ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}` : 'No new messages'}
+                onClick={() => router.push('/admin/messages')}
+                style={{ position: 'relative' }}
+              >
+                <Bell size={18} />
+                {unreadCount > 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '-4px',
+                      right: '-4px',
+                      backgroundColor: '#ef4444',
+                      color: '#ffffff',
+                      fontSize: '0.6rem',
+                      fontWeight: 800,
+                      minWidth: '16px',
+                      height: '16px',
+                      borderRadius: '9999px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0 3px',
+                      boxShadow: '0 0 8px rgba(239,68,68,0.7)',
+                      animation: 'pulse 2s infinite',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
 
             <div className={styles.profile}>
               <div className={styles.avatar}>
