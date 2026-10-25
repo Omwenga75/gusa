@@ -21,7 +21,7 @@ const ticketTypeColor = (t: string) => {
     case 'VVIP':
       return { bg: 'rgba(250,204,21,0.12)', color: '#fde047', border: 'rgba(250,204,21,0.3)' };
     case 'VIP':
-      return { bg: 'rgba(234, 88, 12,0.15)', color: '#fdba74', border: 'rgba(234, 88, 12,0.4)' };
+      return { bg: 'rgba(124,58,237,0.15)', color: '#c4b5fd', border: 'rgba(124,58,237,0.4)' };
     case 'Couple':
       return { bg: 'rgba(236,72,153,0.12)', color: '#f9a8d4', border: 'rgba(236,72,153,0.3)' };
     case 'Group of 5':
@@ -62,7 +62,7 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
       <div
         style={{
           padding: '1.25rem 1.5rem',
-          background: 'linear-gradient(135deg, rgba(234, 88, 12,0.2) 0%, rgba(59,130,246,0.12) 100%)',
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(59,130,246,0.12) 100%)',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
           display: 'flex',
           alignItems: 'center',
@@ -72,7 +72,7 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <List size={20} color="#fb923c" />
+          <List size={20} color="#a78bfa" />
           <div>
             <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>Ticket List</h3>
             <p style={{ margin: 0, fontSize: '0.78rem', color: '#94a3b8' }}>
@@ -85,9 +85,9 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
           <span
             style={{
               fontSize: '0.75rem',
-              color: '#fdba74',
-              background: 'rgba(234, 88, 12,0.15)',
-              border: '1px solid rgba(234, 88, 12,0.3)',
+              color: '#c4b5fd',
+              background: 'rgba(124,58,237,0.15)',
+              border: '1px solid rgba(124,58,237,0.3)',
               padding: '0.25rem 0.65rem',
               borderRadius: '9999px',
               fontWeight: 600,
@@ -102,7 +102,7 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
           <thead>
-            <tr style={{ background: 'rgba(234, 88, 12,0.07)' }}>
+            <tr style={{ background: 'rgba(124,58,237,0.07)' }}>
               <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>#</th>
               <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
               <th style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Ticket Type</th>
@@ -187,11 +187,11 @@ export function EventTicketList({ ticketList }: EventTicketListProps) {
               borderRadius: '0.5rem',
               fontSize: '0.8125rem',
               fontWeight: 700,
-              background: 'linear-gradient(135deg, #ea580c, #4f46e5)',
+              background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
               border: '1px solid rgba(255,255,255,0.15)',
               color: '#ffffff',
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(234, 88, 12, 0.3)',
+              boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
               transition: 'all 0.2s',
             }}
           >

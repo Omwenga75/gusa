@@ -65,7 +65,7 @@ function LoginForm() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-r from-orange-500 to-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-r from-violet-500 to-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="w-full max-w-sm bg-slate-900/80 border border-white/10 backdrop-blur-xl rounded-2xl p-6 shadow-2xl relative z-10">
         {/* Top Header */}
@@ -90,7 +90,7 @@ function LoginForm() {
               <input
                 id="email"
                 type="email"
-                className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
+                className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                 placeholder="admin@gusa.org"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -108,7 +108,7 @@ function LoginForm() {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-11 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
+                className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-11 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -128,7 +128,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full btn-primary py-3 rounded-xl text-sm font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all mt-2"
+            className="w-full btn-primary py-3 rounded-xl text-sm font-bold shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all mt-2"
           >
             {isLoading ? "Authenticating..." : "Sign In to Admin Dashboard"}
           </button>

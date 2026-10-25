@@ -22,7 +22,7 @@ const PERMISSION_COLORS: Record<string, string> = {
   news:       '#fbbf24',
   welfare:    '#34d399',
   gallery:    '#f472b6',
-  members:    '#fb923c',
+  members:    '#a78bfa',
   leadership: '#fb923c',
   emeritus:   '#e879f9',
   alumni:     '#38bdf8',

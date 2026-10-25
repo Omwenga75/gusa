@@ -74,7 +74,7 @@ export default function GalleryClient() {
               category: (alb.category && alb.category !== 'Campus Life') ? alb.category : undefined,
               date: new Date(alb.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
               description: alb.description || 'Official GUSA Album',
-              coverGradient: 'from-orange-600 to-blue-600',
+              coverGradient: 'from-violet-600 to-blue-600',
               coverImage: alb.coverImage || firstImage,
               photoCount: alb.images?.length || 0,
               videoCount: 0,
@@ -265,7 +265,7 @@ export default function GalleryClient() {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            backgroundColor: '#ea580c',
+            backgroundColor: '#7c3aed',
             color: '#ffffff',
             padding: '0.875rem 1.5rem',
             borderRadius: '0.75rem',
@@ -531,7 +531,7 @@ export default function GalleryClient() {
                         width: '100%',
                         height: '100%',
                         minHeight: '200px',
-                        background: item.thumbnailGradient || 'linear-gradient(135deg, #ea580c, #db2777)',
+                        background: item.thumbnailGradient || 'linear-gradient(135deg, #7c3aed, #db2777)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -553,7 +553,7 @@ export default function GalleryClient() {
                   padding: '3rem 1.5rem',
                   color: '#94a3b8'
                 }}>
-                  <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#fb923c' }} />
+                  <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#a78bfa' }} />
                   <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>No Photos Yet</h3>
                   <p style={{ fontSize: '0.875rem', margin: 0 }}>No pictures have been added to this album yet.</p>
                 </div>

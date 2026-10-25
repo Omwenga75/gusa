@@ -351,7 +351,7 @@ function AdminPoliticsPageInner() {
           className={styles.statCard}
           style={{ cursor: 'pointer', margin: 0 }}
         >
-          <div className={styles.statIcon} style={{ background: 'rgba(234, 88, 12, 0.15)', color: '#fb923c' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(124, 58, 237, 0.15)', color: '#a78bfa' }}>
             <Vote size={24} />
           </div>
           <div className={styles.statInfo}>
@@ -520,7 +520,7 @@ function AdminPoliticsPageInner() {
                 <tr>
                   <td colSpan={6}>
                     <div className={styles.emptyBox} style={{ border: 'none', background: 'transparent', padding: '3.5rem 1rem' }}>
-                      <Vote size={40} style={{ opacity: 0.25, color: '#ea580c', marginBottom: '0.75rem' }} />
+                      <Vote size={40} style={{ opacity: 0.25, color: '#7c3aed', marginBottom: '0.75rem' }} />
                       <p className={styles.emptyText} style={{ margin: 0, fontWeight: 600 }}>
                         {searchQuery || statusFilter !== 'all' || countyFilter !== 'all'
                           ? 'No nomination applications match your filters.'
@@ -561,7 +561,7 @@ function AdminPoliticsPageInner() {
                             <div className={styles.userName} style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f8fafc' }}>
                               {n.fullName}
                             </div>
-                            <div style={{ fontSize: '0.72rem', color: '#fb923c', fontWeight: 600, marginTop: '0.15rem' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#a78bfa', fontWeight: 600, marginTop: '0.15rem' }}>
                               Aspirant#{aspirantNumberMap[n.id] || (idx + 1)}
                             </div>
                           </div>
@@ -659,8 +659,8 @@ function AdminPoliticsPageInner() {
                           onClick={() => setSelectedNomination(n)}
                           title="View Full Nomination Details"
                           style={{
-                            background: 'rgba(234, 88, 12, 0.15)',
-                            border: '1px solid rgba(234, 88, 12, 0.35)',
+                            background: 'rgba(124, 58, 237, 0.15)',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
                             color: '#c084fc',
                             borderRadius: '0.5rem',
                             padding: '0.42rem 0.85rem',
@@ -711,8 +711,8 @@ function AdminPoliticsPageInner() {
               maxHeight: '90vh',
               overflowY: 'auto',
               background: '#0d1225',
-              border: '1px solid rgba(234, 88, 12, 0.3)',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(234, 88, 12, 0.15)'
+              border: '1px solid rgba(124, 58, 237, 0.3)',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(124, 58, 237, 0.15)'
             }}
             onClick={e => e.stopPropagation()}
           >
@@ -742,7 +742,7 @@ function AdminPoliticsPageInner() {
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                       {selectedNomination.fullName}
                     </h2>
-                    <span style={{ fontSize: '0.72rem', color: '#fb923c', background: 'rgba(234, 88, 12, 0.15)', border: '1px solid rgba(234, 88, 12, 0.3)', padding: '0.1rem 0.45rem', borderRadius: '4px', fontWeight: 700 }}>
+                    <span style={{ fontSize: '0.72rem', color: '#a78bfa', background: 'rgba(124, 58, 237, 0.15)', border: '1px solid rgba(124, 58, 237, 0.3)', padding: '0.1rem 0.45rem', borderRadius: '4px', fontWeight: 700 }}>
                       Aspirant#{aspirantNumberMap[selectedNomination.id] || 1}
                     </span>
                   </div>

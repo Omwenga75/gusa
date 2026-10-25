@@ -88,7 +88,7 @@ export default function NewsClient() {
             }),
             readTime: '3 min read',
             commentsCount: 0,
-            gradient: 'linear-gradient(135deg, #ea580c 0%, #c026d3 50%, #db2777 100%)'
+            gradient: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)'
           }));
           writeCache(NEWS_CACHE_KEY, mapped);
           setArticlesData(mapped);
@@ -189,7 +189,7 @@ export default function NewsClient() {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            backgroundColor: '#ea580c',
+            backgroundColor: '#7c3aed',
             color: '#ffffff',
             padding: '0.875rem 1.5rem',
             borderRadius: '0.75rem',
@@ -304,7 +304,7 @@ export default function NewsClient() {
                     <div
                       style={{
                         height: '145px',
-                        background: 'linear-gradient(135deg, #ea580c 0%, #c026d3 50%, #db2777 100%)',
+                        background: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%)',
                         padding: '1.15rem 1.25rem',
                         display: 'flex',
                         flexDirection: 'column',
@@ -470,7 +470,7 @@ export default function NewsClient() {
                               width: '34px',
                               height: '34px',
                               borderRadius: '50%',
-                              background: 'linear-gradient(135deg, #ea580c 0%, #db2777 100%)',
+                              background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
                               color: '#ffffff',
                               display: 'flex',
                               alignItems: 'center',
@@ -478,7 +478,7 @@ export default function NewsClient() {
                               fontSize: '0.75rem',
                               fontWeight: 800,
                               flexShrink: 0,
-                              boxShadow: '0 2px 8px rgba(234, 88, 12, 0.3)'
+                              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
                             }}
                           >
                             E
@@ -516,7 +516,7 @@ export default function NewsClient() {
           {/* Empty search state */}
           {!isLoading && filteredArticles.length === 0 && (
             <div className="empty-state flex flex-col items-center justify-center text-center mx-auto py-14 px-4 w-full max-w-lg">
-              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400">
+              <div className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
                 <Search size={32} />
               </div>
               <h3 className="text-xl font-bold text-white mb-2 text-center">
@@ -530,7 +530,7 @@ export default function NewsClient() {
                   setSearchQuery('');
                   setSelectedCategory('All');
                 }}
-                className="btn btn-primary inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20"
+                className="btn btn-primary inline-flex items-center justify-center mx-auto px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-500/20"
               >
                 Clear Search & View All
               </button>
@@ -653,7 +653,7 @@ export default function NewsClient() {
                       width: '40px',
                       height: '40px',
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #ea580c 0%, #db2777 100%)',
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
                       color: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
@@ -661,7 +661,7 @@ export default function NewsClient() {
                       fontWeight: 700,
                       fontSize: '0.85rem',
                       flexShrink: 0,
-                      boxShadow: '0 2px 8px rgba(234, 88, 12, 0.3)'
+                      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)'
                     }}
                   >
                     E

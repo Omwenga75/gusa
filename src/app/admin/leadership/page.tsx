@@ -301,9 +301,9 @@ function LeadershipPageInner() {
                     gap: '0.5rem',
                     padding: '0.4rem 1rem',
                     borderRadius: '0.75rem',
-                    background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
-                    border: '1px solid rgba(234, 88, 12, 0.4)',
-                    boxShadow: '0 4px 15px rgba(234, 88, 12, 0.15)',
+                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
+                    border: '1px solid rgba(124, 58, 237, 0.4)',
+                    boxShadow: '0 4px 15px rgba(124, 58, 237, 0.15)',
                   }}
                 >
                   <span
@@ -311,15 +311,15 @@ function LeadershipPageInner() {
                       width: '8px',
                       height: '8px',
                       borderRadius: '50%',
-                      backgroundColor: '#fb923c',
-                      boxShadow: '0 0 8px #fb923c',
+                      backgroundColor: '#a78bfa',
+                      boxShadow: '0 0 8px #a78bfa',
                     }}
                   />
                   <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.025em' }}>
                     {termKey === 'No Term' ? termKey : `Term ${termKey}`}
                   </span>
                 </div>
-                <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(234, 88, 12, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
+                <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
               </div>
 
               {/* Cards in this term */}
@@ -343,7 +343,7 @@ function LeadershipPageInner() {
                     <div
                       style={{
                         height: '64px',
-                        background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         position: 'relative',
                         display: 'flex',
@@ -385,9 +385,9 @@ function LeadershipPageInner() {
                           onClick={() => handleOpenEdit(leader)}
                           title="Edit leader profile"
                           style={{
-                            background: 'rgba(234, 88, 12, 0.2)',
-                            border: '1px solid rgba(234, 88, 12, 0.4)',
-                            color: '#fdba74',
+                            background: 'rgba(124, 58, 237, 0.2)',
+                            border: '1px solid rgba(124, 58, 237, 0.4)',
+                            color: '#c4b5fd',
                             width: '30px',
                             height: '30px',
                             borderRadius: '0.5rem',
@@ -435,7 +435,7 @@ function LeadershipPageInner() {
                             height: '96px',
                             borderRadius: '50%',
                             overflow: 'hidden',
-                            background: 'linear-gradient(135deg, #ea580c 0%, #3b82f6 100%)',
+                            background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
                             border: '4px solid #0f172a',
                             display: 'flex',
                             alignItems: 'center',
@@ -443,7 +443,7 @@ function LeadershipPageInner() {
                             color: 'white',
                             fontWeight: 'bold',
                             fontSize: '1.85rem',
-                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(234, 88, 12, 0.5)',
+                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
                             flexShrink: 0,
                           }}
                         >
@@ -469,7 +469,7 @@ function LeadershipPageInner() {
                         <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
                           {leader.name}
                         </h3>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#fdba74', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                           {leader.position}
                         </p>
                       </div>
@@ -486,9 +486,9 @@ function LeadershipPageInner() {
                             fontWeight: 800,
                             textTransform: 'uppercase',
                             letterSpacing: '0.08em',
-                            backgroundColor: 'rgba(234, 88, 12, 0.15)',
-                            color: '#fed7aa',
-                            border: '1px solid rgba(234, 88, 12, 0.35)',
+                            backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                            color: '#ddd6fe',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
                           }}
                         >
                           Executive
@@ -529,8 +529,8 @@ function LeadershipPageInner() {
                                 width: '20px',
                                 height: '20px',
                                 borderRadius: '0.375rem',
-                                backgroundColor: 'rgba(234, 88, 12, 0.2)',
-                                color: '#fb923c',
+                                backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                                color: '#a78bfa',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -584,7 +584,7 @@ function LeadershipPageInner() {
                     height: '96px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '2px dashed rgba(234, 88, 12, 0.4)',
+                    border: '2px dashed rgba(124, 58, 237, 0.4)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -596,7 +596,7 @@ function LeadershipPageInner() {
                   {imagePreview ? (
                     <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                   ) : (
-                    <Camera size={28} color="#ea580c" style={{ opacity: 0.6 }} />
+                    <Camera size={28} color="#7c3aed" style={{ opacity: 0.6 }} />
                   )}
                 </div>
                 <input
@@ -612,7 +612,7 @@ function LeadershipPageInner() {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#fb923c',
+                    color: '#a78bfa',
                     fontSize: '0.75rem',
                     cursor: 'pointer',
                     fontWeight: 600

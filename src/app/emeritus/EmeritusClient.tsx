@@ -133,11 +133,11 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                   onClick={() => setSelectedCategory(label)}
                   className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
                     selectedCategory === label
-                      ? 'bg-gradient-to-r from-orange-600 to-blue-600 text-white shadow-lg shadow-orange-500/25 scale-[1.02]'
-                      : 'bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-orange-500/30'
+                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25 scale-[1.02]'
+                      : 'bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-violet-500/30'
                   }`}
                 >
-                  <Icon size={14} className={selectedCategory === label ? 'text-white' : 'text-orange-400'} />
+                  <Icon size={14} className={selectedCategory === label ? 'text-white' : 'text-violet-400'} />
                   <span>{label}</span>
                 </button>
               ))}
@@ -182,7 +182,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                 border: '1px solid rgba(255, 255, 255, 0.08)'
               }}
             >
-              <GraduationCap size={48} style={{ color: '#ea580c', margin: '0 auto 1rem auto' }} />
+              <GraduationCap size={48} style={{ color: '#7c3aed', margin: '0 auto 1rem auto' }} />
               <h3 style={{ color: '#ffffff', fontSize: '1.25rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>
                 No {selectedCategory} Yet
               </h3>
@@ -204,9 +204,9 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                         gap: '0.5rem',
                         padding: '0.4rem 1rem',
                         borderRadius: '0.75rem',
-                        background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
-                        border: '1px solid rgba(234, 88, 12, 0.4)',
-                        boxShadow: '0 4px 15px rgba(234, 88, 12, 0.15)'
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
+                        border: '1px solid rgba(124, 58, 237, 0.4)',
+                        boxShadow: '0 4px 15px rgba(124, 58, 237, 0.15)'
                       }}
                     >
                       <span
@@ -214,15 +214,15 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                           width: '8px',
                           height: '8px',
                           borderRadius: '50%',
-                          backgroundColor: '#fb923c',
-                          boxShadow: '0 0 8px #fb923c'
+                          backgroundColor: '#a78bfa',
+                          boxShadow: '0 0 8px #a78bfa'
                         }}
                       />
                       <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.025em' }}>
                         Term {term}
                       </span>
                     </div>
-                    <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(234, 88, 12, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
+                    <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
                   </div>
 
                   {/* Grid of Leaders in this Term */}
@@ -247,13 +247,13 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                           transition: 'all 0.3s ease',
                         }}
-                        className="hover:-translate-y-1 hover:shadow-orange-500/15"
+                        className="hover:-translate-y-1 hover:shadow-violet-500/15"
                       >
                         {/* Glowing Graphic Header Banner */}
                         <div
                           style={{
                             height: '64px',
-                            background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                             position: 'relative',
                           }}
@@ -269,7 +269,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                                 height: '96px',
                                 borderRadius: '50%',
                                 overflow: 'hidden',
-                                background: 'linear-gradient(135deg, #ea580c 0%, #3b82f6 100%)',
+                                background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
                                 border: '4px solid #0f172a',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -277,7 +277,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                                 color: 'white',
                                 fontWeight: 'bold',
                                 fontSize: '1.85rem',
-                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(234, 88, 12, 0.5)',
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
                                 flexShrink: 0,
                               }}
                             >
@@ -303,7 +303,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                             <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
                               {leader.name}
                             </h3>
-                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#fdba74', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                               {leader.position.replace(/^past\s+/i, '')}
                             </p>
                           </div>
@@ -321,12 +321,12 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                                 fontWeight: 800,
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.08em',
-                                backgroundColor: 'rgba(234, 88, 12, 0.15)',
-                                color: '#fed7aa',
-                                border: '1px solid rgba(234, 88, 12, 0.35)',
+                                backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                                color: '#ddd6fe',
+                                border: '1px solid rgba(124, 58, 237, 0.35)',
                               }}
                             >
-                              <Award size={11} className="text-orange-400" />
+                              <Award size={11} className="text-violet-400" />
                               {leader.category === 'House Leaders'
                                 ? 'HOUSE LEADER'
                                 : leader.category === 'SAMU Leaders'
@@ -345,9 +345,9 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                             }}
                           >
                             <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                              <Award size={13} className="text-orange-400 shrink-0 mt-0.5" />
+                              <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
                               <p className="text-[11px] text-slate-300 leading-snug m-0">
-                                <strong className="text-orange-300 font-semibold">Key Legacy: </strong>
+                                <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
                                 {leader.achievement || 'A committed leader who served GUSA well and will be forever remembered.'}
                               </p>
                             </div>

@@ -84,7 +84,7 @@ export function Navbar() {
       {/* ── Top Navigation Loading Bar ──────────────────────────── */}
       {(isPending || navigatingTo) && (
         <div className="fixed top-0 left-0 right-0 h-[3px] z-[100] overflow-hidden pointer-events-none">
-          <div className="w-full h-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 animate-pulse origin-left" />
+          <div className="w-full h-full bg-gradient-to-r from-violet-500 via-blue-400 to-pink-500 animate-pulse origin-left" />
         </div>
       )}
 
@@ -92,7 +92,7 @@ export function Navbar() {
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md shadow-lg border-b border-orange-500/20 py-2.5 sm:py-3'
+            ? 'bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md shadow-lg border-b border-violet-500/20 py-2.5 sm:py-3'
             : 'bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-sm border-b border-white/10 py-3 sm:py-4'
         }`}
       >
@@ -105,15 +105,15 @@ export function Navbar() {
             onMouseEnter={() => router.prefetch('/')}
             className="flex items-center gap-2 sm:gap-3 group min-w-0"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 p-0.5 shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-lg sm:text-xl text-orange-400">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-lg sm:text-xl text-violet-400">
                 G
               </div>
             </div>
             <div className="flex flex-col min-w-0">
               <span className="font-extrabold text-base sm:text-lg xl:text-xl tracking-tight text-white flex items-center gap-1.5 leading-tight">
                 GUSA{' '}
-                <span className="text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                <span className="text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
                   MUST
                 </span>
               </span>
@@ -144,9 +144,9 @@ export function Navbar() {
                   onMouseEnter={() => router.prefetch(href)}
                   className={`px-2 xl:px-3.5 py-1 xl:py-1.5 rounded-full text-[10.5px] xl:text-xs font-semibold transition-all whitespace-nowrap ${
                     active
-                      ? 'bg-gradient-to-r from-orange-600 to-amber-500 !text-white font-bold shadow-md shadow-orange-500/30'
+                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30'
                       : isTarget
-                      ? 'bg-orange-500/30 text-white animate-pulse'
+                      ? 'bg-violet-500/30 text-white animate-pulse'
                       : '!text-slate-200 hover:!text-white hover:bg-white/10'
                   }`}
                 >
@@ -160,7 +160,7 @@ export function Navbar() {
           <div className="lg:hidden flex items-center">
             <button
               onClick={() => setDrawerOpen(true)}
-              className="p-2 sm:p-2.5 rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer hover:bg-orange-500/30 transition-colors"
+              className="p-2 sm:p-2.5 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer hover:bg-violet-500/30 transition-colors"
               aria-label="Open navigation menu"
               aria-expanded={drawerOpen}
             >
@@ -190,8 +190,8 @@ export function Navbar() {
         aria-label="Navigation menu"
         className={`lg:hidden fixed top-0 left-0 z-[70] h-full w-[82vw] max-w-[320px]
           flex flex-col
-          bg-[#0d0d1a] border-r border-orange-500/20
-          shadow-[8px_0_40px_rgba(234,88,12,0.18)]
+          bg-[#0d0d1a] border-r border-violet-500/20
+          shadow-[8px_0_40px_rgba(109,40,217,0.18)]
           transition-all duration-300 ease-in-out
           ${drawerOpen ? 'translate-x-0 opacity-100 pointer-events-auto visible' : '-translate-x-full opacity-0 pointer-events-none invisible'}
         `}
@@ -206,8 +206,8 @@ export function Navbar() {
             className="flex items-center gap-3 group"
           >
             {/* Logo icon */}
-            <div className="w-11 h-11 shrink-0 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 p-0.5 shadow-lg shadow-orange-500/25 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#0d0d1a] rounded-[14px] flex items-center justify-center font-black text-xl text-orange-400">
+            <div className="w-11 h-11 shrink-0 rounded-2xl bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 shadow-lg shadow-violet-500/25 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#0d0d1a] rounded-[14px] flex items-center justify-center font-black text-xl text-violet-400">
                 G
               </div>
             </div>
@@ -215,7 +215,7 @@ export function Navbar() {
             <div className="flex flex-col leading-tight min-w-0">
               <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
                 GUSA
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">
                   MUST
                 </span>
               </span>
@@ -229,17 +229,17 @@ export function Navbar() {
           <button
             onClick={closeDrawer}
             aria-label="Close navigation menu"
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500/30 transition-colors cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30 hover:bg-violet-500/30 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Thin accent line */}
-        <div className="mx-5 h-px bg-gradient-to-r from-orange-500/40 via-amber-500/20 to-transparent mb-2" />
+        <div className="mx-5 h-px bg-gradient-to-r from-violet-500/40 via-blue-500/20 to-transparent mb-2" />
 
         {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-orange-500/20">
+        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-violet-500/20">
           {NAV_LINKS.map(({ href, label, icon: Icon }, idx) => {
             const active = isLinkActive(href)
             const isTarget = navigatingTo === href
@@ -265,22 +265,22 @@ export function Navbar() {
                   ${drawerOpen ? 'animate-drawer-item' : ''}
                   ${
                     active
-                      ? 'bg-orange-600/25 text-white border border-orange-500/40 shadow-sm shadow-orange-500/10'
+                      ? 'bg-violet-600/25 text-white border border-violet-500/40 shadow-sm shadow-violet-500/10'
                       : isTarget
-                      ? 'bg-orange-500/20 text-white animate-pulse'
+                      ? 'bg-violet-500/20 text-white animate-pulse'
                       : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }
                 `}
               >
                 {/* Active left-edge accent */}
                 {active && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-orange-400 to-amber-500" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-violet-400 to-blue-500" />
                 )}
 
                 {/* Icon */}
                 <span
                   className={`shrink-0 transition-colors ${
-                    active ? 'text-orange-400' : 'text-slate-500 group-hover:text-orange-400'
+                    active ? 'text-violet-400' : 'text-slate-500 group-hover:text-violet-400'
                   }`}
                 >
                   <Icon size={19} strokeWidth={active ? 2.2 : 1.8} />
@@ -291,7 +291,7 @@ export function Navbar() {
 
                 {/* Active dot indicator */}
                 {active && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow shadow-orange-400/60" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow shadow-violet-400/60" />
                 )}
               </Link>
             )
@@ -299,7 +299,7 @@ export function Navbar() {
         </nav>
 
         {/* Footer strip */}
-        <div className="px-5 py-5 border-t border-orange-500/10">
+        <div className="px-5 py-5 border-t border-violet-500/10">
           <p className="text-[11px] text-slate-600 font-medium tracking-wide text-center">
             &copy; {new Date().getFullYear()} GUSA &ndash; Meru University
           </p>

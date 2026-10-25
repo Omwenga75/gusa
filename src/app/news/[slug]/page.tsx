@@ -84,7 +84,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
           <div className="flex items-center gap-4">
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold text-white shadow-md"
-              style={{ background: 'linear-gradient(135deg, #ea580c 0%, #db2777 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }}
             >
               E
             </div>

@@ -133,7 +133,7 @@ export default function WelfareClient() {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            backgroundColor: '#ea580c',
+            backgroundColor: '#7c3aed',
             color: '#ffffff',
             padding: '0.875rem 1.5rem',
             borderRadius: '0.75rem',
@@ -181,9 +181,9 @@ export default function WelfareClient() {
               <div
                 className="empty-state-icon flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl"
                 style={{
-                  backgroundColor: 'rgba(234, 88, 12, 0.1)',
-                  border: '1px solid rgba(234, 88, 12, 0.25)',
-                  color: '#fb923c'
+                  backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                  border: '1px solid rgba(124, 58, 237, 0.25)',
+                  color: '#a78bfa'
                 }}
               >
                 <HeartHandshake size={32} />
@@ -229,7 +229,7 @@ export default function WelfareClient() {
                               ? 'rgba(34, 197, 94, 0.15)'
                               : item.status === 'Upcoming'
                               ? 'rgba(6, 182, 212, 0.15)'
-                              : 'rgba(234, 88, 12, 0.18)',
+                              : 'rgba(124, 58, 237, 0.18)',
                           color:
                             item.status === 'Completed'
                               ? '#4ade80'
@@ -241,7 +241,7 @@ export default function WelfareClient() {
                               ? '1px solid rgba(34, 197, 94, 0.3)'
                               : item.status === 'Upcoming'
                               ? '1px solid rgba(6, 182, 212, 0.3)'
-                              : '1px solid rgba(234, 88, 12, 0.35)'
+                              : '1px solid rgba(124, 58, 237, 0.35)'
                         }}
                       >
                         {item.status === 'Ongoing' && <Clock size={12} />}
@@ -272,7 +272,7 @@ export default function WelfareClient() {
 
                     {/* Title */}
                     <h3
-                      className="group-hover:text-orange-400 transition-colors"
+                      className="group-hover:text-violet-400 transition-colors"
                       style={{
                         fontSize: '1.25rem',
                         fontWeight: 800,
@@ -380,7 +380,7 @@ export default function WelfareClient() {
                         ? 'rgba(34, 197, 94, 0.15)'
                         : activeInitiative.status === 'Upcoming'
                         ? 'rgba(6, 182, 212, 0.15)'
-                        : 'rgba(234, 88, 12, 0.18)',
+                        : 'rgba(124, 58, 237, 0.18)',
                     color:
                       activeInitiative.status === 'Completed'
                         ? '#4ade80'
@@ -392,7 +392,7 @@ export default function WelfareClient() {
                         ? '1px solid rgba(34, 197, 94, 0.3)'
                         : activeInitiative.status === 'Upcoming'
                         ? '1px solid rgba(6, 182, 212, 0.3)'
-                        : '1px solid rgba(234, 88, 12, 0.35)',
+                        : '1px solid rgba(124, 58, 237, 0.35)',
                     marginBottom: '0.75rem'
                   }}
                 >

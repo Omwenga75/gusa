@@ -186,8 +186,8 @@ export default async function HomePage() {
           {/* Top-to-Bottom Scrim: Clean readability on mobile/tablets & seamless nav/bottom blend */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/40 via-30% to-slate-950/95 lg:from-slate-950/70 lg:via-transparent lg:to-slate-950/95" />
           
-          {/* Soft ambient orange glow localized to the left text quadrant */}
-          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Soft ambient violet glow localized to the left text quadrant */}
+          <div className="absolute top-1/4 left-4 sm:left-12 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
         </div>
 
         {/* Content Layer (Positioned higher up to match screenshot 2) */}
@@ -195,7 +195,7 @@ export default async function HomePage() {
           <div className="max-w-2xl xl:max-w-3xl text-center lg:text-left py-2 sm:py-4 mx-auto lg:mx-0">
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.15] text-white drop-shadow-xl break-words">
               Building Community. <br />
-              <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-400 via-blue-400 to-pink-400 bg-clip-text text-transparent">
                 Celebrating Culture.
               </span>
             </h1>
@@ -206,7 +206,7 @@ export default async function HomePage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
               <JoinGusaButton />
-              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-orange-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center">
+              <Link href="/events" className="btn-glass btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold text-slate-100 hover:text-violet-300 border border-white/20 backdrop-blur-md hover:bg-white/10 transition-all text-center flex items-center justify-center">
                 Explore Events
               </Link>
             </div>
@@ -216,8 +216,8 @@ export default async function HomePage() {
         {/* Stat Counters Grid */}
         <div className="container mx-auto px-3 sm:px-6 relative z-10 mt-4 sm:mt-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
-            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-orange-500/40 transition-colors shadow-lg">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-orange-400 mb-0.5 sm:mb-1">
+            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
+              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
                 {stats ? stats.activeMembers.toLocaleString() : '1'}
               </h3>
               <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Active Members</p>
@@ -252,8 +252,8 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="glass-card p-6 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-orange-500/30 transition-all">
-              <div className="w-12 h-12 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center mb-5 border border-orange-500/30">
+            <div className="glass-card p-6 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-violet-500/30 transition-all">
+              <div className="w-12 h-12 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center mb-5 border border-violet-500/30">
                 <BookOpen size={24} />
               </div>
               <h3 className="text-lg font-bold mb-2 text-white">Cultural Heritage</h3>
@@ -293,10 +293,10 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between gap-3 mb-6 sm:mb-10">
             <div>
-              <p className="text-orange-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-1">What&apos;s Happening</p>
+              <p className="text-violet-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-1">What&apos;s Happening</p>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">Upcoming Events</h2>
             </div>
-            <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-orange-400 hover:text-orange-300 transition-colors">
+            <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-violet-400 hover:text-violet-300 transition-colors">
               View all <ChevronRight size={16} />
             </Link>
           </div>
@@ -328,7 +328,7 @@ export default async function HomePage() {
                   <Link
                     href={`/events/${ev.slug || ev.id}`}
                     key={ev.id}
-                    className="group flex flex-col glass-card bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-orange-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1"
+                    className="group flex flex-col glass-card bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1"
                   >
                     {coverUrl ? (
                       <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-950 flex-shrink-0">
@@ -338,7 +338,7 @@ export default async function HomePage() {
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-orange-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-orange-500/30 shadow-md">
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {category}
                         </span>
                         <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
@@ -346,9 +346,9 @@ export default async function HomePage() {
                         </div>
                       </div>
                     ) : (
-                      <div className="relative w-full h-48 sm:h-52 bg-gradient-to-br from-orange-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5 flex-shrink-0">
-                        <Calendar size={40} className="text-orange-400/40" />
-                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-orange-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-orange-500/30 shadow-md">
+                      <div className="relative w-full h-48 sm:h-52 bg-gradient-to-br from-violet-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5 flex-shrink-0">
+                        <Calendar size={40} className="text-violet-400/40" />
+                        <span className="absolute top-3 left-3 z-10 inline-block text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {category}
                         </span>
                         <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
@@ -360,29 +360,29 @@ export default async function HomePage() {
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs text-slate-400 font-medium">
                           <span className="flex items-center gap-1.5 text-slate-300">
-                            <Calendar size={12} className="text-orange-400 shrink-0" />
+                            <Calendar size={12} className="text-violet-400 shrink-0" />
                             <span>{ev.date ? new Date(ev.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA'}</span>
                           </span>
                           {ev.venue && (
                             <span className="flex items-center gap-1.5 text-slate-400 max-w-[180px] truncate" title={ev.venue}>
-                              <MapPin size={12} className="text-orange-400 shrink-0" />
+                              <MapPin size={12} className="text-violet-400 shrink-0" />
                               <span className="truncate">{ev.venue}</span>
                             </span>
                           )}
                         </div>
                         <div className="flex items-start justify-between gap-2.5">
-                          <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-orange-300 transition-colors line-clamp-2 flex-1">
+                          <h3 className="text-white font-bold text-base sm:text-lg leading-snug group-hover:text-violet-300 transition-colors line-clamp-2 flex-1">
                             {ev.title}
                           </h3>
                           {(ev.ticketCount ?? 0) > 0 && (
-                            <span className="inline-flex items-center gap-1 text-[10.5px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/40 shrink-0 shadow-sm mt-0.5">
-                              <Ticket size={11} className="text-orange-400" />
+                            <span className="inline-flex items-center gap-1 text-[10.5px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shrink-0 shadow-sm mt-0.5">
+                              <Ticket size={11} className="text-violet-400" />
                               <span>Tickets</span>
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-orange-400 group-hover:text-orange-300">
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-violet-400 group-hover:text-violet-300">
                         <span>View Details</span>
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </div>
@@ -498,7 +498,7 @@ export default async function HomePage() {
 
                 // Category color map
                 const catColors: Record<string, string> = {
-                  Announcements: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+                  Announcements: 'bg-violet-500/20 text-violet-300 border-violet-500/30',
                   News:          'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
                   Events:        'bg-pink-500/20 text-pink-300 border-pink-500/30',
                   Sports:        'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
@@ -527,7 +527,7 @@ export default async function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
                       </div>
                     ) : (
-                      <div className={`h-2 w-full ${idx === 0 ? 'bg-gradient-to-r from-cyan-500 via-orange-500 to-pink-500' : 'bg-gradient-to-r from-slate-700 to-slate-600'}`} />
+                      <div className={`h-2 w-full ${idx === 0 ? 'bg-gradient-to-r from-cyan-500 via-violet-500 to-pink-500' : 'bg-gradient-to-r from-slate-700 to-slate-600'}`} />
                     )}
 
                     {/* Card body */}
@@ -554,7 +554,7 @@ export default async function HomePage() {
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
                           {/* Author avatar */}
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-orange-500 flex items-center justify-center text-[10px] font-black text-white shrink-0">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-violet-500 flex items-center justify-center text-[10px] font-black text-white shrink-0">
                             {authorInitial}
                           </div>
                           <div className="flex flex-col leading-tight min-w-0">
@@ -587,7 +587,7 @@ export default async function HomePage() {
       {/* ── WHAT PEOPLE SAY ABOUT GUSA (TESTIMONIALS) ───────────────── */}
       <section className="py-14 sm:py-20 bg-slate-950 text-white border-t border-white/10 relative overflow-hidden">
         {/* Subtle background ambient glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
@@ -598,8 +598,8 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {/* Card 1 */}
-            <div className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-orange-500/40 transition-all flex flex-col justify-between relative group hover:shadow-xl hover:shadow-orange-950/40">
-              <Quote className="text-orange-500/30 absolute top-5 right-5 group-hover:text-orange-500/50 transition-colors" size={36} />
+            <div className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-900/70 border border-white/10 hover:border-violet-500/40 transition-all flex flex-col justify-between relative group hover:shadow-xl hover:shadow-violet-950/40">
+              <Quote className="text-violet-500/30 absolute top-5 right-5 group-hover:text-violet-500/50 transition-colors" size={36} />
               <div>
                 <div className="flex items-center gap-1 text-amber-400 mb-4">
                   {[...Array(5)].map((_, i) => (
@@ -611,12 +611,12 @@ export default async function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-600 to-pink-500 flex items-center justify-center text-xs font-black text-white shrink-0 shadow-md">
                   DF
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-white font-bold text-sm truncate">Daniel, Fischer</h4>
-                  <p className="text-orange-400 text-xs truncate">Alumnus • School of Education</p>
+                  <p className="text-violet-400 text-xs truncate">Alumnus • School of Education</p>
                 </div>
               </div>
             </div>

@@ -35,7 +35,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 mb-5 border-b pb-4 dark:border-gray-800">
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
             <ImageIcon size={18} />
           </div>
           <div className="min-w-0">
@@ -43,7 +43,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
             <p className="text-xs text-slate-400 truncate">Official media and event captures</p>
           </div>
         </div>
-        <span className="text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 border border-orange-500/25 whitespace-nowrap shrink-0">
+        <span className="text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/25 whitespace-nowrap shrink-0">
           {images.length} {images.length === 1 ? 'photo' : 'photos'}
         </span>
       </div>
@@ -62,7 +62,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
           <div
             key={index}
             onClick={() => setActiveLightboxIndex(index)}
-            className="group relative rounded-xl overflow-hidden bg-slate-900/80 border border-white/10 hover:border-orange-500/40 shadow-md cursor-pointer aspect-video sm:aspect-4/3 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10"
+            className="group relative rounded-xl overflow-hidden bg-slate-900/80 border border-white/10 hover:border-violet-500/40 shadow-md cursor-pointer aspect-video sm:aspect-4/3 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10"
           >
             <img
               src={imgUrl}
@@ -98,7 +98,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
               <span className="text-sm font-semibold text-slate-300 truncate max-w-xs sm:max-w-md">
                 {title}
               </span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-orange-300 font-mono">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-violet-300 font-mono">
                 {activeLightboxIndex + 1} / {images.length}
               </span>
             </div>
@@ -125,7 +125,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
                     prev !== null && prev > 0 ? prev - 1 : images.length - 1
                   )
                 }
-                className="absolute left-2 sm:left-4 z-30 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-orange-600 border border-white/15 text-white transition-all shadow-xl cursor-pointer"
+                className="absolute left-2 sm:left-4 z-30 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-violet-600 border border-white/15 text-white transition-all shadow-xl cursor-pointer"
                 title="Previous photo (←)"
               >
                 <ChevronLeft size={22} />
@@ -146,7 +146,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
                     prev !== null && prev < images.length - 1 ? prev + 1 : 0
                   )
                 }
-                className="absolute right-2 sm:right-4 z-30 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-orange-600 border border-white/15 text-white transition-all shadow-xl cursor-pointer"
+                className="absolute right-2 sm:right-4 z-30 p-2.5 sm:p-3 rounded-full bg-slate-900/80 hover:bg-violet-600 border border-white/15 text-white transition-all shadow-xl cursor-pointer"
                 title="Next photo (→)"
               >
                 <ChevronRight size={22} />
@@ -167,7 +167,7 @@ export function EventDetailGallery({ images, title }: EventDetailGalleryProps) {
                   onClick={() => setActiveLightboxIndex(idx)}
                   className={`relative w-14 h-11 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
                     activeLightboxIndex === idx
-                      ? 'border-orange-500 scale-105 shadow-md shadow-orange-500/30'
+                      ? 'border-violet-500 scale-105 shadow-md shadow-violet-500/30'
                       : 'border-white/10 opacity-60 hover:opacity-100'
                   }`}
                 >

@@ -109,7 +109,7 @@ export default function AboutPage() {
                     width: '44px',
                     height: '44px',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(249, 115, 22, 0.12)',
+                    backgroundColor: 'rgba(139, 92, 246, 0.12)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -419,7 +419,7 @@ export default function AboutPage() {
                 textAlign: 'center',
                 padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                 border: '2px solid var(--primary)',
-                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, var(--surface) 100%)',
+                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, var(--surface) 100%)',
                 boxShadow: 'var(--shadow-md)'
               }}
             >
@@ -514,7 +514,7 @@ export default function AboutPage() {
                 textAlign: 'center',
                 padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
                 border: '1px dashed var(--primary)',
-                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)'
+                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)'
               }}
             >
               <h5 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', fontWeight: 700, color: 'var(--primary)' }}>

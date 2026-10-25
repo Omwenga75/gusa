@@ -77,8 +77,8 @@ function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?: strin
   if (!timeLeft) return null
 
   return (
-    <span className="text-[11px] font-extrabold font-mono tracking-tight bg-orange-950/85 text-orange-300 px-2.5 py-1 rounded-full border border-orange-500/35 backdrop-blur-md inline-flex items-center gap-1.5 whitespace-nowrap shadow-md">
-      <Clock size={11} className="text-orange-400" />
+    <span className="text-[11px] font-extrabold font-mono tracking-tight bg-violet-950/85 text-violet-300 px-2.5 py-1 rounded-full border border-violet-500/35 backdrop-blur-md inline-flex items-center gap-1.5 whitespace-nowrap shadow-md">
+      <Clock size={11} className="text-violet-400" />
       {timeLeft}
     </span>
   )
@@ -194,7 +194,7 @@ export default function EventsPage() {
               registeredCount: evt._count?.registrations || 0,
               ticketCount: evt.ticketCount || 0,
               status: 'upcoming',
-              tagColor: '#f97316',
+              tagColor: '#8b5cf6',
               coverImage: evt.coverImage || undefined
             }
           })
@@ -213,7 +213,7 @@ export default function EventsPage() {
       {/* ── Page Header with Search & Filter Tabs ── */}
       <section className="relative overflow-hidden bg-slate-950 border-b border-white/10 pt-10 pb-10 sm:pt-14 sm:pb-12">
         {/* Ambient Gradient Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-orange-600/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 blur-[100px] rounded-full pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-600/10 blur-[90px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
@@ -259,7 +259,7 @@ export default function EventsPage() {
           ) : filteredEvents.length === 0 ? (
             /* Empty State */
             <div className="flex flex-col items-center justify-center text-center mx-auto py-16 px-4 w-full max-w-lg bg-slate-900/50 rounded-2xl border border-dashed border-white/15">
-              <div className="flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400">
+              <div className="flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
                 <Calendar size={32} />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">No events found</h3>
@@ -280,7 +280,7 @@ export default function EventsPage() {
                     key={event.id}
                     href={eventUrl}
                     prefetch={true}
-                    className="group cursor-pointer flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-orange-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1.5"
+                    className="group cursor-pointer flex flex-col bg-slate-900/80 hover:bg-slate-850 border border-white/10 hover:border-violet-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1.5"
                   >
                     {/* Event Banner Image with Aspect Ratio */}
                     <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-slate-950 flex-shrink-0">
@@ -291,15 +291,15 @@ export default function EventsPage() {
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-orange-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5">
-                          <Calendar size={44} className="text-orange-400/40" />
+                        <div className="w-full h-full bg-gradient-to-br from-violet-950/60 via-slate-900 to-slate-950 flex items-center justify-center border-b border-white/5">
+                          <Calendar size={44} className="text-violet-400/40" />
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
 
                       {/* Category Badge & Photos Count Overlay */}
                       <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10 pointer-events-none">
-                        <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold tracking-wider text-orange-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-orange-500/30 shadow-md">
+                        <span className="inline-flex items-center text-[10.5px] sm:text-xs font-bold tracking-wider text-violet-300 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-violet-500/30 shadow-md">
                           {event.category ? event.category.charAt(0).toUpperCase() + event.category.slice(1).toLowerCase() : 'General'}
                         </span>
                       </div>
@@ -316,12 +316,12 @@ export default function EventsPage() {
                         {/* Date & Venue Metadata */}
                         <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-400 font-medium">
                           <span className="flex items-center gap-1.5 text-slate-300">
-                            <Calendar size={13} className="text-orange-400 shrink-0" />
+                            <Calendar size={13} className="text-violet-400 shrink-0" />
                             <span>{event.date}</span>
                           </span>
                           {event.venue && (
                             <span className="flex items-center gap-1.5 text-slate-400 max-w-[200px] truncate" title={event.venue}>
-                              <MapPin size={13} className="text-orange-400 shrink-0" />
+                              <MapPin size={13} className="text-violet-400 shrink-0" />
                               <span className="truncate">{event.venue}</span>
                             </span>
                           )}
@@ -329,12 +329,12 @@ export default function EventsPage() {
 
                         {/* Title (2-line clamp) & Tickets badge on same line at end */}
                         <div className="flex items-start justify-between gap-2.5">
-                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-orange-300 transition-colors leading-snug line-clamp-2 flex-1">
+                          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-violet-300 transition-colors leading-snug line-clamp-2 flex-1">
                             {event.title}
                           </h3>
                           {(event.ticketCount ?? 0) > 0 && (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/40 shrink-0 shadow-sm mt-0.5">
-                              <Ticket size={11} className="text-orange-400" />
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shrink-0 shadow-sm mt-0.5">
+                              <Ticket size={11} className="text-violet-400" />
                               <span>Tickets</span>
                             </span>
                           )}
@@ -343,7 +343,7 @@ export default function EventsPage() {
 
                       {/* Card Action Footer */}
                       <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2.5 mt-auto">
-                        <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-orange-400 group-hover:text-orange-300 transition-colors">
+                        <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-violet-400 group-hover:text-violet-300 transition-colors">
                           <span>View Details</span>
                           <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                         </span>
@@ -356,9 +356,9 @@ export default function EventsPage() {
                               e.stopPropagation()
                               setGalleryModalEvent(event)
                             }}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/5 hover:bg-orange-500/15 border border-white/10 hover:border-orange-500/30 text-slate-300 hover:text-white transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/5 hover:bg-violet-500/15 border border-white/10 hover:border-violet-500/30 text-slate-300 hover:text-white transition-all cursor-pointer"
                           >
-                            <ImageIcon size={13} className="text-orange-400" />
+                            <ImageIcon size={13} className="text-violet-400" />
                             <span>Gallery ({images.length})</span>
                           </button>
                         )}
@@ -388,7 +388,7 @@ export default function EventsPage() {
           >
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
                   {galleryModalEvent.category}
                 </span>
                 <span className="text-xs text-slate-400">{galleryModalEvent.date}</span>
@@ -420,7 +420,7 @@ export default function EventsPage() {
               if (images.length === 0) {
                 return (
                   <div className="text-center py-16 px-6 bg-slate-900/60 rounded-2xl border border-dashed border-white/15 max-w-md w-full">
-                    <ImageIcon size={44} className="mx-auto mb-3 text-orange-400/40" />
+                    <ImageIcon size={44} className="mx-auto mb-3 text-violet-400/40" />
                     <h3 className="text-base font-bold text-white mb-1">No Photos Found</h3>
                     <p className="text-xs text-slate-400">There are no gallery photos uploaded for this event yet.</p>
                   </div>
@@ -433,7 +433,7 @@ export default function EventsPage() {
                     <div
                       key={i}
                       onClick={() => setFullscreenImageIndex(i)}
-                      className="group/thumb relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15 bg-slate-900 shadow-xl cursor-pointer hover:border-orange-400/60 transition-all"
+                      className="group/thumb relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15 bg-slate-900 shadow-xl cursor-pointer hover:border-violet-400/60 transition-all"
                     >
                       <img
                         src={imgSrc}

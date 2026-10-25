@@ -54,7 +54,7 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
       {/* ── Page Header ── */}
       <section className="relative overflow-hidden bg-slate-950 border-b border-white/10 pt-10 pb-10 sm:pt-14 sm:pb-12">
         {/* Glow Effects */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-orange-600/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 blur-[100px] rounded-full pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-600/10 blur-[90px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
@@ -92,7 +92,7 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
           ) : alumniList.length === 0 ? (
             /* Empty State */
             <div className="flex flex-col items-center justify-center text-center mx-auto py-16 px-4 w-full max-w-md bg-slate-900/50 rounded-2xl border border-dashed border-white/15">
-              <div className="flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400">
+              <div className="flex items-center justify-center mx-auto mb-4 w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400">
                 <GraduationCap size={32} />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">No alumni records found</h3>
@@ -134,13 +134,13 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                       transition: 'all 0.3s ease',
                     }}
-                    className="hover:-translate-y-1 hover:shadow-orange-500/15"
+                    className="hover:-translate-y-1 hover:shadow-violet-500/15"
                   >
                     {/* Glowing Graphic Header Banner */}
                     <div
                       style={{
                         height: '64px',
-                        background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         position: 'relative',
                       }}
@@ -156,7 +156,7 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                             height: '96px',
                             borderRadius: '50%',
                             overflow: 'hidden',
-                            background: 'linear-gradient(135deg, #ea580c 0%, #3b82f6 100%)',
+                            background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
                             border: '4px solid #0f172a',
                             display: 'flex',
                             alignItems: 'center',
@@ -164,7 +164,7 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                             color: 'white',
                             fontWeight: 'bold',
                             fontSize: '1.85rem',
-                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(234, 88, 12, 0.5)',
+                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
                             flexShrink: 0,
                           }}
                         >
@@ -215,12 +215,12 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                             fontWeight: 800,
                             textTransform: 'uppercase',
                             letterSpacing: '0.08em',
-                            backgroundColor: 'rgba(234, 88, 12, 0.15)',
-                            color: '#fed7aa',
-                            border: '1px solid rgba(234, 88, 12, 0.35)',
+                            backgroundColor: 'rgba(124, 58, 237, 0.15)',
+                            color: '#ddd6fe',
+                            border: '1px solid rgba(124, 58, 237, 0.35)',
                           }}
                         >
-                          <GraduationCap size={11} className="text-orange-400" />
+                          <GraduationCap size={11} className="text-violet-400" />
                           ALUMNI
                         </span>
                       </div>
@@ -235,9 +235,9 @@ export default function AlumniClient({ initialAlumni = [] }: { initialAlumni?: A
                         }}
                       >
                         <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                          <Award size={13} className="text-orange-400 shrink-0 mt-0.5" />
+                          <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
                           <p className="text-[11px] text-slate-300 leading-snug m-0">
-                            <strong className="text-orange-300 font-semibold">Key Legacy: </strong>
+                            <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
                             {alumnus.shortDescription}
                           </p>
                         </div>
