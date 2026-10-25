@@ -27,7 +27,7 @@ export function JoinGusaButton({ className }: { className?: string }) {
     return (
       <Link
         href="/join"
-        className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform'}
+        className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-orange-600/30 hover:scale-[1.02] transition-transform'}
       >
         <span>Join GUSA</span>
         <ArrowRight size={18} />
@@ -50,7 +50,7 @@ export function JoinGusaButton({ className }: { className?: string }) {
   return (
     <Link
       href="/join"
-      className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-violet-600/30 hover:scale-[1.02] transition-transform'}
+      className={className ?? 'btn-primary btn-lg w-full sm:w-auto px-6 sm:px-7 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-xl shadow-orange-600/30 hover:scale-[1.02] transition-transform'}
     >
       <span>Join GUSA</span>
       <ArrowRight size={18} />

@@ -224,7 +224,7 @@ function AdminAlumniPageInner() {
 
         <button
           onClick={handleOpenAdd}
-          className="btn btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-500/20 cursor-pointer"
+          className="btn btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20 cursor-pointer"
         >
           <Plus size={18} />
           <span>Add Alumni</span>
@@ -245,7 +245,7 @@ function AdminAlumniPageInner() {
         </div>
       ) : alumniList.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-900/40 border border-dashed border-white/15 rounded-2xl">
-          <div className="w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 mb-4">
             <GraduationCap size={32} />
           </div>
           <h3 className="text-lg font-bold text-white mb-1">No alumni records found</h3>
@@ -293,13 +293,13 @@ function AdminAlumniPageInner() {
                   boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                   transition: 'all 0.3s ease',
                 }}
-                className="hover:-translate-y-1 hover:shadow-violet-500/15"
+                className="hover:-translate-y-1 hover:shadow-orange-500/15"
               >
                 {/* Glowing Graphic Header Banner with Actions */}
                 <div
                   style={{
                     height: '64px',
-                    background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                    background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                     display: 'flex',
                     alignItems: 'center',
@@ -318,8 +318,8 @@ function AdminAlumniPageInner() {
                       fontSize: '0.68rem',
                       fontWeight: 700,
                       backgroundColor: 'rgba(15, 23, 42, 0.75)',
-                      border: '1px solid rgba(124, 58, 237, 0.4)',
-                      color: '#ddd6fe',
+                      border: '1px solid rgba(234, 88, 12, 0.4)',
+                      color: '#fed7aa',
                     }}
                   >
                     <span
@@ -327,8 +327,8 @@ function AdminAlumniPageInner() {
                         width: '6px',
                         height: '6px',
                         borderRadius: '50%',
-                        backgroundColor: '#a78bfa',
-                        boxShadow: '0 0 6px #a78bfa',
+                        backgroundColor: '#fb923c',
+                        boxShadow: '0 0 6px #fb923c',
                       }}
                     />
                     Alumni
@@ -341,9 +341,9 @@ function AdminAlumniPageInner() {
                       onClick={() => handleOpenEdit(item)}
                       title="Edit Alumni"
                       style={{
-                        background: 'rgba(124, 58, 237, 0.2)',
-                        border: '1px solid rgba(124, 58, 237, 0.4)',
-                        color: '#c4b5fd',
+                        background: 'rgba(234, 88, 12, 0.2)',
+                        border: '1px solid rgba(234, 88, 12, 0.4)',
+                        color: '#fdba74',
                         width: '30px',
                         height: '30px',
                         borderRadius: '0.5rem',
@@ -391,7 +391,7 @@ function AdminAlumniPageInner() {
                         height: '96px',
                         borderRadius: '50%',
                         overflow: 'hidden',
-                        background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                        background: 'linear-gradient(135deg, #ea580c 0%, #3b82f6 100%)',
                         border: '4px solid #0f172a',
                         display: 'flex',
                         alignItems: 'center',
@@ -399,7 +399,7 @@ function AdminAlumniPageInner() {
                         color: 'white',
                         fontWeight: 'bold',
                         fontSize: '1.85rem',
-                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(234, 88, 12, 0.5)',
                         flexShrink: 0,
                       }}
                     >
@@ -445,12 +445,12 @@ function AdminAlumniPageInner() {
                         fontWeight: 800,
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',
-                        backgroundColor: 'rgba(124, 58, 237, 0.15)',
-                        color: '#ddd6fe',
-                        border: '1px solid rgba(124, 58, 237, 0.35)',
+                        backgroundColor: 'rgba(234, 88, 12, 0.15)',
+                        color: '#fed7aa',
+                        border: '1px solid rgba(234, 88, 12, 0.35)',
                       }}
                     >
-                      <GraduationCap size={11} className="text-violet-400" />
+                      <GraduationCap size={11} className="text-orange-400" />
                       ALUMNI
                     </span>
                   </div>
@@ -465,9 +465,9 @@ function AdminAlumniPageInner() {
                     }}
                   >
                     <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                      <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
+                      <Award size={13} className="text-orange-400 shrink-0 mt-0.5" />
                       <p className="text-[11px] text-slate-300 leading-snug m-0">
-                        <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
+                        <strong className="text-orange-300 font-semibold">Key Legacy: </strong>
                         {item.shortDescription}
                       </p>
                     </div>
@@ -523,7 +523,7 @@ function AdminAlumniPageInner() {
                     height: '96px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '2px dashed rgba(124, 58, 237, 0.5)',
+                    border: '2px dashed rgba(234, 88, 12, 0.5)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -541,7 +541,7 @@ function AdminAlumniPageInner() {
                       style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                     />
                   ) : (
-                    <Camera size={28} color="#7c3aed" style={{ opacity: 0.7 }} />
+                    <Camera size={28} color="#ea580c" style={{ opacity: 0.7 }} />
                   )}
                 </div>
                 <input
@@ -557,7 +557,7 @@ function AdminAlumniPageInner() {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#a78bfa',
+                    color: '#fb923c',
                     fontSize: '0.8125rem',
                     cursor: 'pointer',
                     fontWeight: 600
@@ -597,7 +597,7 @@ function AdminAlumniPageInner() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Denis Omwenga"
-                  className="w-full bg-slate-950 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                  className="w-full bg-slate-950 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
 
@@ -626,7 +626,7 @@ function AdminAlumniPageInner() {
                   value={shortDescription}
                   onChange={(e) => setShortDescription(e.target.value)}
                   placeholder="Legacy left"
-                  className="w-full bg-slate-950 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                  className="w-full bg-slate-950 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                 />
                 <p className="text-[11px] text-slate-500 mt-1">
                   Maximum 60 characters. Describe the legacy left.

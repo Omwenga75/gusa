@@ -154,7 +154,7 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
             </div>
           ) : leaders.length === 0 ? (
             <div className="text-center py-16 bg-slate-900/60 rounded-2xl border border-white/10 max-w-xl mx-auto p-8">
-              <div className="w-14 h-14 bg-violet-500/10 text-violet-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-violet-500/20">
+              <div className="w-14 h-14 bg-orange-500/10 text-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-orange-500/20">
                 <Users size={28} />
               </div>
               <h3 className="text-lg font-bold text-white mb-2">No Executive Leaders Listed</h3>
@@ -175,9 +175,9 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                         gap: '0.5rem',
                         padding: '0.4rem 1rem',
                         borderRadius: '0.75rem',
-                        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
-                        border: '1px solid rgba(124, 58, 237, 0.4)',
-                        boxShadow: '0 4px 15px rgba(124, 58, 237, 0.15)'
+                        background: 'rgba(234, 88, 12, 0.15)',
+                        border: '1px solid rgba(234, 88, 12, 0.4)',
+                        boxShadow: '0 4px 15px rgba(234, 88, 12, 0.15)'
                       }}
                     >
                       <span
@@ -185,15 +185,15 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                           width: '8px',
                           height: '8px',
                           borderRadius: '50%',
-                          backgroundColor: '#a78bfa',
-                          boxShadow: '0 0 8px #a78bfa'
+                          backgroundColor: '#f97316',
+                          boxShadow: '0 0 8px #f97316'
                         }}
                       />
                       <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.025em' }}>
                         {termKey === 'Active' ? termKey : `Term ${termKey}`}
                       </span>
                     </div>
-                    <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
+                    <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(234, 88, 12, 0.35) 0%, rgba(255, 255, 255, 0.05) 100%)' }} />
                   </div>
 
                   {/* Grid of Leaders in this Term */}
@@ -218,13 +218,13 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                           transition: 'all 0.3s ease',
                         }}
-                        className="hover:-translate-y-1 hover:shadow-violet-500/15"
+                        className="hover:-translate-y-1 hover:shadow-orange-500/15"
                       >
                         {/* Glowing Graphic Header Banner */}
                         <div
                           style={{
                             height: '64px',
-                            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.35) 0%, rgba(59, 130, 246, 0.25) 50%, rgba(236, 72, 153, 0.2) 100%)',
+                            background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(249, 115, 22, 0.2) 100%)',
                             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                             position: 'relative',
                             display: 'flex',
@@ -271,7 +271,7 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                                 height: '96px',
                                 borderRadius: '50%',
                                 overflow: 'hidden',
-                                background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+                                background: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)',
                                 border: '4px solid #0f172a',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -279,7 +279,7 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                                 color: 'white',
                                 fontWeight: 'bold',
                                 fontSize: '1.85rem',
-                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(124, 58, 237, 0.5)',
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(234, 88, 12, 0.5)',
                                 flexShrink: 0,
                               }}
                             >
@@ -305,7 +305,7 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                             <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#ffffff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.025em', lineHeight: 1.3 }}>
                               {leader.name}
                             </h3>
-                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#fb923c', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                               {leader.position}
                             </p>
                           </div>
@@ -322,9 +322,9 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                                 fontWeight: 800,
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.08em',
-                                backgroundColor: 'rgba(124, 58, 237, 0.15)',
-                                color: '#ddd6fe',
-                                border: '1px solid rgba(124, 58, 237, 0.35)',
+                                backgroundColor: 'rgba(234, 88, 12, 0.15)',
+                                color: '#fed7aa',
+                                border: '1px solid rgba(234, 88, 12, 0.35)',
                               }}
                             >
                               EXECUTIVE
@@ -360,15 +360,15 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                                   fontWeight: 600,
                                   transition: 'all 0.2s ease'
                                 }}
-                                className="hover:border-violet-500/40 hover:bg-violet-600/15 hover:text-white"
+                                className="hover:border-orange-500/40 hover:bg-orange-600/15 hover:text-white"
                               >
                                 <span
                                   style={{
                                     width: '20px',
                                     height: '20px',
                                     borderRadius: '0.375rem',
-                                    backgroundColor: 'rgba(124, 58, 237, 0.2)',
-                                    color: '#a78bfa',
+                                    backgroundColor: 'rgba(234, 88, 12, 0.2)',
+                                    color: '#f97316',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center'

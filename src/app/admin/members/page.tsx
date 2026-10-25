@@ -211,7 +211,7 @@ function MembersPageInner() {
                                 ? 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)'
                                 : isNyamira
                                 ? 'linear-gradient(135deg, #9333ea 0%, #c026d3 100%)'
-                                : 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)'
+                                : 'linear-gradient(135deg, #ea580c 0%, #3b82f6 100%)'
                             }}
                           >
                             {member.name.charAt(0).toUpperCase()}
@@ -308,7 +308,7 @@ function MembersPageInner() {
               {members.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#64748b' }}>
-                    <Users size={36} style={{ opacity: 0.25, color: '#7c3aed', marginBottom: '0.5rem' }} />
+                    <Users size={36} style={{ opacity: 0.25, color: '#ea580c', marginBottom: '0.5rem' }} />
                     <p style={{ margin: 0, fontWeight: 600, color: '#94a3b8' }}>No members registered yet.</p>
                     <p style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.25rem' }}>
                       Students who register on the Join GUSA page will immediately appear here.
@@ -333,7 +333,7 @@ function MembersPageInner() {
           zIndex: 100,
           padding: '1rem'
         }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(124, 58, 237, 0.3)' }}>
+          <div className={styles.card} style={{ width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(234, 88, 12, 0.3)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '0.75rem' }}>
               <h2 className={styles.cardTitle} style={{ margin: 0 }}>Add New Member</h2>
               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>

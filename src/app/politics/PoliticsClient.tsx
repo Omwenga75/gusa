@@ -285,8 +285,8 @@ export default function PoliticsClient() {
                 onClick={() => setActiveTab('aspirants')}
                 className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
                   activeTab === 'aspirants'
-                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
+                    ? 'bg-gradient-to-r from-orange-600 to-blue-600 text-white shadow-lg shadow-orange-600/30'
+                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-orange-500/40 bg-slate-900/40'
                 }`}
               >
                 Elective Seats &amp; Aspirants
@@ -296,8 +296,8 @@ export default function PoliticsClient() {
                 onClick={() => setActiveTab('elections')}
                 className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
                   activeTab === 'elections'
-                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
+                    ? 'bg-gradient-to-r from-orange-600 to-blue-600 text-white shadow-lg shadow-orange-600/30'
+                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-orange-500/40 bg-slate-900/40'
                 }`}
               >
                 Electoral Calendar
@@ -325,11 +325,11 @@ export default function PoliticsClient() {
                 {positions.map((pos, idx) => (
                   <div
                     key={idx}
-                    className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-950/80 border border-white/10 hover:border-violet-500/40 transition-all flex flex-col justify-between"
+                    className="glass-card p-6 sm:p-7 rounded-2xl bg-slate-950/80 border border-white/10 hover:border-orange-500/40 transition-all flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-3 py-1 rounded-full border border-violet-500/20">
+                        <span className="text-xs font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
                           {pos.status}
                         </span>
                         <Scale size={18} className="text-slate-400" />
@@ -344,7 +344,7 @@ export default function PoliticsClient() {
                         <ul className="space-y-2">
                           {pos.requirements.map((req, rIdx) => (
                             <li key={rIdx} className="text-xs text-slate-300 flex items-center gap-2">
-                              <CheckCircle2 size={14} className="text-violet-400 flex-shrink-0" />
+                              <CheckCircle2 size={14} className="text-orange-400 flex-shrink-0" />
                               <span>{req}</span>
                             </li>
                           ))}
@@ -355,7 +355,7 @@ export default function PoliticsClient() {
                     <button
                       type="button"
                       onClick={() => handleOpenModal(pos.category)}
-                      className="w-full py-3 rounded-xl text-sm font-bold text-center text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 transition-all cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full py-3 rounded-xl text-sm font-bold text-center text-white bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-500 hover:to-blue-500 shadow-lg shadow-orange-600/25 hover:shadow-orange-600/40 transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Award size={16} /> Express Interest / Nominate
                     </button>
@@ -378,13 +378,13 @@ export default function PoliticsClient() {
                     key={idx}
                     className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-950/80 border border-white/10 flex flex-col sm:flex-row items-start gap-4 sm:gap-5"
                   >
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600/25 via-purple-950/40 to-slate-950 border border-violet-500/40 flex flex-col items-center justify-center flex-shrink-0 shadow-md shadow-violet-950/50 relative overflow-hidden">
-                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-violet-400 to-transparent opacity-90" />
-                      <Calendar size={13} className="text-violet-400 mb-0.5" />
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-600/25 via-purple-950/40 to-slate-950 border border-orange-500/40 flex flex-col items-center justify-center flex-shrink-0 shadow-md shadow-orange-950/50 relative overflow-hidden">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-90" />
+                      <Calendar size={13} className="text-orange-400 mb-0.5" />
                       <span className="text-xs font-extrabold tracking-wider uppercase text-white leading-none">
                         {item.month}
                       </span>
-                      <span className="text-[9px] font-semibold text-violet-300/80 tracking-wide mt-0.5">
+                      <span className="text-[9px] font-semibold text-orange-300/80 tracking-wide mt-0.5">
                         {item.year}
                       </span>
                     </div>
@@ -412,11 +412,11 @@ export default function PoliticsClient() {
           onClick={resetFormAndClose}
         >
           <div
-            className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-slate-900 border border-violet-500/30 rounded-2xl shadow-2xl shadow-black/80 text-white p-5 sm:p-7 relative"
+            className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-slate-900 border border-orange-500/30 rounded-2xl shadow-2xl shadow-black/80 text-white p-5 sm:p-7 relative"
             onClick={e => e.stopPropagation()}
             style={{
               scrollbarWidth: 'thin',
-              scrollbarColor: 'rgba(124, 58, 237, 0.4) transparent'
+              scrollbarColor: 'rgba(234, 88, 12, 0.4) transparent'
             }}
           >
             {/* Close Button */}
@@ -440,7 +440,7 @@ export default function PoliticsClient() {
                   <h3 className="text-2xl font-extrabold text-white">Nomination Submitted!</h3>
                   <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
                     Thank you, <strong className="text-white">{fullName}</strong>. Your expression of interest for{' '}
-                    <span className="text-violet-400 font-bold">
+                    <span className="text-orange-400 font-bold">
                       {selectedPosition === 'Other' && customPosition ? customPosition : selectedPosition}
                     </span>{' '}
                     ({county} County) has been safely transmitted to the GUSA Executive Electoral Administration.
@@ -470,7 +470,7 @@ export default function PoliticsClient() {
                   <button
                     type="button"
                     onClick={resetFormAndClose}
-                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-bold text-sm shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer"
+                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-blue-600 text-white font-bold text-sm shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all cursor-pointer"
                   >
                     Done &amp; Return to Politics
                   </button>
@@ -503,7 +503,7 @@ export default function PoliticsClient() {
                           onClick={() => handleSamuSubtypeChange('samu_executive')}
                           className={`py-2.5 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
                             samuSubtype === 'samu_executive'
-                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-md shadow-violet-600/20'
+                              ? 'bg-orange-600/25 border-orange-500 text-orange-300 shadow-md shadow-orange-600/20'
                               : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                           }`}
                         >
@@ -514,7 +514,7 @@ export default function PoliticsClient() {
                           onClick={() => handleSamuSubtypeChange('delegate')}
                           className={`py-2.5 px-3 rounded-lg text-xs font-bold transition-all text-center cursor-pointer border ${
                             samuSubtype === 'delegate'
-                              ? 'bg-violet-600/25 border-violet-500 text-violet-300 shadow-md shadow-violet-600/20'
+                              ? 'bg-orange-600/25 border-orange-500 text-orange-300 shadow-md shadow-orange-600/20'
                               : 'bg-slate-900 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                           }`}
                         >
@@ -532,7 +532,7 @@ export default function PoliticsClient() {
                     <select
                       value={selectedPosition}
                       onChange={e => setSelectedPosition(e.target.value)}
-                      className="w-full bg-slate-900 border border-white/10 rounded-lg py-2.5 px-3 text-xs text-white focus:outline-none focus:border-violet-500"
+                      className="w-full bg-slate-900 border border-white/10 rounded-lg py-2.5 px-3 text-xs text-white focus:outline-none focus:border-orange-500"
                     >
                       {availableSeats.map(seat => (
                         <option key={seat} value={seat}>
@@ -558,7 +558,7 @@ export default function PoliticsClient() {
                         placeholder="e.g. Dennis Omwenga"
                         value={fullName}
                         onChange={e => setFullName(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -578,7 +578,7 @@ export default function PoliticsClient() {
                           placeholder="dennis@example.com"
                           value={email}
                           onChange={e => setEmail(e.target.value)}
-                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                       </div>
                     </div>
@@ -596,7 +596,7 @@ export default function PoliticsClient() {
                           placeholder="0712 345 678"
                           value={phone}
                           onChange={e => setPhone(e.target.value)}
-                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                       </div>
                     </div>
@@ -617,7 +617,7 @@ export default function PoliticsClient() {
                           placeholder="e.g. CT201/101234/23"
                           value={regNumber}
                           onChange={e => setRegNumber(e.target.value)}
-                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors uppercase"
+                          className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors uppercase"
                         />
                       </div>
                     </div>
@@ -630,7 +630,7 @@ export default function PoliticsClient() {
                       <select
                         value={yearOfStudy}
                         onChange={e => setYearOfStudy(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                       >
                         <option value="Year 1">Year 1</option>
                         <option value="Year 2">Year 2</option>
@@ -688,7 +688,7 @@ export default function PoliticsClient() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-500 hover:to-blue-500 shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

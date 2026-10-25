@@ -650,9 +650,9 @@ function EventsPageInner() {
                       <button
                         onClick={() => openListPanel(event)}
                         style={{
-                          background: 'rgba(139, 92, 246, 0.15)',
-                          border: '1px solid rgba(139, 92, 246, 0.3)',
-                          color: '#a78bfa',
+                          background: 'rgba(249, 115, 22, 0.15)',
+                          border: '1px solid rgba(249, 115, 22, 0.3)',
+                          color: '#fb923c',
                           padding: '0.35rem 0.7rem',
                           borderRadius: '0.375rem',
                           fontSize: '0.75rem',
@@ -995,11 +995,11 @@ function EventsPageInner() {
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '0.75rem',
-              background: 'rgba(124,58,237,0.08)',
+              background: 'rgba(234, 88, 12,0.08)',
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
-                  <List size={18} color="#a78bfa" />
+                  <List size={18} color="#fb923c" />
                   <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>
                     {ticketModalTab === 'add' ? 'Add to Ticket List' : 'Ticket List'}
                   </span>
@@ -1021,9 +1021,9 @@ function EventsPageInner() {
                     display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                     padding: '0.4rem 0.75rem', borderRadius: '0.5rem',
                     fontSize: '0.75rem', fontWeight: 700,
-                    background: ticketModalTab === 'view' ? 'rgba(124,58,237,0.3)' : 'rgba(124,58,237,0.15)',
-                    border: '1px solid rgba(124,58,237,0.4)',
-                    color: '#c4b5fd', cursor: 'pointer',
+                    background: ticketModalTab === 'view' ? 'rgba(234, 88, 12,0.3)' : 'rgba(234, 88, 12,0.15)',
+                    border: '1px solid rgba(234, 88, 12,0.4)',
+                    color: '#fdba74', cursor: 'pointer',
                   }}
                 >
                   {ticketModalTab === 'add' ? (
@@ -1217,10 +1217,10 @@ function EventsPageInner() {
                         alignItems: 'center',
                         gap: '0.4rem',
                         fontSize: '0.8125rem',
-                        color: '#a78bfa',
+                        color: '#fb923c',
                         fontWeight: 600,
-                        background: 'rgba(124, 58, 237, 0.1)',
-                        border: '1px solid rgba(124, 58, 237, 0.25)',
+                        background: 'rgba(234, 88, 12, 0.1)',
+                        border: '1px solid rgba(234, 88, 12, 0.25)',
                         padding: '0.3rem 0.85rem',
                         borderRadius: '9999px',
                         cursor: 'pointer',
@@ -1231,8 +1231,8 @@ function EventsPageInner() {
                           width: '6px',
                           height: '6px',
                           borderRadius: '50%',
-                          backgroundColor: '#a78bfa',
-                          boxShadow: '0 0 6px #a78bfa',
+                          backgroundColor: '#fb923c',
+                          boxShadow: '0 0 6px #fb923c',
                         }}
                       />
                       {ticketEntries.length} added · View list
@@ -1380,8 +1380,8 @@ function EventsPageInner() {
                       onClick={() => setTicketModalTab('add')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                        fontSize: '0.75rem', color: '#a78bfa', background: 'rgba(124,58,237,0.12)',
-                        border: '1px solid rgba(124,58,237,0.3)', padding: '0.25rem 0.6rem',
+                        fontSize: '0.75rem', color: '#fb923c', background: 'rgba(234, 88, 12,0.12)',
+                        border: '1px solid rgba(234, 88, 12,0.3)', padding: '0.25rem 0.6rem',
                         borderRadius: '0.375rem', cursor: 'pointer', fontWeight: 600,
                       }}
                     >
@@ -1401,7 +1401,7 @@ function EventsPageInner() {
                     <div style={{ overflowX: 'auto', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.07)' }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8125rem' }}>
                         <thead>
-                          <tr style={{ background: 'rgba(124,58,237,0.1)' }}>
+                          <tr style={{ background: 'rgba(234, 88, 12,0.1)' }}>
                             <th style={{ padding: '0.6rem 0.75rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>#</th>
                             <th style={{ padding: '0.6rem 0.75rem', textAlign: 'left', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase' }}>Name</th>
                             <th style={{ padding: '0.6rem 0.75rem', textAlign: 'center', color: '#94a3b8', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Ticket</th>
@@ -1420,12 +1420,12 @@ function EventsPageInner() {
                                   display: 'inline-block', padding: '0.15rem 0.55rem', borderRadius: '9999px',
                                   fontSize: '0.7rem', fontWeight: 700,
                                   background: entry.ticketType === 'VVIP' ? 'rgba(250,204,21,0.15)' :
-                                    entry.ticketType === 'VIP' ? 'rgba(124,58,237,0.2)' :
+                                    entry.ticketType === 'VIP' ? 'rgba(234, 88, 12,0.2)' :
                                     entry.ticketType === 'Couple' ? 'rgba(236,72,153,0.15)' :
                                     entry.ticketType === 'Group of 5' ? 'rgba(59,130,246,0.15)' :
                                     entry.ticketType === 'Special' ? 'rgba(20,184,166,0.15)' : 'rgba(255,255,255,0.07)',
                                   color: entry.ticketType === 'VVIP' ? '#fde047' :
-                                    entry.ticketType === 'VIP' ? '#c4b5fd' :
+                                    entry.ticketType === 'VIP' ? '#fdba74' :
                                     entry.ticketType === 'Couple' ? '#f9a8d4' :
                                     entry.ticketType === 'Group of 5' ? '#93c5fd' :
                                     entry.ticketType === 'Special' ? '#2dd4bf' : '#94a3b8',
@@ -1453,8 +1453,8 @@ function EventsPageInner() {
                                     onClick={() => handleStartEditTicket(entry)}
                                     title="Edit entry"
                                     style={{
-                                      background: 'rgba(124, 58, 237, 0.15)', border: '1px solid rgba(124, 58, 237, 0.3)',
-                                      color: '#c4b5fd', width: '26px', height: '26px', borderRadius: '0.4rem',
+                                      background: 'rgba(234, 88, 12, 0.15)', border: '1px solid rgba(234, 88, 12, 0.3)',
+                                      color: '#fdba74', width: '26px', height: '26px', borderRadius: '0.4rem',
                                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                       cursor: 'pointer',
                                     }}

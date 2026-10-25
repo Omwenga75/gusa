@@ -228,7 +228,7 @@ export default function JoinPage() {
                 <button
                   type="button"
                   onClick={handleOpenModal}
-                  className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
+                  className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-orange-600/30 hover:shadow-orange-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
                 >
                   <span>Register Now</span>
                   <ChevronRight size={18} />
@@ -247,8 +247,8 @@ export default function JoinPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {benefits.map((benefit, idx) => (
-              <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-white/10 hover:border-violet-500/30 transition-all">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500/20 text-violet-400 flex items-center justify-center mb-4 sm:mb-5 border border-violet-500/30">
+              <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-900/80 border border-white/10 hover:border-orange-500/30 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500/20 text-orange-400 flex items-center justify-center mb-4 sm:mb-5 border border-orange-500/30">
                   <benefit.icon size={24} />
                 </div>
                 <h3 className="text-base sm:text-lg font-bold mb-2 text-white">{benefit.title}</h3>
@@ -268,8 +268,8 @@ export default function JoinPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
             {/* Standard Member */}
-            <div className="glass-card p-5 sm:p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl flex flex-col justify-between">
-              <div className="absolute top-0 right-0 bg-gradient-to-r from-violet-500 to-blue-500 text-slate-950 text-xs font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
+            <div className="glass-card p-5 sm:p-8 rounded-2xl relative bg-slate-900/90 border-2 border-orange-500/50 shadow-xl flex flex-col justify-between">
+              <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 text-xs font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
                 Most Popular
               </div>
               <div>
@@ -281,7 +281,7 @@ export default function JoinPage() {
                 <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Full voting rights in elections', 'Access to GUSA welfare emergency fund', 'Priority registration for trips & cultural events', 'Alumni network & mentorship program', 'Eligible for Executive Committee positions'].map((item, i) => (
                     <li key={i} className="flex items-start gap-2.5 sm:gap-3 text-slate-300 text-xs sm:text-sm">
-                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={16} />
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-orange-400" size={16} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -297,7 +297,7 @@ export default function JoinPage() {
                   <span>Joined GUSA</span>
                 </button>
               ) : (
-                <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all">
+                <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all">
                   Register Now
                 </button>
               )}
@@ -314,7 +314,7 @@ export default function JoinPage() {
                 <ul className="space-y-3 sm:space-y-3.5 mb-6 sm:mb-8">
                   {['Participation in cultural nights & events', 'Join social groups & forums', 'Discounts on event tickets', 'Networking & friendship opportunities'].map((item, i) => (
                     <li key={i} className="flex items-start gap-2.5 sm:gap-3 text-slate-300 text-xs sm:text-sm">
-                      <CheckCircle className="flex-shrink-0 mt-0.5 text-violet-400" size={16} />
+                      <CheckCircle className="flex-shrink-0 mt-0.5 text-orange-400" size={16} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -330,7 +330,7 @@ export default function JoinPage() {
                   <span>Already Joined</span>
                 </button>
               ) : (
-                <button type="button" onClick={handleOpenModal} className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-violet-400 mt-auto cursor-pointer transition-all">
+                <button type="button" onClick={handleOpenModal} className="btn-glass w-full py-3.5 rounded-xl font-bold text-center block text-slate-200 border border-white/10 hover:text-orange-400 mt-auto cursor-pointer transition-all">
                   Register as Associate
                 </button>
               )}
@@ -349,7 +349,7 @@ export default function JoinPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
             {steps.map((step, idx) => (
               <div key={idx} className="glass-card p-4 sm:p-6 rounded-2xl bg-slate-900/90 border border-white/10 text-center flex flex-col items-center">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-violet-500 to-blue-500 text-slate-950 font-black text-lg sm:text-xl flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-violet-500/20">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 text-slate-950 font-black text-lg sm:text-xl flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-orange-500/20">
                   {step.num}
                 </div>
                 <h3 className="text-sm sm:text-base font-bold mb-1.5 sm:mb-2 text-white">{step.title}</h3>
@@ -412,7 +412,7 @@ export default function JoinPage() {
                 <div>
                   <h3 className="text-xl font-bold text-white mb-1">Registration Successful!</h3>
                   <p className="text-sm text-slate-300 max-w-md mx-auto">
-                    Welcome to GUSA, <strong className="text-violet-400">{fullName}</strong>! Your registration has been submitted and added to the official member directory.
+                    Welcome to GUSA, <strong className="text-orange-400">{fullName}</strong>! Your registration has been submitted and added to the official member directory.
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-950/80 border border-white/10 text-left text-xs space-y-2 text-slate-300">
@@ -422,7 +422,7 @@ export default function JoinPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">School:</span>
-                    <span className="font-semibold text-violet-300">{school}</span>
+                    <span className="font-semibold text-orange-300">{school}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">County:</span>
@@ -432,7 +432,7 @@ export default function JoinPage() {
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 cursor-pointer"
+                  className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-500 hover:to-blue-500 shadow-lg shadow-orange-600/30 cursor-pointer"
                 >
                   Done
                 </button>
@@ -460,7 +460,7 @@ export default function JoinPage() {
                         placeholder="e.g. Dennis Omwenga"
                         value={fullName}
                         onChange={e => setFullName(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -474,7 +474,7 @@ export default function JoinPage() {
                       <select
                         value={school}
                         onChange={e => setSchool(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                       >
                         {SCHOOL_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -498,7 +498,7 @@ export default function JoinPage() {
                         placeholder="dennis@example.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -518,7 +518,7 @@ export default function JoinPage() {
                         className={`w-full bg-slate-950/80 border rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none transition-colors ${
                           phone && !isValidPhone(phone)
                             ? 'border-red-500/60 focus:border-red-500'
-                            : 'border-white/10 focus:border-violet-500'
+                            : 'border-white/10 focus:border-orange-500'
                         }`}
                       />
                     </div>
@@ -545,7 +545,7 @@ export default function JoinPage() {
                         className={`w-full bg-slate-950/80 border rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none transition-colors uppercase ${
                           regNumber && !isValidRegNumber(regNumber)
                             ? 'border-red-500/60 focus:border-red-500'
-                            : 'border-white/10 focus:border-violet-500'
+                            : 'border-white/10 focus:border-orange-500'
                         }`}
                       />
                     </div>
@@ -561,7 +561,7 @@ export default function JoinPage() {
                     <select
                       value={yearOfStudy}
                       onChange={e => setYearOfStudy(e.target.value)}
-                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-violet-500 transition-colors"
+                      className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-orange-500 transition-colors"
                     >
                       <option value="Year 1">Year 1</option>
                       <option value="Year 2">Year 2</option>
@@ -608,10 +608,10 @@ export default function JoinPage() {
 
                 {/* Security Questions — revealed only after county is selected */}
                 {countySelected && (
-                  <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
+                  <div className="rounded-xl border border-orange-500/20 bg-orange-500/5 p-4 space-y-3">
                     <div className="flex items-center gap-2 mb-1">
-                      <Shield size={14} className="text-violet-400" />
-                      <span className="text-xs font-bold text-violet-300 uppercase tracking-wider">Security Verification</span>
+                      <Shield size={14} className="text-orange-400" />
+                      <span className="text-xs font-bold text-orange-300 uppercase tracking-wider">Security Verification</span>
                     </div>
                     <p className="text-xs text-slate-400 -mt-1">Answer both questions correctly to complete registration.</p>
 
@@ -625,7 +625,7 @@ export default function JoinPage() {
                         placeholder="Orotuba"
                         value={securityAnswer1}
                         onChange={e => setSecurityAnswer1(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
 
@@ -639,7 +639,7 @@ export default function JoinPage() {
                         placeholder="Isato"
                         value={securityAnswer2}
                         onChange={e => setSecurityAnswer2(e.target.value)}
-                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
+                        className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -658,7 +658,7 @@ export default function JoinPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting || hasJoined}
-                    className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-orange-600 to-blue-600 hover:from-orange-500 hover:to-blue-500 shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

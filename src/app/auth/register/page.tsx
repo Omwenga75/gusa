@@ -226,7 +226,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="form-group" style={{ marginTop: "var(--space-4)", padding: "var(--space-4)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "var(--radius-md)", background: "rgba(139,92,246,0.05)" }}>
+            <div className="form-group" style={{ marginTop: "var(--space-4)", padding: "var(--space-4)", border: "1px solid rgba(249, 115, 22,0.25)", borderRadius: "var(--radius-md)", background: "rgba(249, 115, 22,0.05)" }}>
               <p style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", marginBottom: "var(--space-3)", color: "var(--color-text-main)" }}>🔒 Security Verification</p>
               <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", marginBottom: "var(--space-3)" }}>Answer both questions correctly to complete registration.</p>
 

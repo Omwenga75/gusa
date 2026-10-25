@@ -90,7 +90,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/80 via-slate-900 to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-950/80 via-slate-900 to-slate-950" />
         )}
 
         <div className="container mx-auto px-4 relative z-10">
@@ -112,11 +112,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             >
               {event.status}
             </span>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-300 border border-orange-500/30 backdrop-blur-md">
               {eventType}
             </span>
             {images.length > 0 && (
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-900/80 text-violet-300 border border-violet-500/30 backdrop-blur-md">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-900/80 text-orange-300 border border-orange-500/30 backdrop-blur-md">
                 {images.length} {images.length === 1 ? 'photo' : 'photos'}
               </span>
             )}
@@ -128,9 +128,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
             {ticketList.length > 0 && (
               <a
                 href="#ticket-list"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs sm:text-sm md:text-base font-bold shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all border border-violet-400/30 cursor-pointer hover:scale-105 active:scale-95 shrink-0 self-start sm:self-auto"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs sm:text-sm md:text-base font-bold shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all border border-orange-400/30 cursor-pointer hover:scale-105 active:scale-95 shrink-0 self-start sm:self-auto"
               >
-                <Ticket size={18} className="text-violet-200" />
+                <Ticket size={18} className="text-orange-200" />
                 <span>Tickets ({ticketList.length})</span>
               </a>
             )}

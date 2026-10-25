@@ -132,7 +132,7 @@ export default function ContactPage() {
                       width: '64px',
                       height: '64px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                      backgroundColor: 'rgba(249, 115, 22, 0.12)',
                       color: 'var(--primary)',
                       display: 'flex',
                       alignItems: 'center',

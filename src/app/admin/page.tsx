@@ -252,7 +252,7 @@ export default async function AdminDashboard() {
       case 'nomination':
         return { color: '#c084fc', bg: 'rgba(168, 85, 247, 0.15)', icon: Vote };
       case 'leader':
-        return { color: '#a78bfa', bg: 'rgba(124, 58, 237, 0.15)', icon: Award };
+        return { color: '#fb923c', bg: 'rgba(234, 88, 12, 0.15)', icon: Award };
       case 'message':
         return { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.15)', icon: Mail };
       case 'event':

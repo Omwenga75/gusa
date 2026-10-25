@@ -60,8 +60,8 @@ export function EventCountdown({ dateStr, timeStr }: { dateStr: string; timeStr?
   if (!timeLeft) return null
 
   return (
-    <span className="text-[11px] sm:text-xs font-mono font-extrabold bg-violet-500/15 text-violet-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-violet-500/35 inline-flex items-center gap-1 whitespace-nowrap shadow-sm shrink-0">
-      <Clock size={11} className="text-violet-400 shrink-0" />
+    <span className="text-[11px] sm:text-xs font-mono font-extrabold bg-orange-500/15 text-orange-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-orange-500/35 inline-flex items-center gap-1 whitespace-nowrap shadow-sm shrink-0">
+      <Clock size={11} className="text-orange-400 shrink-0" />
       {timeLeft}
     </span>
   )
