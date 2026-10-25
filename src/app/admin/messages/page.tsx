@@ -248,9 +248,10 @@ function AdminMessagesPageInner() {
       </div>
 
       {/* ── Inbox list ─────────────────────────────────────── */}
-      <div className={styles.card} style={{ padding: 0, overflow: 'hidden' }}>
-
-        {/* List header */}
+      <div className={styles.card} style={{ padding: 0, overflow: 'hidden', width: '100%' }}>
+        <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: '520px' }}>
+            {/* List header */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '32px 1fr 180px 72px 32px',
@@ -402,7 +403,7 @@ function AdminMessagesPageInner() {
                 {/* ── Expanded Panel ── */}
                 {isExpanded && (
                   <div style={{
-                    padding: '1rem 1rem 1rem 3.5rem',
+                    padding: '1rem',
                     background: 'rgba(99,102,241,0.05)',
                     borderBottom: idx < filtered.length - 1
                       ? '1px solid rgba(255,255,255,0.06)' : 'none',
@@ -510,6 +511,8 @@ function AdminMessagesPageInner() {
             );
           })
         )}
+          </div>
+        </div>
       </div>
 
       <style>{`

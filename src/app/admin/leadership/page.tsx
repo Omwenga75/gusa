@@ -566,7 +566,7 @@ function LeadershipPageInner() {
           zIndex: 100,
           padding: '1rem'
         }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '480px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <div className={styles.card} style={{ width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>{editingLeader ? 'Edit Leader Profile' : 'Add Leader Profile'}</h2>
               <button onClick={resetForm} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
@@ -623,7 +623,7 @@ function LeadershipPageInner() {
               </div>
 
               {/* Name & Term row */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Full Name</label>
                   <input

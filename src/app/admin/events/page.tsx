@@ -496,7 +496,7 @@ function EventsPageInner() {
       <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
         Event Images (Choose up to 4 from device)
       </label>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(65px, 1fr))', gap: '0.65rem' }}>
         {[0, 1, 2, 3].map((idx) => (
           <div
             key={idx}
@@ -739,7 +739,7 @@ function EventsPageInner() {
           zIndex: 100,
           padding: '1rem'
         }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>Create New Event</h2>
               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
@@ -761,7 +761,7 @@ function EventsPageInner() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Date</label>
                   <input
@@ -787,7 +787,7 @@ function EventsPageInner() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Venue Location</label>
                   <input
@@ -855,7 +855,7 @@ function EventsPageInner() {
           zIndex: 105,
           padding: '1rem'
         }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>Edit Event</h2>
               <button onClick={() => { setIsEditModalOpen(false); setEditingEvent(null); }} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
@@ -876,7 +876,7 @@ function EventsPageInner() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Date</label>
                   <input
@@ -901,7 +901,7 @@ function EventsPageInner() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Venue Location</label>
                   <input
@@ -1107,7 +1107,7 @@ function EventsPageInner() {
                     </div>
 
                     {/* Ticket Type, Status, Quantity — 3 columns */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                    <div className={styles.formGrid3}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                         <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
                         <select
@@ -1278,7 +1278,7 @@ function EventsPageInner() {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                  <div className={styles.formGrid3}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                       <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Ticket Type</label>
                       <select

@@ -357,7 +357,7 @@ function MembersPageInner() {
               </div>
 
               {/* Email & Phone Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                   <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#f8fafc' }}>Email Address *</label>
                   <input
@@ -384,7 +384,7 @@ function MembersPageInner() {
               </div>
 
               {/* Reg No & Year Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                   <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#f8fafc' }}>Registration Number</label>
                   <input
@@ -429,7 +429,7 @@ function MembersPageInner() {
               </div>
 
               {/* County & Role Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className={styles.formGrid2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                   <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#f8fafc' }}>County</label>
                   <select

@@ -4,17 +4,17 @@
 /* ============================================================
    GUSA — Gusii University Students Association – Meru
    Modern Design System & Global Styles
-   Color Palette: Vibrant Violet & Electric Blue with Coral Accents
+   Color Palette: Dark Navy & Vibrant Orange (Professional)
    ============================================================ */
 
 :root {
   /* ---- Primary Brand Colors (Violet → Blue) ---- */
-  --color-primary: #7c3aed;
-  --color-primary-hover: #6d28d9;
-  --color-primary-light: rgba(124, 58, 237, 0.08);
+  --color-primary: #ea580c;
+  --color-primary-hover: #c2410c;
+  --color-primary-light: rgba(234, 88, 12, 0.1);
 
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
 
   --color-gold: #f97316;
 
@@ -24,7 +24,7 @@
   --bg-tertiary: #111827;
   --card-bg: #0d1225;
   --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-hover: rgba(124, 58, 237, 0.35);
+  --card-border-hover: rgba(234, 88, 12, 0.35);
 
   /* ---- Text Tokens ---- */
   --text-primary: #f8fafc;
@@ -62,15 +62,15 @@
   --color-text-inverse: #0f1419;
 
   /* ---- Primary (design-system style) ---- */
-  --primary: #8b5cf6;
-  --primary-hover: #7c3aed;
-  --primary-light: rgba(139, 92, 246, 0.12);
-  --color-primary-50: rgba(139, 92, 246, 0.08);
+  --primary: #f97316;
+  --primary-hover: #ea580c;
+  --primary-light: rgba(249, 115, 22, 0.12);
+  --color-primary-50: rgba(249, 115, 22, 0.08);
 
   /* ---- Accent Colors ---- */
   --accent-gold: #fb923c;
   --accent-teal: #06b6d4;
-  --accent-coral: #f472b6;
+  --accent-coral: #fb923c;
 
   /* ---- Semantic ---- */
   --color-success: #22c55e;
@@ -323,7 +323,7 @@ img, video, canvas, svg {
   transform: translate(-50%, -50%);
   width: 700px;
   height: 700px;
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(234, 88, 12, 0.1);
   border-radius: 9999px;
   filter: blur(80px);
   pointer-events: none;
@@ -336,7 +336,7 @@ img, video, canvas, svg {
   right: 25%;
   width: 400px;
   height: 400px;
-  background: rgba(59, 130, 246, 0.08);
+  background: rgba(249, 115, 22, 0.06);
   border-radius: 9999px;
   filter: blur(80px);
   pointer-events: none;
@@ -409,28 +409,28 @@ img, video, canvas, svg {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #a78bfa 0%, #818cf8 50%, #60a5fa 100%);
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
   color: #ffffff !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.45);
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+  background: rgba(255,255,255,0.06);
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.3);
+  box-shadow: none;
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
+  background: rgba(255,255,255,0.1);
   color: #ffffff !important;
   transform: translateY(-2px);
 }
@@ -442,9 +442,9 @@ img, video, canvas, svg {
 }
 
 .btn-outline:hover {
-  background: rgba(139, 92, 246, 0.15);
-  border-color: #8b5cf6;
-  color: #a78bfa !important;
+  background: rgba(249, 115, 22, 0.12);
+  border-color: #f97316;
+  color: #fb923c !important;
   transform: translateY(-2px);
 }
 
@@ -477,8 +477,8 @@ img, video, canvas, svg {
 
 .btn-glass:hover {
   background: rgba(255, 255, 255, 0.12);
-  border-color: #8b5cf6;
-  color: #a78bfa !important;
+  border-color: #f97316;
+  color: #fb923c !important;
   transform: translateY(-2px);
 }
 
@@ -528,8 +528,8 @@ img, video, canvas, svg {
 }
 
 .glass-card:hover {
-  border-color: rgba(139, 92, 246, 0.35);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px rgba(139, 92, 246, 0.15);
+  border-color: rgba(249, 115, 22, 0.35);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px rgba(249, 115, 22, 0.15);
   transform: translateY(-3px);
 }
 
@@ -552,7 +552,7 @@ img, video, canvas, svg {
 .card-hover:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-xl);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(249, 115, 22, 0.3);
 }
 
 .card-body {
@@ -612,13 +612,13 @@ img, video, canvas, svg {
 }
 
 .badge-primary {
-  background: rgba(139, 92, 246, 0.12);
-  color: #a78bfa;
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
 }
 
 .badge-secondary {
-  background: rgba(244, 114, 182, 0.12);
-  color: #f472b6;
+  background: rgba(251, 146, 60, 0.12);
+  color: #fb923c;
 }
 
 .badge-success {
@@ -701,7 +701,7 @@ img, video, canvas, svg {
 .form-input:focus,
 .form-control:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
 }
 
 .form-input::placeholder,
@@ -902,12 +902,12 @@ select.form-control {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(249, 115, 22, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgba(249, 115, 22, 0.35);
 }
 
 /* ============================================================
@@ -932,9 +932,9 @@ select.form-control {
   width: 72px !important;
   height: 72px !important;
   border-radius: 1.25rem !important;
-  background: rgba(124, 58, 237, 0.12) !important;
-  border: 1px solid rgba(124, 58, 237, 0.25) !important;
-  color: #a78bfa !important;
+  background: rgba(234, 88, 12, 0.12) !important;
+  border: 1px solid rgba(234, 88, 12, 0.25) !important;
+  color: #f97316 !important;
   margin: 0 auto 1.25rem auto !important;
 }
 

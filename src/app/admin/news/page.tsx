@@ -207,7 +207,7 @@ function NewsPageInner() {
           zIndex: 100,
           padding: '1rem'
         }}>
-          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <div className={styles.card} style={{ width: '100%', maxWidth: '540px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>Publish New Article</h2>
               <button onClick={() => { setIsModalOpen(false); setErrorMsg(''); }} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
