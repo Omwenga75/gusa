@@ -58,6 +58,7 @@ export default function GalleryClient() {
   const [activeAlbum, setActiveAlbum] = useState<Album | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [mediaFilter, setMediaFilter] = useState<'all' | 'photo' | 'video'>('all');
+  const [isAlbumLoading, setIsAlbumLoading] = useState<boolean>(false);
   const [sharedAlert, setSharedAlert] = useState<string | null>(null);
 
   const fetchGalleryData = React.useCallback(() => {
@@ -132,9 +133,10 @@ export default function GalleryClient() {
     setMediaFilter('all');
     setLightboxIndex(null);
 
-    // If album.media lacks loaded image URLs, fetch full album on demand
+    // If album.media lacks loaded image URLs, fetch full album on demand with loading state
     const hasMediaImages = album.media && album.media.length > 0 && album.media.some(m => Boolean(m.imageUrl));
     if (!hasMediaImages) {
+      setIsAlbumLoading(true);
       try {
         const res = await fetch(`/api/gallery/${album.id}`, { cache: 'no-store' });
         const data = await res.json();
@@ -149,10 +151,19 @@ export default function GalleryClient() {
             date: new Date(img.createdAt).toLocaleDateString()
           }));
           setActiveAlbum(prev => prev && prev.id === album.id ? { ...prev, media: freshMedia } : prev);
+          setAlbumsData(prev => {
+            const next = prev.map(a => a.id === album.id ? { ...a, media: freshMedia, photoCount: freshMedia.length } : a);
+            writeCache(GALLERY_CACHE_KEY, next);
+            return next;
+          });
         }
       } catch (err) {
         console.error('Failed to load full album media:', err);
+      } finally {
+        setIsAlbumLoading(false);
       }
+    } else {
+      setIsAlbumLoading(false);
     }
   };
 
@@ -160,6 +171,7 @@ export default function GalleryClient() {
   const handleCloseAlbum = () => {
     setActiveAlbum(null);
     setLightboxIndex(null);
+    setIsAlbumLoading(false);
   };
 
   // Filter media inside open album
@@ -477,86 +489,110 @@ export default function GalleryClient() {
                 flex: 1
               }}
             >
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: currentAlbumMedia.length === 1
-                    ? '1fr'
-                    : 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
-                  gap: '1rem'
-                }}
-              >
-                {currentAlbumMedia.map((item, index) => (
+              {isAlbumLoading ? (
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+                    gap: '1rem'
+                  }}
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                    <div
+                      key={n}
+                      className="skeleton"
+                      style={{
+                        height: '260px',
+                        borderRadius: '1rem',
+                        border: '1px solid rgba(255, 255, 255, 0.08)'
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <>
                   <div
-                    key={item.id}
-                    onClick={() => setLightboxIndex(index)}
                     style={{
-                      borderRadius: '1rem',
-                      overflow: 'hidden',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
-                      cursor: 'pointer',
-                      position: 'relative',
-                      height: currentAlbumMedia.length === 1 ? 'auto' : '260px',
-                      maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
-                      maxWidth: currentAlbumMedia.length === 1 ? '700px' : undefined,
-                      margin: currentAlbumMedia.length === 1 ? '0 auto' : undefined,
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.4)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
+                      display: 'grid',
+                      gridTemplateColumns: currentAlbumMedia.length === 1
+                        ? '1fr'
+                        : 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+                      gap: '1rem'
                     }}
                   >
-                    {item.imageUrl ? (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
+                    {currentAlbumMedia.map((item, index) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setLightboxIndex(index)}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          objectPosition: 'center top',
+                          borderRadius: '1rem',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+                          cursor: 'pointer',
+                          position: 'relative',
+                          height: currentAlbumMedia.length === 1 ? 'auto' : '260px',
                           maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
-                          display: 'block'
+                          maxWidth: currentAlbumMedia.length === 1 ? '700px' : undefined,
+                          margin: currentAlbumMedia.length === 1 ? '0 auto' : undefined,
+                          transition: 'transform 0.2s ease, box-shadow 0.2s ease'
                         }}
-                      />
-                    ) : (
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        minHeight: '200px',
-                        background: item.thumbnailGradient || 'linear-gradient(135deg, #7c3aed, #db2777)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        {item.type === 'video' ? (
-                          <Play size={40} color="#ffffff" style={{ opacity: 0.7 }} />
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-3px)';
+                          e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
+                        }}
+                      >
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              objectPosition: 'center top',
+                              maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
+                              display: 'block'
+                            }}
+                          />
                         ) : (
-                          <ImageIcon size={40} color="#ffffff" style={{ opacity: 0.4 }} />
+                          <div style={{
+                            width: '100%',
+                            height: '100%',
+                            minHeight: '200px',
+                            background: item.thumbnailGradient || 'linear-gradient(135deg, #7c3aed, #db2777)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            {item.type === 'video' ? (
+                              <Play size={40} color="#ffffff" style={{ opacity: 0.7 }} />
+                            ) : (
+                              <ImageIcon size={40} color="#ffffff" style={{ opacity: 0.4 }} />
+                            )}
+                          </div>
                         )}
                       </div>
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              {currentAlbumMedia.length === 0 && (
-                <div style={{
-                  textAlign: 'center',
-                  padding: '3rem 1.5rem',
-                  color: '#94a3b8'
-                }}>
-                  <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#a78bfa' }} />
-                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>No Photos Yet</h3>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>No pictures have been added to this album yet.</p>
-                </div>
+                  {currentAlbumMedia.length === 0 && (
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '3rem 1.5rem',
+                      color: '#94a3b8'
+                    }}>
+                      <ImageIcon size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.4, color: '#a78bfa' }} />
+                      <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>No Photos Yet</h3>
+                      <p style={{ fontSize: '0.875rem', margin: 0 }}>No pictures have been added to this album yet.</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
