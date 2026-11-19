@@ -14,7 +14,6 @@ import {
   HeartHandshake,
   Award,
   Mail,
-  Bell,
   LogOut,
   Menu,
   X,
@@ -212,44 +211,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <Menu size={20} />
             </button>
-          </div>
-
-          <div className={styles.topbarActions}>
-            {canSeeMessages && (
-              <button
-                className={styles.iconBtn}
-                title={unreadCount > 0 ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}` : 'No new messages'}
-                onClick={() => router.push('/admin/messages')}
-                style={{ position: 'relative' }}
-              >
-                <Bell size={18} />
-                {unreadCount > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '-4px',
-                      right: '-4px',
-                      backgroundColor: '#ef4444',
-                      color: '#ffffff',
-                      fontSize: '0.6rem',
-                      fontWeight: 800,
-                      minWidth: '16px',
-                      height: '16px',
-                      borderRadius: '9999px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0 3px',
-                      boxShadow: '0 0 8px rgba(239,68,68,0.7)',
-                      animation: 'pulse 2s infinite',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
-                )}
-              </button>
-            )}
           </div>
         </header>
 

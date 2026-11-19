@@ -157,11 +157,11 @@
 }
 
 .topbar {
+  display: none;
   height: 72px;
   background: rgba(13, 18, 37, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
