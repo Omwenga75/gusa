@@ -9,13 +9,12 @@ import {
   Mail,
   MailOpen,
   CheckCircle2,
+  AlertCircle,
+  Inbox,
   Trash2,
   Phone,
-  Search,
   RefreshCw,
   Clock,
-  Inbox,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
@@ -51,7 +50,6 @@ function AdminMessagesPageInner() {
   );
   const [loading, setLoading] = useState<boolean>(() => !readCache(ADMIN_MESSAGES_KEY));
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
@@ -73,14 +71,6 @@ function AdminMessagesPageInner() {
   };
 
   useEffect(() => { fetchMessages(); }, []);
-
-  useEffect(() => {
-    const handleSearch = (e: any) => {
-      setSearchQuery(e.detail?.query || '');
-    };
-    window.addEventListener('admin-search', handleSearch);
-    return () => window.removeEventListener('admin-search', handleSearch);
-  }, []);
 
   const triggerBadgeUpdate = () => {
     if (typeof window !== 'undefined') window.dispatchEvent(new Event('messages-updated'));
@@ -130,21 +120,8 @@ function AdminMessagesPageInner() {
   const unreadCount = messages.filter(m => m.status === 'UNREAD').length;
   const readCount   = messages.filter(m => m.status === 'READ').length;
 
-  const filtered = messages.filter(msg => {
-    if (filter === 'unread' && msg.status !== 'UNREAD') return false;
-    if (filter === 'read'   && msg.status !== 'READ')   return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        msg.name.toLowerCase().includes(q)    ||
-        msg.email.toLowerCase().includes(q)   ||
-        msg.subject.toLowerCase().includes(q) ||
-        msg.message.toLowerCase().includes(q) ||
-        (msg.phone?.toLowerCase().includes(q) ?? false)
-      );
-    }
-    return true;
-  });
+  const filtered = filter === 'all' ? messages
+    : messages.filter(m => m.status === (filter === 'unread' ? 'UNREAD' : 'READ'));
 
   /* ─── stat card ─── */
   const StatCard = ({
@@ -207,47 +184,6 @@ function AdminMessagesPageInner() {
         <StatCard label="Read"   value={readCount}   icon={<CheckCircle2 size={20}/>} active={filter==='read'}   color="16,185,129" onClick={() => setFilter('read')}/>
       </div>
 
-      {/* ── Search + filter pills ───────────────────────────── */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', alignItems: 'center', marginBottom: '1rem' }}>
-        {/* Search */}
-        <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '380px' }}>
-          <Search size={14} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', pointerEvents: 'none' }}/>
-          <input
-            type="text"
-            placeholder="Search name, email, subject…"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%', background: '#0d1225',
-              border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.6rem',
-              padding: '0.5rem 0.75rem 0.5rem 2.25rem',
-              color: '#fff', fontSize: '0.85rem', outline: 'none',
-            }}
-          />
-        </div>
-
-        {/* Pills */}
-        <div style={{ display: 'flex', gap: '0.3rem', background: '#0d1225', padding: '0.2rem', borderRadius: '0.6rem', border: '1px solid rgba(255,255,255,0.08)' }}>
-          {(['all','unread','read'] as const).map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              style={{
-                padding: '0.35rem 0.75rem', borderRadius: '0.45rem', border: 'none',
-                background: filter===f ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : 'transparent',
-                color: filter===f ? '#fff' : '#94a3b8',
-                fontWeight: filter===f ? 700 : 500,
-                fontSize: '0.8rem', cursor: 'pointer', textTransform: 'capitalize',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {f}{f==='unread' && unreadCount>0 ? ` (${unreadCount})` : ''}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Inbox list ─────────────────────────────────────── */}
       <div className={styles.card} style={{ padding: 0, overflow: 'hidden', width: '100%' }}>
         <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ minWidth: '520px' }}>
@@ -294,12 +230,10 @@ function AdminMessagesPageInner() {
           <div className={styles.emptyBox} style={{ padding: '3rem 1rem' }}>
             <Mail size={40} style={{ opacity: 0.25, color: '#6366f1' }}/>
             <p className={styles.emptyText} style={{ marginTop: '0.6rem' }}>
-              {searchQuery
-                ? `No results for "${searchQuery}"`
-                : filter === 'unread' ? 'All caught up — no unread messages!'
+                {filter === 'unread' ? 'All caught up — no unread messages!'
                 : filter === 'read'   ? 'No read messages.'
                 : 'No messages yet.'}
-            </p>
+              </p>
           </div>
         ) : (
           filtered.map((msg, idx) => {
