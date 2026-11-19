@@ -113,16 +113,12 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               Emeritus Leaders
             </h1>
-
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Past leaders who shaped and served GUSA
-            </p>
 
             {/* 3 Category Filter Buttons */}
             <div className="mt-6 flex flex-wrap justify-center gap-2.5">

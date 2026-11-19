@@ -169,15 +169,12 @@ export default function NewsClient() {
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               News & Announcements
             </h1>
-            <p style={{ maxWidth: '650px', margin: '0 auto', fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-              Official news, community stories, and executive announcements from GUSA leaders.
-            </p>
           </div>
         </div>
       </section>

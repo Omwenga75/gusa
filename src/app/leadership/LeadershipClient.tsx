@@ -113,16 +113,12 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               Executive Leaders
             </h1>
-
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Meet the elected GUSA executive leaders.
-            </p>
           </div>
         </div>
       </section>

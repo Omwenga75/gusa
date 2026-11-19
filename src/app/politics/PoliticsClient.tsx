@@ -268,16 +268,12 @@ export default function PoliticsClient() {
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: '1.5rem',
                 color: 'var(--text-main)'
               }}
             >
               Politics &amp; Governance
             </h1>
-
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Elected leaders representing GUSA Community across Kisii &amp; Nyamira chapters at Meru University.
-            </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
               <button

@@ -13,8 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
-  Layers,
-  Camera,
   Share2,
   CheckCircle,
   Play
@@ -122,10 +120,6 @@ export default function GalleryClient() {
     return albumsData.filter((album) => album.category === selectedCategory);
   }, [albumsData, selectedCategory]);
 
-  // Total photos count
-  const totalPhotos = useMemo(() => {
-    return albumsData.reduce((acc, alb) => acc + (alb.photoCount || 0), 0);
-  }, [albumsData]);
 
   // Open album modal
   const handleOpenAlbum = async (album: Album) => {
@@ -212,60 +206,12 @@ export default function GalleryClient() {
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               GUSA Media Gallery
             </h1>
-
-            {/* Quick Stats Pill Counters */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '0.75rem',
-                marginTop: '1.25rem'
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '9999px',
-                  padding: '0.45rem 1.15rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.875rem'
-                }}
-              >
-                <Layers size={16} style={{ color: '#FFD700' }} />
-                <strong style={{ color: '#ffffff' }}>{albumsData.length}</strong>
-                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Albums</span>
-              </div>
-
-              <div
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '9999px',
-                  padding: '0.45rem 1.15rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.875rem'
-                }}
-              >
-                <Camera size={16} style={{ color: '#ec4899' }} />
-                <strong style={{ color: '#ffffff' }}>{totalPhotos}</strong>
-                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Photos</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>

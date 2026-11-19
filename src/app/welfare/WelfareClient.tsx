@@ -105,23 +105,12 @@ export default function WelfareClient() {
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               GUSA Student Welfare & Initiatives
             </h1>
-            <p
-              style={{
-                maxWidth: '650px',
-                margin: '0 auto',
-                fontSize: '1rem',
-                color: 'var(--text-muted)',
-                lineHeight: 1.6
-              }}
-            >
-              Championing student well-being, emergency relief, academic resource drives, and compassionate community care at Meru University.
-            </p>
           </div>
         </div>
       </section>

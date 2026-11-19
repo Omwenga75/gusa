@@ -81,17 +81,12 @@ export default function ContactPage() {
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 800,
                 lineHeight: 1.15,
-                marginBottom: '0.75rem',
+                marginBottom: 0,
                 color: 'var(--text-main)'
               }}
             >
               Contact Us
             </h1>
-
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-              Have questions regarding membership,<br />
-              welfare aid, or event sponsorships?
-            </p>
           </div>
         </div>
       </section>

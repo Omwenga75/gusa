@@ -218,12 +218,9 @@ export default function EventsPage() {
 
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
           <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-0 leading-tight">
               Events
             </h1>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              All GUSA events
-            </p>
           </div>
         </div>
       </section>
