@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [pathname]);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--color-bg-subtle)' }}>
+    <div style={{ display: 'flex', height: '100dvh', maxHeight: '100dvh', overflow: 'hidden', backgroundColor: 'var(--color-bg-subtle)' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
@@ -80,9 +80,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
+        position: 'relative',
+        height: '100%',
+        maxHeight: '100dvh',
+        overflowY: 'auto',
+        overscrollBehavior: 'contain',
+        flexShrink: 0,
         zIndex: 50,
         transition: 'transform 0.3s ease',
       }}
@@ -130,7 +133,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, width: '100%' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, width: '100%', height: '100%', maxHeight: '100dvh', overflowY: 'auto', overscrollBehavior: 'contain' }}>
         {/* Top bar */}
         <header style={{ 
           height: '64px', 
@@ -139,7 +142,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 var(--space-6)'
+          padding: '0 var(--space-6)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 40,
+          flexShrink: 0
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
             <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: '24px' }}>
