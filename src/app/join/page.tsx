@@ -44,7 +44,7 @@ export default function JoinPage() {
   const [school, setSchool] = useState(SCHOOL_OPTIONS[0].value);
   const [yearOfStudy, setYearOfStudy] = useState('Year 1');
   const [county, setCounty] = useState<'Kisii' | 'Nyamira' | ''>('');
-  const [countySelected, setCountySelected] = useState(false);
+  const [countyError, setCountyError] = useState(false);
   const [securityAnswer1, setSecurityAnswer1] = useState('');
   const [securityAnswer2, setSecurityAnswer2] = useState('');
 
@@ -91,7 +91,7 @@ export default function JoinPage() {
     if (hasJoined) return;
     setSubmitError(null);
     setIsSubmittedSuccess(false);
-    setCountySelected(false);
+    setCountyError(false);
     setIsModalOpen(true);
   };
 
@@ -103,7 +103,7 @@ export default function JoinPage() {
       setPhone('');
       setRegNumber('');
       setCounty('');
-      setCountySelected(false);
+      setCountyError(false);
       setSecurityAnswer1('');
       setSecurityAnswer2('');
       setIsSubmittedSuccess(false);
@@ -112,7 +112,7 @@ export default function JoinPage() {
 
   const handleCountySelect = (c: 'Kisii' | 'Nyamira') => {
     setCounty(c);
-    setCountySelected(true);
+    setCountyError(false);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -136,6 +136,7 @@ export default function JoinPage() {
       return;
     }
     if (!county) {
+      setCountyError(true);
       setSubmitError('Please select your county of origin.');
       return;
     }
@@ -577,13 +578,15 @@ export default function JoinPage() {
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                     County of Origin <span className="text-red-400">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className={`grid grid-cols-2 gap-3`}>
                     <button
                       type="button"
                       onClick={() => handleCountySelect('Kisii')}
                       className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
                         county === 'Kisii'
                           ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-lg shadow-sky-500/10'
+                          : countyError
+                          ? 'bg-slate-950/80 border-red-500/50 text-slate-400 hover:text-white hover:border-white/20'
                           : 'bg-slate-950/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                       }`}
                     >
@@ -597,6 +600,8 @@ export default function JoinPage() {
                       className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 border cursor-pointer ${
                         county === 'Nyamira'
                           ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-lg shadow-purple-500/10'
+                          : countyError
+                          ? 'bg-slate-950/80 border-red-500/50 text-slate-400 hover:text-white hover:border-white/20'
                           : 'bg-slate-950/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                       }`}
                     >
@@ -606,9 +611,8 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                {/* Security Questions — revealed only after county is selected */}
-                {countySelected && (
-                  <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
+                {/* Security Questions — always visible */}
+                <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Shield size={14} className="text-violet-400" />
                       <span className="text-xs font-bold text-violet-300 uppercase tracking-wider">Security Verification</span>
@@ -643,7 +647,6 @@ export default function JoinPage() {
                       />
                     </div>
                   </div>
-                )}
 
                 {/* Action Buttons */}
                 <div className="flex items-center justify-end gap-3 pt-3">
