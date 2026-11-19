@@ -20,6 +20,7 @@ import {
   Vote,
   GraduationCap,
   ShieldCheck,
+  Loader2,
 } from 'lucide-react';
 import { hasPermission, getFirstPermittedPath } from '@/lib/permissions';
 
@@ -41,7 +42,7 @@ const ALL_NAV_ITEMS = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(false);
 
@@ -62,12 +63,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [role, permissions, pathname, router]);
 
-  // Filter nav items based on role + permissions
-  const navItems = ALL_NAV_ITEMS.filter((item) => {
-    if (item.key === null) return isSuperAdmin; // Dashboard: super admin only
-    if (item.key === '__super_only__') return isSuperAdmin; // Manage Admins: super admin only
-    return hasPermission(role, permissions, item.key as any);
-  });
+  // Filter nav items based on role + permissions (keep all items visible during loading so sidebar never collapses)
+  const navItems = React.useMemo(() => {
+    if (status === 'loading') {
+      return ALL_NAV_ITEMS;
+    }
+    return ALL_NAV_ITEMS.filter((item) => {
+      if (item.key === null) return isSuperAdmin; // Dashboard: super admin only
+      if (item.key === '__super_only__') return isSuperAdmin; // Manage Admins: super admin only
+      return hasPermission(role, permissions, item.key as any);
+    });
+  }, [status, isSuperAdmin, role, permissions]);
 
   // Automatically close mobile sidebar on navigation
   React.useEffect(() => {
@@ -216,8 +222,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <div className={styles.pageContainer}>
           {role === 'ADMIN' && pathname === '/admin' ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', color: '#94a3b8' }}>
-              Redirecting to your dashboard...
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+              <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
             </div>
           ) : (
             children

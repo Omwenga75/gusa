@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AdminPermissionKey, getFirstPermittedPath, hasPermission } from '@/lib/permissions';
+import { Loader2 } from 'lucide-react';
 
 interface Props {
   permissionKey: AdminPermissionKey;
@@ -38,14 +39,18 @@ export function AdminPermissionGuard({ permissionKey, children }: Props) {
 
   if (status === 'loading') {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '40vh', color: '#94a3b8' }}>
-        Checking access…
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+        <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
       </div>
     );
   }
 
   if (!session || !hasPermission(role, permissions, permissionKey)) {
-    return null;
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+        <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
+      </div>
+    );
   }
 
   return <>{children}</>;

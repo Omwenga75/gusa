@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
 import { ADMIN_PERMISSIONS, AdminPermissionKey } from '@/lib/permissions';
 import styles from '../../admin.module.css';
 
@@ -156,7 +156,11 @@ export default function ManageAdminsPage() {
   };
 
   if (status === 'loading' || role !== 'SUPER_ADMIN') {
-    return <div style={{ color: '#94a3b8', padding: '2rem' }}>Checking access…</div>;
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+        <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
+      </div>
+    );
   }
 
   return (
