@@ -22,7 +22,7 @@ import {
   GraduationCap,
   ShieldCheck,
 } from 'lucide-react';
-import { ADMIN_PERMISSIONS, hasPermission, getFirstPermittedPath } from '@/lib/permissions';
+import { hasPermission, getFirstPermittedPath } from '@/lib/permissions';
 
 const ALL_NAV_ITEMS = [
   { label: 'Dashboard',       path: '/admin',            icon: LayoutDashboard, key: null },
@@ -134,6 +134,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             const Icon = item.icon;
             const isActive = pathname === item.path;
             const isMessages = item.path === '/admin/messages';
+            const isDashboard = item.path === '/admin';
 
             return (
               <Link
@@ -144,9 +145,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  <span className={styles.navIcon}>
-                    <Icon size={18} />
-                  </span>
+                  {isDashboard && (
+                    <span className={styles.navIcon}>
+                      <Icon size={18} />
+                    </span>
+                  )}
                   <span>{item.label}</span>
                 </div>
 
@@ -247,22 +250,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
               </button>
             )}
-
-            <div className={styles.profile}>
-              <div className={styles.avatar}>
-                {session?.user?.name?.[0]?.toUpperCase() ?? 'A'}
-              </div>
-              <div className={styles.profileInfo}>
-                <span className={styles.profileName}>{session?.user?.name ?? 'Admin'}</span>
-                <span className={styles.profileRole}>
-                  {isSuperAdmin
-                    ? 'Super Admin'
-                    : permissions && permissions.length === 1
-                    ? `${ADMIN_PERMISSIONS.find(p => p.key === permissions[0])?.label || 'Admin'} Admin`
-                    : 'Admin'}
-                </span>
-              </div>
-            </div>
           </div>
         </header>
 
