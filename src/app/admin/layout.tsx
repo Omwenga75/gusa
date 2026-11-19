@@ -6,38 +6,27 @@ import { usePathname, useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import styles from './admin.module.css';
 import {
-  LayoutDashboard,
-  Users,
-  Calendar,
-  Newspaper,
-  Image as ImageIcon,
-  HeartHandshake,
-  Award,
-  Mail,
   LogOut,
   Menu,
   X,
-  Vote,
-  GraduationCap,
-  ShieldCheck,
   Loader2,
 } from 'lucide-react';
 import { hasPermission, getFirstPermittedPath } from '@/lib/permissions';
 import { AdminSkeletonLoader } from '@/components/AdminSkeletonLoader';
 
 const ALL_NAV_ITEMS = [
-  { label: 'Dashboard',       path: '/admin',            icon: LayoutDashboard, key: null },
-  { label: 'Politics',        path: '/admin/politics',   icon: Vote,            key: 'politics' },
-  { label: 'Members',         path: '/admin/members',    icon: Users,           key: 'members' },
-  { label: 'Events',          path: '/admin/events',     icon: Calendar,        key: 'events' },
-  { label: 'Posts / News',    path: '/admin/news',       icon: Newspaper,       key: 'news' },
-  { label: 'Gallery',         path: '/admin/gallery',    icon: ImageIcon,       key: 'gallery' },
-  { label: 'Welfare',         path: '/admin/welfare',    icon: HeartHandshake,  key: 'welfare' },
-  { label: 'Leadership',      path: '/admin/leadership', icon: Award,           key: 'leadership' },
-  { label: 'Emeritus Leaders',path: '/admin/emeritus',   icon: Award,           key: 'emeritus' },
-  { label: 'Alumni',          path: '/admin/alumni',     icon: GraduationCap,   key: 'alumni' },
-  { label: 'Messages',        path: '/admin/messages',   icon: Mail,            key: 'messages' },
-  { label: 'Manage Admins',   path: '/admin/settings/admins', icon: ShieldCheck, key: '__super_only__' },
+  { label: 'Dashboard',        path: '/admin',                 key: null },
+  { label: 'Politics',         path: '/admin/politics',        key: 'politics' },
+  { label: 'Members',          path: '/admin/members',         key: 'members' },
+  { label: 'Events',           path: '/admin/events',          key: 'events' },
+  { label: 'Posts / News',     path: '/admin/news',            key: 'news' },
+  { label: 'Gallery',          path: '/admin/gallery',         key: 'gallery' },
+  { label: 'Welfare',          path: '/admin/welfare',         key: 'welfare' },
+  { label: 'Leadership',       path: '/admin/leadership',      key: 'leadership' },
+  { label: 'Emeritus Leaders', path: '/admin/emeritus',        key: 'emeritus' },
+  { label: 'Alumni',           path: '/admin/alumni',          key: 'alumni' },
+  { label: 'Messages',         path: '/admin/messages',        key: 'messages' },
+  { label: 'Manage Admins',    path: '/admin/settings/admins', key: '__super_only__' },
 ] as const;
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -137,10 +126,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <nav className={styles.nav}>
           {navItems.map((item) => {
-            const Icon = item.icon;
             const isActive = pathname === item.path;
             const isMessages = item.path === '/admin/messages';
-            const isDashboard = item.path === '/admin';
 
             return (
               <Link
@@ -151,11 +138,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  {isDashboard && (
-                    <span className={styles.navIcon}>
-                      <Icon size={18} />
-                    </span>
-                  )}
                   <span>{item.label}</span>
                 </div>
 
