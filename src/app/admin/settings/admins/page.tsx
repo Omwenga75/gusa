@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
 import { ADMIN_PERMISSIONS, AdminPermissionKey } from '@/lib/permissions';
+import { AdminSkeletonLoader } from '@/components/AdminSkeletonLoader';
 import styles from '../../admin.module.css';
 
 interface AdminUser {
@@ -156,11 +157,7 @@ export default function ManageAdminsPage() {
   };
 
   if (status === 'loading' || role !== 'SUPER_ADMIN') {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
-        <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
-      </div>
-    );
+    return <AdminSkeletonLoader />;
   }
 
   return (

@@ -23,6 +23,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { hasPermission, getFirstPermittedPath } from '@/lib/permissions';
+import { AdminSkeletonLoader } from '@/components/AdminSkeletonLoader';
 
 const ALL_NAV_ITEMS = [
   { label: 'Dashboard',       path: '/admin',            icon: LayoutDashboard, key: null },
@@ -222,9 +223,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <div className={styles.pageContainer}>
           {role === 'ADMIN' && pathname === '/admin' ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
-              <Loader2 size={32} className="animate-spin" style={{ color: '#7c3aed' }} />
-            </div>
+            <AdminSkeletonLoader />
           ) : (
             children
           )}
