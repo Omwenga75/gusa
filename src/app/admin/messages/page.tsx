@@ -184,269 +184,235 @@ function AdminMessagesPageInner() {
         <StatCard label="Read"   value={readCount}   icon={<CheckCircle2 size={20}/>} active={filter==='read'}   color="16,185,129" onClick={() => setFilter('read')}/>
       </div>
 
-      <div className={styles.card} style={{ padding: 0, overflow: 'hidden', width: '100%' }}>
-        <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: '520px' }}>
-            {/* List header */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '32px 1fr 180px 72px 32px',
-          gap: '0.5rem',
-          padding: '0.55rem 1rem',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
-          fontSize: '0.7rem', color: '#64748b', fontWeight: 700,
-          textTransform: 'uppercase', letterSpacing: '0.05em',
-          alignItems: 'center',
-        }}>
-          <span/>
-          <span>Sender / Subject</span>
-          <span style={{ textAlign: 'right' }}>Email</span>
-          <span style={{ textAlign: 'right' }}>Time</span>
-          <span/>
-        </div>
-
-        {loading ? (
-          /* Skeleton rows */
-          <div>
-            {[1,2,3,4,5].map(n => (
-              <div key={n} style={{
-                display: 'grid', gridTemplateColumns: '32px 1fr 180px 72px 32px',
-                gap: '0.5rem', padding: '0.7rem 1rem',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                alignItems: 'center',
-              }}>
-                <div className="skeleton" style={{ width: 28, height: 28, borderRadius: '50%' }}/>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div className="skeleton" style={{ width: '45%', height: 12, borderRadius: 4 }}/>
-                  <div className="skeleton" style={{ width: '70%', height: 10, borderRadius: 4 }}/>
-                </div>
-                <div className="skeleton" style={{ width: '80%', height: 10, borderRadius: 4, marginLeft: 'auto' }}/>
-                <div className="skeleton" style={{ width: 42, height: 10, borderRadius: 4, marginLeft: 'auto' }}/>
-                <div/>
-              </div>
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className={styles.emptyBox} style={{ padding: '3rem 1rem' }}>
-            <Mail size={40} style={{ opacity: 0.25, color: '#6366f1' }}/>
-            <p className={styles.emptyText} style={{ marginTop: '0.6rem' }}>
-                {filter === 'unread' ? 'All caught up — no unread messages!'
-                : filter === 'read'   ? 'No read messages.'
-                : 'No messages yet.'}
-              </p>
-          </div>
-        ) : (
-          filtered.map((msg, idx) => {
-            const isUnread   = msg.status === 'UNREAD';
-            const isExpanded = expandedId === msg.id;
-            const isActing   = actionLoadingId === msg.id;
-
-            return (
-              <div key={msg.id}>
-                {/* ── Compact Row ── */}
-                <div
-                  onClick={() => setExpandedId(isExpanded ? null : msg.id)}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '32px 1fr 180px 72px 32px',
-                    gap: '0.5rem',
-                    padding: '0.7rem 1rem',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    borderBottom: isExpanded ? 'none' : idx < filtered.length - 1
-                      ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                    background: isExpanded
-                      ? 'rgba(99,102,241,0.08)'
-                      : isUnread
-                        ? 'rgba(239,68,68,0.04)'
-                        : 'transparent',
-                    transition: 'background 0.15s ease',
-                  }}
-                >
-                  {/* Avatar */}
-                  <div style={{
-                    width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                    background: isUnread
-                      ? 'linear-gradient(135deg,#ef4444,#f97316)'
-                      : 'linear-gradient(135deg,#3b82f6,#6366f1)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '0.7rem', fontWeight: 800, color: '#fff',
-                  }}>
-                    {msg.name.charAt(0).toUpperCase()}
-                  </div>
-
-                  {/* Name + subject */}
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <span style={{
-                        fontSize: '0.85rem', fontWeight: isUnread ? 700 : 500,
-                        color: isUnread ? '#f8fafc' : '#cbd5e1',
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                        maxWidth: '140px',
-                      }}>
-                        {msg.name}
-                      </span>
-                      {isUnread && (
-                        <span style={{
-                          background: '#ef4444', color: '#fff',
-                          fontSize: '0.6rem', fontWeight: 800,
-                          padding: '0.1rem 0.4rem', borderRadius: 9999,
-                          textTransform: 'uppercase', flexShrink: 0,
-                        }}>
-                          new
-                        </span>
-                      )}
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable} style={{ borderSpacing: '0 0.5rem' }}>
+          <thead>
+            <tr>
+              <th style={{ width: 44 }}></th>
+              <th>Sender / Subject</th>
+              <th style={{ textAlign: 'right' }}>Email</th>
+              <th style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>Time</th>
+              <th style={{ width: 32 }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              [1,2,3,4,5].map(n => (
+                <tr key={n}>
+                  <td><div className="skeleton" style={{ width: 32, height: 32, borderRadius: '50%' }}/></td>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div className="skeleton" style={{ width: '45%', height: 12, borderRadius: 4 }}/>
+                      <div className="skeleton" style={{ width: '70%', height: 10, borderRadius: 4 }}/>
                     </div>
-                    <p style={{
-                      margin: 0, fontSize: '0.78rem',
-                      color: isUnread ? '#e2e8f0' : '#64748b',
-                      fontWeight: isUnread ? 600 : 400,
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    }}>
-                      {msg.subject} —{' '}
-                      <span style={{ fontWeight: 400, color: '#475569' }}>
-                        {msg.message.slice(0, 60)}{msg.message.length > 60 ? '…' : ''}
-                      </span>
+                  </td>
+                  <td><div className="skeleton" style={{ width: 140, height: 10, borderRadius: 4, marginLeft: 'auto' }}/></td>
+                  <td><div className="skeleton" style={{ width: 42, height: 10, borderRadius: 4, marginLeft: 'auto' }}/></td>
+                  <td></td>
+                </tr>
+              ))
+            ) : filtered.length === 0 ? (
+              <tr>
+                <td colSpan={5}>
+                  <div className={styles.emptyBox} style={{ padding: '3rem 1rem' }}>
+                    <Mail size={40} style={{ opacity: 0.25, color: '#6366f1' }}/>
+                    <p className={styles.emptyText} style={{ marginTop: '0.6rem' }}>
+                      {filter === 'unread' ? 'All caught up — no unread messages!'
+                      : filter === 'read'   ? 'No read messages.'
+                      : 'No messages yet.'}
                     </p>
                   </div>
+                </td>
+              </tr>
+            ) : (
+              filtered.map((msg) => {
+                const isUnread   = msg.status === 'UNREAD';
+                const isExpanded = expandedId === msg.id;
+                const isActing   = actionLoadingId === msg.id;
 
-                  {/* Email */}
-                  <p style={{
-                    margin: 0, fontSize: '0.75rem', color: '#64748b',
-                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    textAlign: 'right',
-                  }}>
-                    {msg.email}
-                  </p>
+                return (
+                  <React.Fragment key={msg.id}>
+                    {/* ── Compact Row ── */}
+                    <tr
+                      onClick={() => setExpandedId(isExpanded ? null : msg.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {/* Avatar */}
+                      <td>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: '50%',
+                          background: isUnread
+                            ? 'linear-gradient(135deg,#ef4444,#f97316)'
+                            : 'linear-gradient(135deg,#3b82f6,#6366f1)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: '0.7rem', fontWeight: 800, color: '#fff',
+                          flexShrink: 0,
+                        }}>
+                          {msg.name.charAt(0).toUpperCase()}
+                        </div>
+                      </td>
 
-                  {/* Time */}
-                  <p style={{
-                    margin: 0, fontSize: '0.72rem', color: '#475569',
-                    whiteSpace: 'nowrap', textAlign: 'right',
-                    fontWeight: isUnread ? 700 : 400,
-                  }}>
-                    {timeAgo(msg.createdAt)}
-                  </p>
+                      {/* Name + subject */}
+                      <td style={{ minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.15rem' }}>
+                          <span style={{
+                            fontSize: '0.875rem', fontWeight: isUnread ? 700 : 500,
+                            color: isUnread ? '#f8fafc' : '#cbd5e1',
+                            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                          }}>
+                            {msg.name}
+                          </span>
+                          {isUnread && (
+                            <span style={{
+                              background: '#ef4444', color: '#fff',
+                              fontSize: '0.6rem', fontWeight: 800,
+                              padding: '0.1rem 0.4rem', borderRadius: 9999,
+                              textTransform: 'uppercase', flexShrink: 0,
+                            }}>
+                              new
+                            </span>
+                          )}
+                        </div>
+                        <p style={{
+                          margin: 0, fontSize: '0.78rem',
+                          color: isUnread ? '#e2e8f0' : '#64748b',
+                          fontWeight: isUnread ? 600 : 400,
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                          maxWidth: '320px',
+                        }}>
+                          {msg.subject} —{' '}
+                          <span style={{ fontWeight: 400, color: '#475569' }}>
+                            {msg.message.slice(0, 60)}{msg.message.length > 60 ? '…' : ''}
+                          </span>
+                        </p>
+                      </td>
 
-                  {/* Chevron */}
-                  <div style={{ display: 'flex', justifyContent: 'center', color: '#475569' }}>
-                    {isExpanded ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
-                  </div>
-                </div>
+                      {/* Email */}
+                      <td style={{ textAlign: 'right', fontSize: '0.78rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                        {msg.email}
+                      </td>
 
-                {/* ── Expanded Panel ── */}
-                {isExpanded && (
-                  <div style={{
-                    padding: '1rem',
-                    background: 'rgba(99,102,241,0.05)',
-                    borderBottom: idx < filtered.length - 1
-                      ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                    borderTop: '1px solid rgba(99,102,241,0.12)',
-                    animation: 'fadeIn 0.15s ease',
-                  }}>
-                    {/* Contact meta */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.85rem', fontSize: '0.8rem', color: '#94a3b8' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Mail size={12} style={{ color: '#818cf8' }}/>
-                        <a href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
-                           style={{ color: '#a5b4fc', textDecoration: 'none' }}>
-                          {msg.email}
-                        </a>
-                      </span>
-                      {msg.phone && (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <Phone size={12} style={{ color: '#34d399' }}/>
-                          <a href={`tel:${msg.phone}`} style={{ color: '#6ee7b7', textDecoration: 'none' }}>
-                            {msg.phone}
-                          </a>
-                        </span>
-                      )}
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Clock size={12}/>
-                        {new Date(msg.createdAt).toLocaleString()}
-                      </span>
-                    </div>
+                      {/* Time */}
+                      <td style={{ textAlign: 'right', fontSize: '0.75rem', color: '#475569', whiteSpace: 'nowrap', fontWeight: isUnread ? 700 : 400 }}>
+                        {timeAgo(msg.createdAt)}
+                      </td>
 
-                    {/* Subject */}
-                    <div style={{
-                      borderLeft: `3px solid ${isUnread ? '#ef4444' : '#6366f1'}`,
-                      paddingLeft: '0.75rem', marginBottom: '0.75rem',
-                    }}>
-                      <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Subject: </span>
-                      <span style={{ fontSize: '0.9rem', color: '#f8fafc', fontWeight: 700 }}>{msg.subject}</span>
-                    </div>
+                      {/* Chevron */}
+                      <td style={{ textAlign: 'center', color: '#475569' }}>
+                        {isExpanded ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+                      </td>
+                    </tr>
 
-                    {/* Body */}
-                    <div style={{
-                      background: 'rgba(0,0,0,0.25)', borderRadius: '0.5rem',
-                      padding: '0.85rem', marginBottom: '0.85rem',
-                      color: '#e2e8f0', fontSize: '0.875rem', lineHeight: 1.65,
-                      whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                    }}>
-                      {msg.message}
-                    </div>
+                    {/* ── Expanded Panel Row ── */}
+                    {isExpanded && (
+                      <tr>
+                        <td colSpan={5} style={{
+                          padding: '1rem 1.25rem',
+                          background: 'rgba(99,102,241,0.06)',
+                          borderTop: '1px solid rgba(99,102,241,0.15)',
+                          animation: 'fadeIn 0.15s ease',
+                          borderRadius: '0 0 0.85rem 0.85rem',
+                        }}>
+                          {/* Contact meta */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.85rem', fontSize: '0.8rem', color: '#94a3b8' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                              <Mail size={12} style={{ color: '#818cf8' }}/>
+                              <a href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
+                                 style={{ color: '#a5b4fc', textDecoration: 'none' }}>
+                                {msg.email}
+                              </a>
+                            </span>
+                            {msg.phone && (
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                <Phone size={12} style={{ color: '#34d399' }}/>
+                                <a href={`tel:${msg.phone}`} style={{ color: '#6ee7b7', textDecoration: 'none' }}>
+                                  {msg.phone}
+                                </a>
+                              </span>
+                            )}
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                              <Clock size={12}/>
+                              {new Date(msg.createdAt).toLocaleString()}
+                            </span>
+                          </div>
 
-                    {/* Actions */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <a
-                          href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
-                          className={styles.secondaryBtn}
-                          style={{ fontSize: '0.78rem', padding: '0.35rem 0.7rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}
-                        >
-                          <Mail size={13}/> Reply Email
-                        </a>
-                        {msg.phone && (
-                          <a
-                            href={`https://wa.me/${msg.phone.replace(/[^0-9]/g, '')}`}
-                            target="_blank" rel="noopener noreferrer"
-                            className={styles.secondaryBtn}
-                            style={{ fontSize: '0.78rem', padding: '0.35rem 0.7rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', color: '#34d399', borderColor: 'rgba(52,211,153,0.3)' }}
-                          >
-                            <Phone size={13}/> WhatsApp
-                          </a>
-                        )}
-                      </div>
+                          {/* Subject */}
+                          <div style={{ borderLeft: `3px solid ${isUnread ? '#ef4444' : '#6366f1'}`, paddingLeft: '0.75rem', marginBottom: '0.75rem' }}>
+                            <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Subject: </span>
+                            <span style={{ fontSize: '0.9rem', color: '#f8fafc', fontWeight: 700 }}>{msg.subject}</span>
+                          </div>
 
-                      <div style={{ display: 'flex', gap: '0.4rem' }}>
-                        <button
-                          disabled={isActing}
-                          onClick={e => { e.stopPropagation(); toggleStatus(msg.id, msg.status); }}
-                          style={{
-                            background: isUnread ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.12)',
-                            color: isUnread ? '#34d399' : '#f87171',
-                            border: isUnread ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)',
-                            borderRadius: '0.45rem', padding: '0.35rem 0.7rem',
-                            fontSize: '0.78rem', fontWeight: 600,
-                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                          }}
-                        >
-                          {isUnread ? <><CheckCircle2 size={13}/> Mark Read</> : <><MailOpen size={13}/> Mark Unread</>}
-                        </button>
-                        <button
-                          disabled={isActing}
-                          onClick={e => { e.stopPropagation(); deleteMessage(msg.id); }}
-                          style={{
-                            background: 'rgba(239,68,68,0.1)', color: '#ef4444',
-                            border: '1px solid rgba(239,68,68,0.25)',
-                            borderRadius: '0.45rem', padding: '0.35rem 0.6rem',
-                            fontSize: '0.78rem', cursor: 'pointer',
-                            display: 'inline-flex', alignItems: 'center',
-                          }}
-                          title="Delete"
-                        >
-                          <Trash2 size={13}/>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
-          </div>
-        </div>
+                          {/* Body */}
+                          <div style={{
+                            background: 'rgba(0,0,0,0.25)', borderRadius: '0.5rem',
+                            padding: '0.85rem', marginBottom: '0.85rem',
+                            color: '#e2e8f0', fontSize: '0.875rem', lineHeight: 1.65,
+                            whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                          }}>
+                            {msg.message}
+                          </div>
+
+                          {/* Actions */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                              <a
+                                href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
+                                className={styles.secondaryBtn}
+                                style={{ fontSize: '0.78rem', padding: '0.35rem 0.7rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}
+                              >
+                                <Mail size={13}/> Reply Email
+                              </a>
+                              {msg.phone && (
+                                <a
+                                  href={`https://wa.me/${msg.phone.replace(/[^0-9]/g, '')}`}
+                                  target="_blank" rel="noopener noreferrer"
+                                  className={styles.secondaryBtn}
+                                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.7rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', color: '#34d399', borderColor: 'rgba(52,211,153,0.3)' }}
+                                >
+                                  <Phone size={13}/> WhatsApp
+                                </a>
+                              )}
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.4rem' }}>
+                              <button
+                                disabled={isActing}
+                                onClick={e => { e.stopPropagation(); toggleStatus(msg.id, msg.status); }}
+                                style={{
+                                  background: isUnread ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.12)',
+                                  color: isUnread ? '#34d399' : '#f87171',
+                                  border: isUnread ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)',
+                                  borderRadius: '0.45rem', padding: '0.35rem 0.7rem',
+                                  fontSize: '0.78rem', fontWeight: 600,
+                                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                                }}
+                              >
+                                {isUnread ? <><CheckCircle2 size={13}/> Mark Read</> : <><MailOpen size={13}/> Mark Unread</>}
+                              </button>
+                              <button
+                                disabled={isActing}
+                                onClick={e => { e.stopPropagation(); deleteMessage(msg.id); }}
+                                style={{
+                                  background: 'rgba(239,68,68,0.1)', color: '#ef4444',
+                                  border: '1px solid rgba(239,68,68,0.25)',
+                                  borderRadius: '0.45rem', padding: '0.35rem 0.6rem',
+                                  fontSize: '0.78rem', cursor: 'pointer',
+                                  display: 'inline-flex', alignItems: 'center',
+                                }}
+                                title="Delete"
+                              >
+                                <Trash2 size={13}/>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       <style>{`
