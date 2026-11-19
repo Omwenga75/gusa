@@ -230,17 +230,26 @@ function LeadershipPageInner() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to remove this leader?')) return;
 
+    const prev = leaders;
+    const updated = leaders.filter(l => l.id !== id);
+    setLeaders(updated);
+    writeCache(ADMIN_LEADERSHIP_KEY, updated);
+    clearCache('leaders');
+    clearCache('leadership');
     setDeletingId(id);
+
     try {
       const res = await fetch(`/api/leadership?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        clearCache('leaders');
-        clearCache('leadership');
-        clearCache(ADMIN_LEADERSHIP_KEY);
-        fetchLeaders();
+      if (!res.ok) {
+        setLeaders(prev);
+        writeCache(ADMIN_LEADERSHIP_KEY, prev);
+        alert('Failed to delete leader.');
       }
     } catch (err) {
       console.error(err);
+      setLeaders(prev);
+      writeCache(ADMIN_LEADERSHIP_KEY, prev);
+      alert('Error deleting leader.');
     } finally {
       setDeletingId(null);
     }

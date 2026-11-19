@@ -189,7 +189,13 @@ function AdminAlumniPageInner() {
   const handleDeleteAlumni = async (id: string) => {
     if (!confirm('Are you sure you want to delete this alumni record?')) return;
 
+    const prev = alumniList;
+    const updated = alumniList.filter(a => a.id !== id);
+    setAlumniList(updated);
+    writeCache(ADMIN_ALUMNI_KEY, updated);
+    writeCache(PUBLIC_ALUMNI_KEY, updated);
     setDeletingId(id);
+
     try {
       const res = await fetch(`/api/alumni?id=${encodeURIComponent(id)}`, {
         method: 'DELETE'
@@ -197,14 +203,15 @@ function AdminAlumniPageInner() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to delete alumni');
+        setAlumniList(prev);
+        writeCache(ADMIN_ALUMNI_KEY, prev);
+        writeCache(PUBLIC_ALUMNI_KEY, prev);
+        alert(data.error || 'Failed to delete alumni');
       }
-
-      const updated = alumniList.filter(a => a.id !== id);
-      setAlumniList(updated);
-      writeCache(ADMIN_ALUMNI_KEY, updated);
-      writeCache(PUBLIC_ALUMNI_KEY, updated);
     } catch (err: any) {
+      setAlumniList(prev);
+      writeCache(ADMIN_ALUMNI_KEY, prev);
+      writeCache(PUBLIC_ALUMNI_KEY, prev);
       alert(err.message || 'Failed to delete record');
     } finally {
       setDeletingId(null);

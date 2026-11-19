@@ -15,8 +15,7 @@ import {
   Mail,
   Phone,
   Shield,
-  Trash2,
-  RefreshCw
+  Trash2
 } from 'lucide-react';
 import { SCHOOL_ABBREVIATIONS, formatPositionName } from '@/lib/formatPosition';
 
@@ -128,16 +127,23 @@ function MembersPageInner() {
 
   const handleDeleteMember = async (id: string) => {
     if (!confirm('Are you sure you want to delete this member? This action cannot be undone.')) return;
+    const prev = members;
+    const updated = members.filter(m => m.id !== id);
+    setMembers(updated);
+    writeCache(ADMIN_MEMBERS_KEY, updated);
+
     try {
       const res = await fetch(`/api/members?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setMembers(prev => prev.filter(m => m.id !== id));
-      } else {
+      if (!res.ok) {
         const d = await res.json();
+        setMembers(prev);
+        writeCache(ADMIN_MEMBERS_KEY, prev);
         alert(d.error || 'Failed to delete member.');
       }
     } catch (err) {
       console.error('Delete member error:', err);
+      setMembers(prev);
+      writeCache(ADMIN_MEMBERS_KEY, prev);
       alert('Network error while deleting member.');
     }
   };
@@ -150,14 +156,6 @@ function MembersPageInner() {
           <p className={styles.pageSubtitle}>View registered members and official student community accounts</p>
         </div>
         <div style={{ display: 'flex', gap: '0.6rem' }}>
-          <button
-            className={styles.btnOutline}
-            onClick={fetchMembers}
-            style={{ width: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-            title="Refresh Member List"
-          >
-            <RefreshCw size={15} /> Refresh
-          </button>
           <button className={styles.btnPrimary} onClick={() => setIsModalOpen(true)}>
             <UserPlus size={16} /> Add Member
           </button>

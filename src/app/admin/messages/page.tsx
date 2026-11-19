@@ -13,7 +13,6 @@ import {
   Inbox,
   Trash2,
   Phone,
-  RefreshCw,
   Clock,
   ChevronDown,
   ChevronUp,
@@ -79,7 +78,9 @@ function AdminMessagesPageInner() {
   const toggleStatus = async (id: string, current: string) => {
     const next = current === 'UNREAD' ? 'READ' : 'UNREAD';
     setActionLoadingId(id);
-    setMessages(prev => prev.map(m => m.id === id ? { ...m, status: next as 'UNREAD' | 'READ' } : m));
+    const updated = messages.map(m => m.id === id ? { ...m, status: next as 'UNREAD' | 'READ' } : m);
+    setMessages(updated);
+    writeCache(ADMIN_MESSAGES_KEY, updated);
     try {
       const res = await fetch('/api/contact', {
         method: 'PATCH',
@@ -87,12 +88,16 @@ function AdminMessagesPageInner() {
         body: JSON.stringify({ id, status: next }),
       });
       if (!res.ok) {
-        setMessages(prev => prev.map(m => m.id === id ? { ...m, status: current as 'UNREAD' | 'READ' } : m));
+        const reverted = messages.map(m => m.id === id ? { ...m, status: current as 'UNREAD' | 'READ' } : m);
+        setMessages(reverted);
+        writeCache(ADMIN_MESSAGES_KEY, reverted);
       } else {
         triggerBadgeUpdate();
       }
     } catch {
-      setMessages(prev => prev.map(m => m.id === id ? { ...m, status: current as 'UNREAD' | 'READ' } : m));
+      const reverted = messages.map(m => m.id === id ? { ...m, status: current as 'UNREAD' | 'READ' } : m);
+      setMessages(reverted);
+      writeCache(ADMIN_MESSAGES_KEY, reverted);
     } finally {
       setActionLoadingId(null);
     }
@@ -102,14 +107,22 @@ function AdminMessagesPageInner() {
     if (!window.confirm('Permanently delete this message?')) return;
     setActionLoadingId(id);
     const prev = [...messages];
-    setMessages(p => p.filter(m => m.id !== id));
+    const updated = messages.filter(m => m.id !== id);
+    setMessages(updated);
+    writeCache(ADMIN_MESSAGES_KEY, updated);
     if (expandedId === id) setExpandedId(null);
     try {
       const res = await fetch(`/api/contact?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-      if (!res.ok) { setMessages(prev); alert('Failed to delete.'); }
-      else triggerBadgeUpdate();
+      if (!res.ok) {
+        setMessages(prev);
+        writeCache(ADMIN_MESSAGES_KEY, prev);
+        alert('Failed to delete.');
+      } else {
+        triggerBadgeUpdate();
+      }
     } catch {
       setMessages(prev);
+      writeCache(ADMIN_MESSAGES_KEY, prev);
       alert('Network error while deleting.');
     } finally {
       setActionLoadingId(null);
@@ -159,7 +172,6 @@ function AdminMessagesPageInner() {
 
   return (
     <>
-      {/* ── Header ─────────────────────────────────────────── */}
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Inquiries &amp; Messages</h1>
@@ -167,14 +179,6 @@ function AdminMessagesPageInner() {
             Review and respond to messages from members, students, and partners.
           </p>
         </div>
-        <button
-          onClick={() => fetchMessages(true)}
-          className={styles.secondaryBtn}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Refresh
-        </button>
       </div>
 
       {/* ── Stats ──────────────────────────────────────────── */}

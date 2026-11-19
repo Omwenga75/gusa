@@ -182,12 +182,19 @@ function EventsPageInner() {
 
   const handleDeleteEntry = async (entryId: string) => {
     if (!listPanelEvent) return;
+    const prev = ticketEntries;
+    setTicketEntries(p => p.filter(e => e.id !== entryId));
     setDeletingEntryId(entryId);
     try {
-      await fetch(`/api/events/${listPanelEvent.id}/list?entryId=${entryId}`, { method: 'DELETE' });
-      setTicketEntries(prev => prev.filter(e => e.id !== entryId));
+      const res = await fetch(`/api/events/${listPanelEvent.id}/list?entryId=${entryId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        setTicketEntries(prev);
+        alert('Failed to delete ticket entry.');
+      }
     } catch (err) {
       console.error(err);
+      setTicketEntries(prev);
+      alert('Network error while deleting entry.');
     } finally {
       setDeletingEntryId(null);
     }
@@ -471,20 +478,26 @@ function EventsPageInner() {
   const handleDeleteEvent = async (event: Event) => {
     if (!window.confirm(`Are you sure you want to delete "${event.title}"?`)) return;
 
+    const prev = events;
+    const updated = events.filter(e => e.id !== event.id);
+    setEvents(updated);
+    writeCache(ADMIN_EVENTS_KEY, updated);
+    clearCache('events');
+
     try {
       const res = await fetch(`/api/events/${event.id}`, {
         method: 'DELETE'
       });
 
-      if (res.ok) {
-        clearCache('events');
-        clearCache(ADMIN_EVENTS_KEY);
-        fetchEvents();
-      } else {
+      if (!res.ok) {
+        setEvents(prev);
+        writeCache(ADMIN_EVENTS_KEY, prev);
         alert('Failed to delete event.');
       }
     } catch (err) {
       console.error(err);
+      setEvents(prev);
+      writeCache(ADMIN_EVENTS_KEY, prev);
       alert('Error deleting event.');
     }
   };

@@ -190,16 +190,25 @@ function AdminEmeritusPageInner() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to remove this emeritus leader?')) return;
+    const prev = leaders;
+    const updated = leaders.filter(l => l.id !== id);
+    setLeaders(updated);
+    writeCache(ADMIN_EMERITUS_KEY, updated);
+    clearCache('emeritus_leaders');
     setDeletingId(id);
+
     try {
       const res = await fetch(`/api/emeritus?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        clearCache('emeritus_leaders');
-        clearCache(ADMIN_EMERITUS_KEY);
-        fetchLeaders();
+      if (!res.ok) {
+        setLeaders(prev);
+        writeCache(ADMIN_EMERITUS_KEY, prev);
+        alert('Failed to delete leader.');
       }
     } catch (err) {
       console.error(err);
+      setLeaders(prev);
+      writeCache(ADMIN_EMERITUS_KEY, prev);
+      alert('Error deleting leader.');
     } finally {
       setDeletingId(null);
     }

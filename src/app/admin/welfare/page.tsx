@@ -81,18 +81,24 @@ function WelfarePageInner() {
 
   const handleDeleteProject = async (id: string, projectTitle: string) => {
     if (!confirm(`Are you sure you want to delete "${projectTitle}"?`)) return;
+    const prev = projects;
+    const updated = projects.filter(p => p.id !== id);
+    setProjects(updated);
+    writeCache(ADMIN_WELFARE_KEY, updated);
+    clearCache('projects');
+    clearCache('welfare');
+
     try {
       const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        clearCache('projects');
-        clearCache('welfare');
-        clearCache('admin_welfare');
-        setProjects(prev => prev.filter(p => p.id !== id));
-      } else {
+      if (!res.ok) {
+        setProjects(prev);
+        writeCache(ADMIN_WELFARE_KEY, prev);
         alert('Failed to delete initiative');
       }
     } catch (err) {
       console.error(err);
+      setProjects(prev);
+      writeCache(ADMIN_WELFARE_KEY, prev);
       alert('Error deleting initiative');
     }
   };

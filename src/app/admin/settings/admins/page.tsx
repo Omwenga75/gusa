@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, RefreshCw, Loader2 } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { ADMIN_PERMISSIONS, AdminPermissionKey } from '@/lib/permissions';
 import { AdminSkeletonLoader } from '@/components/AdminSkeletonLoader';
 import styles from '../../admin.module.css';
@@ -119,17 +119,20 @@ export default function ManageAdminsPage() {
 
   const handleDelete = async (admin: AdminUser) => {
     if (!confirm(`Delete admin "${admin.name}" (${admin.email})? This cannot be undone.`)) return;
+    const prev = admins;
+    setAdmins(prev.filter(a => a.id !== admin.id));
+    setSuccess(`Admin "${admin.name}" deleted.`);
+
     try {
       const res = await fetch(`/api/admin/admins/${admin.id}`, { method: 'DELETE' });
       if (!res.ok) {
         const d = await res.json();
+        setAdmins(prev);
         setError(d.error || 'Failed to delete admin');
-        return;
       }
-      setSuccess(`Admin "${admin.name}" deleted.`);
-      fetchAdmins();
     } catch {
-      setError('Network error');
+      setAdmins(prev);
+      setError('Network error while deleting admin');
     }
   };
 
@@ -289,9 +292,6 @@ export default function ManageAdminsPage() {
       <div className={styles.card}>
         <div className={styles.cardHeader}>
           <h2 className={styles.cardTitle}>All Admin Accounts</h2>
-          <button onClick={fetchAdmins} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '0.25rem' }}>
-            <RefreshCw size={16} />
-          </button>
         </div>
 
         {loading ? (

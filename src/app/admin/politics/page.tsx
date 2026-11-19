@@ -17,7 +17,6 @@ import {
   Phone,
   Mail,
   Search,
-  RefreshCw,
   MapPin,
   GraduationCap,
   Award,
@@ -175,7 +174,9 @@ function AdminPoliticsPageInner() {
     if (!window.confirm(`Permanently delete nomination application for "${name}"?`)) return;
     setActionLoadingId(id);
     const prev = [...nominations];
-    setNominations(prevList => prevList.filter(item => item.id !== id));
+    const updated = prev.filter(item => item.id !== id);
+    setNominations(updated);
+    writeCache(ADMIN_POLITICS_KEY, updated);
     if (selectedNomination && selectedNomination.id === id) {
       setSelectedNomination(null);
     }
@@ -186,12 +187,12 @@ function AdminPoliticsPageInner() {
       });
       if (!res.ok) {
         setNominations(prev);
+        writeCache(ADMIN_POLITICS_KEY, prev);
         alert('Failed to delete nomination.');
-      } else {
-        fetchNominations();
       }
     } catch {
       setNominations(prev);
+      writeCache(ADMIN_POLITICS_KEY, prev);
       alert('Network error while deleting nomination.');
     } finally {
       setActionLoadingId(null);
@@ -309,25 +310,6 @@ function AdminPoliticsPageInner() {
             }}
           >
             <Download size={14} /> Export CSV
-          </button>
-          <button
-            onClick={() => fetchNominations(true)}
-            className={styles.secondaryBtn}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '0.6rem',
-              padding: '0.5rem 0.9rem',
-              color: '#cbd5e1',
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh
           </button>
         </div>
       </div>
