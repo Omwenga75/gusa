@@ -19,6 +19,7 @@ import prisma from '@/lib/prisma';
 import { EventCountdown } from '@/components/events/EventCountdown';
 import { JoinGusaButton } from '@/components/JoinGusaButton';
 import { HeroSlider } from '@/components/HeroSlider';
+import { HomeStatCounters } from '@/components/HomeStatCounters';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -35,8 +36,8 @@ async function getHomePageData() {
       (async () => {
         try {
           const [totalMembers, annualEvents, totalPhotos] = await Promise.all([
-            prisma.user.count(),
-            prisma.event.count({ where: { status: { not: 'DRAFT' } } }),
+            prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' }, status: 'ACTIVE' } }),
+            prisma.event.count({ where: { status: 'PUBLISHED' } }),
             prisma.galleryImage.count(),
           ]);
           return {
@@ -47,7 +48,7 @@ async function getHomePageData() {
           };
         } catch (e) {
           console.error('Error fetching stats:', e);
-          return { activeMembers: 1, annualEvents: 0, counties: 2, totalPhotos: 0 };
+          return { activeMembers: 0, annualEvents: 0, counties: 2, totalPhotos: 0 };
         }
       })(),
 
@@ -162,7 +163,7 @@ async function getHomePageData() {
   } catch (error) {
     console.error('getHomePageData error:', error);
     return {
-      stats: { activeMembers: 1, annualEvents: 0, counties: 2, totalPhotos: 0 },
+      stats: { activeMembers: 0, annualEvents: 0, counties: 2, totalPhotos: 0 },
       events: [],
       albums: [],
       posts: [],
@@ -214,34 +215,7 @@ export default async function HomePage() {
         </div>
 
         {/* Stat Counters Grid */}
-        <div className="container mx-auto px-3 sm:px-6 relative z-10 mt-4 sm:mt-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-5xl mx-auto">
-            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-violet-500/40 transition-colors shadow-lg">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-violet-400 mb-0.5 sm:mb-1">
-                {stats ? stats.activeMembers.toLocaleString() : '1'}
-              </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Active Members</p>
-            </div>
-            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-blue-500/40 transition-colors shadow-lg">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-blue-400 mb-0.5 sm:mb-1">
-                {stats ? stats.annualEvents.toLocaleString() : '3'}
-              </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Annual Events</p>
-            </div>
-            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-pink-500/40 transition-colors shadow-lg">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-pink-400 mb-0.5 sm:mb-1">
-                {stats ? stats.counties.toLocaleString() : '39'}
-              </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Counties</p>
-            </div>
-            <div className="glass-card p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-white/15 text-center backdrop-blur-xl hover:border-cyan-500/40 transition-colors shadow-lg">
-              <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-cyan-400 mb-0.5 sm:mb-1">
-                {stats ? stats.totalPhotos.toLocaleString() : '6'}
-              </h3>
-              <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-slate-300 truncate">Total Photos</p>
-            </div>
-          </div>
-        </div>
+        <HomeStatCounters initialStats={stats} />
       </section>
 
       {/* Core Pillars Section */}

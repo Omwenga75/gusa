@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
@@ -112,6 +113,10 @@ export async function POST(request: NextRequest) {
         status: status || 'PUBLISHED',
       }
     })
+
+    revalidatePath('/')
+    revalidatePath('/events')
+    revalidatePath('/admin/events')
 
     return NextResponse.json({ success: true, event }, { status: 201 })
   } catch (error) {

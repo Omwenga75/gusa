@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { verifyAdminSession } from '@/lib/adminAuth'
@@ -83,6 +84,9 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    revalidatePath('/')
+    revalidatePath('/admin')
+    revalidatePath('/admin/members')
     return NextResponse.json({ success: true, user }, { status: 201 })
   } catch (err) {
     console.error('Create member error:', err)
@@ -100,6 +104,9 @@ export async function DELETE(request: NextRequest) {
     if (!id) return NextResponse.json({ error: 'Member ID is required' }, { status: 400 })
 
     await prisma.user.delete({ where: { id } })
+    revalidatePath('/')
+    revalidatePath('/admin')
+    revalidatePath('/admin/members')
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Delete member error:', err)

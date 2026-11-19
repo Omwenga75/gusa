@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
@@ -49,6 +50,10 @@ export async function PUT(
       data: updateData
     })
 
+    revalidatePath('/')
+    revalidatePath('/events')
+    revalidatePath('/admin/events')
+
     return NextResponse.json({ success: true, event })
   } catch (error) {
     console.error('Update event API error:', error)
@@ -70,6 +75,10 @@ export async function DELETE(
     await prisma.event.delete({
       where: { id }
     })
+
+    revalidatePath('/')
+    revalidatePath('/events')
+    revalidatePath('/admin/events')
 
     return NextResponse.json({ success: true })
   } catch (error) {

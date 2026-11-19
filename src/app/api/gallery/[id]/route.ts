@@ -97,6 +97,7 @@ export async function PUT(
       })
     })
 
+    revalidatePath('/')
     revalidatePath('/gallery')
     revalidatePath('/admin/gallery')
 
@@ -125,6 +126,7 @@ export async function DELETE(
       where: { id }
     })
 
+    revalidatePath('/')
     revalidatePath('/gallery')
     revalidatePath('/admin/gallery')
 

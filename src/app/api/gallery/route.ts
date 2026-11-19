@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    revalidatePath('/')
     revalidatePath('/gallery')
     revalidatePath('/admin/gallery')
 
@@ -109,6 +110,7 @@ export async function DELETE(request: NextRequest) {
       where: { id }
     })
 
+    revalidatePath('/')
     revalidatePath('/gallery')
     revalidatePath('/admin/gallery')
 

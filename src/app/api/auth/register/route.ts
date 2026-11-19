@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
@@ -98,6 +99,9 @@ export async function POST(request: NextRequest) {
     })
 
     const { passwordHash: _, ...userWithoutPassword } = user
+    revalidatePath('/')
+    revalidatePath('/admin')
+    revalidatePath('/admin/members')
 
     return NextResponse.json({ success: true, user: userWithoutPassword }, { status: 201 })
   } catch (error: any) {

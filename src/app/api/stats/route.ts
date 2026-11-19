@@ -10,7 +10,7 @@ export async function GET() {
       annualEvents,
       totalPhotos
     ] = await Promise.all([
-      prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' } } }),
+      prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' }, status: 'ACTIVE' } }),
       prisma.event.count({ where: { status: 'PUBLISHED' } }),
       prisma.galleryImage.count()
     ])
@@ -35,7 +35,7 @@ export async function GET() {
   } catch (error) {
     console.error('Stats API error:', error)
     return NextResponse.json({
-      activeMembers: 1,
+      activeMembers: 0,
       annualEvents: 0,
       counties: 2,
       totalPhotos: 0,
