@@ -376,35 +376,24 @@ export default function ManageAdminsPage() {
 
                     {/* Role & Access column */}
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      {isSuperA ? (
                         <span style={{
                           fontSize: '0.72rem', padding: '0.2rem 0.6rem', borderRadius: '9999px',
-                          background: isSuperA ? 'rgba(99,102,241,0.15)' : 'rgba(52,211,153,0.15)',
-                          color: isSuperA ? '#818cf8' : '#34d399',
-                          fontWeight: 700, display: 'inline-block', width: 'fit-content'
+                          background: 'rgba(99,102,241,0.15)', color: '#818cf8',
+                          fontWeight: 700, display: 'inline-block'
                         }}>
-                          {isSuperA ? 'Super Admin' : 'Admin'}
+                          Super Admin
                         </span>
-                        {!isSuperA && (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
-                            {perms.length === 0
-                              ? <span style={{ fontSize: '0.72rem', color: '#ef4444' }}>No permissions</span>
-                              : perms.map(p => {
-                                  const color = PERMISSION_COLORS[p] ?? '#94a3b8';
-                                  const label = ADMIN_PERMISSIONS.find(a => a.key === p)?.label ?? p;
-                                  return (
-                                    <span key={p} style={{
-                                      fontSize: '0.68rem', padding: '0.12rem 0.45rem', borderRadius: '9999px',
-                                      background: `${color}22`, color, fontWeight: 600, border: `1px solid ${color}44`
-                                    }}>
-                                      {label}
-                                    </span>
-                                  );
-                                })
-                            }
-                          </div>
-                        )}
-                      </div>
+                      ) : perms.length === 0 ? (
+                        <span style={{ fontSize: '0.72rem', color: '#ef4444' }}>No permissions</span>
+                      ) : (
+                        <span style={{
+                          fontSize: '0.78rem', fontWeight: 600, color: '#34d399',
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block'
+                        }}>
+                          {perms.map(p => ADMIN_PERMISSIONS.find(a => a.key === p)?.label ?? p).join(', ')} Admin
+                        </span>
+                      )}
                     </td>
 
                     {/* Status column */}
