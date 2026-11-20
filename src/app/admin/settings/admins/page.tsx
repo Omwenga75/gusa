@@ -49,6 +49,25 @@ export default function ManageAdminsPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('admin-search', handleSearch);
+    return () => window.removeEventListener('admin-search', handleSearch);
+  }, []);
+
+  const filteredAdmins = admins.filter((admin) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      admin.name.toLowerCase().includes(q) ||
+      admin.email.toLowerCase().includes(q) ||
+      admin.role.toLowerCase().includes(q)
+    );
+  });
 
   // Form state
   const [form, setForm] = useState({
@@ -289,94 +308,166 @@ export default function ManageAdminsPage() {
       )}
 
       {/* Admins Table */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>All Admin Accounts</h2>
-        </div>
-
-        {loading ? (
-          <p style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>Loading…</p>
-        ) : admins.length === 0 ? (
-          <p style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>No admin accounts found.</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {admins.map((admin) => {
-              const perms = parsePermissions(admin.permissions);
-              const isSelf = (session?.user as any)?.email === admin.email;
-              const isSuperA = admin.role === 'SUPER_ADMIN';
-              return (
-                <div key={admin.id} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: '1rem',
-                  padding: '1rem', borderRadius: '0.75rem',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${admin.status === 'SUSPENDED' ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.06)'}`,
-                  flexWrap: 'wrap',
-                }}>
-                  {/* Avatar */}
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: isSuperA ? 'rgba(99,102,241,0.2)' : 'rgba(52,211,153,0.15)', color: isSuperA ? '#818cf8' : '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', flexShrink: 0 }}>
-                    {admin.name[0]?.toUpperCase()}
-                  </div>
-
-                  {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <span style={{ color: '#f8fafc', fontWeight: 700, fontSize: '0.9rem' }}>{admin.name}</span>
-                      <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.55rem', borderRadius: '9999px', background: isSuperA ? 'rgba(99,102,241,0.15)' : 'rgba(52,211,153,0.15)', color: isSuperA ? '#818cf8' : '#34d399', fontWeight: 600 }}>
-                        {isSuperA ? 'Super Admin' : 'Admin'}
-                      </span>
-                      {admin.status === 'SUSPENDED' && (
-                        <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.55rem', borderRadius: '9999px', background: 'rgba(239,68,68,0.15)', color: '#f87171', fontWeight: 600 }}>Suspended</span>
-                      )}
-                      {isSelf && (
-                        <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.55rem', borderRadius: '9999px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', fontWeight: 600 }}>You</span>
-                      )}
-                    </div>
-                    <p style={{ color: '#64748b', fontSize: '0.8rem', margin: '0.2rem 0 0.5rem' }}>{admin.email}</p>
-
-                    {/* Permissions chips */}
-                    {!isSuperA && (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                        {perms.length === 0
-                          ? <span style={{ fontSize: '0.75rem', color: '#ef4444' }}>No permissions set</span>
-                          : perms.map(p => {
-                              const color = PERMISSION_COLORS[p] ?? '#94a3b8';
-                              const label = ADMIN_PERMISSIONS.find(a => a.key === p)?.label ?? p;
-                              return (
-                                <span key={p} style={{ fontSize: '0.72rem', padding: '0.15rem 0.55rem', borderRadius: '9999px', background: `${color}22`, color, fontWeight: 600, border: `1px solid ${color}44` }}>
-                                  {label}
-                                </span>
-                              );
-                            })
-                        }
+      <div className={styles.independentTableWrapper}>
+        <table className={styles.independentTable}>
+          <thead>
+            <tr>
+              <th style={{ width: '35%' }}>Admin</th>
+              <th style={{ width: '25%' }}>Role &amp; Access</th>
+              <th style={{ width: '15%' }}>Status</th>
+              <th style={{ width: '25%', textAlign: 'center' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              [1, 2, 3].map((n) => (
+                <tr key={n}>
+                  <td>
+                    <div className={styles.userCell}>
+                      <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0 }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                        <div className="skeleton" style={{ width: '130px', height: '14px', borderRadius: '4px' }} />
+                        <div className="skeleton" style={{ width: '100px', height: '11px', borderRadius: '4px' }} />
                       </div>
-                    )}
-                    {isSuperA && <span style={{ fontSize: '0.75rem', color: '#818cf8' }}>Full system access</span>}
-                  </div>
-
-                  {/* Actions */}
-                  {!isSelf && !isSuperA && (
-                    <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
-                      <button
-                        onClick={() => handleToggleStatus(admin)}
-                        title={admin.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
-                        style={{ padding: '0.4rem 0.75rem', borderRadius: '0.5rem', border: `1px solid ${admin.status === 'ACTIVE' ? 'rgba(251,191,36,0.3)' : 'rgba(52,211,153,0.3)'}`, background: 'transparent', color: admin.status === 'ACTIVE' ? '#fbbf24' : '#34d399', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}
-                      >
-                        {admin.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(admin)}
-                        title="Delete admin"
-                        style={{ padding: '0.4rem 0.5rem', borderRadius: '0.5rem', border: '1px solid rgba(239,68,68,0.3)', background: 'transparent', color: '#f87171', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                      >
-                        <Trash2 size={14} />
-                      </button>
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                  </td>
+                  <td><div className="skeleton" style={{ width: '90px', height: '22px', borderRadius: '9999px' }} /></td>
+                  <td><div className="skeleton" style={{ width: '70px', height: '22px', borderRadius: '9999px' }} /></td>
+                  <td style={{ textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem' }}>
+                      <div className="skeleton" style={{ width: '70px', height: '28px', borderRadius: '0.375rem' }} />
+                      <div className="skeleton" style={{ width: '36px', height: '28px', borderRadius: '0.375rem' }} />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : filteredAdmins.length === 0 ? (
+              <tr>
+                <td colSpan={4} style={{ textAlign: 'center', color: '#64748b', padding: '2.5rem' }}>
+                  {searchQuery ? 'No admins match your search.' : 'No admin accounts found.'}
+                </td>
+              </tr>
+            ) : (
+              filteredAdmins.map((admin) => {
+                const perms = parsePermissions(admin.permissions);
+                const isSelf = (session?.user as any)?.email === admin.email;
+                const isSuperA = admin.role === 'SUPER_ADMIN';
+                return (
+                  <tr key={admin.id}>
+                    {/* Admin column */}
+                    <td>
+                      <div className={styles.userCell}>
+                        <div
+                          className={styles.userAvatar}
+                          style={{
+                            background: isSuperA
+                              ? 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)'
+                              : 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                          }}
+                        >
+                          {admin.name[0]?.toUpperCase()}
+                        </div>
+                        <div>
+                          <div className={styles.userName}>{admin.name}</div>
+                          <div className={styles.userEmail}>{admin.email}</div>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Role & Access column */}
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <span style={{
+                          fontSize: '0.72rem', padding: '0.2rem 0.6rem', borderRadius: '9999px',
+                          background: isSuperA ? 'rgba(99,102,241,0.15)' : 'rgba(52,211,153,0.15)',
+                          color: isSuperA ? '#818cf8' : '#34d399',
+                          fontWeight: 700, display: 'inline-block', width: 'fit-content'
+                        }}>
+                          {isSuperA ? 'Super Admin' : 'Admin'}
+                        </span>
+                        {isSuperA ? (
+                          <span style={{ fontSize: '0.75rem', color: '#818cf8' }}>Full system access</span>
+                        ) : (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
+                            {perms.length === 0
+                              ? <span style={{ fontSize: '0.72rem', color: '#ef4444' }}>No permissions</span>
+                              : perms.map(p => {
+                                  const color = PERMISSION_COLORS[p] ?? '#94a3b8';
+                                  const label = ADMIN_PERMISSIONS.find(a => a.key === p)?.label ?? p;
+                                  return (
+                                    <span key={p} style={{
+                                      fontSize: '0.68rem', padding: '0.12rem 0.45rem', borderRadius: '9999px',
+                                      background: `${color}22`, color, fontWeight: 600, border: `1px solid ${color}44`
+                                    }}>
+                                      {label}
+                                    </span>
+                                  );
+                                })
+                            }
+                          </div>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Status column */}
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                        <span style={{
+                          fontSize: '0.72rem', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontWeight: 700,
+                          background: admin.status === 'SUSPENDED' ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
+                          color: admin.status === 'SUSPENDED' ? '#f87171' : '#4ade80',
+                        }}>
+                          {admin.status === 'SUSPENDED' ? 'Suspended' : 'Active'}
+                        </span>
+                        {isSelf && (
+                          <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem', borderRadius: '9999px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', fontWeight: 600 }}>You</span>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Actions column */}
+                    <td style={{ textAlign: 'center' }}>
+                      {!isSelf && !isSuperA ? (
+                        <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center' }}>
+                          <button
+                            onClick={() => handleToggleStatus(admin)}
+                            title={admin.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
+                            style={{
+                              padding: '0.35rem 0.7rem', borderRadius: '0.375rem',
+                              border: `1px solid ${admin.status === 'ACTIVE' ? 'rgba(251,191,36,0.3)' : 'rgba(52,211,153,0.3)'}`,
+                              background: admin.status === 'ACTIVE' ? 'rgba(251,191,36,0.1)' : 'rgba(52,211,153,0.1)',
+                              color: admin.status === 'ACTIVE' ? '#fbbf24' : '#34d399',
+                              fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
+                              whiteSpace: 'nowrap', transition: 'all 0.15s ease'
+                            }}
+                          >
+                            {admin.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(admin)}
+                            title="Delete admin"
+                            style={{
+                              padding: '0.35rem 0.5rem', borderRadius: '0.375rem',
+                              border: '1px solid rgba(239,68,68,0.3)',
+                              background: 'rgba(239,68,68,0.1)',
+                              color: '#f87171', cursor: 'pointer',
+                              display: 'inline-flex', alignItems: 'center',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{ color: '#475569', fontSize: '0.75rem' }}>—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
     </>
   );
