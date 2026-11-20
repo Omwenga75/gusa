@@ -385,9 +385,7 @@ export default function ManageAdminsPage() {
                         }}>
                           {isSuperA ? 'Super Admin' : 'Admin'}
                         </span>
-                        {isSuperA ? (
-                          <span style={{ fontSize: '0.75rem', color: '#818cf8' }}>Full system access</span>
-                        ) : (
+                        {!isSuperA && (
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                             {perms.length === 0
                               ? <span style={{ fontSize: '0.72rem', color: '#ef4444' }}>No permissions</span>
@@ -414,10 +412,11 @@ export default function ManageAdminsPage() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
                         <span style={{
                           fontSize: '0.72rem', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontWeight: 700,
-                          background: admin.status === 'SUSPENDED' ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
-                          color: admin.status === 'SUSPENDED' ? '#f87171' : '#4ade80',
+                          background: 'rgba(239,68,68,0.15)',
+                          color: '#f87171',
+                          display: admin.status === 'SUSPENDED' ? 'inline-block' : 'none',
                         }}>
-                          {admin.status === 'SUSPENDED' ? 'Suspended' : 'Active'}
+                          Suspended
                         </span>
                         {isSelf && (
                           <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem', borderRadius: '9999px', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', fontWeight: 600 }}>You</span>
