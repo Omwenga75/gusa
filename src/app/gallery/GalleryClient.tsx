@@ -197,25 +197,6 @@ export default function GalleryClient() {
 
   return (
     <PublicLayout>
-      {/* Page Header */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: 0,
-                color: 'var(--text-main)'
-              }}
-            >
-              GUSA Media Gallery
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* Shared Feedback Toast */}
       {sharedAlert && (
         <div
@@ -243,7 +224,7 @@ export default function GalleryClient() {
       )}
 
       {/* Main Section */}
-      <section className="section" style={{ minHeight: '600px', backgroundColor: 'var(--bg-primary)' }}>
+      <section className="section" style={{ minHeight: '600px', backgroundColor: 'var(--bg-primary)', paddingTop: '2.5rem' }}>
         <div className="container">
 
 

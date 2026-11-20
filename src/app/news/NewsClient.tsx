@@ -160,25 +160,6 @@ export default function NewsClient() {
 
   return (
     <PublicLayout>
-      {/* Page Header */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: 0,
-                color: 'var(--text-main)'
-              }}
-            >
-              News & Announcements
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* Toast Notification */}
       {toastMessage && (
         <div

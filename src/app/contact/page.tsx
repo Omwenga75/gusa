@@ -72,27 +72,8 @@ export default function ContactPage() {
 
   return (
     <PublicLayout>
-      {/* Header Hero */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: 0,
-                color: 'var(--text-main)'
-              }}
-            >
-              Contact Us
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* Main Content: Form & Direct Contact Info */}
-      <section className="section" style={{ background: 'var(--surface)' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '3rem', paddingBottom: '4rem' }}>
         <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
             {/* Interactive Contact Form */}
             <div

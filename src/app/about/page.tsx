@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Target,
   Globe,
-  ChevronRight,
   Scale,
   Calendar,
   CheckCircle2,
@@ -42,36 +41,8 @@ export default function AboutPage() {
 
   return (
     <PublicLayout>
-      {/* Hero Section */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: '0.75rem',
-                color: 'var(--text-main)'
-              }}
-            >
-              About GUSA
-            </h1>
-
-            <div className="responsive-btn-group">
-              <Link href="/leadership" className="btn btn-primary btn-lg">
-                Meet Our Leadership <ChevronRight size={18} />
-              </Link>
-              <Link href="/contact" className="btn btn-outline btn-lg">
-                Get In Touch
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Mission, Vision & Core Values */}
-      <section className="section" style={{ background: 'var(--surface)' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '3rem' }}>
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
             <span className="badge badge-primary" style={{ marginBottom: '0.75rem' }}>Our Creed</span>

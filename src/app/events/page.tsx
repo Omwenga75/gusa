@@ -210,21 +210,6 @@ export default function EventsPage() {
 
   return (
     <PublicLayout>
-      {/* ── Page Header with Search & Filter Tabs ── */}
-      <section className="relative overflow-hidden bg-slate-950 border-b border-white/10 pt-10 pb-10 sm:pt-14 sm:pb-12">
-        {/* Ambient Gradient Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-violet-600/10 blur-[100px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 right-1/4 w-[400px] h-[200px] bg-blue-600/10 blur-[90px] rounded-full pointer-events-none" />
-
-        <div className="container mx-auto px-4 max-w-5xl relative z-10">
-          <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-0 leading-tight">
-              Events
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* ── Main Events Grid Section ── */}
       <section className="flex-1 w-full bg-[#090e1c] py-10 sm:py-14">
         <div className="container mx-auto px-4 max-w-7xl">

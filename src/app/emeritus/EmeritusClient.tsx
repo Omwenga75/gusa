@@ -104,47 +104,27 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
 
   return (
     <PublicLayout>
-      {/* Header Banner */}
-      <section className="page-header" style={{ paddingBottom: '1.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: 0,
-                color: 'var(--text-main)'
-              }}
-            >
-              Emeritus Leaders
-            </h1>
-
-            {/* 3 Category Filter Buttons */}
-            <div className="mt-6 flex flex-wrap justify-center gap-2.5">
-              {CATEGORIES.map(({ label, icon: Icon }) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => setSelectedCategory(label)}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                    selectedCategory === label
-                      ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25 scale-[1.02]'
-                      : 'bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-violet-500/30'
-                  }`}
-                >
-                  <Icon size={14} className={selectedCategory === label ? 'text-white' : 'text-violet-400'} />
-                  <span>{label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Main Content Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem', paddingBottom: '4rem' }}>
         <div className="container">
+          {/* 3 Category Filter Buttons */}
+          <div className="mb-8 flex flex-wrap justify-center gap-2.5">
+            {CATEGORIES.map(({ label, icon: Icon }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => setSelectedCategory(label)}
+                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                  selectedCategory === label
+                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/25 scale-[1.02]'
+                    : 'bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-violet-500/30'
+                }`}
+              >
+                <Icon size={14} className={selectedCategory === label ? 'text-white' : 'text-violet-400'} />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
           {isLoading && leaders.length === 0 ? (
             // Loading skeletons - 3 cards
             <div

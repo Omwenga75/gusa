@@ -257,55 +257,33 @@ export default function PoliticsClient() {
 
   return (
     <PublicLayout>
-      {/* ── HERO BANNER ───────────────────────────────────── */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-
-
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: '1.5rem',
-                color: 'var(--text-main)'
-              }}
-            >
-              Politics &amp; Governance
-            </h1>
-
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto">
-              <button
-                type="button"
-                onClick={() => setActiveTab('aspirants')}
-                className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
-                  activeTab === 'aspirants'
-                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
-                }`}
-              >
-                Elective Seats &amp; Aspirants
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('elections')}
-                className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
-                  activeTab === 'elections'
-                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
-                    : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
-                }`}
-              >
-                Electoral Calendar
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── CONTENT BODY ──────────────────────────────────── */}
-      <section className="py-12 sm:py-16 bg-slate-900/60 text-white">
+      <section className="py-10 sm:py-14 bg-slate-900/60 text-white">
         <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl mx-auto mb-10">
+            <button
+              type="button"
+              onClick={() => setActiveTab('aspirants')}
+              className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
+                activeTab === 'aspirants'
+                  ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
+                  : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
+              }`}
+            >
+              Elective Seats &amp; Aspirants
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('elections')}
+              className={`w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all text-center cursor-pointer ${
+                activeTab === 'elections'
+                  ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-600/30'
+                  : 'border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-violet-500/40 bg-slate-900/40'
+              }`}
+            >
+              Electoral Calendar
+            </button>
+          </div>
           {activeTab === 'aspirants' && (
             <div>
               <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">

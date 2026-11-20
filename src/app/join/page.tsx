@@ -205,41 +205,30 @@ export default function JoinPage() {
 
   return (
     <PublicLayout>
-      {/* Page Header */}
-      <section className="page-header" style={{ paddingBottom: '2.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 0, color: 'var(--text-main)' }}>
-              Join GUSA
-            </h1>
-            <div className="mt-6 flex justify-center">
-              {hasJoined ? (
-                <button
-                  type="button"
-                  disabled
-                  className="px-8 py-3.5 rounded-xl font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 cursor-not-allowed opacity-80 select-none shadow-lg shadow-emerald-500/10"
-                >
-                  <CheckCircle2 size={18} />
-                  <span>Joined GUSA</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleOpenModal}
-                  className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
-                >
-                  <span>Register Now</span>
-                  <ChevronRight size={18} />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Benefits Section */}
       <section id="benefits" className="py-12 sm:py-20 bg-slate-900/50 text-white">
         <div className="container mx-auto px-4">
+          <div className="mb-10 flex justify-center">
+            {hasJoined ? (
+              <button
+                type="button"
+                disabled
+                className="px-8 py-3.5 rounded-xl font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 cursor-not-allowed opacity-80 select-none shadow-lg shadow-emerald-500/10"
+              >
+                <CheckCircle2 size={18} />
+                <span>Joined GUSA</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleOpenModal}
+                className="btn-primary px-8 py-3.5 rounded-xl font-bold text-white shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] transition-all cursor-pointer flex items-center gap-2"
+              >
+                <span>Register Now</span>
+                <ChevronRight size={18} />
+              </button>
+            )}
+          </div>
           <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Why Join GUSA?</h2>
           </div>

@@ -104,27 +104,8 @@ export default function LeadershipClient({ initialLeaders = [] }: { initialLeade
 
   return (
     <PublicLayout>
-      {/* Header Banner */}
-      <section className="page-header" style={{ paddingBottom: '1.5rem' }}>
-        <div className="container">
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                marginBottom: 0,
-                color: 'var(--text-main)'
-              }}
-            >
-              Executive Leaders
-            </h1>
-          </div>
-        </div>
-      </section>
-
       {/* Main Leadership Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem', paddingBottom: '4rem' }}>
         <div className="container">
           {/* Loading Skeletons - 3 cards matching real layout */}
           {isLoading && leaders.length === 0 ? (
