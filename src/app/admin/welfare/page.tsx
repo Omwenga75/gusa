@@ -150,7 +150,7 @@ function WelfarePageInner() {
               ) : (
                 projects.map(project => (
                 <tr key={project.id}>
-                  <td style={{ fontWeight: 600, color: '#ffffff' }}>{project.title}</td>
+                  <td style={{ fontWeight: 600, color: '#ffffff', textTransform: 'uppercase' }}>{project.title}</td>
                   <td>
                     <span style={{
                       padding: '0.25rem 0.75rem',
@@ -231,7 +231,7 @@ function WelfarePageInner() {
                   required
                   placeholder="e.g. Student Emergency Relief Fund"
                   value={title}
-                  onChange={e => setTitle(e.target.value)}
+                  onChange={e => setTitle(e.target.value.toUpperCase())}
                   className={styles.searchInput}
                   style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem' }}
                 />
