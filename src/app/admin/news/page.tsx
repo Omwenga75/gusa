@@ -164,7 +164,7 @@ function NewsPageInner() {
             <thead>
               <tr>
                 <th style={{ width: '40%' }}>Title</th>
-                <th style={{ width: '18%' }}>Author</th>
+                <th style={{ width: '18%', textAlign: 'center' }}>Author</th>
                 <th style={{ width: '15%' }}>Category</th>
                 <th style={{ width: '15%' }}>Published Date</th>
                 <th style={{ width: '12%', textAlign: 'center' }}>Actions</th>
@@ -177,8 +177,8 @@ function NewsPageInner() {
                     <td>
                       <div className="skeleton" style={{ width: '85%', height: '18px', borderRadius: '4px' }} />
                     </td>
-                    <td>
-                      <div className="skeleton" style={{ width: '100px', height: '14px', borderRadius: '4px' }} />
+                    <td style={{ textAlign: 'center' }}>
+                      <div className="skeleton" style={{ width: '100px', height: '14px', borderRadius: '4px', margin: '0 auto' }} />
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '80px', height: '22px', borderRadius: '0.375rem' }} />
@@ -195,7 +195,7 @@ function NewsPageInner() {
                 filteredPosts.map(post => (
                 <tr key={post.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{post.title}</td>
-                  <td style={{ color: '#94a3b8' }}>{formatAuthor(post.author?.name)}</td>
+                  <td style={{ color: '#94a3b8', textAlign: 'center' }}>{formatAuthor(post.author?.name)}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     <span style={{
                       padding: '0.25rem 0.75rem',
