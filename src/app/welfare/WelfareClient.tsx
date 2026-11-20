@@ -248,7 +248,8 @@ export default function WelfareClient() {
                         fontWeight: 800,
                         lineHeight: 1.3,
                         color: '#ffffff',
-                        marginBottom: '0.75rem'
+                        marginBottom: '0.75rem',
+                        textTransform: 'uppercase'
                       }}
                     >
                       {item.title}
@@ -368,7 +369,7 @@ export default function WelfareClient() {
                 >
                   {activeInitiative.status}
                 </span>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.25 }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.25, textTransform: 'uppercase' }}>
                   {activeInitiative.title}
                 </h2>
               </div>
