@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useTransition } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X, Home, Users, Award, Calendar, Image, Newspaper, Landmark, HeartHandshake, Info, Mail, UserPlus, GraduationCap } from 'lucide-react'
@@ -23,8 +23,6 @@ const NAV_LINKS = [
 export function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [navigatingTo, setNavigatingTo] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -35,17 +33,15 @@ export function Navbar() {
     return pathname === href
   }, [pathname])
 
-  const handleNavClick = useCallback((href: string) => {
+  const handleNavClick = useCallback((href: string, e?: React.MouseEvent) => {
     closeDrawer()
-    if (typeof window !== 'undefined' && pathname === href) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      setNavigatingTo(href)
-      startTransition(() => {
-        router.push(href)
-      })
+    if (pathname === href) {
+      if (e) e.preventDefault()
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
     }
-  }, [closeDrawer, pathname, router])
+  }, [closeDrawer, pathname])
 
   // Prefetch all nav links on mount
   useEffect(() => {
@@ -60,10 +56,9 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close on route change & clear pending
+  // Close on route change
   useEffect(() => {
     closeDrawer()
-    setNavigatingTo(null)
   }, [pathname, closeDrawer])
 
   // Close on Escape key
@@ -81,13 +76,6 @@ export function Navbar() {
 
   return (
     <>
-      {/* ── Top Navigation Loading Bar ──────────────────────────── */}
-      {(isPending || navigatingTo) && (
-        <div className="fixed top-0 left-0 right-0 h-[3px] z-[100] overflow-hidden pointer-events-none">
-          <div className="w-full h-full bg-gradient-to-r from-violet-500 via-blue-400 to-pink-500 animate-pulse origin-left" />
-        </div>
-      )}
-
       {/* ── Top bar ─────────────────────────────────────────────────── */}
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -101,7 +89,7 @@ export function Navbar() {
           <Link
             href="/"
             prefetch={true}
-            onClick={() => handleNavClick('/')}
+            onClick={(e) => handleNavClick('/', e)}
             onMouseEnter={() => router.prefetch('/')}
             className="flex items-center gap-2 sm:gap-3 group min-w-0"
           >
@@ -127,26 +115,16 @@ export function Navbar() {
           <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-slate-800/60 dark:bg-slate-900/60 p-1 xl:p-1.5 rounded-full border border-white/10 backdrop-blur-md">
             {NAV_LINKS.map(({ href, label }) => {
               const active = isLinkActive(href)
-              const isTarget = navigatingTo === href
               return (
                 <Link
                   key={href}
                   href={href}
                   prefetch={true}
-                  onClick={(e) => {
-                    if (pathname === href) {
-                      e.preventDefault()
-                      handleNavClick(href)
-                    } else {
-                      handleNavClick(href)
-                    }
-                  }}
+                  onClick={(e) => handleNavClick(href, e)}
                   onMouseEnter={() => router.prefetch(href)}
                   className={`px-2 xl:px-3.5 py-1 xl:py-1.5 rounded-full text-[10.5px] xl:text-xs font-semibold transition-all whitespace-nowrap ${
                     active
                       ? 'bg-gradient-to-r from-violet-600 to-blue-600 !text-white font-bold shadow-md shadow-violet-500/30'
-                      : isTarget
-                      ? 'bg-violet-500/30 text-white animate-pulse'
                       : '!text-slate-200 hover:!text-white hover:bg-white/10'
                   }`}
                 >
@@ -201,7 +179,7 @@ export function Navbar() {
           <Link
             href="/"
             prefetch={true}
-            onClick={() => handleNavClick('/')}
+            onClick={(e) => handleNavClick('/', e)}
             onMouseEnter={() => router.prefetch('/')}
             className="flex items-center gap-3 group"
           >
@@ -242,20 +220,12 @@ export function Navbar() {
         <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-violet-500/20">
           {NAV_LINKS.map(({ href, label, icon: Icon }, idx) => {
             const active = isLinkActive(href)
-            const isTarget = navigatingTo === href
             return (
               <Link
                 key={href}
                 href={href}
                 prefetch={true}
-                onClick={(e) => {
-                  if (pathname === href) {
-                    e.preventDefault()
-                    handleNavClick(href)
-                  } else {
-                    handleNavClick(href)
-                  }
-                }}
+                onClick={(e) => handleNavClick(href, e)}
                 onMouseEnter={() => router.prefetch(href)}
                 style={{ animationDelay: `${idx * 30}ms` }}
                 className={`
@@ -266,8 +236,6 @@ export function Navbar() {
                   ${
                     active
                       ? 'bg-violet-600/25 text-white border border-violet-500/40 shadow-sm shadow-violet-500/10'
-                      : isTarget
-                      ? 'bg-violet-500/20 text-white animate-pulse'
                       : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }
                 `}
