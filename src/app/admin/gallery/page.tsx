@@ -291,7 +291,7 @@ function GalleryPageInner() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
             {[1, 2, 3, 4].map((n) => (
               <div key={n} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>
-                <div className="skeleton" style={{ height: '140px', width: '100%', borderRadius: 0 }} />
+                <div className="skeleton" style={{ height: '280px', width: '100%', borderRadius: 0 }} />
                 <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <div className="skeleton" style={{ width: '70%', height: '16px', borderRadius: '4px' }} />
                   <div className="skeleton" style={{ width: '40%', height: '12px', borderRadius: '4px' }} />
@@ -308,9 +308,9 @@ function GalleryPageInner() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
             {filteredAlbums.map(album => (
               <div key={album.id} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>
-                <div style={{ height: '140px', background: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                <div style={{ height: '280px', background: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', overflow: 'hidden' }}>
                   {album.coverImage ? (
-                    <img src={album.coverImage} alt={album.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={album.coverImage} alt={album.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                   ) : (
                     <ImageIcon size={32} />
                   )}

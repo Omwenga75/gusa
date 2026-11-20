@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { verifyAdminSession } from '@/lib/adminAuth'
 
@@ -95,5 +96,39 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Create post error:', error)
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const { error } = await verifyAdminSession()
+  if (error) return error
+
+  try {
+    const { searchParams } = new URL(request.url)
+    let id = searchParams.get('id')
+
+    if (!id) {
+      try {
+        const body = await request.json()
+        id = body.id
+      } catch {}
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: 'Post ID is required' }, { status: 400 })
+    }
+
+    await prisma.post.delete({
+      where: { id }
+    })
+
+    revalidatePath('/')
+    revalidatePath('/news')
+    revalidatePath('/admin/news')
+
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('Delete post error:', err)
+    return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 })
   }
 }

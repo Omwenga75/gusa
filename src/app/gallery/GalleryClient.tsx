@@ -235,8 +235,9 @@ export default function GalleryClient() {
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
-                  className="aspect-square rounded-2xl overflow-hidden skeleton"
+                  className="rounded-2xl overflow-hidden skeleton"
                   style={{
+                    aspectRatio: '4 / 5',
                     backgroundColor: 'var(--surface-subtle)',
                     border: '1px solid var(--border)',
                   }}
@@ -249,16 +250,16 @@ export default function GalleryClient() {
                 <div
                   key={album.id}
                   onClick={() => handleOpenAlbum(album)}
-                  className="group relative aspect-square rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900 cursor-pointer shadow-lg hover:shadow-pink-500/10"
-                  style={{ aspectRatio: '1 / 1' }}
+                  className="group relative rounded-2xl overflow-hidden block border border-white/10 hover:border-pink-500/40 transition-all bg-slate-900 cursor-pointer shadow-lg hover:shadow-pink-500/10"
+                  style={{ aspectRatio: '4 / 5' }}
                 >
                   {/* Full Cover Image */}
                   {album.coverImage ? (
                     <img
                       src={album.coverImage}
                       alt={album.title}
-                      className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+                      className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                     />
                   ) : (
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-pink-950/30 to-slate-900 flex items-center justify-center">

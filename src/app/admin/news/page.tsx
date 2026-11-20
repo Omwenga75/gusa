@@ -4,7 +4,7 @@ import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { Newspaper, Plus, X } from 'lucide-react';
+import { Newspaper, Plus, X, Trash2 } from 'lucide-react';
 import { readCache, writeCache, clearCache } from '@/lib/cache';
 
 interface Post {
@@ -119,6 +119,29 @@ function NewsPageInner() {
     }
   };
 
+  const handleDeletePost = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this news article?')) return;
+    const previous = posts;
+    const updated = posts.filter((p) => p.id !== id);
+    setPosts(updated);
+    writeCache(ADMIN_NEWS_KEY, updated);
+
+    try {
+      const res = await fetch(`/api/posts?id=${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to delete post.');
+        setPosts(previous);
+        writeCache(ADMIN_NEWS_KEY, previous);
+      }
+    } catch (err) {
+      console.error('Delete post error:', err);
+      alert('Network error while deleting post.');
+      setPosts(previous);
+      writeCache(ADMIN_NEWS_KEY, previous);
+    }
+  };
+
   return (
     <>
       <div className={styles.pageHeader}>
@@ -135,10 +158,11 @@ function NewsPageInner() {
         <table className={styles.independentTable}>
             <thead>
               <tr>
-                <th style={{ width: '45%' }}>Title</th>
-                <th style={{ width: '22%' }}>Author</th>
-                <th style={{ width: '18%' }}>Category</th>
+                <th style={{ width: '40%' }}>Title</th>
+                <th style={{ width: '18%' }}>Author</th>
+                <th style={{ width: '15%' }}>Category</th>
                 <th style={{ width: '15%' }}>Published Date</th>
+                <th style={{ width: '12%', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -156,6 +180,9 @@ function NewsPageInner() {
                     </td>
                     <td>
                       <div className="skeleton" style={{ width: '90px', height: '14px', borderRadius: '4px' }} />
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <div className="skeleton" style={{ width: '65px', height: '24px', borderRadius: '0.375rem', margin: '0 auto' }} />
                     </td>
                   </tr>
                 ))
@@ -180,12 +207,35 @@ function NewsPageInner() {
                   <td style={{ color: '#94a3b8', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
                     {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Draft'}
                   </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <button
+                      onClick={() => handleDeletePost(post.id)}
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#f87171',
+                        padding: '0.35rem 0.85rem',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        whiteSpace: 'nowrap',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Delete article"
+                    >
+                      <Trash2 size={13} /> Delete
+                    </button>
+                  </td>
                 </tr>
               ))
               )}
               {filteredPosts.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                     {searchQuery ? `No articles match "${searchQuery}".` : 'No news articles or announcements published yet. Click "New Article" to publish.'}
                   </td>
                 </tr>
