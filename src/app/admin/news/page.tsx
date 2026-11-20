@@ -34,12 +34,17 @@ function NewsPageInner() {
     return () => window.removeEventListener('admin-search', handleSearch);
   }, []);
 
+  const formatAuthor = (name?: string) => {
+    if (!name || name === 'GUSA Super Admin' || name === 'Super Admin') return 'Admin';
+    return name.replace(/Super Admin/gi, 'Admin');
+  };
+
   const filteredPosts = posts.filter((p) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
       p.title.toLowerCase().includes(q) ||
-      (p.author?.name && p.author.name.toLowerCase().includes(q)) ||
+      formatAuthor(p.author?.name).toLowerCase().includes(q) ||
       (p.category && p.category.toLowerCase().includes(q))
     );
   });
@@ -190,7 +195,7 @@ function NewsPageInner() {
                 filteredPosts.map(post => (
                 <tr key={post.id}>
                   <td style={{ fontWeight: 600, color: '#ffffff' }}>{post.title}</td>
-                  <td style={{ color: '#94a3b8' }}>{post.author?.name || 'Admin'}</td>
+                  <td style={{ color: '#94a3b8' }}>{formatAuthor(post.author?.name)}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     <span style={{
                       padding: '0.25rem 0.75rem',
