@@ -329,7 +329,7 @@ function AdminPoliticsPageInner() {
         <div>
           <h1 className={styles.pageTitle}>Politics &amp; Aspirants</h1>
           <p className={styles.pageSubtitle}>
-            Review student leadership nominations, manage aspirants, and verify candidate electoral details.
+            Review student nominations, and verify candidate electoral details.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
