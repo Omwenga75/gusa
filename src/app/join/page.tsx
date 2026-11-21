@@ -200,7 +200,7 @@ export default function JoinPage() {
     { q: 'Who is eligible to join GUSA?', a: 'Any student currently enrolled at Meru University of Science and Technology (MUST) who hails from or associates with the Gusii region is eligible to join.' },
     { q: 'How much is the registration fee?', a: 'The annual registration fee is Ksh 100, which is renewable every academic year.' },
     { q: 'Do I have to speak Ekegusii to join?', a: 'Not at all! While we celebrate our culture and language, fluency in Ekegusii is not a requirement. We welcome all who identify with or support our community.' },
-    { q: 'What if I am not from the Gusii region?', a: 'We have an Associate Member tier for friends of GUSA! If you are passionate about our culture and want to participate in our events, you are welcome to join.' }
+    { q: 'What if I am not from the Gusii region?', a: 'We welcome you to share with us our activities without any discrimination.' }
   ];
 
   return (
