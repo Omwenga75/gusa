@@ -65,6 +65,7 @@ export function Footer() {
               <li><Link href="/news" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Latest News & Blog</Link></li>
               <li><Link href="/gallery" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Photo Gallery</Link></li>
               <li><Link href="/contact" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Get in Touch</Link></li>
+              <li><Link href="/news" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">News</Link></li>
             </ul>
           </div>
 

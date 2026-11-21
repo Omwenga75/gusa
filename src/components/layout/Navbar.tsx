@@ -15,8 +15,8 @@ const NAV_LINKS = [
   { label: 'Gallery',          href: '/gallery',    icon: Image },
   { label: 'Politics',         href: '/politics',   icon: Landmark },
   { label: 'Welfare',          href: '/welfare',    icon: HeartHandshake },
-  { label: 'About',            href: '/about',      icon: Info },
-  { label: 'Contact',          href: '/contact',    icon: Mail },
+  { label: 'About Us',         href: '/about',      icon: Info },
+  { label: 'Contact Us',       href: '/contact',    icon: Mail },
   { label: 'Join Us',          href: '/join',       icon: UserPlus },
 ]
 
