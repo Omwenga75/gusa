@@ -281,24 +281,10 @@ function AdminEldersPageInner() {
                   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
                   padding: '0 1rem',
                 }}
               >
-                <span
-                  style={{
-                    backgroundColor: 'rgba(10, 15, 29, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#e2e8f0',
-                    fontSize: '0.675rem',
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '9999px',
-                    fontWeight: 600,
-                  }}
-                >
-                  GUSA ELDER
-                </span>
-
                 {/* Edit & Delete Actions */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <button

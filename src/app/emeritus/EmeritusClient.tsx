@@ -320,8 +320,7 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                               borderTop: '1px solid rgba(255, 255, 255, 0.06)',
                             }}
                           >
-                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                              <Award size={13} className="text-violet-400 shrink-0 mt-0.5" />
+                            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
                               <p className="text-[11px] text-slate-300 leading-snug m-0">
                                 <strong className="text-violet-300 font-semibold">Key Legacy: </strong>
                                 {leader.achievement || 'A committed leader who served GUSA well and will be forever remembered.'}
