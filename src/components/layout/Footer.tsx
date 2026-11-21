@@ -48,8 +48,8 @@ export function Footer() {
             </h3>
             <ul className="flex flex-col gap-2.5">
               <li><Link href="/" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Home</Link></li>
-              <li><Link href="/about" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">About GUSA</Link></li>
-              <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leadership</Link></li>
+              <li><Link href="/about" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">About Us</Link></li>
+              <li><Link href="/leadership" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Executive Leaders</Link></li>
               <li><Link href="/emeritus" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Emeritus Leaders</Link></li>
               <li><Link href="/alumni" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Alumni</Link></li>
             </ul>
@@ -65,7 +65,7 @@ export function Footer() {
               <li><Link href="/news" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Latest News & Blog</Link></li>
               <li><Link href="/gallery" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Photo Gallery</Link></li>
               <li><Link href="/privacy" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Privacy Policy</Link></li>
-              <li><Link href="/news" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">News</Link></li>
+              <li><Link href="/contact" className="text-slate-400 hover:text-violet-400 transition-colors text-sm">Contact Us</Link></li>
             </ul>
           </div>
 
