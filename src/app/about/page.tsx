@@ -45,7 +45,6 @@ export default function AboutPage() {
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '3rem' }}>
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3rem auto' }}>
-            <span className="badge badge-primary" style={{ marginBottom: '0.75rem' }}>Our Creed</span>
             <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>
               Mission, Vision & Core Values
             </h2>
