@@ -63,7 +63,7 @@ export default function PrivacyClient() {
   return (
     <PublicLayout>
       {/* Page Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 pt-16 sm:pt-20 pb-12 border-b border-white/10">
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 pt-8 sm:pt-10 pb-8 border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/20 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 max-w-3xl">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
