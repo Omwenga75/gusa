@@ -55,7 +55,7 @@ const DELEGATE_SEATS = [
   'SEA Delegate',
   'SHS Delegate',
   'SON Delegate',
-  'SPA Delegate',
+  'SPAS Delegate',
   'PWD Delegate'
 ];
 

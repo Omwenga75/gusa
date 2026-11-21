@@ -30,7 +30,7 @@ const SCHOOL_OPTIONS = [
   { value: 'School of Engineering & Architecture', label: 'SEA – Engineering & Architecture' },
   { value: 'School of Health Sciences', label: 'SHS – Health Sciences' },
   { value: 'School of Nursing', label: 'SON – Nursing' },
-  { value: 'School of Pure & Applied Sciences', label: 'SPA – Pure & Applied Sciences' }
+  { value: 'School of Pure & Applied Sciences', label: 'SPAS – Pure & Applied Sciences' }
 ];
 
 export default function JoinPage() {

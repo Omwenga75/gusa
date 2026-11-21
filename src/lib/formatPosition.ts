@@ -10,8 +10,8 @@ export const SCHOOL_ABBREVIATIONS: Record<string, string> = {
   'School of Engineering and Architecture': 'SEA',
   'School of Health Sciences': 'SHS',
   'School of Nursing': 'SON',
-  'School of Pure & Applied Sciences': 'SPA',
-  'School of Pure and Applied Sciences': 'SPA',
+  'School of Pure & Applied Sciences': 'SPAS',
+  'School of Pure and Applied Sciences': 'SPAS',
 };
 
 export const formatPositionName = (position: string): string => {
