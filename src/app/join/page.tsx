@@ -249,16 +249,9 @@ export default function JoinPage() {
       {/* Membership Tiers */}
       <section className="py-12 sm:py-20 bg-slate-950 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10 sm:mb-16 max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 sm:mb-4 text-white">Membership Categories</h2>
-            <p className="text-slate-400 text-sm sm:text-base">Choose the membership tier that applies to you.</p>
-          </div>
           <div className="max-w-xl mx-auto">
             {/* Standard Member */}
             <div className="glass-card p-5 sm:p-8 rounded-2xl relative bg-slate-900/90 border-2 border-violet-500/50 shadow-xl flex flex-col justify-between">
-              <div className="absolute top-0 right-0 bg-gradient-to-r from-violet-500 to-blue-500 text-slate-950 text-xs font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
-                Most Popular
-              </div>
               <div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">Standard Member</h3>
                 <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">For students originating from the Gusii region (Kisii &amp; Nyamira Counties).</p>
