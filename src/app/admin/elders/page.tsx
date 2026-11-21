@@ -1,9 +1,9 @@
 'use client'
 
 import { AdminPermissionGuard } from '@/components/AdminPermissionGuard'
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from '../admin.module.css'
-import { Plus, X, Trash2, Camera, Pencil, Search, Users, Sparkles, CheckCircle2 } from 'lucide-react'
+import { Plus, X, Trash2, Camera, Pencil, Users } from 'lucide-react'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 
 interface Elder {
@@ -21,7 +21,6 @@ const PUBLIC_ELDERS_KEY = 'gusa_elders'
 function AdminEldersPageInner() {
   const [elders, setElders] = useState<Elder[]>(() => readCache<Elder[]>(ADMIN_ELDERS_KEY) || [])
   const [isLoading, setIsLoading] = useState<boolean>(() => !hasCache(ADMIN_ELDERS_KEY))
-  const [searchQuery, setSearchQuery] = useState('')
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -55,12 +54,6 @@ function AdminEldersPageInner() {
   useEffect(() => {
     fetchElders()
   }, [])
-
-  const filteredElders = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim()
-    if (!q) return elders
-    return elders.filter((e) => e.name.toLowerCase().includes(q))
-  }, [elders, searchQuery])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -207,10 +200,7 @@ function AdminEldersPageInner() {
       {/* Top Header */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <Sparkles className="text-violet-400" size={26} />
-            Elders Directory
-          </h1>
+          <h1 className={styles.title}>Elders</h1>
           <p className={styles.subtitle}>
             Manage community elders displayed on the Elders page (picture and name only).
           </p>
@@ -222,30 +212,6 @@ function AdminEldersPageInner() {
         >
           <Plus size={18} /> Add Elder
         </button>
-      </div>
-
-      {/* Filter / Search Bar */}
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ position: 'relative', maxWidth: '400px' }}>
-          <Search
-            size={16}
-            style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#94a3b8',
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Search elders by name..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="form-input"
-            style={{ paddingLeft: '2.5rem', width: '100%' }}
-          />
-        </div>
       </div>
 
       {/* Cards Grid */}
@@ -270,20 +236,18 @@ function AdminEldersPageInner() {
             />
           ))}
         </div>
-      ) : filteredElders.length === 0 ? (
+      ) : elders.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/60 rounded-2xl border border-white/10 max-w-xl mx-auto p-8">
           <div className="w-14 h-14 bg-violet-500/10 text-violet-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-violet-500/20">
             <Users size={28} />
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">No Elders Found</h3>
+          <h3 className="text-lg font-bold text-white mb-2">No Elders Listed Yet</h3>
           <p className="text-slate-400 text-xs sm:text-sm mb-6">
-            {searchQuery ? 'No elders match your search filter.' : 'Click "Add Elder" to publish your first elder profile.'}
+            Click &quot;Add Elder&quot; to publish your first elder profile.
           </p>
-          {!searchQuery && (
-            <button onClick={handleOpenAdd} className="btn btn-primary btn-sm">
-              <Plus size={16} /> Add First Elder
-            </button>
-          )}
+          <button onClick={handleOpenAdd} className="btn btn-primary btn-sm">
+            <Plus size={16} /> Add First Elder
+          </button>
         </div>
       ) : (
         <div
@@ -293,7 +257,7 @@ function AdminEldersPageInner() {
             gap: '1.5rem',
           }}
         >
-          {filteredElders.map((elder) => (
+          {elders.map((elder) => (
             <div
               key={elder.id}
               style={{
