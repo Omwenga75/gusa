@@ -194,7 +194,7 @@ export default function ContactPage() {
                     <label className="form-label">Your Message *</label>
                     <textarea
                       required
-                      rows={5}
+                      rows={3}
                       placeholder="Type your message in detail here..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
