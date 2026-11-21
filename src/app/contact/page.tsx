@@ -198,7 +198,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="form-input"
-                      style={{ resize: 'vertical' }}
+                      style={{ minHeight: '60px', height: '60px', resize: 'vertical' }}
                     />
                   </div>
 
