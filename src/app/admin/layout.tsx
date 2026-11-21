@@ -24,6 +24,7 @@ const ALL_NAV_ITEMS = [
   { label: 'Welfare',          path: '/admin/welfare',         key: 'welfare' },
   { label: 'Leadership',       path: '/admin/leadership',      key: 'leadership' },
   { label: 'Emeritus Leaders', path: '/admin/emeritus',        key: 'emeritus' },
+  { label: 'Elders',           path: '/admin/elders',          key: 'elders' },
   { label: 'Alumni',           path: '/admin/alumni',          key: 'alumni' },
   { label: 'Messages',         path: '/admin/messages',        key: 'messages' },
   { label: 'Manage Admins',    path: '/admin/settings/admins', key: '__super_only__' },

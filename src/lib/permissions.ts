@@ -9,6 +9,7 @@ export const ADMIN_PERMISSIONS = [
   { key: 'members',   label: 'Members',           path: '/admin/members' },
   { key: 'leadership',label: 'Leadership',         path: '/admin/leadership' },
   { key: 'emeritus',  label: 'Emeritus Leaders',  path: '/admin/emeritus' },
+  { key: 'elders',    label: 'Elders',            path: '/admin/elders' },
   { key: 'alumni',    label: 'Alumni',            path: '/admin/alumni' },
   { key: 'messages',  label: 'Messages',          path: '/admin/messages' },
   { key: 'politics',  label: 'Politics',          path: '/admin/politics' },

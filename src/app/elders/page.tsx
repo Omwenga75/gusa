@@ -1,23 +1,39 @@
-import { PersonStanding } from 'lucide-react'
+import prisma from '@/lib/prisma'
+import EldersClient, { ElderProfile } from './EldersClient'
 
 export const dynamic = 'force-dynamic'
 
-export default function EldersPage() {
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 px-4">
-      <div className="container mx-auto max-w-4xl text-center">
-        <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
-            <PersonStanding className="text-violet-400" size={32} />
-          </div>
-        </div>
-        <h1 className="text-4xl font-extrabold text-white mb-4 tracking-tight">
-          GUSA Elders
-        </h1>
-        <p className="text-slate-400 text-lg max-w-xl mx-auto">
-          Honoring the wisdom and guidance of our esteemed community elders. This page is coming soon.
-        </p>
-      </div>
-    </main>
-  )
+export default async function EldersPage() {
+  let initialElders: ElderProfile[] = []
+
+  try {
+    const record = await prisma.siteSetting.findUnique({
+      where: { key: 'gusa_elders' },
+    })
+    if (record?.value) {
+      const parsed = JSON.parse(record.value)
+      if (Array.isArray(parsed)) {
+        initialElders = parsed.map((e: any) => ({
+          id: e.id,
+          name: e.name,
+          image: e.image || null,
+          avatarInitials:
+            e.avatarInitials ||
+            (e.name
+              ? e.name
+                  .split(' ')
+                  .map((n: string) => n[0])
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase()
+              : 'E'),
+        }))
+      }
+    }
+  } catch (err) {
+    console.error('Failed to prefetch elders:', err)
+  }
+
+  return <EldersClient initialElders={initialElders} />
 }
