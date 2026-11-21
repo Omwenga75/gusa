@@ -524,7 +524,6 @@ export default function JoinPage() {
                       <option value="Year 2">Year 2</option>
                       <option value="Year 3">Year 3</option>
                       <option value="Year 4">Year 4</option>
-                      <option value="Postgraduate">Postgraduate</option>
                     </select>
                   </div>
                 </div>
