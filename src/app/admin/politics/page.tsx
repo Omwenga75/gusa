@@ -23,7 +23,9 @@ import {
   Eye,
   X,
   AlertCircle,
-  FileText
+  FileText,
+  Lock,
+  Unlock
 } from 'lucide-react';
 
 interface Nomination {
@@ -72,6 +74,8 @@ function AdminPoliticsPageInner() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNomination, setSelectedNomination] = useState<Nomination | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [nominationsOpen, setNominationsOpen] = useState<boolean>(true);
+  const [togglingNomination, setTogglingNomination] = useState<boolean>(false);
 
   // Nomination Countdown Timer targeting March 2027 cycle
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({
@@ -118,11 +122,49 @@ function AdminPoliticsPageInner() {
         if (data.counts) {
           setCounts(data.counts);
         }
+        if (typeof data.nominationsOpen === 'boolean') {
+          setNominationsOpen(data.nominationsOpen);
+        }
       }
     } catch (err) {
       console.error('Failed to load nominations:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const toggleNominationStatus = async () => {
+    const nextStatus = !nominationsOpen;
+    const actionText = nextStatus ? 'OPEN' : 'CLOSE';
+    if (!window.confirm(`Are you sure you want to ${actionText} nominations for users on the public site?`)) {
+      return;
+    }
+
+    setTogglingNomination(true);
+    const prev = nominationsOpen;
+    setNominationsOpen(nextStatus);
+
+    try {
+      const res = await fetch('/api/politics', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nominationsOpen: nextStatus })
+      });
+
+      if (!res.ok) {
+        setNominationsOpen(prev);
+        alert('Failed to update nomination status.');
+      } else {
+        const data = await res.json();
+        if (typeof data.nominationsOpen === 'boolean') {
+          setNominationsOpen(data.nominationsOpen);
+        }
+      }
+    } catch {
+      setNominationsOpen(prev);
+      alert('Network error while updating nomination status.');
+    } finally {
+      setTogglingNomination(false);
     }
   };
 
@@ -290,7 +332,31 @@ function AdminPoliticsPageInner() {
             Review student leadership nominations, manage aspirants, and verify candidate electoral details.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <button
+            onClick={toggleNominationStatus}
+            disabled={togglingNomination}
+            title={nominationsOpen ? 'Click to close nomination' : 'Click to open nomination'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              background: nominationsOpen ? 'rgba(239, 68, 68, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+              border: nominationsOpen ? '1px solid rgba(239, 68, 68, 0.35)' : '1px solid rgba(16, 185, 129, 0.35)',
+              borderRadius: '0.6rem',
+              padding: '0.5rem 0.95rem',
+              color: nominationsOpen ? '#f87171' : '#34d399',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              cursor: togglingNomination ? 'not-allowed' : 'pointer',
+              opacity: togglingNomination ? 0.7 : 1,
+              transition: 'all 0.15s ease'
+            }}
+          >
+            {nominationsOpen ? <Lock size={14} /> : <Unlock size={14} />}
+            <span>{nominationsOpen ? 'Close Nomination' : 'Open Nomination'}</span>
+          </button>
+
           <button
             onClick={exportCSV}
             className={styles.secondaryBtn}

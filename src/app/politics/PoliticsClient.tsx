@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Vote,
@@ -67,8 +67,24 @@ interface PositionCard {
   status: string;
 }
 
-export default function PoliticsClient() {
+export default function PoliticsClient({
+  nominationsOpenInitial = true
+}: {
+  nominationsOpenInitial?: boolean;
+}) {
+  const [nominationsOpen, setNominationsOpen] = useState<boolean>(nominationsOpenInitial);
   const [activeTab, setActiveTab] = useState<'aspirants' | 'elections'>('aspirants');
+
+  useEffect(() => {
+    fetch('/api/politics?statusOnly=true')
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.nominationsOpen === 'boolean') {
+          setNominationsOpen(data.nominationsOpen);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -96,14 +112,14 @@ export default function PoliticsClient() {
       category: 'Executive Positions',
       description: 'The executive leadership steering GUSA policy, campus administration representation, and overall member advocacy.',
       requirements: ['Must be in 2nd year or above', 'Good academic standing', 'Proven leadership track record'],
-      status: 'Nominations Open'
+      status: nominationsOpen ? 'Nominations Open' : 'Nominations Closed'
     },
     {
       title: 'SAMU & Delegate Positions',
       category: 'SAMU & Delegate Positions',
       description: 'Leaders representing GUSA as delegates and Students Association of Meru University (SAMU) representatives.',
       requirements: ['Strong organizational skills', 'Active member for at least 1 academic year', 'Enthusiasm for student welfare'],
-      status: 'Nominations Open'
+      status: nominationsOpen ? 'Nominations Open' : 'Nominations Closed'
     }
   ];
 
@@ -143,6 +159,7 @@ export default function PoliticsClient() {
   ];
 
   const handleOpenModal = (category: 'Executive Positions' | 'SAMU & Delegate Positions') => {
+    if (!nominationsOpen) return;
     setSelectedCategory(category);
     if (category === 'Executive Positions') {
       setSelectedPosition(EXECUTIVE_SEATS[0]);
@@ -299,7 +316,11 @@ export default function PoliticsClient() {
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="text-xs font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-3 py-1 rounded-full border border-violet-500/20">
+                        <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${
+                          nominationsOpen
+                            ? 'text-violet-400 bg-violet-500/10 border-violet-500/20'
+                            : 'text-rose-400 bg-rose-500/10 border-rose-500/20'
+                        }`}>
                           {pos.status}
                         </span>
                         <Scale size={18} className="text-slate-400" />
@@ -324,10 +345,15 @@ export default function PoliticsClient() {
 
                     <button
                       type="button"
-                      onClick={() => handleOpenModal(pos.category)}
-                      className="w-full py-3 rounded-xl text-sm font-bold text-center text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 transition-all cursor-pointer flex items-center justify-center gap-2"
+                      disabled={!nominationsOpen}
+                      onClick={() => nominationsOpen && handleOpenModal(pos.category)}
+                      className={`w-full py-3 rounded-xl text-sm font-bold text-center text-white transition-all flex items-center justify-center gap-2 ${
+                        nominationsOpen
+                          ? 'bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 cursor-pointer'
+                          : 'bg-slate-800/80 text-slate-400 border border-white/5 cursor-not-allowed opacity-75'
+                      }`}
                     >
-                      <Vote size={16} /> Express Interest / Nominate
+                      <Vote size={16} /> {nominationsOpen ? 'Express Interest / Nominate' : 'Nominations Closed'}
                     </button>
                   </div>
                 ))}

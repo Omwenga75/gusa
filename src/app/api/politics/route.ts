@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { verifyAdminSession } from '@/lib/adminAuth';
 
 // POST: Public submission for candidate nomination / expressing interest
 export async function POST(request: NextRequest) {
   try {
+    // Check if nominations are currently open
+    const nominationSetting = await prisma.siteSetting.findUnique({
+      where: { key: 'nominations_open' }
+    });
+    const nominationsOpen = nominationSetting ? nominationSetting.value === 'true' : true;
+    if (!nominationsOpen) {
+      return NextResponse.json(
+        { error: 'Nominations are currently closed by the electoral commission.' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const {
       fullName,
@@ -98,13 +111,23 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET: Admin-only fetch for politics nominations
+// GET: Admin-only fetch for politics nominations (or statusOnly for public check)
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const statusOnly = searchParams.get('statusOnly');
+
+  if (statusOnly === 'true') {
+    const setting = await prisma.siteSetting.findUnique({
+      where: { key: 'nominations_open' }
+    });
+    const nominationsOpen = setting ? setting.value === 'true' : true;
+    return NextResponse.json({ nominationsOpen });
+  }
+
   const { error } = await verifyAdminSession();
   if (error) return error;
 
   try {
-    const { searchParams } = new URL(request.url);
     const countOnly = searchParams.get('countOnly');
     const status = searchParams.get('status');
     const county = searchParams.get('county');
@@ -167,8 +190,14 @@ export async function GET(request: NextRequest) {
         prisma.nomination.count({ where: { county: 'Nyamira' } })
       ]);
 
+    const setting = await prisma.siteSetting.findUnique({
+      where: { key: 'nominations_open' }
+    });
+    const nominationsOpen = setting ? setting.value === 'true' : true;
+
     return NextResponse.json({
       nominations,
+      nominationsOpen,
       counts: {
         total: totalCount,
         pending: pendingCount,
@@ -194,6 +223,23 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
+
+    // Check if toggling / updating nomination openness setting
+    if (body.nominationsOpen !== undefined) {
+      const isOpen = Boolean(body.nominationsOpen);
+      const updatedSetting = await prisma.siteSetting.upsert({
+        where: { key: 'nominations_open' },
+        create: { key: 'nominations_open', value: String(isOpen), category: 'politics' },
+        update: { value: String(isOpen) }
+      });
+      revalidatePath('/politics');
+      revalidatePath('/admin/politics');
+      return NextResponse.json({
+        success: true,
+        nominationsOpen: updatedSetting.value === 'true'
+      });
+    }
+
     const { id, status, position, statement } = body;
 
     if (!id) {
