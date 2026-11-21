@@ -4,7 +4,6 @@ import React from 'react'
 import Link from 'next/link'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import {
-  Award,
   Heart,
   Users,
   ShieldCheck,
@@ -202,7 +201,7 @@ export default function AboutPage() {
 
             <div className="card" style={{ padding: 'clamp(1.15rem, 3.5vw, 1.75rem)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <Award size={20} color="var(--accent-blue)" />
+                <Heart size={20} color="var(--accent-blue)" />
                 <h4 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Oborwaneri (Welfare)</h4>
               </div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: 1.6 }}>
@@ -477,19 +476,24 @@ export default function AboutPage() {
 
             {/* Level 4: General Assembly */}
             <div
-              className="card"
+              className="relative overflow-hidden w-full text-center p-6 sm:p-8 rounded-2xl border border-violet-500/30 shadow-2xl transition-all hover:border-violet-500/50"
               style={{
-                width: '100%',
-                textAlign: 'center',
-                padding: 'clamp(1.15rem, 3.5vw, 1.75rem)',
-                border: '1px dashed var(--primary)',
-                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)'
+                background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%)',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(124, 58, 237, 0.12)'
               }}
             >
-              <h5 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', fontWeight: 700, color: 'var(--primary)' }}>
+              {/* Top ambient glow line */}
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
+
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[11px] font-bold uppercase tracking-wider mb-3">
+                <Users size={13} className="text-violet-400" />
+                <span>Supreme Legislative Organ</span>
+              </div>
+
+              <h5 style={{ fontSize: 'clamp(1.15rem, 3.2vw, 1.4rem)', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
                 The General Assembly (All Registered Members)
               </h5>
-              <p style={{ fontSize: '0.9375rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+              <p style={{ fontSize: '0.9375rem', color: '#94a3b8', marginTop: '0.5rem', maxWidth: '640px', margin: '0.5rem auto 0 auto', lineHeight: 1.6 }}>
                 The supreme organ of the association with supreme legislative authority at Annual General Meetings (AGM)
               </p>
             </div>

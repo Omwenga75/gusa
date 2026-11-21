@@ -11,12 +11,9 @@ import {
   Camera,
   HeartHandshake,
   CheckCircle2,
-  Mail,
   ChevronRight,
   Info
 } from 'lucide-react'
-import Link from 'next/link'
-
 const SECTIONS = [
   { id: 'summary', title: 'Privacy Summary' },
   { id: 'collection', title: '1. Information We Collect' },
@@ -25,7 +22,6 @@ const SECTIONS = [
   { id: 'security', title: '4. Data Protection' },
   { id: 'rights', title: '5. Your Privacy Rights' },
   { id: 'media', title: '6. Media & Photography' },
-  { id: 'contact', title: '7. Contact & Inquiries' }
 ]
 
 export default function PrivacyClient() {
@@ -70,16 +66,9 @@ export default function PrivacyClient() {
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 pt-16 sm:pt-20 pb-12 border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/20 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-semibold mb-4 tracking-wide shadow-sm">
-            <ShieldCheck size={14} className="text-violet-400" />
-            <span>Legal &amp; Data Protection</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
             Privacy Policy
           </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            Understanding how the Gusii University Students Association (GUSA) collects, uses, and safeguards your personal data.
-          </p>
         </div>
       </section>
 
@@ -112,10 +101,6 @@ export default function PrivacyClient() {
                   )
                 })}
               </nav>
-
-              <div className="mt-6 pt-5 border-t border-white/10 text-xs text-slate-400 px-2 leading-relaxed">
-                Need clarification? Reach out directly to the GUSA Secretariat.
-              </div>
             </aside>
 
             {/* Main Content Area */}
@@ -301,33 +286,6 @@ export default function PrivacyClient() {
                   <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
                     Photographs and event coverage showcased on our public website document cultural celebrations and student milestones. If you appear in any published photograph or album and would like it taken down or anonymized, submit a request and our Secretariat will promptly fulfill it.
                   </p>
-                </div>
-              </div>
-
-              {/* 7. Contact & Inquiries */}
-              <div id="contact" className="space-y-4 pt-4 border-t border-white/10">
-                <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                  <span className="text-violet-400">7.</span> Contact the Secretariat
-                </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  If you have any questions or data requests regarding this Privacy Policy, please contact our administrative desk:
-                </p>
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center shrink-0">
-                      <Mail size={18} />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-white">GUSA Secretariat Desk</div>
-                      <div className="text-xs text-slate-400">Meru University of Science &amp; Technology</div>
-                    </div>
-                  </div>
-                  <Link
-                    href="/contact"
-                    className="btn btn-outline btn-sm inline-flex items-center gap-1.5 text-xs text-slate-200"
-                  >
-                    Contact Support <ChevronRight size={14} />
-                  </Link>
                 </div>
 
                 <div className="pt-4 text-xs text-slate-500">

@@ -50,9 +50,13 @@ async function saveStoredLeaders(leaders: EmeritusLeaderItem[]): Promise<void> {
 export async function GET() {
   try {
     const leaders = await getStoredLeaders()
-    leaders.sort(compareLeaderHierarchy)
+    const cleanedLeaders = leaders.map(l => ({
+      ...l,
+      position: (l.position || '').replace(/^past\s+/i, '')
+    }))
+    cleanedLeaders.sort(compareLeaderHierarchy)
     return NextResponse.json(
-      { leaders },
+      { leaders: cleanedLeaders },
       {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -96,7 +100,7 @@ export async function POST(request: NextRequest) {
     const newLeader: EmeritusLeaderItem = {
       id: `em_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       name: name.trim(),
-      position: position.trim(),
+      position: position.trim().replace(/^past\s+/i, ''),
       category: category as 'House Leaders' | 'SAMU Leaders' | 'Delegates',
       term: term.trim(),
       image: image || null,
@@ -150,7 +154,7 @@ export async function PUT(request: NextRequest) {
     currentLeaders[index] = {
       ...currentLeaders[index],
       name: name.trim(),
-      position: position.trim(),
+      position: position.trim().replace(/^past\s+/i, ''),
       category: category as 'House Leaders' | 'SAMU Leaders' | 'Delegates',
       term: term.trim(),
       image: image !== undefined ? image : currentLeaders[index].image,

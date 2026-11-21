@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, X, Home, Users, Award, Calendar, Image, Landmark, HeartHandshake, Info, Mail, UserPlus, GraduationCap, PersonStanding } from 'lucide-react'
+import { Menu, X, Home, Users, History, Calendar, Image, Landmark, HeartHandshake, Info, Mail, UserPlus, GraduationCap, PersonStanding } from 'lucide-react'
 
 const NAV_LINKS = [
   { label: 'Home',             href: '/',           icon: Home },
   { label: 'Executive',        href: '/leadership', icon: Users },
-  { label: 'Emeritus Leaders', href: '/emeritus',   icon: Award },
+  { label: 'Emeritus Leaders', href: '/emeritus',   icon: History },
   { label: 'Elders',           href: '/elders',     icon: PersonStanding },
   { label: 'Alumni',           href: '/alumni',     icon: GraduationCap },
   { label: 'Events',           href: '/events',     icon: Calendar },
@@ -106,7 +106,7 @@ export function Navbar() {
                 </span>
               </span>
               <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium tracking-tight sm:tracking-wide block truncate">
-                Gusii University Students Association
+                Omogusii Omong&apos;aini
               </span>
             </div>
           </Link>
@@ -198,7 +198,7 @@ export function Navbar() {
                 </span>
               </span>
               <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium tracking-tight sm:tracking-wide truncate block">
-                Gusii University Students Association
+                Omogusii Omong&apos;aini
               </span>
             </div>
           </Link>

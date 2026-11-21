@@ -19,7 +19,6 @@ import {
   Search,
   MapPin,
   GraduationCap,
-  Award,
   Download,
   Eye,
   X,
@@ -319,7 +318,7 @@ function AdminPoliticsPageInner() {
         {/* 1. Total Seats */}
         <div className={styles.statCard} style={{ margin: 0 }}>
           <div className={styles.statIcon} style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#f472b6' }}>
-            <Award size={24} />
+            <Vote size={24} />
           </div>
           <div className={styles.statInfo}>
             <h3 style={{ whiteSpace: 'nowrap' }}>Total Seats</h3>

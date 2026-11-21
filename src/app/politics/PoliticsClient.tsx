@@ -14,8 +14,7 @@ import {
   Mail,
   Phone,
   GraduationCap,
-  MapPin,
-  Award
+  MapPin
 } from 'lucide-react';
 
 const EXECUTIVE_SEATS = [
@@ -328,7 +327,7 @@ export default function PoliticsClient() {
                       onClick={() => handleOpenModal(pos.category)}
                       className="w-full py-3 rounded-xl text-sm font-bold text-center text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                      <Award size={16} /> Express Interest / Nominate
+                      <Vote size={16} /> Express Interest / Nominate
                     </button>
                   </div>
                 ))}

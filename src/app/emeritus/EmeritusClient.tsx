@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
-import { Award, Landmark, GraduationCap, Users } from 'lucide-react'
+import { Landmark, GraduationCap, Users } from 'lucide-react'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 import { compareLeaderHierarchy } from '@/lib/hierarchy'
 
@@ -302,7 +302,6 @@ export default function EmeritusClient({ initialLeaders = [] }: { initialLeaders
                                 border: '1px solid rgba(124, 58, 237, 0.35)',
                               }}
                             >
-                              <Award size={11} className="text-violet-400" />
                               {leader.category === 'House Leaders'
                                 ? 'HOUSE LEADER'
                                 : leader.category === 'SAMU Leaders'

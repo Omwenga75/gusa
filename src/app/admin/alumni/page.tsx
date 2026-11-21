@@ -4,7 +4,7 @@ import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap, Award } from 'lucide-react';
+import { Plus, X, Trash2, Camera, Pencil, Loader2, GraduationCap } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 
 export interface AlumniItem {

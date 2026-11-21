@@ -8,7 +8,7 @@ import {
   BookOpen,
   Star,
   Shield,
-  Award,
+  Briefcase,
   ChevronRight,
   CheckCircle,
   MapPin,
@@ -186,7 +186,7 @@ export default function JoinPage() {
     { title: 'Academic Support', description: 'Access mentorship programs, study groups, and academic resources tailored for our members.', icon: BookOpen },
     { title: 'Leadership Opportunities', description: 'Develop your leadership skills by taking up roles in various committees and organizing events.', icon: Star },
     { title: 'Welfare & Support', description: 'Benefit from our robust welfare system designed to support members during challenging emergency situations.', icon: Shield },
-    { title: 'Career Growth', description: 'Network with successful alumni and get access to exclusive career talks and mentoring opportunities.', icon: Award }
+    { title: 'Career Growth', description: 'Network with successful alumni and get access to exclusive career talks and mentoring opportunities.', icon: Briefcase }
   ];
 
   const steps = [

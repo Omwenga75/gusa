@@ -15,7 +15,7 @@ import {
   Activity,
   HeartHandshake,
   Mail,
-  Award,
+  GraduationCap,
   ShieldCheck,
   CheckCircle2,
   Bell,
@@ -252,7 +252,7 @@ export default async function AdminDashboard() {
       case 'nomination':
         return { color: '#c084fc', bg: 'rgba(168, 85, 247, 0.15)', icon: Vote };
       case 'leader':
-        return { color: '#a78bfa', bg: 'rgba(124, 58, 237, 0.15)', icon: Award };
+        return { color: '#a78bfa', bg: 'rgba(124, 58, 237, 0.15)', icon: GraduationCap };
       case 'message':
         return { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.15)', icon: Mail };
       case 'event':
@@ -302,7 +302,7 @@ export default async function AdminDashboard() {
 
         <div className={styles.statCard}>
           <div className={styles.statIcon} style={{ background: 'rgba(234, 179, 8, 0.12)', color: '#eab308' }}>
-            <Award size={24} />
+            <GraduationCap size={24} />
           </div>
           <div className={styles.statInfo}>
             <h3>Emeritus Leaders</h3>

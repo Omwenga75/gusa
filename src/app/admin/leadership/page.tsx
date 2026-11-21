@@ -4,7 +4,7 @@ import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { Award, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
+import { Users, Plus, X, Trash2, Phone, Camera, Pencil } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compareLeaderHierarchy } from '@/lib/hierarchy';
 
@@ -294,7 +294,7 @@ function LeadershipPageInner() {
         </div>
       ) : filteredLeaders.length === 0 ? (
         <div className={styles.emptyBox}>
-          <Award size={48} style={{ opacity: 0.3 }} />
+          <Users size={48} style={{ opacity: 0.3 }} />
           <p className={styles.emptyText}>{searchQuery ? `No leaders match "${searchQuery}".` : 'No leadership profiles added yet. Click "Add Leader" to get started.'}</p>
         </div>
       ) : (

@@ -4,7 +4,7 @@ import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../admin.module.css';
-import { Award, Plus, X, Trash2, Camera, Pencil, Landmark, GraduationCap, Users } from 'lucide-react';
+import { Plus, X, Trash2, Camera, Pencil, Landmark, GraduationCap, Users } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compareLeaderHierarchy } from '@/lib/hierarchy';
 
@@ -25,9 +25,9 @@ interface EmeritusLeader {
 const ADMIN_EMERITUS_KEY = 'admin_emeritus';
 
 const HOUSE_POSITIONS = [
-  'Past Chairperson',
-  'Past Vice Chairperson',
-  'Past Secretary General'
+  'Chairperson',
+  'Vice Chairperson',
+  'Secretary General'
 ];
 
 const SAMU_POSITIONS = [
@@ -38,17 +38,6 @@ const SAMU_POSITIONS = [
   'HCA',
   'Sports, Gender & Social Welfare Secretary',
   'Academics & Affairs Secretary'
-];
-
-const DELEGATE_POSITIONS = [
-  'SCI Delegate',
-  'SBE Delegate',
-  'SAFS Delegate',
-  'SED Delegate',
-  'SEA Delegate',
-  'SHS Delegate',
-  'SON Delegate',
-  'SPA Delegate'
 ];
 
 function AdminEmeritusPageInner() {
@@ -98,7 +87,7 @@ function AdminEmeritusPageInner() {
     } else if (newCat === 'SAMU Leaders') {
       setPosition(SAMU_POSITIONS[0]);
     } else {
-      setPosition(DELEGATE_POSITIONS[0]);
+      setPosition('');
     }
   };
 
@@ -142,7 +131,7 @@ function AdminEmeritusPageInner() {
   const handleOpenEdit = (leader: EmeritusLeader) => {
     setEditingLeader(leader);
     setCategory(leader.category || 'House Leaders');
-    setPosition(leader.position || HOUSE_POSITIONS[0]);
+    setPosition((leader.position || HOUSE_POSITIONS[0]).replace(/^past\s+/i, ''));
     setName(leader.name);
     setTerm(leader.term || '2024/2025');
     setImagePreview(leader.image || null);
@@ -152,14 +141,14 @@ function AdminEmeritusPageInner() {
 
   const handleSaveLeader = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !position || !term.trim()) return;
+    if (!name.trim() || !position.trim() || !term.trim()) return;
 
     setIsSubmitting(true);
     try {
       const payload = {
         id: editingLeader ? editingLeader.id : undefined,
         name: name.trim(),
-        position: position.trim(),
+        position: position.trim().replace(/^past\s+/i, ''),
         category,
         term: term.trim(),
         image: imagePreview || null
@@ -451,7 +440,7 @@ function AdminEmeritusPageInner() {
                           {leader.name}
                         </h3>
                         <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.775rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                          {leader.position}
+                          {leader.position.replace(/^past\s+/i, '')}
                         </p>
                       </div>
 
@@ -632,47 +621,57 @@ function AdminEmeritusPageInner() {
                   </select>
                 </div>
 
-                {/* Position Dropdown */}
+                {/* Position Field: Dropdown for House/SAMU, text input for Delegates */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
                     Position <span style={{ color: '#f87171' }}>*</span>
                   </label>
-                  <select
-                    value={position}
-                    onChange={e => setPosition(e.target.value)}
-                    style={{
-                      background: 'rgba(6, 8, 15, 0.8)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      padding: '0.65rem 1rem',
-                      borderRadius: '0.6rem',
-                      color: '#ffffff',
-                      fontSize: '0.875rem'
-                    }}
-                  >
-                    {category === 'House Leaders' && (
-                      <>
-                        {HOUSE_POSITIONS.map(pos => (
-                          <option key={pos} value={pos}>{pos}</option>
-                        ))}
-                      </>
-                    )}
+                  {category === 'Delegates' ? (
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. SCI Delegate"
+                      value={position}
+                      onChange={e => setPosition(e.target.value)}
+                      style={{
+                        background: 'rgba(6, 8, 15, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        padding: '0.65rem 1rem',
+                        borderRadius: '0.6rem',
+                        color: '#ffffff',
+                        fontSize: '0.875rem'
+                      }}
+                    />
+                  ) : (
+                    <select
+                      value={position}
+                      onChange={e => setPosition(e.target.value)}
+                      style={{
+                        background: 'rgba(6, 8, 15, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        padding: '0.65rem 1rem',
+                        borderRadius: '0.6rem',
+                        color: '#ffffff',
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      {category === 'House Leaders' && (
+                        <>
+                          {HOUSE_POSITIONS.map(pos => (
+                            <option key={pos} value={pos}>{pos}</option>
+                          ))}
+                        </>
+                      )}
 
-                    {category === 'SAMU Leaders' && (
-                      <>
-                        {SAMU_POSITIONS.map(pos => (
-                          <option key={pos} value={pos}>{pos}</option>
-                        ))}
-                      </>
-                    )}
-
-                    {category === 'Delegates' && (
-                      <>
-                        {DELEGATE_POSITIONS.map(pos => (
-                          <option key={pos} value={pos}>{pos}</option>
-                        ))}
-                      </>
-                    )}
-                  </select>
+                      {category === 'SAMU Leaders' && (
+                        <>
+                          {SAMU_POSITIONS.map(pos => (
+                            <option key={pos} value={pos}>{pos}</option>
+                          ))}
+                        </>
+                      )}
+                    </select>
+                  )}
                 </div>
               </div>
 
