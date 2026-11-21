@@ -329,12 +329,13 @@ export default function GalleryClient() {
           )}
 
           {/* Privacy Concern Notice */}
-          <div className="mt-12 pt-6 border-t border-white/10 text-center max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900/80 border border-violet-500/20 text-slate-300 text-xs sm:text-sm font-medium shadow-sm">
-              <ShieldCheck size={18} className="text-violet-400 shrink-0" />
-              <span>
-                <strong className="text-white">Privacy Concern:</strong> All pictures, and data shared on this website is kept private according to data privacy guidelines.
-              </span>
+          <div className="mt-12 pt-6 border-t border-white/10 max-w-2xl mx-auto">
+            <div className="flex items-start gap-3 px-5 py-4 rounded-2xl bg-violet-500/5 border border-violet-500/15">
+              <ShieldCheck size={20} className="text-violet-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-slate-400 leading-relaxed">
+                <span className="font-semibold text-slate-200">Privacy Notice —</span>{' '}
+                All pictures and data shared on this website are kept private in accordance with our data privacy guidelines.
+              </p>
             </div>
           </div>
         </div>
