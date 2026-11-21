@@ -45,14 +45,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const canSeeMessages = isSuperAdmin || hasPermission(role, permissions, 'messages');
 
   // Automatically redirect restricted admins away from /admin to their assigned section
+  // Guard: only run after session is fully loaded to prevent redirect on refresh
   React.useEffect(() => {
+    if (status === 'loading') return;
     if (role === 'ADMIN' && pathname === '/admin') {
       const dest = getFirstPermittedPath(permissions);
       if (dest !== '/admin') {
         router.replace(dest);
       }
     }
-  }, [role, permissions, pathname, router]);
+  }, [status, role, permissions, pathname, router]);
 
   // Filter nav items based on role + permissions (keep all items visible during loading so sidebar never collapses)
   const navItems = React.useMemo(() => {

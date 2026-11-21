@@ -100,7 +100,7 @@ export default function RegisterPage() {
                   name="email"
                   type="email"
                   className="form-input"
-                  placeholder="john@student.meru.ac.ke"
+                  placeholder="john@gmail.com"
                   value={formData.email}
                   onChange={handleChange}
                   required

@@ -91,7 +91,7 @@ function LoginForm() {
                 id="email"
                 type="email"
                 className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
-                placeholder="admin@gusa.org"
+                placeholder="yourname@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

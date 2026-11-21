@@ -361,7 +361,7 @@ function MembersPageInner() {
                   <input
                     type="email"
                     required
-                    placeholder="dennis@example.com"
+                    placeholder="dennis@gmail.com"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     className={styles.searchInput}

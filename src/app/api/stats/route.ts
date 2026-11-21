@@ -10,7 +10,7 @@ export async function GET() {
       annualEvents,
       totalPhotos
     ] = await Promise.all([
-      prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' }, status: 'ACTIVE' } }),
+      prisma.user.count({ where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] }, status: 'ACTIVE' } }),
       prisma.event.count({ where: { status: 'PUBLISHED' } }),
       prisma.galleryImage.count()
     ])

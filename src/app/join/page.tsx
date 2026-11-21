@@ -127,6 +127,10 @@ export default function JoinPage() {
       setSubmitError('Please provide a valid email address.');
       return;
     }
+    if (!email.trim().toLowerCase().endsWith('@gmail.com')) {
+      setSubmitError('Only Gmail addresses (@gmail.com) are accepted.');
+      return;
+    }
     if (!isValidPhone(phone)) {
       setSubmitError('Phone must be 10 digits (e.g. 0712345678 or +254712345678).');
       return;
@@ -138,6 +142,12 @@ export default function JoinPage() {
     if (!county) {
       setCountyError(true);
       setSubmitError('Please select your county of origin.');
+      return;
+    }
+
+    // Validate security answers client-side
+    if (securityAnswer1.trim().toLowerCase() !== 'obweri' || securityAnswer2.trim().toLowerCase() !== 'ibere') {
+      setSubmitError('Security question answers are incorrect. Both questions must be answered correctly.');
       return;
     }
 
@@ -442,7 +452,7 @@ export default function JoinPage() {
                       <input
                         type="email"
                         required
-                        placeholder="dennis@example.com"
+                        placeholder="dennis@gmail.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
@@ -557,7 +567,8 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                {/* Security Questions — always visible */}
+                {/* Security Questions — shown only after county is selected */}
+                {county && (
                 <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 space-y-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Shield size={14} className="text-violet-400" />
@@ -593,6 +604,7 @@ export default function JoinPage() {
                       />
                     </div>
                   </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex items-center justify-end gap-3 pt-3">

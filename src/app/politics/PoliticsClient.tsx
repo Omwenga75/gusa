@@ -545,7 +545,7 @@ export default function PoliticsClient() {
                         <input
                           type="email"
                           required
-                          placeholder="dennis@example.com"
+                          placeholder="dennis@gmail.com"
                           value={email}
                           onChange={e => setEmail(e.target.value)}
                           className="w-full bg-slate-950/80 border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-violet-500 transition-colors"

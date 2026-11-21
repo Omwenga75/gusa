@@ -10,7 +10,7 @@ export async function GET() {
 
   try {
     const members = await prisma.user.findMany({
-      where: { role: { not: 'SUPER_ADMIN' } },
+      where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] } },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
@@ -52,6 +52,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 })
     }
 
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      return NextResponse.json({ error: 'Only Gmail addresses (@gmail.com) are accepted.' }, { status: 400 })
+    }
+
+    // Check phone uniqueness
+    let normalizedPhone: string | null = null
+    if (phone) {
+      const stripped = phone.replace(/[\s\-().]/g, '')
+      normalizedPhone = stripped.startsWith('+254') ? '0' + stripped.slice(4) : stripped
+      const existingPhone = await prisma.user.findFirst({ where: { phone: normalizedPhone } })
+      if (existingPhone) {
+        return NextResponse.json({ error: 'This phone number is already registered to another account.' }, { status: 409 })
+      }
+    }
+
+    // Check registration number uniqueness
+    let normalizedReg: string | null = null
+    if (registrationNumber) {
+      normalizedReg = registrationNumber.trim().toUpperCase()
+      const existingReg = await prisma.user.findFirst({ where: { registrationNumber: normalizedReg } })
+      if (existingReg) {
+        return NextResponse.json({ error: 'This registration number is already registered to another account.' }, { status: 409 })
+      }
+    }
+
     const passwordHash = await bcrypt.hash(password || 'Gusa@2026', 10)
 
     const user = await prisma.user.create({
@@ -61,8 +86,8 @@ export async function POST(request: NextRequest) {
         passwordHash,
         role: role || 'MEMBER',
         status: status || 'ACTIVE',
-        phone: phone || null,
-        registrationNumber: registrationNumber || null,
+        phone: normalizedPhone || null,
+        registrationNumber: normalizedReg || null,
         course: course || null,
         school: school || null,
         yearOfStudy: yearOfStudy ? String(yearOfStudy) : null,

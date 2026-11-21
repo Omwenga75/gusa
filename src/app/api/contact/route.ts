@@ -42,6 +42,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      return NextResponse.json(
+        { error: 'Only Gmail addresses (@gmail.com) are accepted.' },
+        { status: 400 }
+      )
+    }
+
     const contact = await prisma.contactMessage.create({
       data: {
         name,

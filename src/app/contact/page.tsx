@@ -33,6 +33,12 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
     setErrorMessage('')
+
+    if (!formData.email.toLowerCase().endsWith('@gmail.com')) {
+      setErrorMessage('Only Gmail addresses (@gmail.com) are accepted.')
+      setIsSubmitting(false)
+      return
+    }
     try {
       const categoryLabels: Record<string, string> = {
         general: 'General Inquiry',
@@ -151,7 +157,7 @@ export default function ContactPage() {
                       <input
                         type="email"
                         required
-                        placeholder="e.g. victor@must.ac.ke"
+                        placeholder="e.g. victor@gmail.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className="form-input"
@@ -201,6 +207,12 @@ export default function ContactPage() {
                       style={{ minHeight: '60px', height: '60px', resize: 'vertical' }}
                     />
                   </div>
+
+                  {errorMessage && (
+                    <div style={{ color: '#f87171', fontSize: '0.875rem', padding: '0.5rem 0.75rem', background: 'rgba(248,113,113,0.08)', borderRadius: '6px', border: '1px solid rgba(248,113,113,0.25)' }}>
+                      {errorMessage}
+                    </div>
+                  )}
 
                   <button
                     type="submit"

@@ -237,7 +237,7 @@ export default function ManageAdminsPage() {
                   type="email" required
                   value={form.email}
                   onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-                  placeholder="e.g. welfare@gusa.com"
+                  placeholder="e.g. welfare@gmail.com"
                   style={{ width: '100%', padding: '0.7rem 1rem', background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.6rem', color: '#f8fafc', fontSize: '0.9rem', boxSizing: 'border-box' }}
                 />
               </div>

@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
     recentUsersList,
     recentNominationsList
   ] = await Promise.all([
-    prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' } } }),
+    prisma.user.count({ where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] } } }),
     prisma.event.count({ where: { status: 'PUBLISHED' } }),
     (async () => {
       try {
@@ -135,6 +135,7 @@ export default async function AdminDashboard() {
     }),
     prisma.user.findMany({
       take: 3,
+      where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] } },
       orderBy: { createdAt: 'desc' }
     }),
     prisma.nomination.findMany({

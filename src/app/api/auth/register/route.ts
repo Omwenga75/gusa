@@ -28,6 +28,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      return NextResponse.json(
+        { error: 'Only Gmail addresses (@gmail.com) are accepted for registration.' },
+        { status: 400 }
+      )
+    }
+
     if (phone) {
       const stripped = phone.replace(/[\s\-().]/g, '')
       const normalizedPhone = stripped.startsWith('+254') ? '0' + stripped.slice(4) : stripped
@@ -78,6 +85,33 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Check phone uniqueness
+    let normalizedPhone: string | null = null
+    if (phone) {
+      const stripped = phone.replace(/[\s\-().]/g, '')
+      normalizedPhone = stripped.startsWith('+254') ? '0' + stripped.slice(4) : stripped
+      const existingPhone = await prisma.user.findFirst({ where: { phone: normalizedPhone } })
+      if (existingPhone) {
+        return NextResponse.json(
+          { error: 'This phone number is already registered to another account.' },
+          { status: 409 }
+        )
+      }
+    }
+
+    // Check registration number uniqueness
+    let normalizedReg: string | null = null
+    if (regNumber) {
+      normalizedReg = regNumber.trim().toUpperCase()
+      const existingReg = await prisma.user.findFirst({ where: { registrationNumber: normalizedReg } })
+      if (existingReg) {
+        return NextResponse.json(
+          { error: 'This registration number is already registered to another account.' },
+          { status: 409 }
+        )
+      }
+    }
+
     // Hash password
     const passwordHash = await bcrypt.hash(password || 'Gusa@2026', 10)
 
@@ -87,8 +121,8 @@ export async function POST(request: NextRequest) {
         name: fullName,
         email,
         passwordHash,
-        phone: phone || null,
-        registrationNumber: regNumber || null,
+        phone: normalizedPhone || null,
+        registrationNumber: normalizedReg || null,
         school: school || null,
         yearOfStudy: yearOfStudy ? String(yearOfStudy) : null,
         county: county || null,

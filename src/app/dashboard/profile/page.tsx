@@ -128,7 +128,7 @@ export default function ProfilePage() {
                 <div className="grid grid-2 gap-4">
                   <div className="form-group">
                     <label className="form-label">Email Address</label>
-                    <input type="email" className="form-input" defaultValue="john@student.meru.ac.ke" disabled style={{ backgroundColor: "var(--color-gray-100)" }} />
+                    <input type="email" className="form-input" defaultValue="john@gmail.com" disabled style={{ backgroundColor: "var(--color-gray-100)" }} />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Phone Number</label>
