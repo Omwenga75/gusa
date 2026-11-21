@@ -76,16 +76,7 @@ export default function ContactPage() {
       <section className="section" style={{ background: 'var(--surface)', paddingTop: '3rem', paddingBottom: '4rem' }}>
         <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
             {/* Interactive Contact Form */}
-            <div
-              className="card"
-              style={{
-                padding: 'clamp(1.25rem, 4vw, 3rem)',
-                borderRadius: 'var(--radius-xl)',
-                border: '1px solid var(--border)',
-                backgroundColor: 'var(--surface)',
-                boxShadow: 'var(--shadow-md)'
-              }}
-            >
+            <div>
               <h2 style={{ fontSize: 'clamp(1.35rem, 3.5vw, 1.75rem)', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
                 Send Us a Message
               </h2>
