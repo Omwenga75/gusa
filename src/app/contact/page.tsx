@@ -6,7 +6,6 @@ import {
   Phone,
   MapPin,
   Clock,
-  Send,
   CheckCircle2,
   MessageCircle,
   Video,
@@ -194,7 +193,7 @@ export default function ContactPage() {
                     <label className="form-label">Your Message *</label>
                     <textarea
                       required
-                      rows={3}
+                      rows={2}
                       placeholder="Type your message in detail here..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -207,15 +206,9 @@ export default function ContactPage() {
                     type="submit"
                     disabled={isSubmitting}
                     className="btn btn-primary btn-lg"
-                    style={{ marginTop: '0.5rem', width: '100%', gap: '0.5rem' }}
+                    style={{ marginTop: '0.5rem', width: 'fit-content', alignSelf: 'flex-start', padding: '0.75rem 2.25rem' }}
                   >
-                    {isSubmitting ? (
-                      'Transmitting Message...'
-                    ) : (
-                      <>
-                        <Send size={18} /> Submit Message
-                      </>
-                    )}
+                    {isSubmitting ? 'Transmitting Message...' : 'Submit Message'}
                   </button>
                 </form>
               )}
