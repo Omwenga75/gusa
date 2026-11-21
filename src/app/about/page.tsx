@@ -444,10 +444,10 @@ export default function AboutPage() {
                   <h5 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Working Committees</h5>
                 </div>
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Emergency Welfare & Benevolent Board</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Academic Peer Mentorship Taskforce</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Cultural Night & Sports Planning Committee</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Media, Design & Communications Bureau</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Executive committee</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Student congress committee</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> Welfare committee</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> students committee</li>
                 </ul>
               </div>
 
@@ -467,7 +467,7 @@ export default function AboutPage() {
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Computing & Informatics Reps</li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Engineering & Architecture Reps</li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Nursing & School of Health Sciences Reps</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Business, Economics & Education Reps</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Business, SPAS, SAFS & Education Reps</li>
                 </ul>
               </div>
             </div>

@@ -290,9 +290,6 @@ export default function PoliticsClient() {
                 <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 text-white">
                   Executive, SAMU &amp; Delegate Positions
                 </h2>
-                <p className="text-slate-400 text-sm">
-                  Positions open for contestation in the upcoming GUSA General Elections. Click below to submit your official expression of interest.
-                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
