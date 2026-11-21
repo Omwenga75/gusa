@@ -197,20 +197,20 @@ function AdminEldersPageInner() {
 
   return (
     <div className={styles.container}>
-      {/* Top Header */}
-      <div className={styles.header}>
+      {/* Header */}
+      <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.title}>Elders</h1>
-          <p className={styles.subtitle}>
+          <h1 className={styles.pageTitle}>Elders</h1>
+          <p className={styles.pageSubtitle}>
             Manage community elders displayed on the Elders page (picture and name only).
           </p>
         </div>
         <button
           onClick={handleOpenAdd}
-          className="btn btn-primary"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 1.25rem' }}
+          className="btn btn-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-500/20 cursor-pointer"
         >
-          <Plus size={18} /> Add Elder
+          <Plus size={18} />
+          <span>Add Elder</span>
         </button>
       </div>
 

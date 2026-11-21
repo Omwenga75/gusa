@@ -15,7 +15,6 @@ import {
   CheckCircle2,
   GraduationCap,
   Quote,
-  Layers,
   ArrowRight,
   Compass,
   FileText
@@ -441,7 +440,7 @@ export default function AboutPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <Layers size={18} color="var(--accent-blue)" />
+                  <Users size={18} color="var(--primary)" />
                   <h5 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Working Committees</h5>
                 </div>
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
@@ -467,7 +466,7 @@ export default function AboutPage() {
                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Computing & Informatics Reps</li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Engineering & Architecture Reps</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Health & Nursing Sciences Reps</li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Nursing & School of Health Sciences Reps</li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={14} color="var(--primary)" /> School of Business, Economics & Education Reps</li>
                 </ul>
               </div>
