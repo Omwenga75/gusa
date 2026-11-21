@@ -27,7 +27,16 @@ function WelfarePageInner() {
   // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('ONGOING');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTitle('');
+    setDescription('');
+    setStartDate('');
+    setEndDate('');
+  };
 
   const fetchProjects = async () => {
     if (!readCache(ADMIN_WELFARE_KEY)) {
@@ -55,21 +64,34 @@ function WelfarePageInner() {
     e.preventDefault();
     if (!title || !description) return;
 
+    let computedStatus = 'ONGOING';
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    if (startDate && new Date(startDate) > new Date()) {
+      computedStatus = 'UPCOMING';
+    } else if (endDate && new Date(endDate) < now) {
+      computedStatus = 'COMPLETED';
+    }
+
     setIsSubmitting(true);
     try {
       const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, status })
+        body: JSON.stringify({
+          title,
+          description,
+          status: computedStatus,
+          startDate: startDate || null,
+          endDate: endDate || null
+        })
       });
 
       if (res.ok) {
         clearCache('projects');
         clearCache('welfare');
         clearCache('admin_welfare');
-        setTitle('');
-        setDescription('');
-        setIsModalOpen(false);
+        handleCloseModal();
         fetchProjects();
       }
     } catch (err) {
@@ -157,8 +179,8 @@ function WelfarePageInner() {
                       borderRadius: '9999px',
                       fontSize: '0.75rem',
                       fontWeight: 700,
-                      backgroundColor: project.status === 'COMPLETED' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(59, 130, 246, 0.15)',
-                      color: project.status === 'COMPLETED' ? '#4ade80' : '#60a5fa'
+                      backgroundColor: project.status === 'COMPLETED' ? 'rgba(34, 197, 94, 0.15)' : project.status === 'UPCOMING' ? 'rgba(234, 179, 8, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+                      color: project.status === 'COMPLETED' ? '#4ade80' : project.status === 'UPCOMING' ? '#facc15' : '#60a5fa'
                     }}>
                       {project.status}
                     </span>
@@ -218,7 +240,7 @@ function WelfarePageInner() {
           <div className={styles.card} style={{ width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto', background: '#0d1225', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h2 className={styles.cardTitle}>Add New Welfare Initiative</h2>
-              <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <button onClick={handleCloseModal} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
@@ -237,18 +259,27 @@ function WelfarePageInner() {
                 />
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Status</label>
-                <select
-                  value={status}
-                  onChange={e => setStatus(e.target.value)}
-                  className={styles.searchInput}
-                  style={{ background: '#06080f', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem', color: '#ffffff' }}
-                >
-                  <option value="ONGOING">ONGOING</option>
-                  <option value="UPCOMING">UPCOMING</option>
-                  <option value="COMPLETED">COMPLETED</option>
-                </select>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>Start Date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={e => setStartDate(e.target.value)}
+                    className={styles.searchInput}
+                    style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 0.75rem', borderRadius: '0.5rem', color: '#ffffff', colorScheme: 'dark' }}
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>End Date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={e => setEndDate(e.target.value)}
+                    className={styles.searchInput}
+                    style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 0.75rem', borderRadius: '0.5rem', color: '#ffffff', colorScheme: 'dark' }}
+                  />
+                </div>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -267,7 +298,7 @@ function WelfarePageInner() {
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={handleCloseModal}
                   className={styles.btnOutline}
                   style={{ width: 'auto' }}
                 >

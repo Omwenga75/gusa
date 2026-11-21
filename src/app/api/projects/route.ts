@@ -7,8 +7,19 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany({
+    const rawProjects = await prisma.project.findMany({
       orderBy: { createdAt: 'desc' }
+    })
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    const projects = rawProjects.map(p => {
+      let currentStatus = p.status
+      if (p.startDate && new Date(p.startDate) > new Date()) {
+        currentStatus = 'UPCOMING'
+      } else if (p.endDate && new Date(p.endDate) < now) {
+        currentStatus = 'COMPLETED'
+      }
+      return { ...p, status: currentStatus }
     })
     return NextResponse.json(
       { projects },
@@ -40,12 +51,25 @@ export async function POST(request: NextRequest) {
 
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now().toString().slice(-4)
 
+    let projectStatus = status
+    if (!projectStatus) {
+      const now = new Date()
+      now.setHours(0, 0, 0, 0)
+      if (startDate && new Date(startDate) > new Date()) {
+        projectStatus = 'UPCOMING'
+      } else if (endDate && new Date(endDate) < now) {
+        projectStatus = 'COMPLETED'
+      } else {
+        projectStatus = 'ONGOING'
+      }
+    }
+
     const project = await prisma.project.create({
       data: {
         title,
         slug,
         description,
-        status: status || 'ONGOING',
+        status: projectStatus,
         startDate: startDate ? new Date(startDate) : new Date(),
         endDate: endDate ? new Date(endDate) : null
       }
