@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
-import { Users, Sparkles } from 'lucide-react'
+import { Users } from 'lucide-react'
 import { readCache, writeCache, hasCache } from '@/lib/cache'
 
 export interface ElderProfile {
@@ -62,25 +62,8 @@ export default function EldersClient({ initialElders = [] }: { initialElders?: E
 
   return (
     <PublicLayout>
-      {/* Hero / Header Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 pt-16 sm:pt-20 pb-12 border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/20 via-transparent to-transparent pointer-events-none" />
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-semibold mb-4 tracking-wide shadow-sm">
-            <Sparkles size={14} className="text-violet-400" />
-            <span>Wisdom &amp; Guidance</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-            GUSA Elders
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            Honoring the esteemed elders whose guidance, wisdom, and leadership shape the legacy of our student community.
-          </p>
-        </div>
-      </section>
-
       {/* Main Elders Section */}
-      <section className="section" style={{ background: 'var(--surface)', paddingTop: '3rem', paddingBottom: '5rem' }}>
+      <section className="section" style={{ background: 'var(--surface)', paddingTop: '2.5rem', paddingBottom: '4rem' }}>
         <div className="container">
           {isLoading && elders.length === 0 ? (
             <div
