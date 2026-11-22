@@ -494,7 +494,7 @@ export default function GalleryClient() {
                               width: '100%',
                               height: '100%',
                               objectFit: 'cover',
-                              objectPosition: 'center top',
+                              objectPosition: 'center',
                               maxHeight: currentAlbumMedia.length === 1 ? '70vh' : undefined,
                               display: 'block'
                             }}

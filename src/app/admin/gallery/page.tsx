@@ -4,7 +4,7 @@ import { AdminPermissionGuard } from '@/components/AdminPermissionGuard';
 
 import React, { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
-import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil } from 'lucide-react';
+import { Upload, Image as ImageIcon, X, Plus, Trash2, Pencil, Loader2 } from 'lucide-react';
 import { readCache, writeCache, clearCache, hasCache } from '@/lib/cache';
 import { compressImage } from '@/lib/imageCompress';
 
@@ -49,6 +49,7 @@ function GalleryPageInner() {
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string[]>(Array(10).fill(''));
   const [compressingIndex, setCompressingIndex] = useState<number | null>(null);
+  const [loadingAlbumDetails, setLoadingAlbumDetails] = useState(false);
 
   const handleDeleteAlbum = async (album: Album) => {
     if (!window.confirm(`Are you sure you want to permanently delete "${album.name}" and all its photos?`)) {
@@ -147,12 +148,16 @@ function GalleryPageInner() {
     setDescription('');
     setImages(Array(10).fill(''));
     setEditingAlbum(null);
+    setLoadingAlbumDetails(false);
   };
 
   const handleOpenEdit = async (album: Album) => {
     setEditingAlbum(album);
     setName(album.name);
     setDescription(album.description || '');
+
+    // Open modal instantly (0ms) so edit click responds immediately
+    setIsModalOpen(true);
 
     const hasFullImages = album.images && album.images.length > 0 && album.images.some(img => Boolean(img.imageUrl));
     if (hasFullImages) {
@@ -162,11 +167,13 @@ function GalleryPageInner() {
         initialImages[i] = url;
       });
       setImages(initialImages);
+      setLoadingAlbumDetails(false);
     } else {
-      // If images were stripped in storage cache, seed coverImage and fetch full album on demand
+      // Seed with coverImage immediately so modal has the main photo while fetching full list
       const initialImages = Array(10).fill('');
       if (album.coverImage) initialImages[0] = album.coverImage;
       setImages(initialImages);
+      setLoadingAlbumDetails(true);
 
       try {
         const res = await fetch(`/api/gallery/${album.id}`, { cache: 'no-store' });
@@ -181,9 +188,10 @@ function GalleryPageInner() {
         }
       } catch (err) {
         console.error('Failed to load full album images for editing:', err);
+      } finally {
+        setLoadingAlbumDetails(false);
       }
     }
-    setIsModalOpen(true);
   };
 
   const handleSaveAlbum = async (e: React.FormEvent) => {
@@ -310,7 +318,7 @@ function GalleryPageInner() {
               <div key={album.id} style={{ background: 'rgba(6, 8, 15, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '0.75rem', overflow: 'hidden' }}>
                 <div style={{ height: '280px', background: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', overflow: 'hidden' }}>
                   {album.coverImage ? (
-                    <img src={album.coverImage} alt={album.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                    <img src={album.coverImage} alt={album.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                   ) : (
                     <ImageIcon size={32} />
                   )}
@@ -414,9 +422,16 @@ function GalleryPageInner() {
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
                     Photo Cards (Pick from device — Scroll ← →)
                   </label>
-                  <span style={{ fontSize: '0.75rem', color: '#c084fc', fontWeight: 600 }}>
-                    {images.filter(Boolean).length}/10 selected
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    {loadingAlbumDetails && (
+                      <span style={{ fontSize: '0.72rem', color: '#60a5fa', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <Loader2 size={12} className="animate-spin" /> Loading photos...
+                      </span>
+                    )}
+                    <span style={{ fontSize: '0.75rem', color: '#c084fc', fontWeight: 600 }}>
+                      {images.filter(Boolean).length}/10 selected
+                    </span>
+                  </div>
                 </div>
 
                 <div style={{
