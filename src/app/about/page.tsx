@@ -496,16 +496,11 @@ export default function AboutPage() {
               {/* Top ambient glow line */}
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
 
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[11px] font-bold uppercase tracking-wider mb-3">
-                <Users size={13} className="text-violet-400" />
-                <span>Supreme Legislative Organ</span>
-              </div>
-
               <h5 style={{ fontSize: 'clamp(1.15rem, 3.2vw, 1.4rem)', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
                 The General Assembly (All Registered Members)
               </h5>
               <p style={{ fontSize: '0.9375rem', color: '#94a3b8', marginTop: '0.5rem', maxWidth: '640px', margin: '0.5rem auto 0 auto', lineHeight: 1.6 }}>
-                The supreme organ of the association with supreme legislative authority at Annual General Meetings (AGM)
+                The supreme organ of the association with supreme legislative authority.
               </p>
             </div>
           </div>
