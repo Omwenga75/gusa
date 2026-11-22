@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { readCache, writeCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import {
   Vote,
@@ -72,7 +73,11 @@ export default function PoliticsClient({
 }: {
   nominationsOpenInitial?: boolean;
 }) {
-  const [nominationsOpen, setNominationsOpen] = useState<boolean>(nominationsOpenInitial);
+  const [nominationsOpen, setNominationsOpen] = useState<boolean>(() => {
+    const cached = readCache<boolean>('gusa_nominations_open');
+    if (typeof cached === 'boolean') return cached;
+    return nominationsOpenInitial;
+  });
   const [activeTab, setActiveTab] = useState<'aspirants' | 'elections'>('aspirants');
 
   useEffect(() => {
@@ -81,6 +86,7 @@ export default function PoliticsClient({
       .then(data => {
         if (typeof data.nominationsOpen === 'boolean') {
           setNominationsOpen(data.nominationsOpen);
+          writeCache('gusa_nominations_open', data.nominationsOpen);
         }
       })
       .catch(() => {});

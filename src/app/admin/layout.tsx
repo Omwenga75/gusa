@@ -95,7 +95,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       clearInterval(interval);
       window.removeEventListener('messages-updated', handleUpdate);
     };
-  }, [fetchUnreadCount, pathname]);
+  }, [fetchUnreadCount]);
+
+  // Pre-warm admin nav items smoothly during idle time
+  React.useEffect(() => {
+    const idleCallback = typeof window !== 'undefined' && 'requestIdleCallback' in window
+      ? window.requestIdleCallback
+      : (cb: () => void) => setTimeout(cb, 100);
+
+    const handle = idleCallback(() => {
+      ALL_NAV_ITEMS.forEach((item, i) => {
+        setTimeout(() => {
+          router.prefetch(item.path);
+        }, i * 50);
+      });
+    });
+
+    return () => {
+      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && typeof handle === 'number') {
+        window.cancelIdleCallback(handle);
+      }
+    };
+  }, [router]);
 
   return (
     <div className={styles.layout}>
@@ -136,6 +157,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.path}
                 href={item.path}
+                prefetch={true}
+                onMouseEnter={() => router.prefetch(item.path)}
                 onClick={() => setSidebarOpen(false)}
                 className={`${styles.navLink} ${isActive ? styles.active : ''}`}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}

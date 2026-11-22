@@ -6,7 +6,10 @@ import { useRouter } from 'next/navigation';
 import { ShieldCheck, Plus, Trash2, X, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { ADMIN_PERMISSIONS, AdminPermissionKey } from '@/lib/permissions';
 import { AdminSkeletonLoader } from '@/components/AdminSkeletonLoader';
+import { readCache, writeCache, hasCache } from '@/lib/cache';
 import styles from '../../admin.module.css';
+
+const ADMIN_USERS_KEY = 'admin_users_list';
 
 interface AdminUser {
   id: string;
@@ -42,8 +45,10 @@ export default function ManageAdminsPage() {
     if (!session || role !== 'SUPER_ADMIN') router.replace('/admin');
   }, [status, session, role, router]);
 
-  const [admins, setAdmins] = useState<AdminUser[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [admins, setAdmins] = useState<AdminUser[]>(
+    () => readCache<AdminUser[]>(ADMIN_USERS_KEY) || []
+  );
+  const [loading, setLoading] = useState<boolean>(() => !hasCache(ADMIN_USERS_KEY));
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -77,12 +82,17 @@ export default function ManageAdminsPage() {
     permissions: [] as AdminPermissionKey[],
   });
 
-  const fetchAdmins = useCallback(async () => {
-    setLoading(true);
+  const fetchAdmins = useCallback(async (showLoading = false) => {
+    if (showLoading || !hasCache(ADMIN_USERS_KEY)) setLoading(true);
     try {
       const res = await fetch('/api/admin/admins');
-      const data = await res.json();
-      setAdmins(data);
+      if (res.ok) {
+        const data = await res.json();
+        setAdmins(data);
+        writeCache(ADMIN_USERS_KEY, data);
+      } else {
+        setError('Failed to load admins');
+      }
     } catch {
       setError('Failed to load admins');
     } finally {
@@ -139,7 +149,9 @@ export default function ManageAdminsPage() {
   const handleDelete = async (admin: AdminUser) => {
     if (!confirm(`Delete admin "${admin.name}" (${admin.email})? This cannot be undone.`)) return;
     const prev = admins;
-    setAdmins(prev.filter(a => a.id !== admin.id));
+    const updated = prev.filter(a => a.id !== admin.id);
+    setAdmins(updated);
+    writeCache(ADMIN_USERS_KEY, updated);
     setSuccess(`Admin "${admin.name}" deleted.`);
 
     try {
@@ -147,10 +159,12 @@ export default function ManageAdminsPage() {
       if (!res.ok) {
         const d = await res.json();
         setAdmins(prev);
+        writeCache(ADMIN_USERS_KEY, prev);
         setError(d.error || 'Failed to delete admin');
       }
     } catch {
       setAdmins(prev);
+      writeCache(ADMIN_USERS_KEY, prev);
       setError('Network error while deleting admin');
     }
   };
@@ -178,7 +192,11 @@ export default function ManageAdminsPage() {
     try { return p ? JSON.parse(p) : []; } catch { return []; }
   };
 
-  if (status === 'loading' || role !== 'SUPER_ADMIN') {
+  if (status === 'loading' && admins.length === 0) {
+    return <AdminSkeletonLoader />;
+  }
+
+  if (status !== 'loading' && role !== 'SUPER_ADMIN') {
     return <AdminSkeletonLoader />;
   }
 

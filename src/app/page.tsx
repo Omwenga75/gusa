@@ -21,8 +21,7 @@ import { JoinGusaButton } from '@/components/JoinGusaButton';
 import { HeroSlider } from '@/components/HeroSlider';
 import { HomeStatCounters } from '@/components/HomeStatCounters';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 30;
 
 async function getHomePageData() {
   // Items older than this threshold are hidden from the home page.

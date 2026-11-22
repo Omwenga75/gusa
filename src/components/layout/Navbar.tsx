@@ -43,11 +43,25 @@ export function Navbar() {
     }
   }, [closeDrawer, pathname])
 
-  // Prefetch all nav links on mount
+  // Prefetch nav links smoothly during browser idle time so it doesn't block initial page load or user clicks
   useEffect(() => {
-    NAV_LINKS.forEach(link => {
-      router.prefetch(link.href)
-    })
+    const idleCallback = typeof window !== 'undefined' && 'requestIdleCallback' in window
+      ? window.requestIdleCallback
+      : (cb: () => void) => setTimeout(cb, 100);
+
+    const handle = idleCallback(() => {
+      NAV_LINKS.forEach((link, i) => {
+        setTimeout(() => {
+          router.prefetch(link.href);
+        }, i * 60);
+      });
+    });
+
+    return () => {
+      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && typeof handle === 'number') {
+        window.cancelIdleCallback(handle);
+      }
+    };
   }, [router])
 
   useEffect(() => {

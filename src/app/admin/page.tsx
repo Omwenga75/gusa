@@ -82,10 +82,6 @@ export default async function AdminDashboard() {
     totalNominations,
     rawActivityLogs,
     recentMessages,
-    recentLeaders,
-    recentEventsList,
-    recentPostsList,
-    recentUsersList,
     recentNominationsList
   ] = await Promise.all([
     prisma.user.count({ where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] } } }),
@@ -109,7 +105,7 @@ export default async function AdminDashboard() {
     prisma.contactMessage.count({ where: { status: 'UNREAD' } }),
     prisma.nomination.count(),
     prisma.activityLog.findMany({
-      take: 5,
+      take: 6,
       orderBy: { createdAt: 'desc' },
       include: {
         admin: {
@@ -118,36 +114,21 @@ export default async function AdminDashboard() {
       }
     }),
     prisma.contactMessage.findMany({
-      take: 4,
-      orderBy: { createdAt: 'desc' }
-    }),
-    prisma.leader.findMany({
-      take: 4,
-      orderBy: { updatedAt: 'desc' }
-    }),
-    prisma.event.findMany({
-      take: 3,
-      orderBy: { createdAt: 'desc' }
-    }),
-    prisma.post.findMany({
-      take: 3,
-      orderBy: { createdAt: 'desc' }
-    }),
-    prisma.user.findMany({
-      take: 3,
-      where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] } },
-      orderBy: { createdAt: 'desc' }
+      take: 2,
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, name: true, email: true, subject: true, createdAt: true }
     }),
     prisma.nomination.findMany({
-      take: 3,
-      orderBy: { createdAt: 'desc' }
+      take: 2,
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, fullName: true, position: true, county: true, createdAt: true }
     })
   ]);
 
-  // Aggregate live activity from all models
+  // Aggregate live activity from recent actions
   const activities: ActivityItem[] = [];
 
-  // 1. Raw activity logs if any exist
+  // 1. Raw activity logs
   rawActivityLogs.forEach((log) => {
     activities.push({
       id: `log-${log.id}`,
@@ -158,7 +139,7 @@ export default async function AdminDashboard() {
     });
   });
 
-  // 2. Recent contact messages
+  // 2. Recent contact inquiries
   recentMessages.forEach((msg) => {
     activities.push({
       id: `msg-${msg.id}`,
@@ -177,50 +158,6 @@ export default async function AdminDashboard() {
       subtitle: `${nom.position} (${nom.county} County)`,
       timestamp: nom.createdAt,
       type: 'nomination'
-    });
-  });
-
-  // 4. Recent leaders updated/added
-  recentLeaders.forEach((ldr) => {
-    activities.push({
-      id: `ldr-${ldr.id}`,
-      title: `Leader Added: ${ldr.name}`,
-      subtitle: `Added as ${ldr.position}`,
-      timestamp: ldr.updatedAt || ldr.createdAt,
-      type: 'leader'
-    });
-  });
-
-  // 4. Recent events
-  recentEventsList.forEach((ev) => {
-    activities.push({
-      id: `ev-${ev.id}`,
-      title: `Event: ${ev.title}`,
-      subtitle: `Status: ${ev.status} • Venue: ${ev.venue || 'Meru University'}`,
-      timestamp: ev.createdAt,
-      type: 'event'
-    });
-  });
-
-  // 5. Recent posts
-  recentPostsList.forEach((post) => {
-    activities.push({
-      id: `post-${post.id}`,
-      title: `News Published: ${post.title}`,
-      subtitle: post.excerpt ? `${post.excerpt.slice(0, 50)}...` : 'Official announcement',
-      timestamp: post.createdAt,
-      type: 'news'
-    });
-  });
-
-  // 6. Recent members
-  recentUsersList.forEach((u) => {
-    activities.push({
-      id: `user-${u.id}`,
-      title: `Member Registered: ${u.name}`,
-      subtitle: u.course ? `${u.course}` : `Role: ${u.role}`,
-      timestamp: u.createdAt,
-      type: 'user'
     });
   });
 
