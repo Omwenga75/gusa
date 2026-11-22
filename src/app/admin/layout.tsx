@@ -22,7 +22,7 @@ const ALL_NAV_ITEMS = [
   { label: 'Posts / News',     path: '/admin/news',            key: 'news' },
   { label: 'Gallery',          path: '/admin/gallery',         key: 'gallery' },
   { label: 'Welfare',          path: '/admin/welfare',         key: 'welfare' },
-  { label: 'Leadership',       path: '/admin/leadership',      key: 'leadership' },
+  { label: 'Executive Leaders', path: '/admin/leadership',      key: 'leadership' },
   { label: 'Emeritus Leaders', path: '/admin/emeritus',        key: 'emeritus' },
   { label: 'Elders',           path: '/admin/elders',          key: 'elders' },
   { label: 'Alumni',           path: '/admin/alumni',          key: 'alumni' },
