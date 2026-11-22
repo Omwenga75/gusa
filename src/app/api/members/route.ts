@@ -25,6 +25,7 @@ export async function GET() {
         yearOfStudy: true,
         county: true,
         subcounty: true,
+        ipAddress: true,
         createdAt: true,
       }
     })

@@ -64,7 +64,7 @@ export default function JoinPage() {
     return () => clearTimeout(timer);
   }, [submitError]);
 
-  // Read localStorage on mount and react to changes
+  // Read localStorage on mount and react to changes; cross-check device/IP registration
   React.useEffect(() => {
     const check = () => {
       if (typeof window !== 'undefined' && localStorage.getItem('gusa_joined')) {
@@ -72,6 +72,17 @@ export default function JoinPage() {
       }
     };
     check();
+
+    fetch('/api/auth/check-device')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.registered) {
+          localStorage.setItem('gusa_joined', 'true');
+          setHasJoined(true);
+        }
+      })
+      .catch(() => {});
+
     window.addEventListener('storage', check);
     window.addEventListener('gusa_joined_change', check);
     return () => {
@@ -236,7 +247,7 @@ export default function JoinPage() {
                 className="px-8 py-3.5 rounded-xl font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 cursor-not-allowed opacity-80 select-none shadow-lg shadow-emerald-500/10"
               >
                 <CheckCircle2 size={18} />
-                <span>Joined GUSA</span>
+                <span>Registered</span>
               </button>
             ) : (
               <button
@@ -294,7 +305,7 @@ export default function JoinPage() {
                   className="w-full py-3.5 rounded-xl font-bold text-center flex items-center justify-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 mt-auto cursor-not-allowed opacity-80 select-none"
                 >
                   <CheckCircle2 size={18} />
-                  <span>Joined GUSA</span>
+                  <span>Registered</span>
                 </button>
               ) : (
                 <button type="button" onClick={handleOpenModal} className="btn-primary w-full py-3.5 rounded-xl font-bold text-center block text-white mt-auto cursor-pointer shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all">

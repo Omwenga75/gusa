@@ -12,8 +12,21 @@ export function JoinGusaButton({ className }: { className?: string }) {
 
   useEffect(() => {
     setMounted(true);
+    const localJoined = !!localStorage.getItem(GUSA_JOINED_KEY);
+    if (localJoined) setHasJoined(true);
+
+    // Cross-check with server-side device/IP registration
+    fetch('/api/auth/check-device')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.registered) {
+          localStorage.setItem(GUSA_JOINED_KEY, 'true');
+          setHasJoined(true);
+        }
+      })
+      .catch(() => {});
+
     const check = () => setHasJoined(!!localStorage.getItem(GUSA_JOINED_KEY));
-    check();
     window.addEventListener('storage', check);
     window.addEventListener('gusa_joined_change', check);
     return () => {
@@ -42,7 +55,7 @@ export function JoinGusaButton({ className }: { className?: string }) {
         aria-disabled="true"
       >
         <CheckCircle2 size={18} className="text-emerald-400" />
-        <span>Joined GUSA</span>
+        <span>Joined</span>
       </span>
     );
   }

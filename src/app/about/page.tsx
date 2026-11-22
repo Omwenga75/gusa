@@ -29,6 +29,17 @@ export default function AboutPage() {
       }
     };
     check();
+
+    fetch('/api/auth/check-device')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.registered) {
+          localStorage.setItem('gusa_joined', 'true');
+          setHasJoined(true);
+        }
+      })
+      .catch(() => {});
+
     window.addEventListener('storage', check);
     window.addEventListener('gusa_joined_change', check);
     return () => {
@@ -524,7 +535,7 @@ export default function AboutPage() {
                 className="btn btn-secondary btn-lg w-full sm:w-auto flex items-center justify-center gap-2 cursor-not-allowed opacity-80 select-none"
                 style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}
               >
-                <CheckCircle2 size={18} /> Joined GUSA
+                <CheckCircle2 size={18} /> Joined
               </span>
             ) : (
               <Link href="/join" className="btn btn-secondary btn-lg w-full sm:w-auto" style={{ backgroundColor: 'var(--accent-gold)', color: '#000000' }}>

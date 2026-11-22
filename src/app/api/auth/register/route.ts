@@ -112,6 +112,32 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Extract client IP and check for duplicate device / IP registrations
+    const forwarded = request.headers.get('x-forwarded-for')
+    const clientIp = forwarded
+      ? forwarded.split(',')[0].trim()
+      : (request.headers.get('x-real-ip') || '127.0.0.1')
+
+    const deviceCookie = request.cookies.get('gusa_joined')?.value
+    if (deviceCookie === 'true') {
+      return NextResponse.json(
+        { error: 'This device is already registered as a GUSA member.' },
+        { status: 409 }
+      )
+    }
+
+    if (clientIp && clientIp !== '127.0.0.1' && clientIp !== '::1') {
+      const existingByIp = await prisma.user.findFirst({
+        where: { ipAddress: clientIp, role: 'MEMBER' }
+      })
+      if (existingByIp) {
+        return NextResponse.json(
+          { error: 'A membership registration has already been completed from this device.' },
+          { status: 409 }
+        )
+      }
+    }
+
     // Hash password
     const passwordHash = await bcrypt.hash(password || 'Gusa@2026', 10)
 
@@ -127,6 +153,7 @@ export async function POST(request: NextRequest) {
         yearOfStudy: yearOfStudy ? String(yearOfStudy) : null,
         county: county || null,
         subcounty: subcounty || null,
+        ipAddress: clientIp || null,
         role: 'MEMBER',
         status: 'ACTIVE',
       },
@@ -137,7 +164,13 @@ export async function POST(request: NextRequest) {
     revalidatePath('/admin')
     revalidatePath('/admin/members')
 
-    return NextResponse.json({ success: true, user: userWithoutPassword }, { status: 201 })
+    const response = NextResponse.json({ success: true, user: userWithoutPassword }, { status: 201 })
+    response.cookies.set('gusa_joined', 'true', {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      sameSite: 'lax',
+    })
+    return response
   } catch (error: any) {
     // Handle Prisma unique constraint errors
     if (error?.code === 'P2002') {

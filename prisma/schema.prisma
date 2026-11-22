@@ -23,6 +23,7 @@ model User {
   county             String?
   subcounty          String?
   profileImage       String?
+  ipAddress          String?
   // Role Enum: MEMBER, ADMIN, SUPER_ADMIN
   role               String             @default("MEMBER")
   // Scoped permissions for ADMIN role (JSON array string e.g. ["events","welfare"])

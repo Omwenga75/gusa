@@ -30,6 +30,7 @@ interface Member {
   school?: string | null;
   yearOfStudy?: string | null;
   county?: string | null;
+  ipAddress?: string | null;
   createdAt: string;
 }
 
@@ -224,6 +225,11 @@ function MembersPageInner() {
                             {member.phone && (
                               <div style={{ fontSize: '0.72rem', color: '#6ee7b7', marginTop: '0.1rem' }}>
                                 📞 {member.phone}
+                              </div>
+                            )}
+                            {member.ipAddress && (
+                              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.1rem', fontFamily: 'monospace' }} title={`Registration IP: ${member.ipAddress}`}>
+                                🌐 {member.ipAddress}
                               </div>
                             )}
                           </div>
