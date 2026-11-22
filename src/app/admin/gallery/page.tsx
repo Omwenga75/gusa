@@ -17,6 +17,7 @@ interface Album {
 }
 
 const ADMIN_GALLERY_KEY = 'admin_gallery';
+const MAX_ALBUM_PHOTOS = 12;
 
 function GalleryPageInner() {
   const [albums, setAlbums] = useState<Album[]>(() => readCache<Album[]>(ADMIN_GALLERY_KEY) || []);
@@ -47,7 +48,7 @@ function GalleryPageInner() {
   // Form State
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [images, setImages] = useState<string[]>(Array(10).fill(''));
+  const [images, setImages] = useState<string[]>(Array(MAX_ALBUM_PHOTOS).fill(''));
   const [compressingIndex, setCompressingIndex] = useState<number | null>(null);
   const [loadingAlbumDetails, setLoadingAlbumDetails] = useState(false);
 
@@ -146,7 +147,7 @@ function GalleryPageInner() {
   const resetForm = () => {
     setName('');
     setDescription('');
-    setImages(Array(10).fill(''));
+    setImages(Array(MAX_ALBUM_PHOTOS).fill(''));
     setEditingAlbum(null);
     setLoadingAlbumDetails(false);
   };
@@ -162,15 +163,15 @@ function GalleryPageInner() {
     const hasFullImages = album.images && album.images.length > 0 && album.images.some(img => Boolean(img.imageUrl));
     if (hasFullImages) {
       const existingUrls = album.images.map(img => img.imageUrl);
-      const initialImages = Array(10).fill('');
-      existingUrls.slice(0, 10).forEach((url, i) => {
+      const initialImages = Array(MAX_ALBUM_PHOTOS).fill('');
+      existingUrls.slice(0, MAX_ALBUM_PHOTOS).forEach((url, i) => {
         initialImages[i] = url;
       });
       setImages(initialImages);
       setLoadingAlbumDetails(false);
     } else {
       // Seed with coverImage immediately so modal has the main photo while fetching full list
-      const initialImages = Array(10).fill('');
+      const initialImages = Array(MAX_ALBUM_PHOTOS).fill('');
       if (album.coverImage) initialImages[0] = album.coverImage;
       setImages(initialImages);
       setLoadingAlbumDetails(true);
@@ -180,8 +181,8 @@ function GalleryPageInner() {
         const data = await res.json();
         if (data.album && Array.isArray(data.album.images)) {
           const existingUrls = data.album.images.map((img: any) => img.imageUrl);
-          const freshImages = Array(10).fill('');
-          existingUrls.slice(0, 10).forEach((url: string, i: number) => {
+          const freshImages = Array(MAX_ALBUM_PHOTOS).fill('');
+          existingUrls.slice(0, MAX_ALBUM_PHOTOS).forEach((url: string, i: number) => {
             freshImages[i] = url;
           });
           setImages(freshImages);
@@ -416,7 +417,7 @@ function GalleryPageInner() {
                 />
               </div>
 
-              {/* 10 Device Photo Cards - Scrollable Left & Right */}
+              {/* {MAX_ALBUM_PHOTOS} Device Photo Cards - Scrollable Left & Right */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#f8fafc' }}>
@@ -429,7 +430,7 @@ function GalleryPageInner() {
                       </span>
                     )}
                     <span style={{ fontSize: '0.75rem', color: '#c084fc', fontWeight: 600 }}>
-                      {images.filter(Boolean).length}/10 selected
+                      {images.filter(Boolean).length}/{MAX_ALBUM_PHOTOS} selected
                     </span>
                   </div>
                 </div>
@@ -443,7 +444,7 @@ function GalleryPageInner() {
                   backgroundColor: 'rgba(6, 8, 15, 0.4)',
                   border: '1px solid rgba(255, 255, 255, 0.06)'
                 }}>
-                  {Array.from({ length: 10 }).map((_, idx) => (
+                  {Array.from({ length: MAX_ALBUM_PHOTOS }).map((_, idx) => (
                     <div
                       key={idx}
                       style={{
