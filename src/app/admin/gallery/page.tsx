@@ -213,7 +213,7 @@ function GalleryPageInner() {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: name.trim(),
+            name: name.trim().toUpperCase(),
             description: description.trim(),
             images: finalUrls,
             category: 'General'
@@ -224,7 +224,7 @@ function GalleryPageInner() {
           const data = await res.json().catch(() => ({}));
           const updatedAlbum: Album = data.album || {
             ...editingAlbum,
-            name: name.trim(),
+            name: name.trim().toUpperCase(),
             description: description.trim(),
             coverImage: finalUrls[0] || null,
             images: finalUrls.map((url, i) => ({ id: `temp-${i}`, imageUrl: url }))
@@ -247,7 +247,7 @@ function GalleryPageInner() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: name.trim(),
+            name: name.trim().toUpperCase(),
             description: description.trim(),
             images: finalUrls,
             category: 'General'
@@ -258,7 +258,7 @@ function GalleryPageInner() {
           const data = await res.json().catch(() => ({}));
           const newAlbum: Album = data.album || {
             id: `temp-${Date.now()}`,
-            name: name.trim(),
+            name: name.trim().toUpperCase(),
             description: description.trim(),
             coverImage: finalUrls[0] || null,
             images: finalUrls.map((url, i) => ({ id: `temp-${i}`, imageUrl: url }))
@@ -326,7 +326,7 @@ function GalleryPageInner() {
                 </div>
                 <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <div>
-                    <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>{album.name}</h3>
+                    <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: 700, color: '#ffffff', textTransform: 'uppercase' }}>{album.name?.toUpperCase()}</h3>
                     <p style={{ margin: 0, fontSize: '0.8125rem', color: '#94a3b8' }}>{album.images?.length || 0} photos</p>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
@@ -413,7 +413,7 @@ function GalleryPageInner() {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   className={styles.searchInput}
-                  style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem' }}
+                  style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem', textTransform: 'uppercase' }}
                 />
               </div>
 
@@ -541,7 +541,7 @@ function GalleryPageInner() {
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   className={styles.searchInput}
-                  style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem' }}
+                  style={{ background: 'rgba(6, 8, 15, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.6rem 1rem', borderRadius: '0.5rem', textTransform: 'uppercase' }}
                 />
               </div>
 

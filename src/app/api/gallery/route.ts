@@ -21,8 +21,12 @@ export async function GET(request: NextRequest) {
         },
       },
     })
+    const formattedAlbums = albums.map((alb) => ({
+      ...alb,
+      name: (alb.name || '').toUpperCase(),
+    }))
     return NextResponse.json(
-      { albums },
+      { albums: formattedAlbums },
       {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -60,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     const album = await prisma.album.create({
       data: {
-        name,
+        name: name.trim().toUpperCase(),
         description: description || '',
         coverImage: cover,
         images: photoList.length > 0 ? {

@@ -69,7 +69,7 @@ export default function GalleryClient() {
             const firstImage = alb.images && alb.images.length > 0 ? alb.images[0].imageUrl : undefined;
             return {
               id: alb.id,
-              title: alb.name,
+              title: (alb.name || '').toUpperCase(),
               slug: alb.id,
               category: (alb.category && alb.category !== 'Campus Life') ? alb.category : undefined,
               date: new Date(alb.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
@@ -82,7 +82,7 @@ export default function GalleryClient() {
               media: (alb.images || []).map((img: any) => ({
                 id: img.id,
                 type: 'photo' as const,
-                title: img.caption || alb.name,
+                title: (img.caption || alb.name || '').toUpperCase(),
                 caption: img.caption || '',
                 thumbnailGradient: 'from-purple-600 to-indigo-600',
                 imageUrl: img.imageUrl,
@@ -101,7 +101,15 @@ export default function GalleryClient() {
   React.useEffect(() => {
     const cached = readCache<Album[]>(GALLERY_CACHE_KEY);
     if (cached && cached.length > 0) {
-      setAlbumsData(cached);
+      const upperCached = cached.map(alb => ({
+        ...alb,
+        title: (alb.title || '').toUpperCase(),
+        media: (alb.media || []).map((m: any) => ({
+          ...m,
+          title: (m.title || '').toUpperCase()
+        }))
+      }));
+      setAlbumsData(upperCached);
       setIsLoading(false);
     }
     fetchGalleryData();
@@ -139,7 +147,7 @@ export default function GalleryClient() {
           const freshMedia: MediaItem[] = data.album.images.map((img: any) => ({
             id: img.id,
             type: 'photo' as const,
-            title: img.caption || data.album.name,
+            title: (img.caption || data.album.name || '').toUpperCase(),
             caption: img.caption || '',
             thumbnailGradient: 'from-purple-600 to-indigo-600',
             imageUrl: img.imageUrl,
@@ -300,8 +308,8 @@ export default function GalleryClient() {
                     style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 35%, transparent 70%)' }}
                   >
                     <div className="w-full">
-                      <h3 className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,1)] group-hover:text-pink-300 transition-colors line-clamp-1">
-                        {album.title}
+                      <h3 className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,1)] group-hover:text-pink-300 transition-colors line-clamp-1 tracking-wide" style={{ textTransform: 'uppercase' }}>
+                        {album.title.toUpperCase()}
                       </h3>
                       {album.description && album.description !== album.title && album.description !== 'Official GUSA Album' && (
                         <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,1)]">
@@ -412,7 +420,7 @@ export default function GalleryClient() {
                     {activeAlbum.date}
                   </span>
                 </div>
-                <h2 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', fontWeight: 800, overflowWrap: 'anywhere' }}>{activeAlbum.title}</h2>
+                <h2 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', fontWeight: 800, overflowWrap: 'anywhere', textTransform: 'uppercase' }}>{activeAlbum.title.toUpperCase()}</h2>
               </div>
 
               <button
@@ -584,9 +592,16 @@ export default function GalleryClient() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ffffff' }}>
-              {lightboxIndex + 1} / {currentAlbumMedia.length}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ffffff' }}>
+                {lightboxIndex + 1} / {currentAlbumMedia.length}
+              </span>
+              {activeAlbum && (
+                <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'rgba(255, 255, 255, 0.8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {activeAlbum.title.toUpperCase()}
+                </span>
+              )}
+            </div>
 
             <button
               onClick={() => setLightboxIndex(null)}
@@ -689,8 +704,8 @@ export default function GalleryClient() {
                   >
                     <Play size={32} fill="#ffffff" color="#ffffff" style={{ marginLeft: '4px' }} />
                   </div>
-                  <h4 style={{ fontSize: 'clamp(1.15rem, 3.5vw, 1.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>
-                    {currentAlbumMedia[lightboxIndex].title}
+                  <h4 style={{ fontSize: 'clamp(1.15rem, 3.5vw, 1.5rem)', fontWeight: 800, marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                    {currentAlbumMedia[lightboxIndex].title.toUpperCase()}
                   </h4>
                   <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '500px', margin: '0 auto', fontSize: '0.85rem' }}>
                     Video Highlight ({currentAlbumMedia[lightboxIndex].videoDuration}) &bull; Recorded live during the event
@@ -725,8 +740,8 @@ export default function GalleryClient() {
                   }}
                 >
                   <ImageIcon size={52} style={{ color: '#FFD700', marginBottom: '0.75rem', opacity: 0.8 }} />
-                  <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-                    {currentAlbumMedia[lightboxIndex].title}
+                  <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                    {currentAlbumMedia[lightboxIndex].title.toUpperCase()}
                   </h4>
                   <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '550px', margin: '0 auto', fontSize: '0.875rem' }}>
                     {currentAlbumMedia[lightboxIndex].caption}

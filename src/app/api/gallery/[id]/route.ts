@@ -27,7 +27,12 @@ export async function GET(
       return NextResponse.json({ error: 'Album not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ album })
+    const formattedAlbum = {
+      ...album,
+      name: (album.name || '').toUpperCase(),
+    }
+
+    return NextResponse.json({ album: formattedAlbum })
   } catch (error) {
     console.error('Get album API error:', error)
     return NextResponse.json({ error: 'Failed to fetch album' }, { status: 500 })
@@ -84,7 +89,7 @@ export async function PUT(
       return tx.album.update({
         where: { id },
         data: {
-          name,
+          name: name.trim().toUpperCase(),
           description: description !== undefined ? (description || '') : undefined,
           coverImage: cover,
         },

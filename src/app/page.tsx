@@ -417,7 +417,7 @@ export default async function HomePage() {
                       style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 35%, transparent 70%)' }}
                     >
                       <div className="w-full">
-                        <p className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,1)] group-hover:text-pink-300 transition-colors line-clamp-1">{alb.name}</p>
+                        <p className="text-white font-bold text-base sm:text-lg leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,1)] group-hover:text-pink-300 transition-colors line-clamp-1 uppercase tracking-wide" style={{ textTransform: 'uppercase' }}>{alb.name?.toUpperCase()}</p>
                         {alb.description && (
                           <p className="text-xs text-white/95 line-clamp-1 mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,1)]">{alb.description}</p>
                         )}
