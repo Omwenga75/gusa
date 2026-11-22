@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { readCache, writeCache, hasCache } from '@/lib/cache';
 import { PublicLayout } from '@/components/layout/PublicLayout';
@@ -186,6 +186,22 @@ export default function GalleryClient() {
     if (lightboxIndex === null || !currentAlbumMedia.length) return;
     setLightboxIndex((prev) => (prev! < currentAlbumMedia.length - 1 ? prev! + 1 : 0));
   };
+
+  // Keyboard controls for lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightboxIndex(null);
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevMedia();
+      } else if (e.key === 'ArrowRight') {
+        handleNextMedia();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, currentAlbumMedia.length]);
 
   const handleShareAlbum = (albumTitle: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -610,42 +626,52 @@ export default function GalleryClient() {
               aria-label="Previous Media"
               style={{
                 position: 'absolute',
-                left: '0.5rem',
-                backgroundColor: 'rgba(255,255,255,0.15)',
+                left: 'clamp(0.5rem, 2vw, 1.5rem)',
+                backgroundColor: 'rgba(255,255,255,0.18)',
                 color: '#ffffff',
-                border: 'none',
-                width: 'clamp(36px, 8vw, 48px)',
-                height: 'clamp(36px, 8vw, 48px)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                width: 'clamp(40px, 6vw, 52px)',
+                height: 'clamp(40px, 6vw, 52px)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                zIndex: 20
+                zIndex: 30,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                transition: 'background 0.2s, transform 0.15s'
               }}
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={26} />
             </button>
 
-            {/* Media Canvas Box */}
+            {/* Media Box */}
             <div
               style={{
+                maxWidth: 'min(94vw, 1600px)',
+                maxHeight: 'calc(100dvh - 90px)',
                 width: '100%',
-                maxWidth: '850px',
-                height: '65vh',
-                borderRadius: '1.25rem',
-                background: currentAlbumMedia[lightboxIndex].thumbnailGradient,
+                height: '100%',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                position: 'relative',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
-                overflow: 'hidden'
+                position: 'relative'
               }}
             >
               {currentAlbumMedia[lightboxIndex].type === 'video' ? (
-                <div style={{ textAlign: 'center', color: '#ffffff', padding: '1.5rem' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: '900px',
+                    borderRadius: '1.25rem',
+                    background: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+                    boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
+                    textAlign: 'center',
+                    color: '#ffffff',
+                    padding: 'clamp(1.5rem, 5vw, 3.5rem)'
+                  }}
+                >
                   <div
                     style={{
                       width: '72px',
@@ -675,14 +701,29 @@ export default function GalleryClient() {
                   src={currentAlbumMedia[lightboxIndex].imageUrl}
                   alt={currentAlbumMedia[lightboxIndex].title}
                   style={{
-                    width: '100%',
-                    height: '100%',
+                    maxWidth: 'min(92vw, 1600px)',
+                    maxHeight: 'calc(100dvh - 100px)',
+                    width: 'auto',
+                    height: 'auto',
                     objectFit: 'contain',
-                    maxHeight: '65vh'
+                    borderRadius: '0.875rem',
+                    boxShadow: '0 25px 60px rgba(0,0,0,0.9)',
+                    userSelect: 'none'
                   }}
                 />
               ) : (
-                <div style={{ textAlign: 'center', color: '#ffffff', padding: '1.5rem' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: '650px',
+                    borderRadius: '1.25rem',
+                    background: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+                    boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
+                    textAlign: 'center',
+                    color: '#ffffff',
+                    padding: '2rem'
+                  }}
+                >
                   <ImageIcon size={52} style={{ color: '#FFD700', marginBottom: '0.75rem', opacity: 0.8 }} />
                   <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
                     {currentAlbumMedia[lightboxIndex].title}
@@ -700,21 +741,24 @@ export default function GalleryClient() {
               aria-label="Next Media"
               style={{
                 position: 'absolute',
-                right: '0.5rem',
-                backgroundColor: 'rgba(255,255,255,0.15)',
+                right: 'clamp(0.5rem, 2vw, 1.5rem)',
+                backgroundColor: 'rgba(255,255,255,0.18)',
                 color: '#ffffff',
-                border: 'none',
-                width: 'clamp(36px, 8vw, 48px)',
-                height: 'clamp(36px, 8vw, 48px)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                width: 'clamp(40px, 6vw, 52px)',
+                height: 'clamp(40px, 6vw, 52px)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                zIndex: 20
+                zIndex: 30,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                transition: 'background 0.2s, transform 0.15s'
               }}
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={26} />
             </button>
           </div>
         </div>
