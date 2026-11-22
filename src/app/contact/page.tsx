@@ -82,12 +82,9 @@ export default function ContactPage() {
         <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
             {/* Interactive Contact Form */}
             <div>
-              <h2 style={{ fontSize: 'clamp(1.35rem, 3.5vw, 1.75rem)', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
+              <h2 style={{ fontSize: 'clamp(1.35rem, 3.5vw, 1.75rem)', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-main)' }}>
                 Send Us a Message
               </h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '1.75rem' }}>
-                Fill in the details below. Our Secretariat typically responds within 24 business hours.
-              </p>
 
               {submitSuccess ? (
                 <div
