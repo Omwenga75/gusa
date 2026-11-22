@@ -19,7 +19,8 @@ import {
   GraduationCap,
   Building,
   Send,
-  CheckCircle2
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 
 const SCHOOL_OPTIONS = [
@@ -53,6 +54,15 @@ export default function JoinPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+
+  // Auto-dismiss floating error popup after 5 seconds
+  React.useEffect(() => {
+    if (!submitError) return;
+    const timer = setTimeout(() => {
+      setSubmitError(null);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [submitError]);
 
   // Read localStorage on mount and react to changes
   React.useEffect(() => {
@@ -341,69 +351,93 @@ export default function JoinPage() {
           onClick={handleCloseModal}
         >
           <div
-            className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 relative"
+            className="w-full max-w-xl max-h-[90vh] bg-slate-900 border border-white/10 rounded-2xl shadow-2xl relative flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={handleCloseModal}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors cursor-pointer"
+              className="absolute top-5 right-5 z-20 text-slate-400 hover:text-white p-1 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X size={20} />
             </button>
 
-            {/* Modal Header — no tier badge */}
-            <div className="mb-6">
-              <h2 className="text-xl sm:text-2xl font-black text-white">Register as a GUSA Member</h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Fill in your details below to activate your student membership.
-              </p>
-            </div>
-
-            {/* Success State */}
-            {isSubmittedSuccess ? (
-              <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
-                  <CheckCircle2 size={36} />
+            {/* Floating Error Popup in Center of Card */}
+            {submitError && (
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-md p-4 sm:p-5 rounded-2xl bg-slate-900/95 border border-red-500/50 shadow-2xl backdrop-blur-xl flex items-start gap-3.5 animate-in fade-in zoom-in-95 duration-200"
+                style={{
+                  boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(239, 68, 68, 0.3)'
+                }}
+              >
+                <div className="w-9 h-9 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center flex-shrink-0 text-red-400 mt-0.5">
+                  <AlertCircle size={20} />
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-1">Registration Successful!</h3>
-                  <p className="text-sm text-slate-300 max-w-md mx-auto">
-                    Welcome to GUSA, <strong className="text-violet-400">{fullName}</strong>! Your registration has been submitted and added to the official member directory.
+                <div className="flex-1 min-w-0 pr-1">
+                  <h4 className="text-sm font-bold text-white mb-0.5">Registration Error</h4>
+                  <p className="text-xs text-red-300 leading-relaxed font-medium">
+                    {submitError}
                   </p>
-                </div>
-                <div className="p-4 rounded-xl bg-slate-950/80 border border-white/10 text-left text-xs space-y-2 text-slate-300">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Registration No:</span>
-                    <span className="font-bold text-white uppercase">{regNumber}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">School:</span>
-                    <span className="font-semibold text-violet-300">{school}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">County:</span>
-                    <span className="font-semibold text-sky-400">{county} County</span>
-                  </div>
                 </div>
                 <button
                   type="button"
-                  onClick={handleCloseModal}
-                  className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 cursor-pointer"
+                  onClick={() => setSubmitError(null)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0 cursor-pointer"
+                  title="Dismiss (X)"
+                  aria-label="Dismiss error"
                 >
-                  Done
+                  <X size={18} />
                 </button>
               </div>
-            ) : (
-              <form onSubmit={handleRegister} className="space-y-4">
-                {/* Error Banner */}
-                {submitError && (
-                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs font-semibold">
-                    {submitError}
-                  </div>
-                )}
+            )}
 
-                {/* Row 1: Full Name + School / Faculty */}
+            {/* Scrollable Form Content */}
+            <div className="overflow-y-auto p-6 sm:p-8 flex-1">
+              {/* Modal Header — no tier badge */}
+              <div className="mb-6">
+                <h2 className="text-xl sm:text-2xl font-black text-white">Register as a GUSA Member</h2>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  Fill in your details below to activate your student membership.
+                </p>
+              </div>
+
+              {/* Success State */}
+              {isSubmittedSuccess ? (
+                <div className="text-center py-8 space-y-4">
+                  <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
+                    <CheckCircle2 size={36} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-1">Registration Successful!</h3>
+                    <p className="text-sm text-slate-300 max-w-md mx-auto">
+                      Welcome to GUSA, <strong className="text-violet-400">{fullName}</strong>! Your registration has been submitted and added to the official member directory.
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-white/10 text-left text-xs space-y-2 text-slate-300">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Registration No:</span>
+                      <span className="font-bold text-white uppercase">{regNumber}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">School:</span>
+                      <span className="font-semibold text-violet-300">{school}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">County:</span>
+                      <span className="font-semibold text-sky-400">{county} County</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 shadow-lg shadow-violet-600/30 cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleRegister} className="space-y-4">
+                  {/* Row 1: Full Name + School / Faculty */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -640,6 +674,7 @@ export default function JoinPage() {
                 </div>
               </form>
             )}
+            </div>
           </div>
         </div>
       )}
