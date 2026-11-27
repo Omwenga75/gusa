@@ -558,7 +558,7 @@ export default function AboutPage() {
             Launched 22 Nov 2026 By GUSA Executive
           </p>
           <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', margin: '0.35rem 0 0 0' }}>
-            Chairman Johnstone Tamuna
+            Chairperson: Johnstone Tamuna
           </p>
           <p style={{ fontSize: '0.875rem', color: 'var(--primary)', fontWeight: 600, margin: '0.25rem 0 0 0' }}>
             <a href="tel:+254768004142" style={{ color: 'inherit', textDecoration: 'none' }}>
