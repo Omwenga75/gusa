@@ -219,6 +219,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <main className={styles.mainContent}>
         <header className={styles.topbar}>
           <div className={styles.topbarLeft}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <div className={styles.logoBadge} style={{ width: '32px', height: '32px', fontSize: '0.95rem', borderRadius: '0.55rem' }}>G</div>
+              <span className={styles.brandName} style={{ fontSize: '1rem' }}>GUSA Admin</span>
+            </div>
+          </div>
+          <div className={styles.topbarActions}>
             <button
               className={styles.mobileMenuBtn}
               onClick={() => setSidebarOpen(true)}
@@ -226,10 +232,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <Menu size={20} />
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <div className={styles.logoBadge} style={{ width: '32px', height: '32px', fontSize: '0.95rem', borderRadius: '0.55rem' }}>G</div>
-              <span className={styles.brandName} style={{ fontSize: '1rem' }}>GUSA Admin</span>
-            </div>
           </div>
         </header>
 
