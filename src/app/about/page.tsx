@@ -543,6 +543,30 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Launch Attribution */}
+      <section
+        style={{
+          background: 'var(--surface)',
+          borderTop: '1px solid var(--border)',
+          padding: '1.75rem 1rem',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ maxWidth: '720px' }}>
+          <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+            Launched 22 Nov 2026 By GUSA Executive
+          </p>
+          <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', margin: '0.35rem 0 0 0' }}>
+            Chairman Johnstone Tamuna
+          </p>
+          <p style={{ fontSize: '0.875rem', color: 'var(--primary)', fontWeight: 600, margin: '0.25rem 0 0 0' }}>
+            <a href="tel:+254768004142" style={{ color: 'inherit', textDecoration: 'none' }}>
+              +254 768 004 142
+            </a>
+          </p>
+        </div>
+      </section>
     </PublicLayout>
   )
 }
