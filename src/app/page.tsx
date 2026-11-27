@@ -34,20 +34,21 @@ async function getHomePageData() {
       // Stats — never filtered by cutoff
       (async () => {
         try {
+          const BASE_MEMBER_COUNT = 1445;
           const [totalMembers, annualEvents, totalPhotos] = await Promise.all([
-            prisma.user.count({ where: { role: { not: 'SUPER_ADMIN' }, status: 'ACTIVE' } }),
+            prisma.user.count({ where: { role: { notIn: ['SUPER_ADMIN', 'ADMIN'] }, status: 'ACTIVE' } }),
             prisma.event.count({ where: { status: 'PUBLISHED' } }),
             prisma.galleryImage.count(),
           ]);
           return {
-            activeMembers: totalMembers,
+            activeMembers: BASE_MEMBER_COUNT + totalMembers,
             annualEvents,
             counties: 2,
             totalPhotos,
           };
         } catch (e) {
           console.error('Error fetching stats:', e);
-          return { activeMembers: 0, annualEvents: 0, counties: 2, totalPhotos: 0 };
+          return { activeMembers: 1445, annualEvents: 0, counties: 2, totalPhotos: 0 };
         }
       })(),
 
@@ -162,7 +163,7 @@ async function getHomePageData() {
   } catch (error) {
     console.error('getHomePageData error:', error);
     return {
-      stats: { activeMembers: 0, annualEvents: 0, counties: 2, totalPhotos: 0 },
+      stats: { activeMembers: 1445, annualEvents: 0, counties: 2, totalPhotos: 0 },
       events: [],
       albums: [],
       posts: [],

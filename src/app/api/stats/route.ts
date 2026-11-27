@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
+const BASE_MEMBER_COUNT = 1445
+
 export async function GET() {
   try {
     const [
@@ -17,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        activeMembers: totalMembers,
+        activeMembers: BASE_MEMBER_COUNT + totalMembers,
         annualEvents: annualEvents || 0,
         counties: 2,
         totalPhotos: totalPhotos || 0,
@@ -35,7 +37,7 @@ export async function GET() {
   } catch (error) {
     console.error('Stats API error:', error)
     return NextResponse.json({
-      activeMembers: 0,
+      activeMembers: BASE_MEMBER_COUNT,
       annualEvents: 0,
       counties: 2,
       totalPhotos: 0,
