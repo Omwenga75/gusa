@@ -328,7 +328,10 @@ export default async function AdminDashboard() {
                     borderRadius: '0.75rem',
                     background: 'rgba(255, 255, 255, 0.03)',
                     border: '1px solid rgba(255, 255, 255, 0.06)',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    minWidth: 0,
+                    width: '100%',
+                    boxSizing: 'border-box'
                   }}
                 >
                   <div
