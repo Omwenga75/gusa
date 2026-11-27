@@ -96,9 +96,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/10 flex justify-center items-center text-center">
+        <div className="pt-8 border-t border-white/10 flex flex-col justify-center items-center text-center gap-1.5">
           <p className="text-slate-500 text-xs text-center w-full">
             &copy; 2026 GUSII UNIVERSITY STUDENTS ASSOCIATION (GUSA) – MERU. All Rights Reserved.
+          </p>
+          <p className="text-slate-500 text-xs text-center w-full">
+            Developed by: Nelson - (<a href="tel:+254111307585" className="text-violet-400 hover:text-violet-300 transition-colors">+254 111 307 585</a>)
           </p>
         </div>
       </div>
