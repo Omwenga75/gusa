@@ -353,12 +353,12 @@ export default function GalleryClient() {
           )}
 
           {/* Privacy Concern Notice */}
-          <div className="mt-12 pt-6 border-t border-white/10 max-w-2xl mx-auto">
-            <div className="flex items-start gap-3 px-5 py-4 rounded-2xl bg-violet-500/5 border border-violet-500/15">
-              <ShieldCheck size={20} className="text-violet-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="mt-12 pt-6 border-t border-white/10 w-fit max-w-full mx-auto">
+            <div className="flex items-start md:items-center gap-3 px-5 py-4 rounded-2xl bg-violet-500/5 border border-violet-500/15">
+              <ShieldCheck size={20} className="text-violet-400 shrink-0 mt-0.5 md:mt-0" />
+              <p className="text-xs text-slate-400 leading-relaxed lg:whitespace-nowrap">
                 <span className="font-semibold text-slate-200">Privacy Notice —</span>{' '}
-                All pictures and data shared on this website are kept private in accordance with our data privacy guidelines.
+                All pictures and data shared on this website are kept private in accordance with our data privacy act.
               </p>
             </div>
           </div>
